@@ -1,8 +1,8 @@
 package com.redefantasy.core.shared.echo.api.packets
 
-import net.hyren.core.shared.echo.api.IByteSerializable
-import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
-import net.hyren.core.shared.echo.api.buffer.EchoBufferOutput
+import com.redefantasy.core.shared.echo.api.IByteSerializable
+import com.redefantasy.core.shared.echo.api.buffer.EchoBufferInput
+import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
 import java.util.*
 
 /**

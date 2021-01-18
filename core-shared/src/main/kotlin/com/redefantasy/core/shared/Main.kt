@@ -1,9 +1,9 @@
 package com.redefantasy.core.shared
 
-import net.hyren.core.shared.applications.ApplicationType
-import net.hyren.core.shared.applications.data.Application
-import net.hyren.core.shared.applications.status.ApplicationStatus
-import net.hyren.core.shared.applications.status.task.ApplicationStatusTask
+import com.redefantasy.core.shared.applications.ApplicationType
+import com.redefantasy.core.shared.applications.data.Application
+import com.redefantasy.core.shared.applications.status.ApplicationStatus
+import com.redefantasy.core.shared.applications.status.task.ApplicationStatusTask
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit

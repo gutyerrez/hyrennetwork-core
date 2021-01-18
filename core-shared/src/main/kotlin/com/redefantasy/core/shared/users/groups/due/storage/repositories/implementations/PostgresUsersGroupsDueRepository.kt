@@ -6,8 +6,10 @@ import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDu
 import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
 import com.redefantasy.core.shared.users.groups.due.storage.table.UsersGroupsDueTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import java.util.*
 
 /**
  * @author SrGutyerrez
@@ -20,10 +22,11 @@ class PostgresUsersGroupsDueRepository : IUsersGroupsDueRepository {
         return transaction {
             val groups = mutableListOf<Group>()
 
+
             UserGroupDueDAO.find {
                 UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdDTO.id and (
                         UsersGroupsDueTable.dueAt greater DateTime.now()
-                        )
+                )
             }.forEach { groups.add(it.group()) }
 
             return@transaction groups

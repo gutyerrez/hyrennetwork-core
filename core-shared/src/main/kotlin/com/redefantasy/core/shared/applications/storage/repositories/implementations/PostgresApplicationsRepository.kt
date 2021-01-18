@@ -8,6 +8,7 @@ import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationsByT
 import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationsByTypeDTO
 import com.redefantasy.core.shared.applications.storage.repositories.IApplicationsRepository
 import com.redefantasy.core.shared.applications.storage.table.ApplicationsTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
