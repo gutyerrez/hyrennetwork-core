@@ -14,6 +14,7 @@ class UserDAO(
     companion object : UUIDEntityClass<UserDAO>(UsersTable)
 
     var name by UsersTable.name
+    var password by UsersTable.password
     var discordId by UsersTable.discordId
     var twoFactorAuthenticationEnabled by UsersTable.twoFactorAuthenticationEnabled
     var twoFactorAuthenticationCode by UsersTable.twoFactorAuthenticationCode
@@ -28,6 +29,7 @@ class UserDAO(
     fun asUser(): User = User(
             this.id.value,
             this.name,
+            this.password,
             this.discordId,
             this.twoFactorAuthenticationEnabled,
             this.twoFactorAuthenticationCode,

@@ -1,7 +1,7 @@
 dependencies {
     // kotlin lib
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.21")
+    api(kotlin("reflect"))
 
     // google
     implementation("com.google.guava:guava:29.0-jre")
@@ -13,14 +13,14 @@ dependencies {
     // commons-io
     implementation("commons-io:commons-io:2.8.0")
 
-    // hikari CP
+    // hikari cp
     implementation("com.zaxxer:HikariCP:3.4.5")
 
     // exposed
-    implementation("org.jetbrains.exposed", "exposed-core", "0.24.1")
-    implementation("org.jetbrains.exposed", "exposed-dao", "0.24.1")
-    implementation("org.jetbrains.exposed", "exposed-jdbc", "0.24.1")
-    implementation("org.jetbrains.exposed", "exposed-jodatime", "0.24.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.24.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.24.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.24.1")
+    implementation("org.jetbrains.exposed:exposed-jodatime:0.24.1")
 
     // postgres
     implementation("org.postgresql:postgresql:42.2.16")
@@ -52,12 +52,9 @@ dependencies {
 
     // caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")
-}
 
-tasks {
-    shadowJar {
-        archiveClassifier.set("")
-    }
+    // waterfall-chat
+    api("io.github.waterfallmc:waterfall-chat:1.16-R0.4-SNAPSHOT")
 }
 
 val sources by tasks.registering(Jar::class) {
@@ -71,7 +68,7 @@ val sources by tasks.registering(Jar::class) {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            from(components["java"])
+            from(components["kotlin"])
             artifact(sources.get())
         }
     }

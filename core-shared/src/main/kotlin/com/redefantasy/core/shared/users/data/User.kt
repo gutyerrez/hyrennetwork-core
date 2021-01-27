@@ -16,7 +16,8 @@ import java.util.stream.Collectors
  **/
 data class User(
         val id: UUID,
-        var name: String,
+        val name: String,
+        var password: String? = null,
         var discordId: Long? = null,
         var twoFactorAuthenticationEnabled: Boolean? = null,
         var twoFactorAuthenticationCode: String? = null,

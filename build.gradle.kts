@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.21"
 
     id("java")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 repositories {
@@ -21,7 +21,7 @@ subprojects {
     tasks {
         compileKotlin {
             kotlinOptions {
-                jvmTarget = "14"
+                jvmTarget = "1.8"
             }
         }
     }
@@ -31,6 +31,8 @@ subprojects {
 
     repositories {
         mavenCentral()
+
+        mavenLocal()
 
         jcenter()
     }

@@ -1,0 +1,4 @@
+name: Core
+main: com.redefantasy.core.bungee.CoreBungeePlugin
+version: 0.1-ALPHA
+author: Gutyerrez

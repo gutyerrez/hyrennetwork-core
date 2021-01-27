@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.echo.api
 
-import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput

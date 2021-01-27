@@ -19,6 +19,7 @@ open class ApplicationStatus(
     var heapSize: Long? = null
     var heapMaxSize: Long? = null
     var heapFreeSize: Long? = null
+    var onlinePlayers: Int = 0
     var maintenance: Boolean = false
 
     fun isSame(applicationName: String) = this.applicationName == applicationName
@@ -41,6 +42,7 @@ open class ApplicationStatus(
                 .addField("heap_max_size", this.heapMaxSize)
                 .addField("heap_free_size", this.heapFreeSize)
                 .addField("maintenance", this.maintenance)
+                .addField("online_players", this.onlinePlayers)
 
         return builder
     }

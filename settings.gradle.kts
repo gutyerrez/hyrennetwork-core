@@ -1,5 +1,6 @@
 rootProject.name = "core"
 
 include(
-        "core-shared"
+        "core-shared",
+        "core-bungee"
 )
