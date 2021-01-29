@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm")version "1.4.30-RC"
 
     id("java")
     id("maven-publish")
@@ -21,7 +21,7 @@ subprojects {
     tasks {
         compileKotlin {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "15"
             }
         }
     }

@@ -13,7 +13,9 @@ class ServersLocalCache : LocalCache {
     private val CACHE = Caffeine.newBuilder()
             .build<String, Server>()
 
-    fun fetchByName(name: String): Server? {
+    fun fetchByName(name: String?): Server? {
+        if (name === null) return null
+
         return this.CACHE.getIfPresent(name)
     }
 

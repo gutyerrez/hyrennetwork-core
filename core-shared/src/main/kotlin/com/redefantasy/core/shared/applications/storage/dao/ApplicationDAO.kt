@@ -12,7 +12,7 @@ import java.net.InetSocketAddress
  * @author SrGutyerrez
  **/
 class ApplicationDAO(
-        val name: EntityID<String>
+    val name: EntityID<String>
 ) : StringEntity(name) {
 
     companion object : StringEntityClass<ApplicationDAO>(ApplicationsTable)
@@ -24,22 +24,22 @@ class ApplicationDAO(
     val port by ApplicationsTable.port
     val applicationType by ApplicationsTable.applicationType
     val serverName by ApplicationsTable.serverName
-    val restrictJoin by ApplicationsTable.restrictJoin
+    val restrictJoinGroupName by ApplicationsTable.restrictJoinGroupName
 
     fun asApplication() = Application(
-            this.name.value,
-            this.displayName,
-            this.description,
-            this.slots,
-            InetSocketAddress(
-                    this.address,
-                    this.port,
-            ),
-            this.applicationType,
-            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-                    this.serverName.value
-            ),
-            this.restrictJoin
+        this.name.value,
+        this.displayName,
+        this.description,
+        this.slots,
+        InetSocketAddress(
+            this.address,
+            this.port,
+        ),
+        this.applicationType,
+        CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+            this.serverName?.value
+        ),
+        this.restrictJoinGroupName
     )
 
 }

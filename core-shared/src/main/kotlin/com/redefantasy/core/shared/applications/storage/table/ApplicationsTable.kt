@@ -10,14 +10,13 @@ import com.redefantasy.core.shared.servers.storage.table.ServersTable
  **/
 object ApplicationsTable : StringTable("applications") {
 
-    val name = varchar("name", 255)
     val displayName = varchar("display_name", 255)
     val description = varchar("description", 255)
     val slots = integer("slots")
     val address = varchar("address", 255)
     val port = integer("port")
     val applicationType = enumerationByName("application_type", 255, ApplicationType::class)
-    val serverName = reference("server_name", ServersTable)
-    val restrictJoin = enumerationByName("restrict_join", 255, Group::class)
+    val serverName = reference("server_name", ServersTable).nullable()
+    val restrictJoinGroupName = enumerationByName("restrict_join_group_name", 255, Group::class)
 
 }

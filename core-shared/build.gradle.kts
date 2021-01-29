@@ -17,10 +17,10 @@ dependencies {
     implementation("com.zaxxer:HikariCP:3.4.5")
 
     // exposed
-    implementation("org.jetbrains.exposed:exposed-core:0.24.1")
-    implementation("org.jetbrains.exposed:exposed-dao:0.24.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.24.1")
-    implementation("org.jetbrains.exposed:exposed-jodatime:0.24.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.29.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.29.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.29.1")
+    implementation("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
     // postgres
     implementation("org.postgresql:postgresql:42.2.16")

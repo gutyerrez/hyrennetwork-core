@@ -16,7 +16,8 @@ abstract class CustomPlugin(
     override fun onEnable() {
         if (prepareProviders) {
             CoreProvider.prepare(
-                (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
+//                (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
+                10007
             )
         }
     }

@@ -111,7 +111,7 @@ object CoreProvider {
         val address = IOUtils.toString(
                 URL("http://checkip.amazonaws.com"),
                 Charsets.UTF_8
-        )
+        ).trim()
 
         val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByAddressAndPort(
                 FetchApplicationByAddressAndPortDTO(

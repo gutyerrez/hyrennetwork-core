@@ -17,17 +17,7 @@ object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val application = Application(
-                "core-application",
-                "Core Application",
-                address = InetSocketAddress(
-                        "127.0.0.1",
-                        0
-                ),
-                applicationType = ApplicationType.GENERIC
-        )
-
-        com.redefantasy.core.shared.CoreProvider.prepare(application)
+        val application = CoreProvider.prepare(10007)
 
         this.STATUS_EXECUTOR.scheduleAtFixedRate(object : ApplicationStatusTask(
                 ApplicationStatus(

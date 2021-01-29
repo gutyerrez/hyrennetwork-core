@@ -62,8 +62,8 @@ class PostgresApplicationsRepository : IApplicationsRepository {
         return transaction {
             var application: Application? = null
 
-            val result =  ApplicationDAO.find {
-                ApplicationsTable.name eq fetchApplicationByNameDTO.applicationName
+            val result = ApplicationDAO.find {
+                ApplicationsTable.id eq fetchApplicationByNameDTO.applicationName
             }
 
             if (!result.empty()) application = result.first().asApplication()
