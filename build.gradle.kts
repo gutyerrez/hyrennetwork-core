@@ -26,6 +26,8 @@ subprojects {
 
             doLast {
                 copy {
+                    println("Testandoooo")
+
                     from("build/libs/${project.name}.jar")
                     to("/home/cloud/output")
                 }
