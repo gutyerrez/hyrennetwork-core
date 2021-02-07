@@ -25,12 +25,13 @@ subprojects {
             }
 
             doLast {
-                copy {
-                    println("Testandoooo")
+                val fileName = "${project.name}.jar"
+                val file = file("build/libs/$fileName")
 
-                    from("build/libs/${project.name}.jar")
-                    to("/home/cloud/output")
-                }
+                println("Existe: ${file.exists()}")
+
+                file.copyTo(file("/home/cloud/output/$fileName"))
+                file.delete()
             }
         }
 
