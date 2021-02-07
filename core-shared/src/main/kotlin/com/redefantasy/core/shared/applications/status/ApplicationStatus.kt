@@ -32,7 +32,7 @@ open class ApplicationStatus(
                 .tag("application_type", this.applicationType.name)
 
         if (this.server != null) {
-            builder.tag("server_name", this.server.name)
+            builder.tag("server_name", this.server.getName())
         }
 
         builder.addField("address", String.format(

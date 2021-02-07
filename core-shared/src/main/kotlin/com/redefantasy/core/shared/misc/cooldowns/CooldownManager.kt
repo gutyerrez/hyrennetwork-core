@@ -18,7 +18,7 @@ class CooldownManager {
 
         cooldown.start(any, duration)
 
-        this.CACHE.put(user.id, cooldown)
+        this.CACHE.put(user.getUniqueId(), cooldown)
     }
 
     fun inCooldown(user: User, any: Any): Boolean {

@@ -1,6 +1,10 @@
 dependencies {
     // waterfall proxy
-    api("io.github.waterfallmc:waterfall-proxy:1.16-R0.4-SNAPSHOT")
+    api("io.github.waterfallmc:waterfall-proxy:1.16-R0.5-SNAPSHOT")
+
+    // exposed
+    api("org.jetbrains.exposed:exposed-core:0.29.1")
+    api("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
     // core shared
     implementation(project(":core-shared"))
@@ -17,7 +21,7 @@ val sources by tasks.registering(Jar::class) {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            from(components["java"])
+            from(components["kotlin"])
             artifact(sources.get())
         }
     }

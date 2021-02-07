@@ -15,5 +15,6 @@ class CreateUserPunishmentDTO(
         val duration: Long,
         val customReason: String? = null,
         val proof: String? = null,
+        val perpetual: Boolean = false,
         val hidden: Boolean = false
 )

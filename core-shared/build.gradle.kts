@@ -1,7 +1,7 @@
 dependencies {
     // kotlin lib
     implementation(kotlin("stdlib"))
-    api(kotlin("reflect"))
+    implementation(kotlin("reflect"))
 
     // google
     implementation("com.google.guava:guava:29.0-jre")

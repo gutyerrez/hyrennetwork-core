@@ -107,7 +107,7 @@ open class Echo(
     ) where T : EchoPacket, T : Respondable<R> {
         this.publishToApplication(
                 packet,
-                targetApplication.server?.name,
+                targetApplication.server?.getName(),
                 targetApplication.name
         )
     }
@@ -119,7 +119,7 @@ open class Echo(
     ) where T : EchoPacket, T : Respondable<R> {
         this.publishToApplication(
                 packet,
-                targetApplication.server?.name,
+                targetApplication.server?.getName(),
                 targetApplication.name,
                 onResponse
         )

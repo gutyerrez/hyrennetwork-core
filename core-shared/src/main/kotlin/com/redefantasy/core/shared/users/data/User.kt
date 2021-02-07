@@ -7,6 +7,7 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.punishments.data.UserPunishment
+import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
 import java.util.stream.Collectors
@@ -15,7 +16,7 @@ import java.util.stream.Collectors
  * @author SrGutyerrez
  **/
 data class User(
-        val id: UUID,
+        val id: EntityID<UUID>,
         val name: String,
         var password: String? = null,
         var discordId: Long? = null,
@@ -30,11 +31,13 @@ data class User(
         var updatedAt: DateTime? = null
 ) {
 
+    fun getUniqueId() = this.id.value
+
     fun getGroups(server: Server? = null): List<Group> {
         return if (server == null) {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.id) ?: listOf(Group.DEFAULT)
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: listOf(Group.DEFAULT)
         } else {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(this.id, server.name) ?: listOf(Group.DEFAULT)
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: listOf(Group.DEFAULT)
         }
     }
 
@@ -57,11 +60,11 @@ data class User(
     }
 
     fun getConnectedProxyName(): String {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "undefined"
+        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "Desconhecido"
     }
 
     fun getConnectedAddress(): String {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchConnectedAddress(this) ?: "undefined"
+        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchConnectedAddress(this) ?: "Desconhecido"
     }
 
     fun getConnectedBukkitApplication(): Application? {
@@ -73,7 +76,7 @@ data class User(
     }
 
     fun getPunishments(): List<UserPunishment> {
-        return CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
+        return CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
     }
 
     fun getActivePunishments(): List<UserPunishment> {
@@ -91,7 +94,7 @@ data class User(
 
     fun getFriends(): List<User> {
         val friends = mutableListOf<User>()
-        val _friends = CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchByUserId(this.id) ?: emptyList()
+        val _friends = CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
 
         _friends.stream()
                 .map {
@@ -108,7 +111,7 @@ data class User(
 
     fun getIgnored(): List<User> {
         val ignored = mutableListOf<User>()
-        val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.id) ?: emptyList()
+        val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
 
         _ignored.stream()
                 .map {
@@ -127,7 +130,7 @@ data class User(
         val preferences = mutableMapOf<String, Boolean>()
 
         val userPreferences = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
-                this.id
+                this.getUniqueId()
         ) ?: emptyList()
 
         userPreferences.forEach { preferences[it.preference.name] = it.status }
@@ -139,7 +142,7 @@ data class User(
         val reports = mutableMapOf<ReportCategory, Int>()
 
         CoreProvider.Cache.Redis.USERS_REPORTS.provide().fetchByUserId(
-                this.id
+                this.getUniqueId()
         ).forEach {
             val count = reports[it.reportCategory] ?: 0
 

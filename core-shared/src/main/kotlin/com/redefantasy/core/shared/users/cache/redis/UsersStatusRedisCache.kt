@@ -21,7 +21,7 @@ class UsersStatusRedisCache : RedisCache {
 
     fun isOnline(user: User): Boolean {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             return@use it.exists(key)
         }
@@ -29,7 +29,7 @@ class UsersStatusRedisCache : RedisCache {
 
     fun fetchConnectedAddress(user: User): String? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             return@use it.hget(key, "connected_address")
         }
@@ -37,7 +37,7 @@ class UsersStatusRedisCache : RedisCache {
 
     fun fetchProxyApplication(user: User): Application? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             return@use com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                     it.hget(key, "proxy_application")
@@ -47,7 +47,7 @@ class UsersStatusRedisCache : RedisCache {
 
     fun fetchBukkitApplication(user: User): Application? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             return@use com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                     it.hget(key, "bukkit_application")
@@ -91,7 +91,7 @@ class UsersStatusRedisCache : RedisCache {
 
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             pipeline.hmset(key, map)
             pipeline.expire(key, this.TTL_SECONDS)
@@ -101,7 +101,7 @@ class UsersStatusRedisCache : RedisCache {
 
     fun delete(user: User) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.id)
+            val key = this.getKey(user.getUniqueId())
 
             it.del(key)
         }

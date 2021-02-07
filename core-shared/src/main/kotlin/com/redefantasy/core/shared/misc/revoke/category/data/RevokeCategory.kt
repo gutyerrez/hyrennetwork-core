@@ -1,12 +1,13 @@
 package com.redefantasy.core.shared.misc.revoke.category.data
 
 import com.redefantasy.core.shared.groups.Group
+import org.jetbrains.exposed.dao.id.EntityID
 
 /**
  * @author SrGutyerrez
  **/
 data class RevokeCategory(
-        val name: String,
+        val name: EntityID<String>,
         val displayName: String,
         private val description: String,
         val group: Group,
@@ -16,10 +17,13 @@ data class RevokeCategory(
     fun getDescription(): String {
         val builder = StringBuilder()
 
-        if (this.description.contains("\n")) {
-            this.description.split("\n").forEach {
-                builder.append(it)
-                        .append("\n")
+        if (this.description.contains("\\n")) {
+            val descriptions = this.description.split("\\n")
+
+            descriptions.forEachIndexed { index, text ->
+                builder.append(text)
+
+                if (index + 1 < descriptions.size) builder.append("\n")
             }
         } else builder.append(this.description)
 

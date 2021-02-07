@@ -21,7 +21,7 @@ subprojects {
     tasks {
         compileKotlin {
             kotlinOptions {
-                jvmTarget = "15"
+                jvmTarget = "1.8"
             }
         }
     }

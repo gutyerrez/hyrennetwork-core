@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.environment
 
-import com.google.common.collect.Maps
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.redefantasy.core.shared.CoreConstants
@@ -13,7 +12,7 @@ import java.io.FileNotFoundException
  **/
 object Env {
 
-    private val ENVIRONMENT_MAP = Maps.newHashMap<String, JsonElement>();
+    private val ENVIRONMENT_MAP = mutableMapOf<String, JsonElement?>()
 
     private var INITIALIZED = false
 
@@ -26,7 +25,7 @@ object Env {
 
         val contents = FileUtils.readFileToString(file)
 
-        val json = com.redefantasy.core.shared.CoreConstants.GSON.fromJson(contents, JsonObject::class.java)
+        val json = CoreConstants.GSON.fromJson(contents, JsonObject::class.java)
 
         FileUtils.mapJsonObject("", json, ENVIRONMENT_MAP)
 

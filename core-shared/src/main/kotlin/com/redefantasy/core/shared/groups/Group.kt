@@ -1,5 +1,7 @@
 package com.redefantasy.core.shared.groups
 
+import com.redefantasy.core.shared.misc.utils.ChatColor
+
 /**
  * @author SrGutyerrez
  **/
@@ -23,5 +25,7 @@ enum class Group(
     ULTIMATE,
     PREMIUM,
     DEFAULT;
+
+    fun getFancyDisplayName() = "${ChatColor.fromHEX(color ?: "")}$displayName"
 
 }

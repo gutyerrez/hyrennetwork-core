@@ -19,7 +19,7 @@ class ServerDAO(
     val serverType by ServersTable.serverType
 
     fun asServer(): Server = Server(
-            this.name.value,
+            this.name,
             this.displayName,
             this.serverType
     )

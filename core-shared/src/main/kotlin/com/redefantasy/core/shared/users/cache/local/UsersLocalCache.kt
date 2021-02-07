@@ -7,6 +7,8 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByDiscordIdDTO
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByIdDTO
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByNameDTO
+import com.redefantasy.core.shared.users.storage.table.UsersTable
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +21,7 @@ class UsersLocalCache : LocalCache {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build<UUID, User?> {
                 CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchById(
-                        FetchUserByIdDTO(it)
+                        FetchUserByIdDTO(EntityID(it, UsersTable))
                 )
             }
 

@@ -21,7 +21,7 @@ class RevokeCategoryDAO(
     val enabled by RevokeCategoriesTable.enabled
 
     fun asRevokeCategory() = RevokeCategory(
-            this.id.value,
+            this.id,
             this.displayName,
             this.description,
             this.group,

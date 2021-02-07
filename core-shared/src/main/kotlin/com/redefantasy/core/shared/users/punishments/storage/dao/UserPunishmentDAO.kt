@@ -33,12 +33,12 @@ class UserPunishmentDAO(
     var updatedAt by UsersPunishmentsTable.updatedAt
 
     fun asUserPunishment() = UserPunishment(
-            this.id.value,
+            this.id,
             this.userId,
             this.stafferId,
             this.startTime,
             this.punishType,
-            com.redefantasy.core.shared.CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(
+            CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(
                     this.punishCategory?.value ?: ""
             ),
             this.duration,
@@ -46,7 +46,7 @@ class UserPunishmentDAO(
             this.proof,
             this.revokeStafferId,
             this.revokeTime,
-            com.redefantasy.core.shared.CoreProvider.Cache.Local.REVOKE_CATEGORIES.provide().fetchByName(
+            CoreProvider.Cache.Local.REVOKE_CATEGORIES.provide().fetchByName(
                     this.punishCategory?.value ?: ""
             ),
             this.hidden,

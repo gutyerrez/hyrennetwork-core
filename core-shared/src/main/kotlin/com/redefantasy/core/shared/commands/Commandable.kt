@@ -7,7 +7,11 @@ import com.redefantasy.core.shared.commands.restriction.entities.CommandRestrict
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.wrapper.CoreWrapper
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ClickEvent
+import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
+import java.util.stream.Collectors
 
 /**
  * @author SrGutyerrez
@@ -15,6 +19,17 @@ import net.md_5.bungee.api.chat.TextComponent
 interface Commandable<T> {
 
     fun getName(): String
+
+    fun getDescription(): String? = null
+
+    fun getUsage(): Array<BaseComponent> {
+        val commandName = this.getParent()?.getName() ?: this.getName()
+        val arguments = this.getArguments()?.stream()?.map {
+            "<${it.name}>"
+        }?.distinct()?.collect(Collectors.joining(" ")) ?: ""
+
+        return ComponentBuilder("${ChatColor.RED}Utilize /$commandName $arguments.").create()
+    }
 
     fun getAliases(): Array<String>
 
@@ -75,6 +90,60 @@ interface Commandable<T> {
                     return
                 }
             }
+        }
+
+        if (this.getArguments() !== null && this.getArguments()!!.size > args.size) {
+            val componentBuilder = ComponentBuilder("\n")
+                .append("§2Comandos disponíveis:")
+                .append("\n\n")
+
+            val commandName = this.getParent()?.getName() ?: this.getName()
+
+            if (this.getSubCommands<Commandable<T>>() !== null) {
+                this.getSubCommands<Commandable<T>>()!!.forEach { commandable, _ ->
+                    if (commandable.getArguments() !== null) {
+                        val arguments = commandable.getArguments()!!.stream().map {
+                            "<${it.name}>"
+                        }.distinct().collect(Collectors.joining(" "))
+
+                        componentBuilder.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${this.getDescription() ?: ""}")
+                            .event(ClickEvent(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                "/$commandName ${commandable.getName()} "
+                            ))
+                    } else {
+                        componentBuilder.append("§a/$commandName ${commandable.getName()} §8- §7${this.getDescription() ?: ""}")
+                            .event(ClickEvent(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                "/$commandName ${commandable.getName()} "
+                            ))
+                    }
+                }
+            } else if (this.getArguments() !== null) {
+                val arguments = this.getArguments()!!.stream().map {
+                    "<${it.name}>"
+                }.distinct().collect(Collectors.joining(" "))
+
+                componentBuilder.append("§a/$commandName $arguments §8- §7${this.getDescription() ?: ""}")
+                    .event(ClickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND,
+                        "/$commandName "
+                    ))
+            } else {
+                componentBuilder.append("§a/$commandName §8- §7${this.getDescription() ?: ""}")
+                    .event(ClickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND,
+                        "/$commandName "
+                    ))
+            }
+
+            componentBuilder.append("\n")
+
+            CoreWrapper.WRAPPER.sendMessage(
+                this.getSenderName(commandSender),
+                componentBuilder.create()
+            )
+            return
         }
 
         try {

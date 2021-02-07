@@ -12,13 +12,13 @@ enum class TimeCode(
         val aliases: Array<String>
 ) {
 
-    YEAR(12 * 30 * 24 * 60 * 60 * 1000L, "year", "years", arrayOf("y")),
-    MONTH(30 * 24 * 60 * 60 * 1000L, "month", "months", arrayOf("m")),
-    WEEK(7 * 24 * 60 * 60 * 1000L, "week", "weeks", arrayOf("w")),
-    DAY(24 * 60 * 60 * 1000L, "day", "days", arrayOf("d")),
-    HOUR(60 * 60 * 1000L, "hour", "hours", arrayOf("h")),
-    MINUTE(60 * 1000L, "minute", "minutes", arrayOf("m")),
-    SECOND(1000L, "second", "seconds", arrayOf("s"));
+    YEAR(12 * 30 * 24 * 60 * 60 * 1000L, "ano", "anos", arrayOf("a")),
+    MONTH(30 * 24 * 60 * 60 * 1000L, "mês", "meses", arrayOf("m")),
+    WEEK(7 * 24 * 60 * 60 * 1000L, "semana", "semanas", arrayOf("s")),
+    DAY(24 * 60 * 60 * 1000L, "dia", "dias", arrayOf("d")),
+    HOUR(60 * 60 * 1000L, "hora", "horas", arrayOf("h")),
+    MINUTE(60 * 1000L, "minuto", "minutos", arrayOf("m")),
+    SECOND(1000L, "segundo", "segundos", arrayOf("s"));
 
     companion object {
 
@@ -93,7 +93,7 @@ enum class TimeCode(
             do {
                 val char = builder[current]
 
-                if (char == ',') builder.replace(current, current + 1, " and")
+                if (char == ',') builder.replace(current, current + 1, " e")
 
                 current++
             } while (builder.length < current)

@@ -27,7 +27,7 @@ class UserDAO(
     var updatedAt by UsersTable.updatedAt
 
     fun asUser(): User = User(
-            this.id.value,
+            this.id,
             this.name,
             this.password,
             this.discordId,

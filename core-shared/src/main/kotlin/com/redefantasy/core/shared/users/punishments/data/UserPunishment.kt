@@ -12,22 +12,22 @@ import java.util.*
  * @author SrGutyerrez
  **/
 data class UserPunishment(
-        val id: Int,
-        val userId: EntityID<UUID>,
-        val stafferId: EntityID<UUID>,
-        val startTime: DateTime? = null,
-        val punishType: PunishType,
-        val punishCategory: PunishCategory? = null,
-        val duration: Long,
-        val customReason: String? = null,
-        val proof: String? = null,
-        val revokeStafferId: EntityID<UUID>? = null,
-        val revokeTime: DateTime? = null,
-        val revokeCategory: RevokeCategory? = null,
-        val hidden: Boolean = false,
-        val perpetual: Boolean = false,
-        val createdAt: DateTime? = null,
-        val updatedAt: DateTime? = null
+    val id: EntityID<Int>,
+    val userId: EntityID<UUID>,
+    val stafferId: EntityID<UUID>,
+    val startTime: DateTime? = null,
+    val punishType: PunishType,
+    val punishCategory: PunishCategory? = null,
+    val duration: Long,
+    val customReason: String? = null,
+    val proof: String? = null,
+    val revokeStafferId: EntityID<UUID>? = null,
+    val revokeTime: DateTime? = null,
+    val revokeCategory: RevokeCategory? = null,
+    val hidden: Boolean = false,
+    val perpetual: Boolean = false,
+    val createdAt: DateTime = DateTime.now(),
+    val updatedAt: DateTime? = null
 ) {
 
     fun getColor(): ChatColor {

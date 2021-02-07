@@ -43,7 +43,7 @@ class PostgresUsersPunishmentsRepository : IUsersPunishmentsRepository {
         }
     }
 
-    override fun create(createUserPunishmentDTO: CreateUserPunishmentDTO): UserPunishment? {
+    override fun create(createUserPunishmentDTO: CreateUserPunishmentDTO): UserPunishment {
         return transaction {
             return@transaction UserPunishmentDAO.new {
                 this.userId = createUserPunishmentDTO.userId
@@ -53,6 +53,7 @@ class PostgresUsersPunishmentsRepository : IUsersPunishmentsRepository {
                 this.duration = createUserPunishmentDTO.duration
                 this.customReason = createUserPunishmentDTO.customReason
                 this.proof = createUserPunishmentDTO.proof
+                this.perpetual = createUserPunishmentDTO.perpetual
                 this.hidden = createUserPunishmentDTO.hidden
             }.asUserPunishment()
         }

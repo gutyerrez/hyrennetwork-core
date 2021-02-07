@@ -102,7 +102,7 @@ class EchoBufferOutput {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
-            this.writeString(server.name)
+            this.writeString(server.getName())
         }
     }
 

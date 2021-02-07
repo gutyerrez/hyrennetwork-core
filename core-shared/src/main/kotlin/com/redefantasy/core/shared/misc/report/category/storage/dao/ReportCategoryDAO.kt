@@ -20,7 +20,7 @@ class ReportCategoryDAO(
     val enabled by ReportCategoriesTable.enabled
 
     fun asReportCategory() = ReportCategory(
-            this.id.value,
+            this.id,
             this.displayName,
             this.description,
             this.enabled
