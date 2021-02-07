@@ -26,7 +26,11 @@ subprojects {
         }
     }
 
-    setBuildDir("/home/cloud/outputs")
+    sourceSets {
+        main {
+            java.outputDir = file("/home/cloud/outputs")
+        }
+    }
 
     group = "com.redefantasy"
     version = "0.1-ALPHA"
