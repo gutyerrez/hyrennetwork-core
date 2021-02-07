@@ -23,6 +23,19 @@ subprojects {
             kotlinOptions {
                 jvmTarget = "1.8"
             }
+
+            doLast {
+                copy {
+                    from("build/libs/${project.name}")
+                    to("/home/cloud/output")
+                }
+            }
+        }
+
+        shadowJar {
+            archiveBaseName.set(project.name)
+            archiveVersion.set(null as String?)
+            archiveClassifier.set(null as String?)
         }
     }
 

@@ -65,10 +65,6 @@ val sources by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
-    destinationDir = file("/home/cloud/output")
-}
-
 publishing {
     publications {
         create<MavenPublication>("maven") {
