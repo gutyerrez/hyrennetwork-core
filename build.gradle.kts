@@ -33,9 +33,7 @@ subprojects {
         }
 
         shadowJar {
-            archiveBaseName.set(project.name)
-            archiveVersion.set(null as String?)
-            archiveClassifier.set(null as String?)
+            archiveFileName.set(project.name)
         }
     }
 
