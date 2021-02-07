@@ -26,14 +26,14 @@ subprojects {
 
             doLast {
                 copy {
-                    from("build/libs/${project.name}")
+                    from("build/libs/${project.name}.jar")
                     to("/home/cloud/output")
                 }
             }
         }
 
         shadowJar {
-            archiveFileName.set(project.name)
+            archiveFileName.set("${project.name}.jar")
         }
     }
 
