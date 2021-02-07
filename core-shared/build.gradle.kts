@@ -62,6 +62,8 @@ val sources by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     archiveVersion.set(null as String?)
 
+    destinationDirectory.set(file("/home/cloud/output"))
+
     from(sourceSets.main.get().allSource)
 }
 
