@@ -28,7 +28,7 @@ subprojects {
 
     sourceSets {
         main {
-            output.setResourcesDir(file("/home/cloud/outputs"))
+            java.outputDir = file("/home/cloud/outputs")
         }
     }
 
