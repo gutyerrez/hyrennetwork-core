@@ -20,15 +20,11 @@ subprojects {
 
     tasks {
         compileKotlin {
+            destinationDir = file("/home/cloud/outputs")
+
             kotlinOptions {
                 jvmTarget = "1.8"
             }
-        }
-    }
-
-    sourceSets {
-        main {
-            java.outputDir = file("/home/cloud/outputs")
         }
     }
 
