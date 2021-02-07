@@ -28,7 +28,9 @@ subprojects {
                 val fileName = "${project.name}.jar"
                 val file = file("build/libs/$fileName")
 
-                println("Existe: ${file.exists()}")
+                val toDelete = file("/home/cloud/output/$fileName")
+                
+                if (toDelete.exists()) toDelete.delete()
 
                 file.copyTo(file("/home/cloud/output/$fileName"))
                 file.delete()
