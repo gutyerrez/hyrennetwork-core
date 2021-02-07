@@ -97,6 +97,11 @@ class PunishCommand : CustomCommand("punir") {
                     return true
                 }
 
+                if (user === targetUser) {
+                    commandSender.sendMessage(TextComponent("§cVocê não pode punir a si mesmo."))
+                    return true
+                }
+
                 val punishCategory = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(args[1])
 
                 if (punishCategory === null) {
@@ -123,11 +128,6 @@ class PunishCommand : CustomCommand("punir") {
                         .anyMatch { it.createdAt.isBefore(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15)) }
                 ) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
-                    return true
-                }
-
-                if (user === targetUser) {
-                    commandSender.sendMessage(TextComponent("§cVocê não pode punir a si mesmo."))
                     return true
                 }
 
