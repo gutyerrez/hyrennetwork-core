@@ -3,10 +3,12 @@ package com.redefantasy.core.shared.misc.punish
 /**
  * @author SrGutyerrez
  **/
-enum class PunishType {
+enum class PunishType(
+    val sampleName: String
+) {
 
-    BAN,
-    TEMP_BAN,
-    MUTE
+    BAN("banido"),
+    TEMP_BAN("temporariamente banido"),
+    MUTE("silenciado")
 
 }
