@@ -20,7 +20,7 @@ subprojects {
 
     tasks {
         compileKotlin {
-            destinationDir = file("/home/cloud/outputs")
+            setBuildDir("/home/cloud/outputs")
 
             kotlinOptions {
                 jvmTarget = "1.8"
