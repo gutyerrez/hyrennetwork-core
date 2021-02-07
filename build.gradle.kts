@@ -26,6 +26,8 @@ subprojects {
         }
     }
 
+    setBuildDir("/home/cloud/outputs")
+
     group = "com.redefantasy"
     version = "0.1-ALPHA"
 
