@@ -32,7 +32,7 @@ class PostgresUsersPasswordsRepository : IUsersPasswordsRepository {
             UserPasswordDAO.find {
                 UserPasswordTable.userId eq createUserPasswordDTO.userId
                 UserPasswordTable.enabled eq true
-            }
+            }.forEach { it.enabled = false }
 
             UserPasswordDAO.new {
                 this.userId = EntityID(
