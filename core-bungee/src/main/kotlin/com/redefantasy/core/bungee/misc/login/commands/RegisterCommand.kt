@@ -53,25 +53,30 @@ class RegisterCommand : CustomCommand("registrar") {
             return false
         }
 
-        val currentPasswords = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(_user.getUniqueId())
+        try {
 
-        if (currentPasswords.isNotEmpty() && currentPasswords.stream().anyMatch {
-                it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
-        }) {
-            commandSender.sendMessage(TextComponent("§cVocê já usou essa senha anteriormente."))
-            return false
-        }
+            val currentPasswords = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(_user.getUniqueId())
 
-        CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
-            CreateUserPasswordDTO(
-                _user.getUniqueId(),
-                args[0]
+            if (currentPasswords.isNotEmpty() && currentPasswords.stream().anyMatch {
+                    it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
+                }) {
+                commandSender.sendMessage(TextComponent("§cVocê já usou essa senha anteriormente."))
+                return false
+            }
+
+            CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
+                CreateUserPasswordDTO(
+                    _user.getUniqueId(),
+                    args[0]
+                )
             )
-        )
 
-        _user.setLogged(true)
+            _user.setLogged(true)
 
-        commandSender.sendMessage(TextComponent("§eRegistrado com sucesso."))
+            commandSender.sendMessage(TextComponent("§eRegistrado com sucesso."))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
         return false
     }
 
