@@ -8,6 +8,7 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
 import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.servers.data.Server
+import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import com.redefantasy.core.shared.users.punishments.data.UserPunishment
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
@@ -39,7 +40,9 @@ data class User(
     }
 
     fun attemptLogin(password: String): Boolean {
-        val userPasswords = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(this.getUniqueId())
+        val userPasswords = CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+            FetchUserPasswordByUserIdDTO(this.getUniqueId())
+        )
 
         if (userPasswords.isEmpty()) return false
 
