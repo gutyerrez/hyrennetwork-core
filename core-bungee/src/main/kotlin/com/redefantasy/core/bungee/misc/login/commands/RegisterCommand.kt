@@ -7,6 +7,7 @@ import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.passwords.storage.dto.CreateUserPasswordDTO
+import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import com.redefantasy.core.shared.users.storage.dto.CreateUserDTO
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
@@ -29,7 +30,10 @@ class RegisterCommand : CustomCommand("registrar") {
     )
 
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
-        if (user !== null && CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(user.getUniqueId()).isNotEmpty()) {
+        if (user !== null && CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+                FetchUserPasswordByUserIdDTO(user.getUniqueId())
+            ).isNotEmpty()
+        ) {
             commandSender.sendMessage(TextComponent("§cVocê já está registrado."))
             return false
         }
@@ -55,7 +59,10 @@ class RegisterCommand : CustomCommand("registrar") {
 
         try {
 
-            val currentPasswords = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(_user.getUniqueId())
+            val currentPasswords =
+                CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+                    FetchUserPasswordByUserIdDTO(_user.getUniqueId())
+                )
 
             if (currentPasswords.isNotEmpty() && currentPasswords.stream().anyMatch {
                     it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])

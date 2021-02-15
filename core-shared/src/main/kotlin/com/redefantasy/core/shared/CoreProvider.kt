@@ -46,7 +46,6 @@ import com.redefantasy.core.shared.users.groups.due.storage.repositories.impleme
 import com.redefantasy.core.shared.users.ignored.cache.local.UsersIgnoredLocalCache
 import com.redefantasy.core.shared.users.ignored.storage.repositories.IUsersIgnoredRepository
 import com.redefantasy.core.shared.users.ignored.storage.repositories.implementations.MongoUsersIgnoredRepository
-import com.redefantasy.core.shared.users.passwords.cache.local.UsersPasswordsLocalCache
 import com.redefantasy.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
 import com.redefantasy.core.shared.users.passwords.storage.repositories.implementations.PostgresUsersPasswordsRepository
 import com.redefantasy.core.shared.users.preferences.cache.local.UsersPreferencesLocalCache
@@ -95,7 +94,6 @@ object CoreProvider {
         PROVIDERS.add(Cache.Local.USERS_FRIENDS)
         PROVIDERS.add(Cache.Local.USERS_IGNORED)
         PROVIDERS.add(Cache.Local.USERS_PREFERENCES)
-        PROVIDERS.add(Cache.Local.USERS_PASSWORDS)
 
         // redis cache
         PROVIDERS.add(Cache.Redis.APPLICATIONS_STATUS)
@@ -353,10 +351,6 @@ object CoreProvider {
 
             val USERS_PREFERENCES = LocalCacheProvider(
                 UsersPreferencesLocalCache()
-            )
-
-            val USERS_PASSWORDS = LocalCacheProvider(
-                UsersPasswordsLocalCache()
             )
 
         }

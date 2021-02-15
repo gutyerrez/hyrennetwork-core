@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.users.data.User
+import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
@@ -28,8 +29,9 @@ class LoginCommand : CustomCommand("logar") {
             return false
         }
 
-        val currentPassword = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(user.getUniqueId())
-            .stream()
+        val currentPassword = CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+            FetchUserPasswordByUserIdDTO(user.getUniqueId())
+        ).stream()
             .filter { it.enabled }
             .findFirst()
             .orElse(null)
