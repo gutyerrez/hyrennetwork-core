@@ -67,7 +67,7 @@ class RegisterCommand : CustomCommand("registrar") {
             CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
                 CreateUserPasswordDTO(
                     _user.getUniqueId(),
-                    args[0]
+                    EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
                 )
             )
 
