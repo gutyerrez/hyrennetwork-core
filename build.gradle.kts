@@ -18,6 +18,8 @@ subprojects {
     plugins.apply("maven-publish")
     plugins.apply("java")
 
+    val fileName = "${project.name}.jar"
+
     tasks {
         compileKotlin {
             kotlinOptions {
@@ -25,7 +27,6 @@ subprojects {
             }
 
             doLast {
-                val fileName = "${project.name}.jar"
                 val file = file("build/libs/$fileName")
 
                 val toDelete = file("/home/cloud/output/$fileName")
@@ -38,7 +39,7 @@ subprojects {
         }
 
         shadowJar {
-            archiveFileName.set("${project.name}.jar")
+            archiveFileName.set(fileName)
         }
     }
 
