@@ -34,7 +34,7 @@ class ServerConnector : ServerConnector {
 //        if (liveApplication === null) return null
 
         return BungeeServerInfo(
-            InetSocketAddress("158.69.120.87", 10003)
+            InetSocketAddress("158.69.120.87", 10004)
         )
     }
 
