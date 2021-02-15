@@ -60,7 +60,7 @@ class RegisterCommand : CustomCommand("registrar") {
             return false
         }
 
-        CoreProvider.Repositories.Postgres.USERS_PASSWORDS.provide().create(
+        CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
             CreateUserPasswordDTO(
                 _user.getUniqueId(),
                 args[0]
