@@ -6,6 +6,9 @@ dependencies {
     api("org.jetbrains.exposed:exposed-core:0.29.1")
     api("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
+    // eventbus
+    api("org.greenrobot:eventbus:3.2.0")
+
     // core shared
     implementation(project(":core-shared"))
 }

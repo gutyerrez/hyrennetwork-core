@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder
  */
 class UserPunishedPacketListener : EchoListener {
 
+    @Subscribe
     fun on(packet: UserPunishedPacket) {
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.userId)
         val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.stafferId)
