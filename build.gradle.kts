@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")version "1.4.30-RC"
+    kotlin("jvm") version "1.4.30-RC"
 
     id("java")
     id("maven-publish")
@@ -18,28 +18,28 @@ subprojects {
     plugins.apply("maven-publish")
     plugins.apply("java")
 
-    val fileName = "${project.name}.jar"
-
     tasks {
         compileKotlin {
             kotlinOptions {
                 jvmTarget = "1.8"
             }
+        }
+
+        shadowJar {
+            val fileName = "${project.name}.jar"
+
+            archiveFileName.set("${project.name}.jar")
 
             doLast {
                 val file = file("build/libs/$fileName")
 
                 val toDelete = file("/home/cloud/output/$fileName")
-                
+
                 if (toDelete.exists()) toDelete.delete()
 
                 file.copyTo(file("/home/cloud/output/$fileName"))
                 file.delete()
             }
-        }
-
-        shadowJar {
-            archiveFileName.set(fileName)
         }
     }
 
