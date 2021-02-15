@@ -16,7 +16,7 @@ class UsersPasswordsLocalCache : LocalCache {
     private val CACHE = Caffeine.newBuilder()
         .expireAfterWrite(5, TimeUnit.MINUTES)
         .build<UUID, List<UserPassword>> {
-            CoreProvider.Repositories.Postgres.USERS_PASSWORDS.provide().fetchByUserId(
+            CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
                 FetchUserPasswordByUserIdDTO(it)
             )
         }
