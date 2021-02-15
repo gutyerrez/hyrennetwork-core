@@ -28,7 +28,6 @@ class UserDAO(
     fun asUser(): User = User(
             this.id,
             this.name,
-            this.password,
             this.discordId,
             this.twoFactorAuthenticationEnabled,
             this.twoFactorAuthenticationCode,
