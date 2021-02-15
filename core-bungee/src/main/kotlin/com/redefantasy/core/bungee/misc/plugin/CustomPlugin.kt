@@ -23,6 +23,8 @@ abstract class CustomPlugin(
             echo.defaultSubscriber = echo.subscribe { _, runnable ->
                 runnable.run()
             }
+
+            println("Registra")
         }
     }
 
