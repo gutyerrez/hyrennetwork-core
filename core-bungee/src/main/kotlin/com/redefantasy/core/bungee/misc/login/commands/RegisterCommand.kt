@@ -49,7 +49,7 @@ class RegisterCommand : CustomCommand("registrar") {
         }
 
         if (args[0] !== args[1]) {
-            commandSender.sendMessage(TextComponent("§cAs senhas não coincidem."))
+            commandSender.sendMessage(TextComponent("§cAs senhas não coincidem. (${args[0]}|${args[1]})"))
             return false
         }
 
