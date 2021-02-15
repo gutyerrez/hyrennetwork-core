@@ -3,12 +3,14 @@ package com.redefantasy.core.bungee.misc.punish.packets
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferInput
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
 import com.redefantasy.core.shared.echo.api.packets.EchoPacket
+import com.redefantasy.core.shared.echo.api.packets.annotations.ServerPacket
 import com.redefantasy.core.shared.misc.punish.PunishType
 import java.util.*
 
 /**
  * @author Gutyerrez
  */
+@ServerPacket
 class UserPunishedPacket(
     var userId: UUID,
     var stafferId: UUID,

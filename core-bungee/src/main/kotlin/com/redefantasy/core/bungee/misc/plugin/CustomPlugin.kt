@@ -20,12 +20,8 @@ abstract class CustomPlugin(
 
             val echo = CoreProvider.Databases.Redis.ECHO.provide()
 
-            try {
-                echo.defaultSubscriber = echo.subscribe { _, runnable ->
-                    runnable.run()
-                }
-            } catch (ex: Exception) {
-                ex.printStackTrace()
+            echo.defaultSubscriber = echo.subscribe { _, runnable ->
+                runnable.run()
             }
         }
     }
