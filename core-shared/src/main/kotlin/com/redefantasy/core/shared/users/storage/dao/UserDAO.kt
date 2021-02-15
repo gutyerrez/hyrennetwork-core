@@ -14,7 +14,6 @@ class UserDAO(
     companion object : UUIDEntityClass<UserDAO>(UsersTable)
 
     var name by UsersTable.name
-    var password by UsersTable.password
     var discordId by UsersTable.discordId
     var twoFactorAuthenticationEnabled by UsersTable.twoFactorAuthenticationEnabled
     var twoFactorAuthenticationCode by UsersTable.twoFactorAuthenticationCode

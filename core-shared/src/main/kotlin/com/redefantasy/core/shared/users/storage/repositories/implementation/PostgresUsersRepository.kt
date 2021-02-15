@@ -54,12 +54,12 @@ class PostgresUsersRepository : IUsersRepository {
         }
     }
 
-    override fun create(createUserDTO: CreateUserDTO) {
-        transaction {
-            UserDAO.new(createUserDTO.id) {
+    override fun create(createUserDTO: CreateUserDTO): User {
+        return transaction {
+            return@transaction UserDAO.new(createUserDTO.id) {
                 this.name = createUserDTO.name
                 this.lastAddress = createUserDTO.lastAddress
-            }
+            }.asUser()
         }
     }
 

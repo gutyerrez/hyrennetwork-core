@@ -10,7 +10,7 @@ import org.jetbrains.exposed.dao.id.EntityID
  * @author SrGutyerrez
  **/
 class UserGroupDueDAO(
-        id: EntityID<Int>
+    id: EntityID<Int>
 ) : IntEntity(id) {
 
     companion object : IntEntityClass<UserGroupDueDAO>(UsersGroupsDueTable)
@@ -20,7 +20,7 @@ class UserGroupDueDAO(
     val serverName by UsersGroupsDueTable.serverName
 
     fun server() = com.redefantasy.core.shared.CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-            this.serverName.value
+        this.serverName.value
     )
 
     fun group() = this.groupName

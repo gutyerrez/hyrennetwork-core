@@ -35,6 +35,7 @@ import com.redefantasy.core.shared.servers.cache.local.ServersLocalCache
 import com.redefantasy.core.shared.servers.storage.repositories.IServersRepository
 import com.redefantasy.core.shared.servers.storage.repositories.implementations.PostgresServersRepository
 import com.redefantasy.core.shared.users.cache.local.UsersLocalCache
+import com.redefantasy.core.shared.users.cache.redis.UsersLoggedRedisCache
 import com.redefantasy.core.shared.users.cache.redis.UsersStatusRedisCache
 import com.redefantasy.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import com.redefantasy.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
@@ -45,6 +46,9 @@ import com.redefantasy.core.shared.users.groups.due.storage.repositories.impleme
 import com.redefantasy.core.shared.users.ignored.cache.local.UsersIgnoredLocalCache
 import com.redefantasy.core.shared.users.ignored.storage.repositories.IUsersIgnoredRepository
 import com.redefantasy.core.shared.users.ignored.storage.repositories.implementations.MongoUsersIgnoredRepository
+import com.redefantasy.core.shared.users.passwords.cache.local.UsersPasswordsLocalCache
+import com.redefantasy.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
+import com.redefantasy.core.shared.users.passwords.storage.repositories.implementations.PostgresUsersPasswordsRepository
 import com.redefantasy.core.shared.users.preferences.cache.local.UsersPreferencesLocalCache
 import com.redefantasy.core.shared.users.preferences.storage.repositories.IUsersPreferencesRepository
 import com.redefantasy.core.shared.users.preferences.storage.repositories.implementations.MongoUsersPreferencesRepository
@@ -109,15 +113,15 @@ object CoreProvider {
         preparePrimaryProviders()
 
         val address = IOUtils.toString(
-                URL("http://checkip.amazonaws.com"),
-                Charsets.UTF_8
+            URL("http://checkip.amazonaws.com"),
+            Charsets.UTF_8
         ).trim()
 
         val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByAddressAndPort(
-                FetchApplicationByAddressAndPortDTO(
-                        address,
-                        port
-                )
+            FetchApplicationByAddressAndPortDTO(
+                address,
+                port
+            )
         ) ?: throw InvalidApplicationException("Invalid application $address:$port")
 
         prepare(application)
@@ -170,14 +174,14 @@ object CoreProvider {
         object Postgres {
 
             val POSTGRE_MAIN = PostgresDatabaseProvider(
-                    InetSocketAddress(
-                            Env.getString("databases.postgresql.host"),
-                            Env.getInt("databases.postgresql.port")
-                    ),
-                    Env.getString("databases.postgresql.user"),
-                    Env.getString("databases.postgresql.password"),
-                    Env.getString("databases.postgresql.database"),
-                    Env.getString("databases.postgresql.schema")
+                InetSocketAddress(
+                    Env.getString("databases.postgresql.host"),
+                    Env.getInt("databases.postgresql.port")
+                ),
+                Env.getString("databases.postgresql.user"),
+                Env.getString("databases.postgresql.password"),
+                Env.getString("databases.postgresql.database"),
+                Env.getString("databases.postgresql.schema")
             )
 
         }
@@ -185,13 +189,13 @@ object CoreProvider {
         object Mongo {
 
             val MONGO_MAIN = MongoDatabaseProvider(
-                    InetSocketAddress(
-                            Env.getString("databases.mongo_db.host"),
-                            Env.getInt("databases.mongo_db.port")
-                    ),
-                    Env.getString("databases.mongo_db.user"),
-                    Env.getString("databases.mongo_db.password"),
-                    Env.getString("databases.mongo_db.database")
+                InetSocketAddress(
+                    Env.getString("databases.mongo_db.host"),
+                    Env.getInt("databases.mongo_db.port")
+                ),
+                Env.getString("databases.mongo_db.user"),
+                Env.getString("databases.mongo_db.password"),
+                Env.getString("databases.mongo_db.database")
             )
 
         }
@@ -199,19 +203,19 @@ object CoreProvider {
         object Redis {
 
             val REDIS_MAIN = RedisDatabaseProvider(
-                    InetSocketAddress(
-                            Env.getString("databases.redis.main.host"),
-                            Env.getInt("databases.redis.main.port")
-                    ),
-                    Env.getString("databases.redis.main.password"),
+                InetSocketAddress(
+                    Env.getString("databases.redis.main.host"),
+                    Env.getInt("databases.redis.main.port")
+                ),
+                Env.getString("databases.redis.main.password"),
             )
 
             val REDIS_ECHO = RedisDatabaseProvider(
-                    InetSocketAddress(
-                            Env.getString("databases.redis.echo.host"),
-                            Env.getInt("databases.redis.echo.port")
-                    ),
-                    Env.getString("databases.redis.echo.password")
+                InetSocketAddress(
+                    Env.getString("databases.redis.echo.host"),
+                    Env.getInt("databases.redis.echo.port")
+                ),
+                Env.getString("databases.redis.echo.password")
             )
 
             val ECHO = EchoProvider(Databases.Redis.REDIS_ECHO)
@@ -221,13 +225,13 @@ object CoreProvider {
         object Influx {
 
             val INFLUX_MAIN = InfluxDatabaseProvider(
-                    InetSocketAddress(
-                            Env.getString("databases.influx_db.host"),
-                            Env.getInt("databases.influx_db.port")
-                    ),
-                    Env.getString("databases.influx_db.user"),
-                    Env.getString("databases.influx_db.password"),
-                    Env.getString("databases.influx_db.database")
+                InetSocketAddress(
+                    Env.getString("databases.influx_db.host"),
+                    Env.getInt("databases.influx_db.port")
+                ),
+                Env.getString("databases.influx_db.user"),
+                Env.getString("databases.influx_db.password"),
+                Env.getString("databases.influx_db.database")
             )
 
         }
@@ -239,39 +243,43 @@ object CoreProvider {
         object Postgres {
 
             val GROUPS_REPOSITORY = PostgresRepositoryProvider<IGroupsRepository>(
-                    PostgresGroupsRepository::class
+                PostgresGroupsRepository::class
             )
 
             val USERS_REPOSITORY = PostgresRepositoryProvider<IUsersRepository>(
-                    PostgresUsersRepository::class
+                PostgresUsersRepository::class
             )
 
             val SERVERS_REPOSITORY = PostgresRepositoryProvider<IServersRepository>(
-                    PostgresServersRepository::class
+                PostgresServersRepository::class
             )
 
             val APPLICATIONS_REPOSITORY = PostgresRepositoryProvider<IApplicationsRepository>(
-                    PostgresApplicationsRepository::class
+                PostgresApplicationsRepository::class
             )
 
             val USERS_GROUPS_DUE_REPOSITORY = PostgresRepositoryProvider<IUsersGroupsDueRepository>(
-                    PostgresUsersGroupsDueRepository::class
+                PostgresUsersGroupsDueRepository::class
             )
 
             val REPORT_CATEGORIES_REPOSITORY = PostgresRepositoryProvider<IReportCategoriesRepository>(
-                    PostgresReportCategoriesRepository::class
+                PostgresReportCategoriesRepository::class
             )
 
             val PUNISH_CATEGORIES_REPOSITORY = PostgresRepositoryProvider<IPunishCategoriesRepository>(
-                    PostgresPunishCategoriesRepository::class
+                PostgresPunishCategoriesRepository::class
             )
 
             val REVOKE_CATEGORIES_REPOSITORY = PostgresRepositoryProvider<IRevokeCategoriesRepository>(
-                    PostgresRevokeCategoriesRepository::class
+                PostgresRevokeCategoriesRepository::class
             )
 
             val USERS_PUNISHMENTS_REPOSITORY = PostgresRepositoryProvider<IUsersPunishmentsRepository>(
-                    PostgresUsersPunishmentsRepository::class
+                PostgresUsersPunishmentsRepository::class
+            )
+
+            val USERS_PASSWORDS = PostgresRepositoryProvider<IUsersPasswordsRepository>(
+                PostgresUsersPasswordsRepository::class
             )
 
         }
@@ -280,17 +288,17 @@ object CoreProvider {
 
             val USERS_FRIENDS_REPOSITORY = MongoRepositoryProvider<IUsersFriendsRepository>(
                 CoreProvider.Databases.Mongo.MONGO_MAIN,
-                    MongoUsersFriendsRepository::class
+                MongoUsersFriendsRepository::class
             )
 
             val USERS_IGNORED_REPOSITORY = MongoRepositoryProvider<IUsersIgnoredRepository>(
                 Databases.Mongo.MONGO_MAIN,
-                    MongoUsersIgnoredRepository::class
+                MongoUsersIgnoredRepository::class
             )
 
             val USERS_PREFERENCES_REPOSITORY = MongoRepositoryProvider<IUsersPreferencesRepository>(
                 Databases.Mongo.MONGO_MAIN,
-                    MongoUsersPreferencesRepository::class
+                MongoUsersPreferencesRepository::class
             )
 
         }
@@ -302,47 +310,51 @@ object CoreProvider {
         object Local {
 
             val USERS = LocalCacheProvider(
-                    UsersLocalCache()
+                UsersLocalCache()
             )
 
             val SERVERS = LocalCacheProvider(
-                    ServersLocalCache()
+                ServersLocalCache()
             )
 
             val APPLICATIONS = LocalCacheProvider(
-                    ApplicationsLocalCache()
+                ApplicationsLocalCache()
             )
 
             val USERS_GROUPS_DUE = LocalCacheProvider(
-                    UsersGroupsDueLocalCache()
+                UsersGroupsDueLocalCache()
             )
 
             val REPORT_CATEGORIES = LocalCacheProvider(
-                    ReportCategoriesLocalCache()
+                ReportCategoriesLocalCache()
             )
 
             val PUNISH_CATEGORIES = LocalCacheProvider(
-                    PunishCategoriesLocalCache()
+                PunishCategoriesLocalCache()
             )
 
             val REVOKE_CATEGORIES = LocalCacheProvider(
-                    RevokeCategoriesLocalCache()
+                RevokeCategoriesLocalCache()
             )
 
             val USERS_PUNISHMENTS = LocalCacheProvider(
-                    UsersPunishmentsLocalCache()
+                UsersPunishmentsLocalCache()
             )
 
             val USERS_FRIENDS = LocalCacheProvider(
-                    UsersFriendsLocalCache()
+                UsersFriendsLocalCache()
             )
 
             val USERS_IGNORED = LocalCacheProvider(
-                    UsersIgnoredLocalCache()
+                UsersIgnoredLocalCache()
             )
 
             val USERS_PREFERENCES = LocalCacheProvider(
-                    UsersPreferencesLocalCache()
+                UsersPreferencesLocalCache()
+            )
+
+            val USERS_PASSWORDS = LocalCacheProvider(
+                UsersPasswordsLocalCache()
             )
 
         }
@@ -350,15 +362,19 @@ object CoreProvider {
         object Redis {
 
             val APPLICATIONS_STATUS = RedisCacheProvider(
-                    ApplicationsStatusRedisCache()
+                ApplicationsStatusRedisCache()
             )
 
             val USERS_REPORTS = RedisCacheProvider(
-                    UsersReportsRedisCache()
+                UsersReportsRedisCache()
             )
 
             val USERS_STATUS = RedisCacheProvider(
-                    UsersStatusRedisCache()
+                UsersStatusRedisCache()
+            )
+
+            val USERS_LOGGED = RedisCacheProvider(
+                UsersLoggedRedisCache()
             )
 
         }

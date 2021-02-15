@@ -1,10 +1,12 @@
 package com.redefantasy.core.shared.users.data
 
+import com.google.common.collect.Lists
 import com.google.common.primitives.Ints
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
+import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.punishments.data.UserPunishment
 import org.jetbrains.exposed.dao.id.EntityID
@@ -18,7 +20,6 @@ import java.util.stream.Collectors
 data class User(
         val id: EntityID<UUID>,
         val name: String,
-        var password: String? = null,
         var discordId: Long? = null,
         var twoFactorAuthenticationEnabled: Boolean? = null,
         var twoFactorAuthenticationCode: String? = null,
@@ -30,6 +31,24 @@ data class User(
         var createdAt: DateTime? = null,
         var updatedAt: DateTime? = null
 ) {
+
+    val loginAttempts = Lists.newArrayListWithCapacity<Long>(3)
+
+    fun setLogged(logged: Boolean) {
+        CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)
+    }
+
+    fun attemptLogin(password: String): Boolean {
+        val userPasswords = CoreProvider.Cache.Local.USERS_PASSWORDS.provide().fetchById(this.getUniqueId())
+
+        if (userPasswords.isEmpty()) return false
+
+        val successfully = userPasswords.stream().anyMatch { it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password) }
+
+        if (!successfully) loginAttempts.add(System.currentTimeMillis())
+
+        return successfully
+    }
 
     fun getUniqueId() = this.id.value
 
@@ -151,6 +170,8 @@ data class User(
 
         return reports
     }
+
+    fun isLogged() = CoreProvider.Cache.Redis.USERS_LOGGED.provide().isLogged(this)
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false
