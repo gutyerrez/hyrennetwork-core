@@ -78,6 +78,7 @@ object CoreProvider {
         PROVIDERS.add(Repositories.Postgres.PUNISH_CATEGORIES_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.REVOKE_CATEGORIES_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.USERS_PASSWORDS_REPOSITORY)
         PROVIDERS.add(Repositories.Mongo.USERS_FRIENDS_REPOSITORY)
         PROVIDERS.add(Repositories.Mongo.USERS_IGNORED_REPOSITORY)
         PROVIDERS.add(Repositories.Mongo.USERS_PREFERENCES_REPOSITORY)
@@ -94,6 +95,7 @@ object CoreProvider {
         PROVIDERS.add(Cache.Local.USERS_FRIENDS)
         PROVIDERS.add(Cache.Local.USERS_IGNORED)
         PROVIDERS.add(Cache.Local.USERS_PREFERENCES)
+        PROVIDERS.add(Cache.Local.USERS_PASSWORDS)
 
         // redis cache
         PROVIDERS.add(Cache.Redis.APPLICATIONS_STATUS)
@@ -218,7 +220,7 @@ object CoreProvider {
                 Env.getString("databases.redis.echo.password")
             )
 
-            val ECHO = EchoProvider(Databases.Redis.REDIS_ECHO)
+            val ECHO = EchoProvider(REDIS_ECHO)
 
         }
 
@@ -278,7 +280,7 @@ object CoreProvider {
                 PostgresUsersPunishmentsRepository::class
             )
 
-            val USERS_PASSWORDS = PostgresRepositoryProvider<IUsersPasswordsRepository>(
+            val USERS_PASSWORDS_REPOSITORY = PostgresRepositoryProvider<IUsersPasswordsRepository>(
                 PostgresUsersPasswordsRepository::class
             )
 

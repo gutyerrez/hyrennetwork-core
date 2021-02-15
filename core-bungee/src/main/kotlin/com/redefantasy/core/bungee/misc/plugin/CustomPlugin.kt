@@ -17,6 +17,12 @@ abstract class CustomPlugin(
             CoreProvider.prepare(
                 (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
             )
+
+            val echo = CoreProvider.Databases.Redis.ECHO.provide()
+
+            echo.defaultSubscriber = echo.subscribe { _, runnable ->
+                runnable.run()
+            }
         }
     }
 
