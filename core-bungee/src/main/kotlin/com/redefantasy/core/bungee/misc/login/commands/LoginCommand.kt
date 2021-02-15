@@ -14,6 +14,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer
  */
 class LoginCommand : CustomCommand("logar") {
 
+    override fun getDescription() = "Autenticar sua conta."
+
     override fun getCommandRestriction() = CommandRestriction.GAME
 
     override fun getArguments() = listOf(
@@ -47,6 +49,7 @@ class LoginCommand : CustomCommand("logar") {
         }
 
         user.setLogged(successfully)
+        commandSender.sendMessage("§aVocê logou com sucesso!")
         return true
     }
 

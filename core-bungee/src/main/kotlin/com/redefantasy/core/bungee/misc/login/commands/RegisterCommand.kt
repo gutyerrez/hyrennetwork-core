@@ -19,6 +19,8 @@ import java.net.InetSocketAddress
  */
 class RegisterCommand : CustomCommand("registrar") {
 
+    override fun getDescription() = "Registrar uma conta."
+
     override fun getCommandRestriction() = CommandRestriction.GAME
 
     override fun getArguments(): List<Argument> = listOf(
