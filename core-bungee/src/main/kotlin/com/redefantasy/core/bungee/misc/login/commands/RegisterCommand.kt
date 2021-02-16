@@ -34,7 +34,7 @@ class RegisterCommand : CustomCommand("registrar") {
                 FetchUserPasswordByUserIdDTO(user.getUniqueId())
             ).isNotEmpty()
         ) {
-            commandSender.sendMessage(TextComponent("§cVocê já está registrado."))
+            commandSender.sendMessage(TextComponent("§cVocê já está registrado. Utilize /login <senha>."))
             return false
         }
 
@@ -57,33 +57,29 @@ class RegisterCommand : CustomCommand("registrar") {
             return false
         }
 
-        try {
-
-            val currentPasswords =
-                CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
-                    FetchUserPasswordByUserIdDTO(_user.getUniqueId())
-                )
-
-            if (currentPasswords.isNotEmpty() && currentPasswords.stream().anyMatch {
-                    it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
-                }) {
-                commandSender.sendMessage(TextComponent("§cVocê já usou essa senha anteriormente."))
-                return false
-            }
-
-            CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
-                CreateUserPasswordDTO(
-                    _user.getUniqueId(),
-                    EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
-                )
+        val currentPasswords =
+            CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+                FetchUserPasswordByUserIdDTO(_user.getUniqueId())
             )
 
-            _user.setLogged(true)
-
-            commandSender.sendMessage(TextComponent("§eRegistrado com sucesso."))
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+        if (currentPasswords.isNotEmpty() && currentPasswords.stream().anyMatch {
+                it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
+            }) {
+            commandSender.sendMessage(TextComponent("§cVocê já usou essa senha anteriormente."))
+            return false
         }
+
+        CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().create(
+            CreateUserPasswordDTO(
+                _user.getUniqueId(),
+                EncryptionUtil.hash(EncryptionUtil.Type.SHA256, args[0])
+            )
+        )
+
+        _user.setLogged(true)
+
+        // Send title to user registered
+        println("${commandSender.name} registrou")
         return false
     }
 

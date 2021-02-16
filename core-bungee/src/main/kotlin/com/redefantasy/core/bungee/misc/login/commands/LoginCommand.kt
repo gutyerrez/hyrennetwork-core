@@ -1,5 +1,6 @@
 package com.redefantasy.core.bungee.misc.login.commands
 
+import com.redefantasy.core.bungee.CoreBungeeConstants
 import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
@@ -24,6 +25,8 @@ class LoginCommand : CustomCommand("logar") {
     )
 
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
+        commandSender as ProxiedPlayer
+
         if (user === null) {
             commandSender.sendMessage(TextComponent("§cVocê não está registrado."))
             return false
@@ -43,15 +46,21 @@ class LoginCommand : CustomCommand("logar") {
 
         val successfully = user.attemptLogin(args[0])
 
-        if (!successfully && user.loginAttempts.size >= 3) {
-            commandSender as ProxiedPlayer
-
-            commandSender.disconnect(TextComponent("§cVocê errou sua senha várias vezes."))
+        if (!successfully && user.loginAttempts.size >= CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) {
+            commandSender.disconnect(
+                TextComponent("§c§lREDE FANTASY"),
+                TextComponent("\n"),
+                TextComponent("§cVocê excedeu o número limite de ${CoreBungeeConstants.MAX_LOGIN_ATTEMPTS} tentativas de login, reconecte e tente novamente.")
+            )
             return false
+        } else if (!successfully) {
+            commandSender.disconnect(TextComponent("§cSenha incorreta! Você tem mais ${user.loginAttempts.size % CoreBungeeConstants.MAX_LOGIN_ATTEMPTS} ${if (user.loginAttempts.size % CoreBungeeConstants.MAX_LOGIN_ATTEMPTS > 1) "tentativas" else "tentativa"}."))
         }
 
         user.setLogged(successfully)
-        commandSender.sendMessage("§aVocê logou com sucesso!")
+
+        // Send title to logged user
+        println("${commandSender.name} logou")
         return true
     }
 
