@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.users.data
 
-import com.google.common.collect.Lists
 import com.google.common.primitives.Ints
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
@@ -47,7 +46,7 @@ data class User(
 
         if (userPasswords.isEmpty()) return false
 
-        val successfully = userPasswords.stream().anyMatch { it.enabled && it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password) }
+        val successfully = userPasswords.stream().anyMatch { it.enabled && it.password.contentEquals(EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password)) }
 
         if (!successfully) loginAttempts.getAndIncrement()
 
