@@ -34,7 +34,7 @@ class RegisterCommand : CustomCommand("registrar") {
                 FetchUserPasswordByUserIdDTO(user.getUniqueId())
             ).isNotEmpty()
         ) {
-            commandSender.sendMessage(TextComponent("§cVocê já está registrado. Utilize /login <senha>."))
+            commandSender.sendMessage(TextComponent("§cVocê já está registrado. Utilize /logar <senha>."))
             return false
         }
 

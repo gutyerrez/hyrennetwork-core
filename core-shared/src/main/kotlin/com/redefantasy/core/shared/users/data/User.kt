@@ -13,6 +13,7 @@ import com.redefantasy.core.shared.users.punishments.data.UserPunishment
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 
 /**
@@ -33,7 +34,7 @@ data class User(
         var updatedAt: DateTime? = null
 ) {
 
-    val loginAttempts = Lists.newArrayListWithCapacity<Long>(3)
+    val loginAttempts = AtomicInteger(0)
 
     fun setLogged(logged: Boolean) {
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)
@@ -46,9 +47,9 @@ data class User(
 
         if (userPasswords.isEmpty()) return false
 
-        val successfully = userPasswords.stream().anyMatch { it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password) }
+        val successfully = userPasswords.stream().anyMatch { it.enabled && it.password === EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password) }
 
-        if (!successfully) loginAttempts.add(System.currentTimeMillis())
+        if (!successfully) loginAttempts.getAndIncrement()
 
         return successfully
     }

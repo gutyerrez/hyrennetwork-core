@@ -46,15 +46,17 @@ class LoginCommand : CustomCommand("logar") {
 
         val successfully = user.attemptLogin(args[0])
 
-        if (!successfully && user.loginAttempts.size >= CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) {
+        if (!successfully && user.loginAttempts.get() >= CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) {
             commandSender.disconnect(
                 TextComponent("§c§lREDE FANTASY"),
                 TextComponent("\n"),
                 TextComponent("§cVocê excedeu o número limite de ${CoreBungeeConstants.MAX_LOGIN_ATTEMPTS} tentativas de login, reconecte e tente novamente.")
             )
+
+            user.loginAttempts.set(0)
             return false
         } else if (!successfully) {
-            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${user.loginAttempts.size % CoreBungeeConstants.MAX_LOGIN_ATTEMPTS} ${if (user.loginAttempts.size % CoreBungeeConstants.MAX_LOGIN_ATTEMPTS > 1) "tentativas" else "tentativa"}."))
+            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${CoreBungeeConstants.MAX_LOGIN_ATTEMPTS % user.loginAttempts.get()} ${if (CoreBungeeConstants.MAX_LOGIN_ATTEMPTS % user.loginAttempts.get() > 1) "tentativas" else "tentativa"}."))
             return false
         }
 
