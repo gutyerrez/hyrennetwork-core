@@ -10,6 +10,7 @@ import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPassword
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
+import kotlin.math.abs
 
 /**
  * @author Gutyerrez
@@ -56,7 +57,7 @@ class LoginCommand : CustomCommand("logar") {
             user.loginAttempts.set(0)
             return false
         } else if (!successfully) {
-            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${(user.loginAttempts.get() / CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1} ${if ((user.loginAttempts.get() / CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1 > 1) "tentativas" else "tentativa"}."))
+            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${abs(user.loginAttempts.get() - CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1} ${if (abs(user.loginAttempts.get() - CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1 > 1) "tentativas" else "tentativa"}."))
             return false
         }
 
