@@ -56,7 +56,7 @@ class LoginCommand : CustomCommand("logar") {
             user.loginAttempts.set(0)
             return false
         } else if (!successfully) {
-            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${(CoreBungeeConstants.MAX_LOGIN_ATTEMPTS % user.loginAttempts.get()) + 1} ${if ((CoreBungeeConstants.MAX_LOGIN_ATTEMPTS % user.loginAttempts.get()) + 1 > 1) "tentativas" else "tentativa"}."))
+            commandSender.sendMessage(TextComponent("§cSenha incorreta! Você tem mais ${(user.loginAttempts.get() / CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1} ${if ((user.loginAttempts.get() / CoreBungeeConstants.MAX_LOGIN_ATTEMPTS) + 1 > 1) "tentativas" else "tentativa"}."))
             return false
         }
 
