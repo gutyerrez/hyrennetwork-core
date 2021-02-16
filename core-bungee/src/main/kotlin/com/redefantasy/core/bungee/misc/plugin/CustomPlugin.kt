@@ -12,8 +12,6 @@ abstract class CustomPlugin(
     private val prepareProviders: Boolean = false
 ) : Plugin() {
 
-    val application = CoreProvider.application
-
     override fun onEnable() {
         if (prepareProviders) {
             CoreProvider.prepare(
