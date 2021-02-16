@@ -4,6 +4,7 @@ import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.echo.packets.TitlePacket
 import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.passwords.storage.dto.CreateUserPasswordDTO
@@ -12,7 +13,6 @@ import com.redefantasy.core.shared.users.storage.dto.CreateUserDTO
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
-import java.net.InetAddress
 import java.net.InetSocketAddress
 
 /**
@@ -76,10 +76,18 @@ class RegisterCommand : CustomCommand("registrar") {
             )
         )
 
+        val users = CoreProvider.Cache.Local.USERS.provide().fetchByAddress(_user.lastAddress!!)
+
+        if (users !== null && users.size > 1) {
+            commandSender.sendMessage(TextComponent("§cVocê já atingiu o limite de cadastros."))
+            return false
+        }
+
         _user.setLogged(true)
 
-        // Send title to user registered
-        println("${commandSender.name} registrou")
+        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(
+            TitlePacket(_user.getUniqueId(), "§a§lRegistrado!", "§fRedirecionando...")
+        )
         return false
     }
 

@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.echo.api
 
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
@@ -20,7 +21,7 @@ import java.util.function.Consumer
  * @author SrGutyerrez
  **/
 open class Echo(
-        private val redisDatabaseProvider: RedisDatabaseProvider
+    private val redisDatabaseProvider: RedisDatabaseProvider
 ) {
 
     private val BASE_CHANNEL_NAME = "minecraft/"
@@ -38,139 +39,139 @@ open class Echo(
     private fun createHeader(responseUUID: UUID?): EchoPacketHeader {
         val uuid = UUID.randomUUID()
 
-        val source = com.redefantasy.core.shared.CoreProvider.application
+        val source = CoreProvider.application
 
         return EchoPacketHeader(
-                uuid,
-                source.name,
-                source.displayName,
-                responseUUID
+            uuid,
+            source.name,
+            source.displayName,
+            responseUUID
         )
     }
 
     fun <T : EchoPacket> _publishToApplication(
-            packet: T,
-            responseUUID: UUID,
-            targetServerName: String?,
-            targetApplicationName: String?
+        packet: T,
+        responseUUID: UUID,
+        targetServerName: String?,
+        targetApplicationName: String?
     ) {
         this._publish(
-                packet,
-                this.createHeader(
-                        responseUUID
-                ),
-                String.format(
-                        this.APPLICATION_CHANNEL_NAME,
-                        targetServerName,
-                        targetApplicationName
-                )
+            packet,
+            this.createHeader(
+                responseUUID
+            ),
+            String.format(
+                this.APPLICATION_CHANNEL_NAME,
+                targetServerName,
+                targetApplicationName
+            )
         )
     }
 
     fun <T : EchoPacket> publishToApplication(
-            packet: T,
-            targetServerName: String?,
-            targetApplicationName: String?
+        packet: T,
+        targetServerName: String?,
+        targetApplicationName: String?
     ) {
         this._publish(
-                packet,
-                this.createHeader(null),
-                String.format(
-                        this.APPLICATION_CHANNEL_NAME,
-                        targetServerName,
-                        targetApplicationName
-                )
+            packet,
+            this.createHeader(null),
+            String.format(
+                this.APPLICATION_CHANNEL_NAME,
+                targetServerName,
+                targetApplicationName
+            )
         )
     }
 
     fun <R : Response, T> publishToApplication(
-            packet: T,
-            targetServerName: String?,
-            targetApplicationName: String?,
-            onResponse: Consumer<R>
+        packet: T,
+        targetServerName: String?,
+        targetApplicationName: String?,
+        onResponse: Consumer<R>
     ) where T : EchoPacket, T : Respondable<R> {
         val responseUUID = UUID.randomUUID()
 
         this.responseCallbacks[responseUUID] = onResponse as Consumer<Response>
 
         this._publishToApplication(
-                packet,
-                responseUUID,
-                targetServerName,
-                targetApplicationName
+            packet,
+            responseUUID,
+            targetServerName,
+            targetApplicationName
         )
     }
 
     fun <R : Response, T> publishToApplication(
-            packet: T,
-            targetApplication: Application
+        packet: T,
+        targetApplication: Application
     ) where T : EchoPacket, T : Respondable<R> {
         this.publishToApplication(
-                packet,
-                targetApplication.server?.getName(),
-                targetApplication.name
+            packet,
+            targetApplication.server?.getName(),
+            targetApplication.name
         )
     }
 
     fun <R : Response, T> publishToApplication(
-            packet: T,
-            targetApplication: Application,
-            onResponse: Consumer<R>
+        packet: T,
+        targetApplication: Application,
+        onResponse: Consumer<R>
     ) where T : EchoPacket, T : Respondable<R> {
         this.publishToApplication(
-                packet,
-                targetApplication.server?.getName(),
-                targetApplication.name,
-                onResponse
+            packet,
+            targetApplication.server?.getName(),
+            targetApplication.name,
+            onResponse
         )
     }
 
     fun <T : EchoPacket> publishToAll(packet: T) {
         this._publish(
-                packet,
-                this.createHeader(null),
-                this.BASE_CHANNEL_NAME
+            packet,
+            this.createHeader(null),
+            this.BASE_CHANNEL_NAME
         )
     }
 
     fun <T : EchoPacket> publishToApplicationTypeAndServer(
-            packet: T,
-            server: Server,
-            applicationType: ApplicationType
+        packet: T,
+        server: Server,
+        applicationType: ApplicationType
     ) {
         this._publish(
-                packet,
-                this.createHeader(null),
-                String.format(
-                        this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
-                        server.name,
-                        applicationType.name
-                )
+            packet,
+            this.createHeader(null),
+            String.format(
+                this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
+                server.name,
+                applicationType.name
+            )
         )
     }
 
     fun <T : EchoPacket> publishToCurrentServer(packet: T) {
         this.publishToServer(
-                packet,
-                com.redefantasy.core.shared.CoreProvider.application.server
+            packet,
+            CoreProvider.application.server
         )
     }
 
     fun <T : EchoPacket> publishToServer(packet: T, server: Server?) {
         this._publish(
-                packet,
-                this.createHeader(null),
-                String.format(
-                        this.SERVER_CHANNEL_NAME,
-                        server?.name
-                )
+            packet,
+            this.createHeader(null),
+            String.format(
+                this.SERVER_CHANNEL_NAME,
+                server?.name
+            )
         )
     }
 
     fun <T : EchoPacket> _publish(
-            packet: T,
-            packetHeader: EchoPacketHeader,
-            channel: String
+        packet: T,
+        packetHeader: EchoPacketHeader,
+        channel: String
     ) {
         val clazz = packet::class.java
 
@@ -193,35 +194,35 @@ open class Echo(
     fun subscribe(dispatcher: BiConsumer<EchoPacket, Runnable>? = null): EchoSubscriber {
         val channels = mutableListOf(this.BASE_CHANNEL_NAME)
 
-        val source = com.redefantasy.core.shared.CoreProvider.application
+        val source = CoreProvider.application
 
         channels.add(
-                String.format(
-                        this.APPLICATION_CHANNEL_NAME,
-                        source.server?.name ?: "undefined",
-                        source.name
-                )
+            String.format(
+                this.APPLICATION_CHANNEL_NAME,
+                source.server?.name ?: "undefined",
+                source.name
+            )
         )
         channels.add(
-                String.format(
-                        this.APPLICATION_TYPE_CHANNEL_NAME,
-                        source.name
-                )
+            String.format(
+                this.APPLICATION_TYPE_CHANNEL_NAME,
+                source.name
+            )
         )
 
         if (source.server != null) {
             channels.add(
-                    String.format(
-                            this.SERVER_CHANNEL_NAME,
-                            source.server.name
-                    )
+                String.format(
+                    this.SERVER_CHANNEL_NAME,
+                    source.server.name
+                )
             )
             channels.add(
-                    String.format(
-                            this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
-                            source.server.name,
-                            source.applicationType.name
-                    )
+                String.format(
+                    this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
+                    source.server.name,
+                    source.applicationType.name
+                )
             )
         }
 
@@ -238,10 +239,10 @@ open class Echo(
         Thread({
             this.redisDatabaseProvider.provide().resource.use {
                 it.subscribe(
-                        echoSubscriber,
-                        *SafeEncoder.encodeMany(
-                                *channels.toTypedArray()
-                        )
+                    echoSubscriber,
+                    *SafeEncoder.encodeMany(
+                        *channels.toTypedArray()
+                    )
                 )
             }
         }, "Echo Subscriber Thread").start()

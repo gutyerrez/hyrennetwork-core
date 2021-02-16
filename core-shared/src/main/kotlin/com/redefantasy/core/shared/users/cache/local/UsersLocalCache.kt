@@ -6,6 +6,7 @@ import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByDiscordIdDTO
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByIdDTO
+import com.redefantasy.core.shared.users.storage.dto.FetchUserByLastAddressDTO
 import com.redefantasy.core.shared.users.storage.dto.FetchUserByNameDTO
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
@@ -41,10 +42,20 @@ class UsersLocalCache : LocalCache {
                 )
             }
 
+    private val CACHE_BY_LAST_ADDRESS = Caffeine.newBuilder()
+        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .build<String, List<User>> {
+            CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByLastAddress(
+                FetchUserByLastAddressDTO(it)
+            )
+        }
+
     fun fetchById(id: UUID) = this.CACHE_BY_ID.get(id)
 
     fun fetchByName(name: String) = this.CACHE_BY_NAME.get(name)
 
     fun fetchByDiscordId(discordId: Long) = this.CACHE_BY_DISCORD_ID.get(discordId)
+
+    fun fetchByAddress(lastAddress: String) = this.CACHE_BY_LAST_ADDRESS.get(lastAddress)
 
 }

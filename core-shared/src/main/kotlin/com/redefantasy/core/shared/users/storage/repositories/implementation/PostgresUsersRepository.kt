@@ -54,6 +54,18 @@ class PostgresUsersRepository : IUsersRepository {
         }
     }
 
+    override fun fetchByLastAddress(fetchUserByLastAddress: FetchUserByLastAddressDTO): List<User> {
+        return transaction {
+            val users = mutableListOf<User>()
+
+            UserDAO.find {
+                UsersTable.lastAddress eq fetchUserByLastAddress.lastAddress
+            }.forEach { users.add(it.asUser()) }
+
+            return@transaction users
+        }
+    }
+
     override fun create(createUserDTO: CreateUserDTO): User {
         return transaction {
             return@transaction UserDAO.new(createUserDTO.id) {

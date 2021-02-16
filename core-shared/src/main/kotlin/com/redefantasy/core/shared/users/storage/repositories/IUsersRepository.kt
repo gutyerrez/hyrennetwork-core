@@ -15,6 +15,8 @@ interface IUsersRepository : IRepository {
 
     fun fetchByDiscordId(fetchUserByDiscordId: FetchUserByDiscordIdDTO): User?
 
+    fun fetchByLastAddress(fetchUserByLastAddress: FetchUserByLastAddressDTO): List<User>
+
     fun create(createUserDTO: CreateUserDTO): User
 
     fun <E> update(updateUserByIdDTO: UpdateUserByIdDTO<E>)
