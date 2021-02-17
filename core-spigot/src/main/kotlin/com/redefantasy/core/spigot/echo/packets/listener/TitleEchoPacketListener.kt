@@ -1,8 +1,9 @@
 package com.redefantasy.core.spigot.echo.packets.listener
 
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.echo.api.listener.EchoListener
 import com.redefantasy.core.shared.echo.packets.TitlePacket
-import net.md_5.bungee.api.chat.TextComponent
+import com.redefantasy.core.spigot.misc.utils.Title
 import org.bukkit.Bukkit
 import org.greenrobot.eventbus.Subscribe
 
@@ -13,7 +14,23 @@ class TitleEchoPacketListener : EchoListener {
 
     @Subscribe
     fun on(packet: TitlePacket) {
-        Bukkit.broadcast(TextComponent("Testando ${packet.title} | ${packet.subTitle}"))
+        val title = Title(
+            packet.title,
+            packet.subTitle,
+            packet.fadeIn,
+            packet.fadeOut,
+            packet.stay
+        )
+
+        if (packet.userId === null) throw NullPointerException("User id cannot be null")
+
+        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.userId!!)
+
+        if (user === null) throw NullPointerException("User cannot be null")
+
+        val player = Bukkit.getPlayer(user.getUniqueId())
+
+        title.sendToPlayer(player)
     }
 
 }

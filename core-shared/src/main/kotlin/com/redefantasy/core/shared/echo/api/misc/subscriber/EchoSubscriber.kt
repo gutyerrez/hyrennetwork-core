@@ -76,8 +76,6 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
-        println("Menssagem: ${String(message)}")
-
         if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName !== CoreProvider.application.name) {
             if (!this.isListening(clazz, packetHeader)) return
 

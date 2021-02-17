@@ -15,7 +15,7 @@ class Title(
     val stay: Long
 ) {
 
-    fun sendTitle(player: Player) {
+    fun sendToPlayer(player: Player) {
         if (title !== null) {
             title = ChatColor.translateAlternateColorCodes('&', title!!)
 
