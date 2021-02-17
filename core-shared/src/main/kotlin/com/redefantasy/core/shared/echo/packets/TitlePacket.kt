@@ -10,14 +10,14 @@ import java.util.*
  * @author Gutyerrez
  */
 @ServerPacket
-class TitlePacket(
-    var userId: UUID,
-    var title: String,
-    var subTitle: String? = null,
-    var fadeIn: Long = 0,
-    var fadeOut: Long = 30,
+class TitlePacket : EchoPacket() {
+
+    lateinit var userId: UUID
+    lateinit var title: String
+    var subTitle: String? = null
+    var fadeIn: Long = 0
+    var fadeOut: Long = 30
     var stay: Long = 0
-) : EchoPacket() {
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeUUID(this.userId)

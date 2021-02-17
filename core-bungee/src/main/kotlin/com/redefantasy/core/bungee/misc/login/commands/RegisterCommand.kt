@@ -85,9 +85,13 @@ class RegisterCommand : CustomCommand("registrar") {
 
         _user.setLogged(true)
 
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(
-            TitlePacket(_user.getUniqueId(), "§a§lRegistrado!", "§fRedirecionando...")
-        )
+        val packet = TitlePacket()
+
+        packet.userId = _user.getUniqueId()
+        packet.title = "§a§lRegistrado!"
+        packet.subTitle = "§fRedirecionando..."
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
         return false
     }
 

@@ -68,9 +68,13 @@ class LoginCommand : CustomCommand("logar") {
 
         user.setLogged(successfully)
 
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(
-            TitlePacket(user.getUniqueId(), "§a§lAutenticado!", "§fRedirecionando...")
-        )
+        val packet = TitlePacket()
+
+        packet.userId = user.getUniqueId()
+        packet.title = "§a§lAutenticado!"
+        packet.subTitle = "§fRedirecionando..."
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
         return true
     }
 
