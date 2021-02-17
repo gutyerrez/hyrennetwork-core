@@ -13,6 +13,8 @@ abstract class CustomCommand(
     name: String
 ) : Command(name), Commandable<CommandSender> {
 
+    override fun getSenderName(commandSender: CommandSender): String = commandSender.name
+    
     override fun getDescription() = ""
 
     override fun getUsage(): Array<BaseComponent> {
