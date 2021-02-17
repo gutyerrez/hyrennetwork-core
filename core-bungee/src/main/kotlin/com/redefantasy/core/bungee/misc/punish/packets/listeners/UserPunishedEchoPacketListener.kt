@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe
 /**
  * @author Gutyerrez
  */
-class UserPunishedPacketListener : EchoListener {
+class UserPunishedEchoPacketListener : EchoListener {
 
     @Subscribe
     fun on(packet: UserPunishedPacket) {

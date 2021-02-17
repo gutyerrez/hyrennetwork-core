@@ -11,3 +11,4 @@ include(
         "core-shared",
         "core-bungee"
 )
+include("core-spigot")

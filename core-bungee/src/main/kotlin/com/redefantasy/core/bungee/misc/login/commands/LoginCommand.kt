@@ -34,6 +34,10 @@ class LoginCommand : CustomCommand("logar") {
             return false
         }
 
+        if (user.isLogged()) {
+            return false
+        }
+
         val currentPassword = CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
             FetchUserPasswordByUserIdDTO(user.getUniqueId())
         ).stream()

@@ -1,0 +1,4 @@
+name: Core
+main: com.redefantasy.core.spigot.CoreSpigotPlugin
+version: 0.1-ALPHA
+author: Gutyerrez
