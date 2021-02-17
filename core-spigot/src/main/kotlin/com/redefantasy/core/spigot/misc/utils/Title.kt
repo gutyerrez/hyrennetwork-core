@@ -1,13 +1,14 @@
 package com.redefantasy.core.spigot.misc.utils
 
-import com.redefantasy.core.shared.misc.utils.ChatColor
+import net.md_5.bungee.api.chat.TextComponent
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 /**
  * @author Gutyerrez
  */
-data class Title(
+class Title(
     var title: String?,
     var subTitle: String?,
     val fadeIn: Long,
@@ -17,62 +18,17 @@ data class Title(
 
     fun sendToPlayer(player: Player) {
         if (title !== null) {
-            title = ChatColor.translateAlternateColorCodes('&', title!!)
-
-            var `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TIMES").get(null)
-            var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
-                .invoke(null, "{\"text\":\"$title\"}")
-            var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
-                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
-                this.getNMSClass("IChatBaseComponent"),
-                Integer.TYPE,
-                Integer.TYPE,
-                Integer.TYPE
+            val title = PacketPlayOutTitle(
+                PacketPlayOutTitle.EnumTitleAction.TITLE,
+                arrayOf(
+                    TextComponent(title)
+                ),
+                fadeIn.toInt(),
+                stay.toInt(),
+                fadeOut.toInt()
             )
-            var titlePacket = subTitleConstructor.newInstance(`object`, chatTitle, fadeIn, stay, fadeOut)
 
-            player.sendPacket(titlePacket)
-
-            `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TITLE").get(null)
-            chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
-                .invoke(null, "{\"text\": \"$title\"}")
-            subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
-                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
-                this.getNMSClass("IChatBaseComponent")
-            )
-            titlePacket = subTitleConstructor.newInstance(`object`, chatTitle)
-
-            player.sendPacket(titlePacket)
-        }
-
-        if (subTitle !== null) {
-            var `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TIMES").get(null)
-            var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
-                .invoke(null, "{\"text\": \"$title\"}")
-            var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
-                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
-                this.getNMSClass("IChatBaseComponent"),
-                Integer.TYPE,
-                Integer.TYPE,
-                Integer.TYPE
-            )
-            var titlePacket = subTitleConstructor.newInstance(`object`, chatTitle, fadeIn, stay, fadeOut)
-
-            player.sendPacket(titlePacket)
-
-            `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("SUBTITLE").get(null)
-            chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
-                .invoke(null, "{\"text\": \"$title\"}")
-            subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
-                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
-                this.getNMSClass("IChatBaseComponent"),
-                Integer.TYPE,
-                Integer.TYPE,
-                Integer.TYPE
-            )
-            titlePacket = subTitleConstructor.newInstance(`object`, chatTitle)
-
-            player.sendPacket(titlePacket)
+            player.sendPacket(title)
         }
     }
 
@@ -84,15 +40,9 @@ data class Title(
     }
 
     private fun getNMSClass(name: String): Class<*> {
-        try {
-            val version = Bukkit.getServer()::class.java.`package`.name.split(".")[3]
+        val version = Bukkit.getServer()::class.java.`package`.name.split(".")[3]
 
-            return Class.forName("net.minecraft.server.$version.$name")
-        } catch (ex: ClassNotFoundException) {
-            ex.printStackTrace()
-        }
-
-        return Class.forName("")
+        return Class.forName("net.minecraft.server.$version.$name")
     }
 
 }
