@@ -15,7 +15,7 @@ object CommandRegistry {
 
         val simpleCommandMap = craftServer.commandMap
 
-        val knowCommandsField = simpleCommandMap::class.java.getDeclaredField("knowCommands")
+        val knowCommandsField = simpleCommandMap::class.java.getDeclaredField("knownCommands")
 
         knowCommandsField.isAccessible = true
 
