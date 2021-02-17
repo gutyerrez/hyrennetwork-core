@@ -1,5 +1,6 @@
 package com.redefantasy.core.spigot.misc.utils
 
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.server.v1_8_R3.Packet
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
@@ -24,7 +25,7 @@ class Title(
             packet = PacketPlayOutTitle(
                 PacketPlayOutTitle.EnumTitleAction.TIMES,
                 arrayOf(
-                    TextComponent(title)
+                    TextComponent(ChatColor.translateAlternateColorCodes('&', title!!))
                 ),
                 fadeIn,
                 stay,
@@ -36,7 +37,7 @@ class Title(
             packet = PacketPlayOutTitle(
                 PacketPlayOutTitle.EnumTitleAction.TITLE,
                 arrayOf(
-                    TextComponent(title)
+                    TextComponent(ChatColor.translateAlternateColorCodes('&', title!!))
                 ),
                 fadeIn,
                 stay,
@@ -50,7 +51,7 @@ class Title(
             packet = PacketPlayOutTitle(
                 PacketPlayOutTitle.EnumTitleAction.TIMES,
                 arrayOf(
-                    TextComponent(subTitle)
+                    TextComponent(ChatColor.translateAlternateColorCodes('&', subTitle!!))
                 ),
                 fadeIn,
                 stay,
@@ -62,7 +63,7 @@ class Title(
             packet = PacketPlayOutTitle(
                 PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
                 arrayOf(
-                    TextComponent(subTitle)
+                    TextComponent(ChatColor.translateAlternateColorCodes('&', subTitle!!))
                 ),
                 fadeIn,
                 stay,
