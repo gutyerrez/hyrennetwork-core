@@ -1,8 +1,10 @@
 package com.redefantasy.core.spigot.misc.utils
 
 import net.md_5.bungee.api.chat.TextComponent
+import net.minecraft.server.v1_8_R3.Packet
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 /**
@@ -32,11 +34,15 @@ class Title(
         }
     }
 
-    private fun Player.sendPacket(packet: Any) {
-        val handle = this::class.java.getMethod("getHandle", *arrayOf<Class<*>>()).invoke(player, Any())
-        val playerConnection = handle::class.java.getField("playerConnection").get(handle)
+    private fun Player.sendPacket(packet: Packet<*>) {
+        val handle = (this as CraftPlayer).handle
+        val playerConnection = handle.playerConnection
 
-        playerConnection::class.java.getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet)
+        playerConnection.sendPacket(packet)
+//        val handle = this::class.java.getMethod("getHandle", *arrayOf<Class<*>>()).invoke(player, Any())
+//        val playerConnection = handle::class.java.getField("playerConnection").get(handle)
+//
+//        playerConnection::class.java.getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet)
     }
 
     private fun getNMSClass(name: String): Class<*> {
