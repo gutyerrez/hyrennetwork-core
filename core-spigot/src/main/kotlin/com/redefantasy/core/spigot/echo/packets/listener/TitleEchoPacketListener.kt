@@ -14,6 +14,8 @@ class TitleEchoPacketListener : EchoListener {
 
     @Subscribe
     fun on(packet: TitlePacket) {
+        println("Opa")
+
         val title = Title(
             packet.title,
             packet.subTitle,
@@ -21,8 +23,6 @@ class TitleEchoPacketListener : EchoListener {
             packet.fadeOut,
             packet.stay
         )
-
-        println(title)
 
         if (packet.userId === null) throw NullPointerException("User id cannot be null")
 
