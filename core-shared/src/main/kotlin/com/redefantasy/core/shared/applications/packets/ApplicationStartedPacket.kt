@@ -8,9 +8,9 @@ import com.redefantasy.core.shared.echo.api.packets.EchoPacket
 /**
  * @author SrGutyerrez
  **/
-class ApplicationStartedPacket(
-        var application: Application? = null
-) : EchoPacket() {
+class ApplicationStartedPacket : EchoPacket() {
+
+    var application: Application? = null
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeApplication(this.application)

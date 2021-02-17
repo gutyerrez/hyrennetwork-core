@@ -12,8 +12,8 @@ import java.util.*
 @ServerPacket
 class TitlePacket : EchoPacket() {
 
-    lateinit var userId: UUID
-    lateinit var title: String
+    var userId: UUID? = null
+    var title: String? = null
     var subTitle: String? = null
     var fadeIn: Long = 0
     var fadeOut: Long = 30
@@ -29,8 +29,8 @@ class TitlePacket : EchoPacket() {
     }
 
     override fun read(buffer: EchoBufferInput) {
-        this.userId = buffer.readUUID()!!
-        this.title = buffer.readString()!!
+        this.userId = buffer.readUUID()
+        this.title = buffer.readString()
         this.subTitle = buffer.readString()
         this.fadeIn = buffer.readLong()
         this.fadeOut = buffer.readLong()

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
  * @author Gutyerrez
  */
 class Title(
-    var title: String,
+    var title: String?,
     var subTitle: String?,
     val fadeIn: Long,
     val fadeOut: Long,
@@ -16,33 +16,60 @@ class Title(
 ) {
 
     fun sendTitle(player: Player) {
-        title = ChatColor.translateAlternateColorCodes('&', title)!!
+        if (title !== null) {
+            title = ChatColor.translateAlternateColorCodes('&', title!!)
 
-        var `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TIMES").get(null)
-        var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java).invoke(null, "{\"text\":\"$title\"}")
-        var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(this.getNMSClass("PacketPlayOutTitle").declaredClasses[0], this.getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE)
-        var titlePacket = subTitleConstructor.newInstance(`object`, chatTitle, fadeIn, stay, fadeOut)
+            var `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TIMES").get(null)
+            var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
+                .invoke(null, "{\"text\":\"$title\"}")
+            var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
+                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
+                this.getNMSClass("IChatBaseComponent"),
+                Integer.TYPE,
+                Integer.TYPE,
+                Integer.TYPE
+            )
+            var titlePacket = subTitleConstructor.newInstance(`object`, chatTitle, fadeIn, stay, fadeOut)
 
-        player.sendPacket(titlePacket)
+            player.sendPacket(titlePacket)
 
-        `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TITLE").get(null)
-        chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java).invoke(null, "{\"text\": \"$title\"}")
-        subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(this.getNMSClass("PacketPlayOutTitle").declaredClasses[0], this.getNMSClass("IChatBaseComponent"))
-        titlePacket = subTitleConstructor.newInstance(`object`, chatTitle)
+            `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TITLE").get(null)
+            chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
+                .invoke(null, "{\"text\": \"$title\"}")
+            subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
+                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
+                this.getNMSClass("IChatBaseComponent")
+            )
+            titlePacket = subTitleConstructor.newInstance(`object`, chatTitle)
 
-        player.sendPacket(titlePacket)
+            player.sendPacket(titlePacket)
+        }
 
         if (subTitle !== null) {
             var `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("TIMES").get(null)
-            var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java).invoke(null, "{\"text\":\"$title\"}")
-            var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(this.getNMSClass("PacketPlayOutTitle").declaredClasses[0], this.getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE)
+            var chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
+                .invoke(null, "{\"text\":\"$title\"}")
+            var subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
+                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
+                this.getNMSClass("IChatBaseComponent"),
+                Integer.TYPE,
+                Integer.TYPE,
+                Integer.TYPE
+            )
             var titlePacket = subTitleConstructor.newInstance(`object`, chatTitle, fadeIn, stay, fadeOut)
 
             player.sendPacket(titlePacket)
 
             `object` = this.getNMSClass("PacketPlayOutTitle").declaredClasses[0].getField("SUBTITLE").get(null)
-            chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java).invoke(null, "{\"text\": \"$title\"}")
-            subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(this.getNMSClass("PacketPlayOutTitle").declaredClasses[0], this.getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE)
+            chatTitle = this.getNMSClass("IChatBaseComponent").declaredClasses[0].getMethod("a", String::class.java)
+                .invoke(null, "{\"text\": \"$title\"}")
+            subTitleConstructor = this.getNMSClass("PacketPlayOutTitle").getConstructor(
+                this.getNMSClass("PacketPlayOutTitle").declaredClasses[0],
+                this.getNMSClass("IChatBaseComponent"),
+                Integer.TYPE,
+                Integer.TYPE,
+                Integer.TYPE
+            )
             titlePacket = subTitleConstructor.newInstance(`object`, chatTitle)
 
             player.sendPacket(titlePacket)
