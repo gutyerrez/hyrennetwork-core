@@ -72,10 +72,6 @@ class LoginCommand : CustomCommand("logar") {
 
         user.setLogged(successfully)
 
-        val application = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchBukkitApplication(user)
-
-        if (application === null) throw NullPointerException("Bukkit application not found")
-
         val packet = TitlePacket()
 
         packet.userId = user.getUniqueId()
