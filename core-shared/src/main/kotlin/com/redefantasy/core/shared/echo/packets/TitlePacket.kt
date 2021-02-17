@@ -15,26 +15,26 @@ class TitlePacket : EchoPacket() {
     var userId: UUID? = null
     var title: String? = null
     var subTitle: String? = null
-    var fadeIn: Long = 0
-    var fadeOut: Long = 30
-    var stay: Long = 0
+    var fadeIn: Int? = 0
+    var fadeOut: Int? = 30
+    var stay: Int? = 0
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeUUID(this.userId)
         buffer.writeString(this.title)
         buffer.writeString(this.subTitle)
-        buffer.writeLong(this.fadeIn)
-        buffer.writeLong(this.fadeOut)
-        buffer.writeLong(this.stay)
+        buffer.writeInt(this.fadeIn)
+        buffer.writeInt(this.fadeOut)
+        buffer.writeInt(this.stay)
     }
 
     override fun read(buffer: EchoBufferInput) {
         this.userId = buffer.readUUID()
         this.title = buffer.readString()
         this.subTitle = buffer.readString()
-        this.fadeIn = buffer.readLong()
-        this.fadeOut = buffer.readLong()
-        this.stay = buffer.readLong()
+        this.fadeIn = buffer.readInt()
+        this.fadeOut = buffer.readInt()
+        this.stay = buffer.readInt()
     }
 
 }

@@ -19,9 +19,9 @@ class TitleEchoPacketListener : EchoListener {
         val title = Title(
             packet.title,
             packet.subTitle,
-            packet.fadeIn,
-            packet.fadeOut,
-            packet.stay
+            packet.fadeIn ?: 0,
+            packet.fadeOut ?: 30,
+            packet.stay ?: 0
         )
 
         if (packet.userId === null) throw NullPointerException("User id cannot be null")
