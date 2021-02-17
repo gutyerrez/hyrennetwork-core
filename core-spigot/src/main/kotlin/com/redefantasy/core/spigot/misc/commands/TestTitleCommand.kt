@@ -18,7 +18,7 @@ class TestTitleCommand : CustomCommand("test") {
         val title = args.joinToString(" ").split("\\n")[0]
         val subTitle = args.joinToString(" ").split("\\n")[1]
 
-        val _title = Title(title, subTitle, 0, 30, 0)
+        val _title = Title(title, subTitle, 0, 100, 0)
 
         commandSender as Player
 
