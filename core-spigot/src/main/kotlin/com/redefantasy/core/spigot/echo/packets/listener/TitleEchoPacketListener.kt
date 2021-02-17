@@ -22,6 +22,8 @@ class TitleEchoPacketListener : EchoListener {
             packet.stay
         )
 
+        println(title)
+
         if (packet.userId === null) throw NullPointerException("User id cannot be null")
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.userId!!)

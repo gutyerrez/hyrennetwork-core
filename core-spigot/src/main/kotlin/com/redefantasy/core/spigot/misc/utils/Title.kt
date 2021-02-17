@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 /**
  * @author Gutyerrez
  */
-class Title(
+data class Title(
     var title: String?,
     var subTitle: String?,
     val fadeIn: Long,

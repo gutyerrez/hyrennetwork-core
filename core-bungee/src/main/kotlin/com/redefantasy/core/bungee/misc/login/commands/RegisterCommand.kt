@@ -24,6 +24,8 @@ class RegisterCommand : CustomCommand("registrar") {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
+    override fun getAliases() = arrayOf("register")
+
     override fun getArguments(): List<Argument> = listOf(
         Argument("senha"),
         Argument("confirme a senha")

@@ -22,6 +22,8 @@ class LoginCommand : CustomCommand("logar") {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
+    override fun getAliases() = arrayOf("login")
+
     override fun getArguments() = listOf(
         Argument("senha")
     )
@@ -67,6 +69,10 @@ class LoginCommand : CustomCommand("logar") {
         }
 
         user.setLogged(successfully)
+
+        val application = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchBukkitApplication(user)
+
+        if (application === null) throw NullPointerException("Bukkit application not found")
 
         val packet = TitlePacket()
 
