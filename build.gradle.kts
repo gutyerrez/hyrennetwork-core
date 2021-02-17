@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException
+
 plugins {
     kotlin("jvm") version "1.4.30-RC"
 
@@ -31,14 +33,18 @@ subprojects {
             archiveFileName.set("${project.name}.jar")
 
             doLast {
-                val file = file("build/libs/$fileName")
+                try {
+                    val file = file("build/libs/$fileName")
 
-                val toDelete = file("/home/cloud/output/$fileName")
+                    val toDelete = file("/home/cloud/output/$fileName")
 
-                if (toDelete.exists()) toDelete.delete()
+                    if (toDelete.exists()) toDelete.delete()
 
-                file.copyTo(file("/home/cloud/output/$fileName"))
-                file.delete()
+                    file.copyTo(file("/home/cloud/output/$fileName"))
+                    file.delete()
+                } catch (ex: FileNotFoundException) {
+                    ex.printStackTrace()
+                }
             }
         }
     }

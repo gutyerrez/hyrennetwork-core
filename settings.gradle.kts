@@ -1,3 +1,5 @@
+rootProject.name = "core"
+
 pluginManagement {
     repositories {
         maven("https://dl.bintray.com/kotlin/kotlin-eap")
@@ -5,7 +7,6 @@ pluginManagement {
         maven("https://plugins.gradle.org/m2/")
     }
 }
-rootProject.name = "core"
 
 include(
     "core-shared",
