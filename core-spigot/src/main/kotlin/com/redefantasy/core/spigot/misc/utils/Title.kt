@@ -85,6 +85,8 @@ class Title(
     }
 
     private fun getNMSClass(name: String): Class<*> {
+        println(Bukkit.getServer()::class.java.`package`.name)
+
         val version = Bukkit.getServer()::class.java.`package`.name.split("\\.")[3]
 
         return Class.forName("net.minecraft.server.$version.$name")
