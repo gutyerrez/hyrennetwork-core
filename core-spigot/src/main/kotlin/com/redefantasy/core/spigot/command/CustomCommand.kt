@@ -5,6 +5,8 @@ import com.redefantasy.core.shared.users.data.User
 import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
+import org.bukkit.entity.Player
 
 /**
  * @author Gutyerrez
@@ -22,6 +24,10 @@ abstract class CustomCommand(
     }
 
     override fun getAliases() = arrayOf<String>()
+
+    override fun isPlayer(commandSender: CommandSender) = commandSender is Player
+
+    override fun isConsole(commandSender: CommandSender) = commandSender is ConsoleCommandSender
 
     override fun execute(commandSender: CommandSender, label: String, args: Array<out String>): Boolean {
         executeRaw(commandSender, args)
