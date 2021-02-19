@@ -1,9 +1,12 @@
 package com.redefantasy.core.shared.users.punishments.storage.dto
 
+import org.jetbrains.exposed.dao.Entity
+import java.util.function.Consumer
+
 /**
  * @author SrGutyerrez
  **/
-class UpdateUserPunishmentByIdDTO<E>(
+class UpdateUserPunishmentByIdDTO(
         val id: Int,
-        val execute: (e: E) -> Unit
+        val execute: Consumer<Entity<*>>
 )

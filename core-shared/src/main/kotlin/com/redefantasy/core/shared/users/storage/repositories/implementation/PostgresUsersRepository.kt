@@ -75,13 +75,13 @@ class PostgresUsersRepository : IUsersRepository {
         }
     }
 
-    override fun <E> update(updateUserByIdDTO: UpdateUserByIdDTO<E>) {
+    override fun update(updateUserByIdDTO: UpdateUserByIdDTO) {
         transaction {
-            val userDAO = UserDAO.find {
+            val user = UserDAO.find {
                 UsersTable.id eq updateUserByIdDTO.id
             }
 
-            if (!userDAO.empty()) updateUserByIdDTO.execute(userDAO.first() as E)
+            if (!user.empty()) updateUserByIdDTO.execute.accept(user.first())
         }
     }
 

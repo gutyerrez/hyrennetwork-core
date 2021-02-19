@@ -39,7 +39,7 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
 
-            return@use com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+            return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                     it.hget(key, "proxy_application")
             )
         }
@@ -49,7 +49,7 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
 
-            return@use com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+            return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                     it.hget(key, "bukkit_application")
             )
         }
@@ -65,7 +65,7 @@ class UsersStatusRedisCache : RedisCache {
             scan.result.forEach { key ->
                 val bukkitApplication = it.hget(key, "bukkit_application")
 
-                val application = com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+                val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                         bukkitApplication
                 )
 
@@ -83,8 +83,8 @@ class UsersStatusRedisCache : RedisCache {
     fun create(user: User, application: Application, address: InetSocketAddress, version: Int) {
         val map = mutableMapOf<String, String>()
 
-        map["proxy_application"] = application.name
-        map["bukkit_application"] = "undefined"
+        map["proxy_application"] = CoreProvider.application.name
+        map["bukkit_application"] = application.name
         map["connected_address"] = address.address.hostAddress
         map["connected_version"] = version.toString()
         map["joined_at"] = DateTime.now().toString()

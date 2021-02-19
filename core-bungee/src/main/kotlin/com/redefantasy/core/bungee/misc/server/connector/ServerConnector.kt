@@ -1,11 +1,15 @@
 package com.redefantasy.core.bungee.misc.server.connector
 
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.applications.ApplicationType
-import com.redefantasy.core.shared.applications.status.ApplicationStatus
+import com.redefantasy.core.shared.users.data.User
+import com.redefantasy.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.BungeeServerInfo
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.config.ServerInfo
+import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.connection.ServerConnector
+import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
 
 /**
@@ -35,6 +39,42 @@ class ServerConnector : ServerConnector {
 
         return BungeeServerInfo(
             InetSocketAddress("158.69.120.87", 10004)
+        )
+    }
+
+    override fun changedUserApplication(
+        proxiedPlayer: ProxiedPlayer,
+        serverInfo: ServerInfo
+    ) {
+        val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
+            serverInfo.address
+        )
+
+        val disconnectMessage: Array<BaseComponent>
+
+        if (application === null) {
+            disconnectMessage = ComponentBuilder()
+                .append("§c§lREDE FANTASY")
+                .append("\n\n")
+                .append("§cNão foi possível localizar a aplicação.")
+                .create()
+
+            proxiedPlayer.disconnect(*disconnectMessage)
+            return
+        }
+
+        var user = CoreProvider.Cache.Local.USERS.provide().fetchById(proxiedPlayer.uniqueId)
+
+        if (user === null) user = User(
+            EntityID(proxiedPlayer.uniqueId, UsersTable),
+            proxiedPlayer.name
+        )
+
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().create(
+            user,
+            application,
+            (proxiedPlayer.pendingConnection.socketAddress as InetSocketAddress),
+            proxiedPlayer.pendingConnection.version
         )
     }
 

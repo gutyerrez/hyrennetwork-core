@@ -59,13 +59,13 @@ class PostgresUsersPunishmentsRepository : IUsersPunishmentsRepository {
         }
     }
 
-    override fun <E> update(updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO<E>): Boolean {
+    override fun update(updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO): Boolean {
         return transaction {
             val result = UserPunishmentDAO.find {
                 UsersPunishmentsTable.id eq updateUserPunishmentByIdDTO.id
             }
 
-            if (!result.empty()) updateUserPunishmentByIdDTO.execute(result.first() as E)
+            if (!result.empty()) updateUserPunishmentByIdDTO.execute.accept(result.first())
 
             return@transaction false
         }

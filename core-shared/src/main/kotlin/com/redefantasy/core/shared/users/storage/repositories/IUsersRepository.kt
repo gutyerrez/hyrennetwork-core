@@ -19,6 +19,6 @@ interface IUsersRepository : IRepository {
 
     fun create(createUserDTO: CreateUserDTO): User
 
-    fun <E> update(updateUserByIdDTO: UpdateUserByIdDTO<E>)
+    fun update(updateUserByIdDTO: UpdateUserByIdDTO)
 
 }

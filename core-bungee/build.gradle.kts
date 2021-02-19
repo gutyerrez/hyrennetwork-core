@@ -4,6 +4,8 @@ dependencies {
 
     // exposed
     api("org.jetbrains.exposed:exposed-core:0.29.1")
+    api("org.jetbrains.exposed:exposed-dao:0.29.1")
+    api("org.jetbrains.exposed:exposed-jdbc:0.29.1")
     api("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
     // eventbus

@@ -18,6 +18,6 @@ interface IUsersPunishmentsRepository : IRepository {
 
     fun create(createUserPunishmentDTO: CreateUserPunishmentDTO): UserPunishment?
 
-    fun <E> update(updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO<E>): Boolean
+    fun update(updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO): Boolean
 
 }
