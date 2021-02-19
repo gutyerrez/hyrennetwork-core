@@ -1,5 +1,6 @@
 package com.redefantasy.core.bungee
 
+import com.redefantasy.core.bungee.command.defaults.staff.FindCommand
 import com.redefantasy.core.bungee.misc.login.commands.LoginCommand
 import com.redefantasy.core.bungee.misc.login.commands.RegisterCommand
 import com.redefantasy.core.bungee.misc.login.listeners.LoginListeners
@@ -30,6 +31,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerCommand(this, PunishCommand())
         pluginManager.registerCommand(this, LoginCommand())
         pluginManager.registerCommand(this, RegisterCommand())
+        pluginManager.registerCommand(this, FindCommand())
 
         pluginManager.registerListener(this, LoginListeners())
 

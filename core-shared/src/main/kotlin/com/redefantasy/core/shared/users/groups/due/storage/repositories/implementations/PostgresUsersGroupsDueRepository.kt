@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.users.groups.due.storage.repositories.implementations
 
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.groups.due.storage.dao.UserGroupDueDAO
 import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdAndServerNameDTO
 import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
@@ -17,35 +18,50 @@ import java.util.*
 class PostgresUsersGroupsDueRepository : IUsersGroupsDueRepository {
 
     override fun fetchUsersGroupsDueByUserId(
-            fetchUserGroupDueByUserIdDTO: FetchUserGroupDueByUserIdDTO
-    ): List<Group> {
+        fetchUserGroupDueByUserIdDTO: FetchUserGroupDueByUserIdDTO
+    ): Map<Server?, List<Group>> {
         return transaction {
-            val groups = mutableListOf<Group>()
-
+            val groups = mutableMapOf<Server?, MutableList<Group>>()
 
             UserGroupDueDAO.find {
                 UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdDTO.id and (
                         UsersGroupsDueTable.dueAt greater DateTime.now()
                 )
-            }.forEach { groups.add(it.group()) }
+            }.forEach {
+                val server = it.server()
+
+                val currentGroups = groups.getOrDefault(server, mutableListOf())
+
+                currentGroups.add(it.group())
+
+                groups[server] = currentGroups
+            }
 
             return@transaction groups
         }
     }
 
     override fun fetchUsersGroupsDueByUserIdAndServerName(
-            fetchUserGroupDueByUserIdAndServerNameDTO: FetchUserGroupDueByUserIdAndServerNameDTO
-    ): List<Group> {
+        fetchUserGroupDueByUserIdAndServerNameDTO: FetchUserGroupDueByUserIdAndServerNameDTO
+    ): Map<Server?, List<Group>> {
         return transaction {
-            val groups = mutableListOf<Group>()
+            val groups = mutableMapOf<Server?, MutableList<Group>>()
 
             UserGroupDueDAO.find {
                 UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdAndServerNameDTO.id and (
                         UsersGroupsDueTable.serverName eq fetchUserGroupDueByUserIdAndServerNameDTO.server.name
-                        ) and (
+                ) and (
                         UsersGroupsDueTable.dueAt greater DateTime.now()
-                        )
-            }.forEach { groups.add(it.group()) }
+                )
+            }.forEach {
+                val server = it.server()
+
+                val currentGroups = groups.getOrDefault(server, mutableListOf())
+
+                currentGroups.add(it.group())
+
+                groups[server] = currentGroups
+            }
 
             return@transaction groups
         }

@@ -17,7 +17,7 @@ class UsersGroupsDueLocalCache : LocalCache {
 
     private val CACHE = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
-            .build<UsersGroupsDueLookupCache, List<Group>> {
+            .build<UsersGroupsDueLookupCache, Map<Server?, List<Group>>> {
                 if (it.server == null) {
                     CoreProvider.Repositories.Postgres.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserId(
                             FetchUserGroupDueByUserIdDTO(
@@ -38,7 +38,7 @@ class UsersGroupsDueLocalCache : LocalCache {
 
     fun fetchByUserIdAndServerName(id: UUID, serverName: String) = this.CACHE.get(UsersGroupsDueLookupCache(
             id,
-            com.redefantasy.core.shared.CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
                     serverName
             )
     ))

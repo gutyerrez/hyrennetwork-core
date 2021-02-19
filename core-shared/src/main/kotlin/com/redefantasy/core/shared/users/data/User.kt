@@ -19,18 +19,18 @@ import java.util.stream.Collectors
  * @author SrGutyerrez
  **/
 data class User(
-        val id: EntityID<UUID>,
-        val name: String,
-        var discordId: Long? = null,
-        var twoFactorAuthenticationEnabled: Boolean? = null,
-        var twoFactorAuthenticationCode: String? = null,
-        var twitterAccessToken: String? = null,
-        var twitterTokenSecret: String? = null,
-        var lastAddress: String? = null,
-        var lastLobbyName: String? = null,
-        var lastLoginAt: DateTime? = null,
-        var createdAt: DateTime? = null,
-        var updatedAt: DateTime? = null
+    val id: EntityID<UUID>,
+    val name: String,
+    var discordId: Long? = null,
+    var twoFactorAuthenticationEnabled: Boolean? = null,
+    var twoFactorAuthenticationCode: String? = null,
+    var twitterAccessToken: String? = null,
+    var twitterTokenSecret: String? = null,
+    var lastAddress: String? = null,
+    var lastLobbyName: String? = null,
+    var lastLoginAt: DateTime? = null,
+    var createdAt: DateTime? = null,
+    var updatedAt: DateTime? = null
 ) {
 
     val loginAttempts = AtomicInteger(0)
@@ -46,7 +46,14 @@ data class User(
 
         if (userPasswords.isEmpty()) return false
 
-        val successfully = userPasswords.stream().anyMatch { it.enabled && it.password.contentEquals(EncryptionUtil.hash(EncryptionUtil.Type.SHA256, password)) }
+        val successfully = userPasswords.stream().anyMatch {
+            it.enabled && it.password.contentEquals(
+                EncryptionUtil.hash(
+                    EncryptionUtil.Type.SHA256,
+                    password
+                )
+            )
+        }
 
         if (!successfully) loginAttempts.getAndIncrement()
 
@@ -55,26 +62,37 @@ data class User(
 
     fun getUniqueId() = this.id.value
 
-    fun getGroups(server: Server? = null): List<Group> {
+    fun getGroups(server: Server? = null): Map<Server?, List<Group>> {
+        val _groups = mutableMapOf<Server?, List<Group>>()
+
+        _groups[server] = listOf(Group.DEFAULT)
+
         return if (server == null) {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: listOf(Group.DEFAULT)
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
         } else {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: listOf(Group.DEFAULT)
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: _groups
         }
     }
 
     fun getHighestGroup(server: Server? = null): Group {
-        return this.getGroups(server)
-                .stream()
-                .sorted { o1, o2 -> Ints.compare(o2.priority!!, o1.priority!!) }
-                .findFirst()
-                .orElse(Group.DEFAULT)
+        val groups = this.getGroups()[server]
+
+        if (groups === null) return Group.DEFAULT
+
+        return groups
+            .stream()
+            .sorted { o1, o2 -> Ints.compare(o2.priority!!, o1.priority!!) }
+            .findFirst()
+            .orElse(Group.DEFAULT)
     }
 
     fun hasGroup(group: Group, server: Server? = null): Boolean {
-        return this.getGroups(server)
-                .stream()
-                .anyMatch { it.priority!! >= group.priority!! }
+        val groups = this.getGroups()[server]
+
+        if (groups === null || groups.isEmpty()) return false
+
+        return groups.stream()
+            .anyMatch { it.priority!! >= group.priority!! }
     }
 
     fun hasStrictGroup(group: Group, server: Server? = null): Boolean {
@@ -82,7 +100,8 @@ data class User(
     }
 
     fun getConnectedProxyName(): String {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "Desconhecido"
+        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName
+            ?: "Desconhecido"
     }
 
     fun getConnectedAddress(): String {
@@ -103,15 +122,15 @@ data class User(
 
     fun getActivePunishments(): List<UserPunishment> {
         return this.getPunishments()
-                .stream()
-                .filter { it.isActive() }
-                .collect(Collectors.toList())
+            .stream()
+            .filter { it.isActive() }
+            .collect(Collectors.toList())
     }
 
     fun isBanned(): Boolean {
         return this.getActivePunishments()
-                .stream()
-                .anyMatch { it.isBan() }
+            .stream()
+            .anyMatch { it.isBan() }
     }
 
     fun getFriends(): List<User> {
@@ -119,14 +138,14 @@ data class User(
         val _friends = CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
 
         _friends.stream()
-                .map {
-                    CoreProvider.Cache.Local.USERS.provide().fetchById(
-                            it.friendUserId
-                    )
-                }
-                .forEach {
-                    if (it != null) friends.add(it)
-                }
+            .map {
+                CoreProvider.Cache.Local.USERS.provide().fetchById(
+                    it.friendUserId
+                )
+            }
+            .forEach {
+                if (it != null) friends.add(it)
+            }
 
         return friends
     }
@@ -136,14 +155,14 @@ data class User(
         val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
 
         _ignored.stream()
-                .map {
-                    CoreProvider.Cache.Local.USERS.provide().fetchById(
-                            it.friendUserId
-                    )
-                }
-                .forEach {
-                    if (it != null) ignored.add(it)
-                }
+            .map {
+                CoreProvider.Cache.Local.USERS.provide().fetchById(
+                    it.friendUserId
+                )
+            }
+            .forEach {
+                if (it != null) ignored.add(it)
+            }
 
         return ignored
     }
@@ -152,7 +171,7 @@ data class User(
         val preferences = mutableMapOf<String, Boolean>()
 
         val userPreferences = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
-                this.getUniqueId()
+            this.getUniqueId()
         ) ?: emptyList()
 
         userPreferences.forEach { preferences[it.preference.name] = it.status }
@@ -164,7 +183,7 @@ data class User(
         val reports = mutableMapOf<ReportCategory, Int>()
 
         CoreProvider.Cache.Redis.USERS_REPORTS.provide().fetchByUserId(
-                this.getUniqueId()
+            this.getUniqueId()
         ).forEach {
             val count = reports[it.reportCategory] ?: 0
 

@@ -51,7 +51,7 @@ class LoginListeners : Listener {
         if (user !== null) {
             user.setLogged(false)
 
-            // TODO
+            CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(user)
         }
     }
 
