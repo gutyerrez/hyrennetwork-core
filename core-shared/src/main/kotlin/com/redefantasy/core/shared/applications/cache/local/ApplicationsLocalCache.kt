@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.local.LocalCache
+import com.redefantasy.core.shared.servers.data.Server
 import java.net.InetSocketAddress
 import java.util.stream.Collectors
 
@@ -33,6 +34,18 @@ class ApplicationsLocalCache : LocalCache {
         .stream()
         .filter { it.applicationType === applicationType }
         .collect(Collectors.toList())
+
+    fun fetchByServerAndApplicationType(
+        server: Server,
+        applicationType: ApplicationType
+    ): Application? {
+        return this.CACHE_BY_NAME.asMap()
+            .values
+            .stream()
+            .filter { it.server === server && it.applicationType === applicationType }
+            .findFirst()
+            .orElse(null)
+    }
 
     override fun populate() {
         super.populate()

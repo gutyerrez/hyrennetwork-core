@@ -37,7 +37,7 @@ interface Commandable<T> {
 
     fun getCommandRestriction(): CommandRestriction? = null
 
-    fun <S : Commandable<T>> getSubCommands(): Map<S, String>? = null
+    fun getSubCommands(): List<Commandable<T>>? = null
 
     fun getArguments(): List<Argument>? = null
 
@@ -99,23 +99,23 @@ interface Commandable<T> {
 
             val commandName = this.getParent()?.getName() ?: this.getName()
 
-            if (this.getSubCommands<Commandable<T>>() !== null) {
-                this.getSubCommands<Commandable<T>>()!!.forEach { commandable, _ ->
-                    if (commandable.getArguments() !== null) {
-                        val arguments = commandable.getArguments()!!.stream().map {
-                            "<${it.name}>"
+            if (this.getSubCommands() !== null) {
+                this.getSubCommands()!!.forEach {
+                    if (it.getArguments() !== null) {
+                        val arguments = it.getArguments()!!.stream().map { argument ->
+                            "<${argument.name}>"
                         }.distinct().collect(Collectors.joining(" "))
 
-                        componentBuilder.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${this.getDescription() ?: ""}")
+                        componentBuilder.append("§a/$commandName ${it.getName()} $arguments §8- §7${this.getDescription() ?: ""}")
                             .event(ClickEvent(
                                 ClickEvent.Action.SUGGEST_COMMAND,
-                                "/$commandName ${commandable.getName()} "
+                                "/$commandName ${it.getName()} "
                             ))
                     } else {
-                        componentBuilder.append("§a/$commandName ${commandable.getName()} §8- §7${this.getDescription() ?: ""}")
+                        componentBuilder.append("§a/$commandName ${it.getName()} §8- §7${this.getDescription() ?: ""}")
                             .event(ClickEvent(
                                 ClickEvent.Action.SUGGEST_COMMAND,
-                                "/$commandName ${commandable.getName()} "
+                                "/$commandName ${it.getName()} "
                             ))
                     }
                 }
@@ -147,9 +147,8 @@ interface Commandable<T> {
         }
 
         try {
-            if (args.isNotEmpty() && this.getSubCommands<Commandable<T>>() !== null) {
-                val subCommand = this.getSubCommands<Commandable<T>>()!!
-                    .keys
+            if (args.isNotEmpty() && this.getSubCommands() !== null) {
+                val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
                         it.getName() === args[0] || it.getAliases().contains(args[0])

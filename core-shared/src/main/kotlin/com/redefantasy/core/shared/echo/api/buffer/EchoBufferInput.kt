@@ -10,8 +10,10 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
+import net.md_5.bungee.chat.ComponentSerializer
 import java.net.InetSocketAddress
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * @author SrGutyerrez
@@ -56,10 +58,10 @@ class EchoBufferInput(
         return null
     }
 
-    fun <T : Enum<T>> readEnum(clazz: Class<T>, deft: T? = null): T? {
+    fun <T : Enum<T>> readEnum(clazz: KClass<T>, deft: T? = null): T? {
         val string = this.readString() ?: return null
 
-        val optional = Enums.getIfPresent(clazz, string)
+        val optional = Enums.getIfPresent(clazz.java, string)
 
         if (deft !== null) return optional.or(deft)
 
@@ -115,9 +117,9 @@ class EchoBufferInput(
                 this.readString(),
                 this.readInt(),
                 this.readAddress()!!,
-                this.readEnum(ApplicationType::class.java)!!,
+                this.readEnum(ApplicationType::class)!!,
                 this.readServer(),
-                this.readEnum(Group::class.java)
+                this.readEnum(Group::class)
         )
 
         return null
@@ -126,10 +128,12 @@ class EchoBufferInput(
     fun readServer(): Server? {
         val serverName = this.readString() ?: return null
 
-        return com.redefantasy.core.shared.CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
+        return CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
     }
 
     fun readSerializedLocation() = SerializedLocation.of(this.readString())
+
+    fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
 

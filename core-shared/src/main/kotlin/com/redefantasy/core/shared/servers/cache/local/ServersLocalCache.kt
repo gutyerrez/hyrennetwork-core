@@ -13,6 +13,8 @@ class ServersLocalCache : LocalCache {
     private val CACHE = Caffeine.newBuilder()
             .build<String, Server>()
 
+    fun fetchAll() = this.CACHE.asMap().values
+
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
 

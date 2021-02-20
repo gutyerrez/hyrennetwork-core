@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.redis.RedisCache
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.data.User
+import com.redefantasy.core.shared.world.location.SerializedLocation
 import org.joda.time.DateTime
 import redis.clients.jedis.ScanParams
 import java.net.InetSocketAddress
@@ -40,7 +41,7 @@ class UsersStatusRedisCache : RedisCache {
             val key = this.getKey(user.getUniqueId())
 
             return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
-                    it.hget(key, "proxy_application")
+                it.hget(key, "proxy_application")
             )
         }
     }
@@ -50,8 +51,33 @@ class UsersStatusRedisCache : RedisCache {
             val key = this.getKey(user.getUniqueId())
 
             return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
-                    it.hget(key, "bukkit_application")
+                it.hget(key, "bukkit_application")
             )
+        }
+    }
+
+    fun fetchBukkitLocation(user: User): SerializedLocation {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val key = this.getKey(user.getUniqueId())
+
+            TODO("not implemented yet")
+        }
+    }
+
+    fun fetchUsers(): List<UUID> {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val users = mutableListOf<UUID>()
+            val scanParams = ScanParams().match("users:*")
+
+            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+
+            scan.result.forEach { key ->
+                val uuid = UUID.fromString(key.split("users:")[1])
+
+                users.add(uuid)
+            }
+
+            return@use users
         }
     }
 
@@ -66,7 +92,7 @@ class UsersStatusRedisCache : RedisCache {
                 val bukkitApplication = it.hget(key, "bukkit_application")
 
                 val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
-                        bukkitApplication
+                    bukkitApplication
                 )
 
                 if (application != null && application.server !== null && application.server === server) {

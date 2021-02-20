@@ -4,6 +4,7 @@ import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.DateFormatter
@@ -16,15 +17,17 @@ import java.util.stream.Collectors
 /**
  * @author Gutyerrez
  */
-class FindCommand : CustomCommand("find") {
+class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
-    override fun getDescription() = "Ver informações de um usuário."
+    override fun getDescription() = "Ver informações sobre um usuário."
 
     override fun getArguments() = listOf(
         Argument("usuário")
     )
+
+    override fun getGroup() = Group.MANAGER
 
     override fun onCommand(
         commandSender: CommandSender,
@@ -56,13 +59,13 @@ class FindCommand : CustomCommand("find") {
             .append("\n")
             .append("   Punido: §c--/--")
             .append("\n\n")
-            .append(" §aInformações avançadas:")
+            .append(" ${color}Informações avançadas:")
             .append("\n\n")
             .append("   Endereço conectado: ${if (address === null || address.isEmpty()) "§7[Desconhecido]" else address}")
             .append("\n")
             .append("   Último IP: ${if (user!!.hasGroup(Group.MANAGER)) targetUser.lastAddress else "§c[Sem permissão]"}")
             .append("\n\n")
-            .append(" §aAssociações:")
+            .append(" ${color}Associações:")
             .append("\n\n")
             .append("   E-mail: §7[Não implementado]")
             .append("\n")
@@ -70,7 +73,7 @@ class FindCommand : CustomCommand("find") {
             .append("\n")
             .append("   Twitter: §7[Não implementado]")
             .append("\n\n")
-            .append(" §aServidores:")
+            .append(" ${color}Servidores:")
             .append("\n\n")
 
         val groups =
@@ -82,7 +85,7 @@ class FindCommand : CustomCommand("find") {
 
             val groupsToString = _groups.stream().map { group -> group.displayName }.collect(Collectors.joining(", "))
 
-            message.append("   ${if (server === null) "Rede" else server.displayName}: $groupsToString")
+            message.append("   ${if (server === null) "Todos" else server.displayName}: $groupsToString")
                 .append("\n")
         }
 
@@ -90,7 +93,7 @@ class FindCommand : CustomCommand("find") {
         val bukkitApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchBukkitApplication(targetUser)
 
         message.append("\n\n")
-            .append(" §aConexão:")
+            .append(" ${color}Conexão:")
             .append("\n\n")
             .append("   Conectado: ${if (targetUser.isOnline()) "§aSim" else "§cNão"}")
             .append("\n")

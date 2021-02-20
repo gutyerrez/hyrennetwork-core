@@ -8,12 +8,13 @@ import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 
 class UserDAO(
-        id: EntityID<UUID>,
+    id: EntityID<UUID>,
 ) : UUIDEntity(id) {
 
     companion object : UUIDEntityClass<UserDAO>(UsersTable)
 
     var name by UsersTable.name
+    var email by UsersTable.email
     var discordId by UsersTable.discordId
     var twoFactorAuthenticationEnabled by UsersTable.twoFactorAuthenticationEnabled
     var twoFactorAuthenticationCode by UsersTable.twoFactorAuthenticationCode
@@ -26,18 +27,19 @@ class UserDAO(
     var updatedAt by UsersTable.updatedAt
 
     fun asUser(): User = User(
-            this.id,
-            this.name,
-            this.discordId,
-            this.twoFactorAuthenticationEnabled,
-            this.twoFactorAuthenticationCode,
-            this.twitterAccessToken,
-            this.twitterTokenSecret,
-            this.lastAddress,
-            this.lastLobbyName,
-            this.lastLoginAt,
-            this.createdAt,
-            this.updatedAt
+        this.id,
+        this.name,
+        this.email,
+        this.discordId,
+        this.twoFactorAuthenticationEnabled,
+        this.twoFactorAuthenticationCode,
+        this.twitterAccessToken,
+        this.twitterTokenSecret,
+        this.lastAddress,
+        this.lastLobbyName,
+        this.lastLoginAt,
+        this.createdAt,
+        this.updatedAt
     )
 
 }

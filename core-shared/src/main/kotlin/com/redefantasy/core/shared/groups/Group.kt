@@ -16,6 +16,7 @@ enum class Group(
 ) {
 
     GAME_MASTER,
+    DIRECTOR,
     MANAGER,
     ADMINISTRATOR,
     MODERATOR,

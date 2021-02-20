@@ -6,6 +6,8 @@ import com.google.gson.JsonObject
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.chat.ComponentSerializer
 import java.net.Inet6Address
 import java.net.InetSocketAddress
 import java.util.*
@@ -98,7 +100,7 @@ class EchoBufferOutput {
     }
 
     fun writeServer(server: Server?) {
-        if (server == null) {
+        if (server === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
@@ -112,6 +114,28 @@ class EchoBufferOutput {
 
     fun writeJsonObject(jsonObject: JsonObject) {
         this.writeString(jsonObject.toString())
+    }
+
+    fun writeBaseComponent(baseComponents: Array<BaseComponent>?) {
+        if (baseComponents === null) {
+            this.writeBoolean(false)
+        } else {
+            val serialized = ComponentSerializer.toString(*baseComponents)
+
+            this.writeBoolean(true)
+            this.writeString(serialized)
+        }
+    }
+
+    fun writeBaseComponent(baseComponent: BaseComponent?) {
+        if (baseComponent === null) {
+            this.writeBoolean(false)
+        } else {
+            val serialized = ComponentSerializer.toString(baseComponent)
+
+            this.writeBoolean(true)
+            this.writeString(serialized)
+        }
     }
 
     fun toByteArray() = this.buffer.toByteArray()

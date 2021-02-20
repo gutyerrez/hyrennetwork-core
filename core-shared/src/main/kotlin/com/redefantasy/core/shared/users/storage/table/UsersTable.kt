@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.jodatime.datetime
 object UsersTable : UUIDTable("users") {
 
     val name = varchar("name", 16)
+    var email = varchar("email", 255).nullable()
     val discordId = long("discord_id").nullable()
     val twoFactorAuthenticationEnabled = bool("two_factor_authentication_enabled").nullable()
     val twoFactorAuthenticationCode = varchar("two_factor_authentication_code", 8).nullable()

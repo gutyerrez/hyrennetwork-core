@@ -1,6 +1,9 @@
 package com.redefantasy.core.bungee
 
-import com.redefantasy.core.bungee.command.defaults.staff.FindCommand
+import com.redefantasy.core.bungee.command.defaults.staff.*
+import com.redefantasy.core.bungee.command.defaults.staff.account.AccountCommand
+import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
+import com.redefantasy.core.bungee.command.defaults.staff.server.ServerCommand
 import com.redefantasy.core.bungee.misc.login.commands.LoginCommand
 import com.redefantasy.core.bungee.misc.login.commands.RegisterCommand
 import com.redefantasy.core.bungee.misc.login.listeners.LoginListeners
@@ -31,7 +34,16 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerCommand(this, PunishCommand())
         pluginManager.registerCommand(this, LoginCommand())
         pluginManager.registerCommand(this, RegisterCommand())
+        pluginManager.registerCommand(this, AccountCommand())
+        pluginManager.registerCommand(this, GroupCommand())
+        pluginManager.registerCommand(this, ServerCommand())
+        pluginManager.registerCommand(this, AnnounceCommand())
+        pluginManager.registerCommand(this, BTPCommand())
         pluginManager.registerCommand(this, FindCommand())
+        pluginManager.registerCommand(this, KickCommand())
+        pluginManager.registerCommand(this, SendCommand())
+        pluginManager.registerCommand(this, StaffChatCommand())
+        pluginManager.registerCommand(this, StaffListCommand())
 
         pluginManager.registerListener(this, LoginListeners())
 

@@ -7,6 +7,6 @@ interface Respondable<T: Response> {
 
     fun getResponse(): T?
 
-    fun setResponse(t: T)
+    fun setResponse(t: T?)
 
 }
