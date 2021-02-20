@@ -47,7 +47,7 @@ interface Commandable<T> {
 
     fun getSenderName(commandSender: T): String
 
-    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean
+    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean?
 
     fun executeRaw(commandSender: T, args: Array<out String>) {
         if (this.getCommandRestriction() !== null) {
@@ -92,6 +92,33 @@ interface Commandable<T> {
             }
         }
 
+        this.sendAvailableCommands(commandSender, args)
+
+        try {
+            if (args.isNotEmpty() && this.getSubCommands() !== null) {
+                val subCommand = this.getSubCommands()!!
+                    .stream()
+                    .filter {
+                        it.getName() === args[0] || it.getAliases().contains(args[0])
+                    }
+                    .findFirst()
+                    .orElse(null)
+
+                if (subCommand !== null) subCommand.executeRaw(
+                    commandSender,
+                    args.copyOfRange(1, args.size)
+                )
+            }
+
+            if (this.onCommand(commandSender, user, args) === null) {
+                this.sendAvailableCommands(commandSender, args)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private fun sendAvailableCommands(commandSender: T, args: Array<out String>) {
         if (this.getArguments() !== null && this.getArguments()!!.size > args.size) {
             val componentBuilder = ComponentBuilder("\n")
                 .append("§2Comandos disponíveis:")
@@ -144,27 +171,6 @@ interface Commandable<T> {
                 componentBuilder.create()
             )
             return
-        }
-
-        try {
-            if (args.isNotEmpty() && this.getSubCommands() !== null) {
-                val subCommand = this.getSubCommands()!!
-                    .stream()
-                    .filter {
-                        it.getName() === args[0] || it.getAliases().contains(args[0])
-                    }
-                    .findFirst()
-                    .orElse(null)
-
-                if (subCommand !== null) subCommand.executeRaw(
-                    commandSender,
-                    args.copyOfRange(1, args.size)
-                )
-            }
-
-            this.onCommand(commandSender, user, args)
-        } catch (e: Exception) {
-            // Criar log de erro
         }
     }
 
