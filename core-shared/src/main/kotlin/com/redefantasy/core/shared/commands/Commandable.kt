@@ -127,11 +127,11 @@ interface Commandable<T> {
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
                     if (commandable.onCommand(commandSender, null, args) !== null) {
-                        componentBuilder.append(commandable, index)
+                        componentBuilder.append(commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
-                            commandable.getSubCommands()!!.forEachIndexed { index, commandable ->
-                                componentBuilder.append(commandable, index)
+                            commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
+                                componentBuilder.append(_commandable, _index, commandable.getSubCommands()!!.size)
                             }
                         }
                     }
@@ -171,7 +171,7 @@ interface Commandable<T> {
         return true
     }
 
-    private fun ComponentBuilder.append(commandable: Commandable<*>, index: Int) {
+    private fun ComponentBuilder.append(commandable: Commandable<*>, index: Int, max: Int) {
         val commandName = commandable.getName()
 
         if (commandable.getArguments() !== null) {
@@ -187,7 +187,7 @@ interface Commandable<T> {
                     )
                 )
 
-            if (commandable.getSubCommands() !== null && index < commandable.getSubCommands()!!.size) this.append("\n")
+            if (index + 1 < max) this.append("\n")
         } else {
             this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription() ?: ""}")
                 .event(
@@ -197,7 +197,7 @@ interface Commandable<T> {
                     )
                 )
 
-            if (commandable.getSubCommands() !== null && index < commandable.getSubCommands()!!.size) this.append("\n")
+            if (index + 1 < max) this.append("\n")
         }
     }
 
