@@ -18,6 +18,8 @@ import java.net.InetSocketAddress
  */
 class LoginListeners : Listener {
 
+    private val UNLOGGED_ALLOWED_COMMANDS = listOf("/logar", "/registrar", "/login", "/register")
+
     @EventHandler(priority = EventPriority.HIGHEST)
     fun on(event: PostLoginEvent) {
         val proxiedPlayer = event.player
@@ -57,12 +59,15 @@ class LoginListeners : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     fun on(event: ChatEvent) {
         val sender = event.sender
+        val message = if (event.message.contains(" ")) {
+            event.message.split(" ")[0]
+        } else event.message
 
         if (sender !is ProxiedPlayer) return
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(sender.uniqueId)
 
-        if (user === null || !user.isLogged()) {
+        if (user === null || !user.isLogged() && !UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { message === it }) {
             event.isCancelled = true
 
             sender.sendMessage(TextComponent("§cVocê precisa estar autenticado para utilizar o chat."))
