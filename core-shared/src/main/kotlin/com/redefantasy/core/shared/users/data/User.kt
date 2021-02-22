@@ -64,9 +64,9 @@ data class User(
     fun getUniqueId() = this.id.value
 
     fun getGroups(server: Server? = null): Map<Server?, List<Group>> {
-        val _groups = mutableMapOf<Server?, List<Group>>()
-
-        _groups[server] = listOf(Group.DEFAULT)
+        val _groups = mutableMapOf<Server?, List<Group>>(
+            Pair(null, listOf(Group.DEFAULT))
+        )
 
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
@@ -89,6 +89,10 @@ data class User(
 
     fun hasGroup(group: Group, server: Server? = null): Boolean {
         val groups = this.getGroups()[server]
+
+        println(groups)
+
+        println(groups?.isEmpty())
 
         if (groups === null || groups.isEmpty()) return false
 

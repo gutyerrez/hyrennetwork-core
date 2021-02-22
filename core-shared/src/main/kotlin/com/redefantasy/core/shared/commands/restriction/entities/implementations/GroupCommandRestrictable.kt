@@ -26,6 +26,6 @@ interface GroupCommandRestrictable : CommandRestrictable {
         }
     }
 
-    override fun getErrorMessage(): String = "§cYou need ${this.getGroup().displayName} group or higher to execute this command."
+    override fun getErrorMessage(): String = "§cÉ necessário o grupo ${this.getGroup().displayName} ou superior para executar este comando."
 
 }
