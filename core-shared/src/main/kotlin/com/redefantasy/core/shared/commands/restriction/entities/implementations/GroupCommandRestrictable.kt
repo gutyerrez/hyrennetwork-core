@@ -4,6 +4,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.restriction.entities.CommandRestrictable
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.users.data.User
+import net.md_5.bungee.api.chat.ComponentBuilder
 
 /**
  * @author SrGutyerrez
@@ -26,6 +27,8 @@ interface GroupCommandRestrictable : CommandRestrictable {
         }
     }
 
-    override fun getErrorMessage(): String = "§cÉ necessário o grupo ${this.getGroup().displayName} ou superior para executar este comando."
+    override fun getErrorMessage() = ComponentBuilder(
+        "§cÉ necessário o grupo ${this.getGroup().displayName} ou superior para executar este comando."
+    ).create()
 
 }
