@@ -127,11 +127,11 @@ interface Commandable<T> {
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
                     if (commandable.onCommand(commandSender, null, args) !== null) {
-                        componentBuilder.append(commandable, index, this.getSubCommands()!!.size)
+                        componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
-                                componentBuilder.append(_commandable, _index, commandable.getSubCommands()!!.size)
+                                componentBuilder.append(commandName, _commandable, _index, commandable.getSubCommands()!!.size)
                             }
                         }
                     }
@@ -171,9 +171,7 @@ interface Commandable<T> {
         return true
     }
 
-    private fun ComponentBuilder.append(commandable: Commandable<*>, index: Int, max: Int) {
-        val commandName = commandable.getName()
-
+    private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
         if (commandable.getArguments() !== null) {
             val arguments = commandable.getArguments()!!.stream().map { argument ->
                 "<${argument.name}>"
