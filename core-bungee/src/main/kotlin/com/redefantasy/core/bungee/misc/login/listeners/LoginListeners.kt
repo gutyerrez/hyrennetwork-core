@@ -63,13 +63,11 @@ class LoginListeners : Listener {
             event.message.split(" ")[0]
         } else event.message
 
-        println(">$message<")
-
         if (sender !is ProxiedPlayer) return
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(sender.uniqueId)
 
-        if (user === null || !user.isLogged() && !UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { message === it }) {
+        if (user === null || !user.isLogged() && !UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { it.contentEquals(message) }) {
             event.isCancelled = true
 
             sender.sendMessage(TextComponent("§cVocê precisa estar autenticado para utilizar o chat."))
