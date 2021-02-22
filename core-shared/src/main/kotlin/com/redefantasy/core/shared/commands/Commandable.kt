@@ -92,8 +92,6 @@ interface Commandable<T> {
             }
         }
 
-        if (!this.sendAvailableCommands(commandSender, args)) return
-
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
                 val subCommand = this.getSubCommands()!!
@@ -108,7 +106,7 @@ interface Commandable<T> {
                     commandSender,
                     args.copyOfRange(1, args.size)
                 )
-            }
+            } else if (!this.sendAvailableCommands(commandSender, args)) return
 
             if (this.onCommand(commandSender, user, args) === null) {
                 this.sendAvailableCommands(commandSender, args)
@@ -119,7 +117,7 @@ interface Commandable<T> {
     }
 
     private fun sendAvailableCommands(commandSender: T, args: Array<out String>): Boolean {
-        if (this.getArguments() !== null && this.getArguments()!!.size > args.size) {
+        if (args.isEmpty() || this.getArguments() !== null && this.getArguments()!!.size > args.size) {
             val componentBuilder = ComponentBuilder("\n")
                 .append("§2Comandos disponíveis:")
                 .append("\n\n")
