@@ -41,17 +41,8 @@ class ServerConnector : ServerConnector {
         proxiedPlayer: ProxiedPlayer,
         bukkitApplicationAddress: InetSocketAddress
     ) {
-        val _bukkitApplicationAddress = InetSocketAddress(
-            if (bukkitApplicationAddress.address.hostAddress.contains("/")) {
-                bukkitApplicationAddress.address.hostAddress.split("/")[1]
-            } else bukkitApplicationAddress.address.hostAddress,
-            bukkitApplicationAddress.port
-        )
-
-        println(_bukkitApplicationAddress.address.hostAddress)
-
         val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
-            _bukkitApplicationAddress
+            bukkitApplicationAddress
         )
 
         if (bukkitApplication === null) {
