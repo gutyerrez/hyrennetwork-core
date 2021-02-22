@@ -107,9 +107,9 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
 
-            if (!it.hexists(key, "bukkit_application")) return@use null
+            if (!it.hexists(key, "joined_at")) return@use null
 
-            return@use DateTime.parse(it.hget(key, "bukkit_application"))
+            return@use DateTime.parse(it.hget(key, "joined_at"))
         }
     }
 
