@@ -5,7 +5,6 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
 import com.redefantasy.core.shared.users.data.User
-import com.redefantasy.core.shared.users.storage.dao.UserDAO
 import com.redefantasy.core.shared.users.storage.dto.UpdateUserByIdDTO
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
@@ -35,7 +34,7 @@ class AccountChangeEmailCommand : CustomCommand("email") {
         targetUser.email = email
 
         CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().update(
-            UpdateUserByIdDTO<UserDAO>(
+            UpdateUserByIdDTO(
                 targetUser.id
             ) {
                 it.email = email

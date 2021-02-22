@@ -1,7 +1,6 @@
 package com.redefantasy.core.bungee.misc.login.listeners
 
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.users.storage.dao.UserDAO
 import com.redefantasy.core.shared.users.storage.dto.UpdateUserByIdDTO
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
@@ -32,7 +31,7 @@ class LoginListeners : Listener {
             user.lastAddress = (proxiedPlayer.pendingConnection.socketAddress as InetSocketAddress).address.hostAddress
 
             CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().update(
-                UpdateUserByIdDTO<UserDAO>(
+                UpdateUserByIdDTO(
                     user.id
                 ) {
                     it.lastLoginAt = user.lastLoginAt

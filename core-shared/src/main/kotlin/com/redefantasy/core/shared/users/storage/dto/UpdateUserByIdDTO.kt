@@ -1,6 +1,6 @@
 package com.redefantasy.core.shared.users.storage.dto
 
-import org.jetbrains.exposed.dao.Entity
+import com.redefantasy.core.shared.users.storage.dao.UserDAO
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 import java.util.function.Consumer
@@ -8,7 +8,7 @@ import java.util.function.Consumer
 /**
  * @author SrGutyerrez
  **/
-class UpdateUserByIdDTO<E: Entity<*>>(
+class UpdateUserByIdDTO(
         val id: EntityID<UUID>,
-        val execute: Consumer<E>
+        val execute: Consumer<UserDAO>
 )
