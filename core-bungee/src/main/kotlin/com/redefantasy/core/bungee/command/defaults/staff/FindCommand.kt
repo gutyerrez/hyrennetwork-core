@@ -94,7 +94,7 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
             val server = it.key
             val _groups = it.value
 
-            val groupsToString = _groups.stream().map { group -> "${group.color}${group.displayName}" }
+            val groupsToString = _groups.stream().map { group -> group.getFancyDisplayName() }
                 .collect(Collectors.joining("§f, "))
 
             message.append("   ${if (server === null) "Todos" else server.displayName}: $groupsToString")
