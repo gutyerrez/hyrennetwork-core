@@ -73,7 +73,8 @@ data class User(
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
         } else {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: _groups
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide()
+                .fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: _groups
         }
     }
 
@@ -90,10 +91,20 @@ data class User(
     }
 
     fun hasGroup(group: Group, server: Server? = null): Boolean {
-        val allGroups = this.getGroups()
-        val groups = this.getGroups()[server]
+        val groups = if (server === null) {
+            val groups = mutableListOf<Group>()
 
-        println(">> $allGroups")
+            this.getGroups().entries.forEach {
+                groups.addAll(
+                    it.value
+                        .stream()
+                        .distinct()
+                        .collect(Collectors.toList())
+                )
+            }
+
+            groups
+        } else this.getGroups()[server]
 
         println(groups)
 
@@ -101,8 +112,7 @@ data class User(
 
         if (groups === null || groups.isEmpty()) return false
 
-        return groups.stream()
-            .anyMatch { it.priority!! >= group.priority!! }
+        return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
     fun hasStrictGroup(group: Group, server: Server? = null): Boolean {
