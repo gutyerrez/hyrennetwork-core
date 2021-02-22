@@ -8,15 +8,12 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import org.joda.time.DateTime
 import redis.clients.jedis.ScanParams
-import java.net.InetSocketAddress
 import java.util.*
 
 /**
  * @author SrGutyerrez
  **/
 class UsersStatusRedisCache : RedisCache {
-
-    private val TTL_SECONDS = 10
 
     private fun getKey(userId: UUID) = String.format("users:$userId")
 
@@ -106,21 +103,32 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
-    fun create(user: User, application: Application, address: InetSocketAddress, version: Int) {
+    fun fetchJoinedAt(user: User): DateTime? {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val key = this.getKey(user.getUniqueId())
+
+            if (!it.hexists(key, "bukkit_application")) return@use null
+
+            return@use DateTime.parse(it.hget(key, "bukkit_application"))
+        }
+    }
+
+    fun create(user: User, application: Application, version: Int) {
         val map = mutableMapOf<String, String>()
 
         map["proxy_application"] = CoreProvider.application.name
         map["bukkit_application"] = application.name
-        map["connected_address"] = address.address.hostAddress
+        map["connected_address"] = CoreProvider.application.address.address.hostAddress
         map["connected_version"] = version.toString()
-        map["joined_at"] = DateTime.now().toString()
+        map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
+            DateTime.now().toString()
+        } else this.fetchJoinedAt(user).toString()
 
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
             val key = this.getKey(user.getUniqueId())
 
             pipeline.hmset(key, map)
-            pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
     }

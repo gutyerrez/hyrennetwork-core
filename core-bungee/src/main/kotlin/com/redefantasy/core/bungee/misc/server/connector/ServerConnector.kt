@@ -66,7 +66,6 @@ class ServerConnector : ServerConnector {
         CoreProvider.Cache.Redis.USERS_STATUS.provide().create(
             user,
             bukkitApplication,
-            (proxiedPlayer.pendingConnection.socketAddress as InetSocketAddress),
             proxiedPlayer.pendingConnection.version
         )
     }
