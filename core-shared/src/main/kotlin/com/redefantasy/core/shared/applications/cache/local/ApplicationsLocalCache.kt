@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.applications.cache.local
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.local.LocalCache
@@ -48,14 +49,14 @@ class ApplicationsLocalCache : LocalCache {
     }
 
     override fun populate() {
-        super.populate()
+        CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
+            this.CACHE_BY_NAME.put(name, application)
 
-        this.CACHE_BY_NAME.asMap().values.forEach {
-            println("${it.displayName} --> ${it.address}")
+            println("Carregando aplicação ${application.displayName} --> ${application.address}")
 
             CACHE_BY_ADDRESS.put(
-                ApplicationByAddressLookup(it.address),
-                it
+                ApplicationByAddressLookup(application.address),
+                application
             )
         }
     }
