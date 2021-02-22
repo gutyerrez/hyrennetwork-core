@@ -187,7 +187,7 @@ interface Commandable<T> {
                     )
                 )
 
-            if (commandable.getSubCommands() !== null && index + 1 < commandable.getSubCommands()!!.size) this.append("\n")
+            if (commandable.getSubCommands() !== null && index < commandable.getSubCommands()!!.size) this.append("\n")
         } else {
             this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription() ?: ""}")
                 .event(
@@ -197,7 +197,7 @@ interface Commandable<T> {
                     )
                 )
 
-            if (commandable.getSubCommands() !== null && index + 1 < commandable.getSubCommands()!!.size) this.append("\n")
+            if (commandable.getSubCommands() !== null && index < commandable.getSubCommands()!!.size) this.append("\n")
         }
     }
 
