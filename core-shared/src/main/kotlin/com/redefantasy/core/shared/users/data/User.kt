@@ -78,10 +78,6 @@ data class User(
     }
 
     fun getHighestGroup(server: Server? = null): Group {
-        val allGroups = this.getGroups()
-
-        println(">> $allGroups")
-
         val groups = this.getGroups()[server]
 
         if (groups === null) return Group.DEFAULT
@@ -94,7 +90,10 @@ data class User(
     }
 
     fun hasGroup(group: Group, server: Server? = null): Boolean {
+        val allGroups = this.getGroups()
         val groups = this.getGroups()[server]
+
+        println(">> $allGroups")
 
         println(groups)
 
