@@ -68,6 +68,8 @@ data class User(
             Pair(null, listOf(Group.DEFAULT))
         )
 
+        println("Grupos: $_groups")
+
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
         } else {
@@ -76,6 +78,10 @@ data class User(
     }
 
     fun getHighestGroup(server: Server? = null): Group {
+        val allGroups = this.getGroups()
+
+        println(">> $allGroups")
+
         val groups = this.getGroups()[server]
 
         if (groups === null) return Group.DEFAULT
