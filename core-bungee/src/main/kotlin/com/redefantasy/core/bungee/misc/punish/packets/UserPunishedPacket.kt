@@ -35,7 +35,7 @@ class UserPunishedPacket(
         userId = buffer.readUUID()!!
         stafferId = buffer.readUUID()!!
         punishCategoryName = buffer.readString()!!
-        punishType = buffer.readEnum(PunishType::class.java)!!
+        punishType = buffer.readEnum(PunishType::class)!!
         proof = buffer.readString()
         hidden = buffer.readBoolean()
     }
