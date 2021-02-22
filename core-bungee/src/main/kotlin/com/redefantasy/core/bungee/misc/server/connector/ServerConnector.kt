@@ -4,7 +4,6 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.BungeeServerInfo
-import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.config.ServerInfo
 import net.md_5.bungee.api.connection.ProxiedPlayer
@@ -46,14 +45,14 @@ class ServerConnector : ServerConnector {
         proxiedPlayer: ProxiedPlayer,
         serverInfo: ServerInfo
     ) {
+        println(serverInfo.address)
+
         val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
             serverInfo.address
         )
 
-        val disconnectMessage: Array<BaseComponent>
-
         if (application === null) {
-            disconnectMessage = ComponentBuilder()
+            val disconnectMessage = ComponentBuilder()
                 .append("§c§lREDE FANTASY")
                 .append("\n\n")
                 .append("§cNão foi possível localizar a aplicação.")
