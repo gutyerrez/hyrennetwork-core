@@ -5,8 +5,6 @@ import com.redefantasy.core.bungee.command.defaults.staff.account.subcommands.Ac
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
 import com.redefantasy.core.shared.groups.Group
-import com.redefantasy.core.shared.users.data.User
-import net.md_5.bungee.api.CommandSender
 
 /**
  * @author Gutyerrez
@@ -22,11 +20,5 @@ class AccountCommand : CustomCommand("conta"), GroupCommandRestrictable {
     )
 
     override fun getGroup() = Group.MANAGER
-
-    override fun onCommand(
-        commandSender: CommandSender,
-        user: User?,
-        args: Array<out String>
-    ): Boolean? = null
 
 }

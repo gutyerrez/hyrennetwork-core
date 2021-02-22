@@ -125,23 +125,15 @@ interface Commandable<T> {
             val commandName = this.getParent()?.getName() ?: this.getName()
 
             if (this.getSubCommands() !== null) {
-                this.getSubCommands()!!.forEach {
-                    if (it.getArguments() !== null) {
-                        val arguments = it.getArguments()!!.stream().map { argument ->
-                            "<${argument.name}>"
-                        }.distinct().collect(Collectors.joining(" "))
-
-                        componentBuilder.append("§a/$commandName ${it.getName()} $arguments §8- §7${this.getDescription() ?: ""}")
-                            .event(ClickEvent(
-                                ClickEvent.Action.SUGGEST_COMMAND,
-                                "/$commandName ${it.getName()} "
-                            ))
+                this.getSubCommands()!!.forEachIndexed { index, commandable ->
+                    if (commandable.onCommand(commandSender, null, args) !== null) {
+                        componentBuilder.append(commandable, index)
                     } else {
-                        componentBuilder.append("§a/$commandName ${it.getName()} §8- §7${this.getDescription() ?: ""}")
-                            .event(ClickEvent(
-                                ClickEvent.Action.SUGGEST_COMMAND,
-                                "/$commandName ${it.getName()} "
-                            ))
+                        if (commandable.getSubCommands() !== null) {
+                            commandable.getSubCommands()!!.forEachIndexed { index, commandable ->
+                                componentBuilder.append(commandable, index)
+                            }
+                        }
                     }
                 }
             } else if (this.getArguments() !== null) {
@@ -150,16 +142,20 @@ interface Commandable<T> {
                 }.distinct().collect(Collectors.joining(" "))
 
                 componentBuilder.append("§a/$commandName $arguments §8- §7${this.getDescription() ?: ""}")
-                    .event(ClickEvent(
-                        ClickEvent.Action.SUGGEST_COMMAND,
-                        "/$commandName "
-                    ))
+                    .event(
+                        ClickEvent(
+                            ClickEvent.Action.SUGGEST_COMMAND,
+                            "/$commandName "
+                        )
+                    )
             } else {
                 componentBuilder.append("§a/$commandName §8- §7${this.getDescription() ?: ""}")
-                    .event(ClickEvent(
-                        ClickEvent.Action.SUGGEST_COMMAND,
-                        "/$commandName "
-                    ))
+                    .event(
+                        ClickEvent(
+                            ClickEvent.Action.SUGGEST_COMMAND,
+                            "/$commandName "
+                        )
+                    )
             }
 
             componentBuilder.append("\n")
@@ -173,6 +169,36 @@ interface Commandable<T> {
         }
 
         return true
+    }
+
+    private fun ComponentBuilder.append(commandable: Commandable<*>, index: Int) {
+        val commandName = commandable.getName()
+
+        if (commandable.getArguments() !== null) {
+            val arguments = commandable.getArguments()!!.stream().map { argument ->
+                "<${argument.name}>"
+            }.distinct().collect(Collectors.joining(" "))
+
+            this.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${commandable.getDescription() ?: ""}")
+                .event(
+                    ClickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND,
+                        "/$commandName ${commandable.getName()} "
+                    )
+                )
+
+            if (index + 1 < commandable.getSubCommands()!!.size) this.append("\n")
+        } else {
+            this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription() ?: ""}")
+                .event(
+                    ClickEvent(
+                        ClickEvent.Action.SUGGEST_COMMAND,
+                        "/$commandName ${commandable.getName()} "
+                    )
+                )
+
+            if (index + 1 < commandable.getSubCommands()!!.size) this.append("\n")
+        }
     }
 
 }
