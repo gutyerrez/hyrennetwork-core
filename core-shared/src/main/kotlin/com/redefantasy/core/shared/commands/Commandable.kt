@@ -92,7 +92,7 @@ interface Commandable<T> {
             }
         }
 
-        this.sendAvailableCommands(commandSender, args)
+        if (!this.sendAvailableCommands(commandSender, args)) return
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
@@ -118,7 +118,7 @@ interface Commandable<T> {
         }
     }
 
-    private fun sendAvailableCommands(commandSender: T, args: Array<out String>) {
+    private fun sendAvailableCommands(commandSender: T, args: Array<out String>): Boolean {
         if (this.getArguments() !== null && this.getArguments()!!.size > args.size) {
             val componentBuilder = ComponentBuilder("\n")
                 .append("§2Comandos disponíveis:")
@@ -170,8 +170,11 @@ interface Commandable<T> {
                 this.getSenderName(commandSender),
                 componentBuilder.create()
             )
-            return
+
+            return false
         }
+
+        return true
     }
 
 }
