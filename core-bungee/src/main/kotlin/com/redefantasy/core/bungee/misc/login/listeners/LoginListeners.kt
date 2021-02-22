@@ -63,6 +63,8 @@ class LoginListeners : Listener {
             event.message.split(" ")[0]
         } else event.message
 
+        println(">$message<")
+
         if (sender !is ProxiedPlayer) return
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(sender.uniqueId)
