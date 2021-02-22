@@ -48,6 +48,8 @@ class ServerConnector : ServerConnector {
             bukkitApplicationAddress.port
         )
 
+        println(_bukkitApplicationAddress.address.hostAddress)
+
         val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
             _bukkitApplicationAddress
         )
