@@ -34,7 +34,7 @@ class ServerConnector : ServerConnector {
 //
 //        if (liveApplication === null) return null
 
-        return InetSocketAddress("158.69.120.87", 10004)
+        return InetSocketAddress("149.56.242.214", 10004)
     }
 
     override fun changedUserApplication(
