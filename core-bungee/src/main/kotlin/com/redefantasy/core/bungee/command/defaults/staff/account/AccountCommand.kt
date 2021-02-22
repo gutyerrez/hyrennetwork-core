@@ -27,9 +27,6 @@ class AccountCommand : CustomCommand("conta"), GroupCommandRestrictable {
         commandSender: CommandSender,
         user: User?,
         args: Array<out String>
-    ): Boolean {
-        commandSender.sendMessage(*this.getUsage())
-        return false
-    }
+    ): Boolean? = null
 
 }

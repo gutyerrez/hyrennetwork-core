@@ -68,8 +68,6 @@ data class User(
             Pair(null, listOf(Group.DEFAULT))
         )
 
-        println("Grupos: $_groups")
-
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
         } else {
@@ -105,10 +103,6 @@ data class User(
 
             groups
         } else this.getGroups()[server]
-
-        println(groups)
-
-        println(groups?.isEmpty())
 
         if (groups === null || groups.isEmpty()) return false
 

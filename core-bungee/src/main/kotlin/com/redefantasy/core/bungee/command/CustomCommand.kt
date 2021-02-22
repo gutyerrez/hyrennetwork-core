@@ -20,7 +20,7 @@ abstract class CustomCommand(
 
     override fun isConsole(commandSender: CommandSender) = commandSender is ConsoleCommandSender
 
-    abstract override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean
+    abstract override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean?
 
     override fun execute(commandSender: CommandSender, args: Array<out String>) {
         this.executeRaw(
