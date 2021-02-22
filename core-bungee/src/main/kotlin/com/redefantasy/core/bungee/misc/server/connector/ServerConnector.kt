@@ -17,7 +17,7 @@ import java.net.InetSocketAddress
  */
 class ServerConnector : ServerConnector {
 
-    override fun fetchLobbyServer(): ServerInfo? {
+    override fun fetchLobbyServer(): ServerInfo {
 //        val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOBBY)
 //
 //        val liveApplication = applications.stream().sorted { application1, application2 ->
