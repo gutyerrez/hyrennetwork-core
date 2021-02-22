@@ -3,9 +3,7 @@ package com.redefantasy.core.bungee.misc.server.connector
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.table.UsersTable
-import net.md_5.bungee.BungeeServerInfo
 import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.config.ServerInfo
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.connection.ServerConnector
 import org.jetbrains.exposed.dao.id.EntityID
@@ -16,7 +14,7 @@ import java.net.InetSocketAddress
  */
 class ServerConnector : ServerConnector {
 
-    override fun fetchLobbyServer(): ServerInfo {
+    override fun fetchLobbyServer(): InetSocketAddress {
 //        val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOBBY)
 //
 //        val liveApplication = applications.stream().sorted { application1, application2 ->
@@ -36,22 +34,20 @@ class ServerConnector : ServerConnector {
 //
 //        if (liveApplication === null) return null
 
-        return BungeeServerInfo(
-            InetSocketAddress("158.69.120.87", 10004)
-        )
+        return InetSocketAddress("158.69.120.87", 10004)
     }
 
     override fun changedUserApplication(
         proxiedPlayer: ProxiedPlayer,
-        serverInfo: ServerInfo
+        bukkitApplicationAddress: InetSocketAddress
     ) {
-        println(serverInfo.address)
+        println(bukkitApplicationAddress)
 
-        val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
-            serverInfo.address
+        val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
+            bukkitApplicationAddress
         )
 
-        if (application === null) {
+        if (bukkitApplication === null) {
             val disconnectMessage = ComponentBuilder()
                 .append("§c§lREDE FANTASY")
                 .append("\n\n")
@@ -71,7 +67,7 @@ class ServerConnector : ServerConnector {
 
         CoreProvider.Cache.Redis.USERS_STATUS.provide().create(
             user,
-            application,
+            bukkitApplication,
             (proxiedPlayer.pendingConnection.socketAddress as InetSocketAddress),
             proxiedPlayer.pendingConnection.version
         )
