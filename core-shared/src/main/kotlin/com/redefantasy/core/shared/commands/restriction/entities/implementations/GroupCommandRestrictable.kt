@@ -27,8 +27,8 @@ interface GroupCommandRestrictable : CommandRestrictable {
         }
     }
 
-    override fun getErrorMessage() = ComponentBuilder(
-        "§cÉ necessário o grupo ${this.getGroup().displayName} ou superior para executar este comando."
-    ).create()
+    override fun getErrorMessage() = ComponentBuilder()
+        .appendLegacy("§cÉ necessário o grupo ${this.getGroup().displayName} ou superior para executar este comando.")
+        .create()
 
 }
