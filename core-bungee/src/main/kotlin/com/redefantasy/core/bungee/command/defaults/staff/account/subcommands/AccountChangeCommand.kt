@@ -5,7 +5,7 @@ import com.redefantasy.core.bungee.command.CustomCommand
 /**
  * @author Gutyerrez
  */
-class AccountChangeCommand : CustomCommand("change") {
+class AccountChangeCommand : CustomCommand("mudar") {
 
     override fun getSubCommands() = listOf(
         AccountChangePasswordCommand(),

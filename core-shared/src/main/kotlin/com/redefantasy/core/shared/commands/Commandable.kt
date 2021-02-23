@@ -99,6 +99,7 @@ interface Commandable<T> {
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
+                        println(it.getName())
                         println(it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0]))
 
                         it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
@@ -108,6 +109,8 @@ interface Commandable<T> {
 
                 if (subCommand !== null) {
                     println("Não tá nulo")
+
+                    println(subCommand.getName())
 
                     subCommand.executeRaw(
                         commandSender,
