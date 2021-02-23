@@ -94,24 +94,18 @@ interface Commandable<T> {
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
-                println(args[0])
-
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
-                        it.getName() === args[0] || it.getAliases().contains(args[0])
+                        it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
                     }
                     .findFirst()
                     .orElse(null)
 
-                if (subCommand !== null) {
-                    println("AAAA ${subCommand.getName()}")
-
-                    subCommand.executeRaw(
-                        commandSender,
-                        args.copyOfRange(1, args.size)
-                    )
-                }
+                if (subCommand !== null) subCommand.executeRaw(
+                    commandSender,
+                    args.copyOfRange(1, args.size)
+                )
             } else if (!this.sendAvailableCommands(commandSender, args)) return
 
             if (this.onCommand(commandSender, user, args) === null) {
@@ -137,7 +131,12 @@ interface Commandable<T> {
                     } else {
                         if (commandable.getSubCommands() !== null) {
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
-                                componentBuilder.append("$commandName ${commandable.getName()}", _commandable, _index, commandable.getSubCommands()!!.size)
+                                componentBuilder.append(
+                                    "$commandName ${commandable.getName()}",
+                                    _commandable,
+                                    _index,
+                                    commandable.getSubCommands()!!.size
+                                )
                             }
                         }
                     }
