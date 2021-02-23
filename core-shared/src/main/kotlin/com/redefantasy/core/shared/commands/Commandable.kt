@@ -94,18 +94,26 @@ interface Commandable<T> {
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
+                println(">")
+
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
+                        println(it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0]))
+
                         it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
                     }
                     .findFirst()
                     .orElse(null)
 
-                if (subCommand !== null) subCommand.executeRaw(
-                    commandSender,
-                    args.copyOfRange(1, args.size)
-                )
+                if (subCommand !== null) {
+                    println("Não tá nulo")
+
+                    subCommand.executeRaw(
+                        commandSender,
+                        args.copyOfRange(1, args.size)
+                    )
+                }
             } else if (!this.sendAvailableCommands(commandSender, args)) return
 
             if (this.onCommand(commandSender, user, args) === null) {
