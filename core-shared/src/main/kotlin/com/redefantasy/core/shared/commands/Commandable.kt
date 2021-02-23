@@ -94,6 +94,8 @@ interface Commandable<T> {
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
+                println(args[0])
+
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
