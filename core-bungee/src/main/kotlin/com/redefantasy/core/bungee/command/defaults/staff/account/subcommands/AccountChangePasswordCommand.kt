@@ -13,9 +13,9 @@ import net.md_5.bungee.api.chat.TextComponent
 /**
  * @author Gutyerrez
  */
-class AccountChangePasswordCommand : CustomCommand("password") {
+class AccountChangePasswordCommand : CustomCommand("senha") {
 
-    override fun getDescription() = "Alterar a senha de um usuário."
+    override fun getDescription() = "Redefinir a senha de um usuário."
 
     override fun getArguments() = listOf(
         Argument("usuário"),

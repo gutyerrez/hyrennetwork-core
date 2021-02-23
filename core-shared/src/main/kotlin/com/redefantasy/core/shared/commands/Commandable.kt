@@ -102,10 +102,14 @@ interface Commandable<T> {
                     .findFirst()
                     .orElse(null)
 
-                if (subCommand !== null) subCommand.executeRaw(
-                    commandSender,
-                    args.copyOfRange(1, args.size)
-                )
+                if (subCommand !== null) {
+                    println("AAAA ${subCommand.getName()}")
+
+                    subCommand.executeRaw(
+                        commandSender,
+                        args.copyOfRange(1, args.size)
+                    )
+                }
             } else if (!this.sendAvailableCommands(commandSender, args)) return
 
             if (this.onCommand(commandSender, user, args) === null) {
