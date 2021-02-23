@@ -137,7 +137,7 @@ interface Commandable<T> {
 
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
-                    if (commandable.onCommand(commandSender, null, args) !== null) {
+                    if (commandable::onCommand === null) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
