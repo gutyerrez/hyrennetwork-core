@@ -94,8 +94,6 @@ interface Commandable<T> {
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
-                println(">")
-
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
@@ -108,14 +106,13 @@ interface Commandable<T> {
                     .orElse(null)
 
                 if (subCommand !== null) {
-                    println("Não tá nulo")
-
-                    println(subCommand.getName())
-
-                    subCommand.executeRaw(
+                    return subCommand.executeRaw(
                         commandSender,
                         args.copyOfRange(1, args.size)
                     )
+                } else {
+                    this.sendAvailableCommands(commandSender, args)
+                    return
                 }
             } else if (!this.sendAvailableCommands(commandSender, args)) return
 
