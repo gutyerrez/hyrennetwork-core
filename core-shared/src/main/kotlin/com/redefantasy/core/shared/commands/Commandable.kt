@@ -128,7 +128,10 @@ interface Commandable<T> {
     }
 
     private fun sendAvailableCommands(commandSender: T, args: Array<out String>): Boolean {
-        if (args.isEmpty() || this.getArguments() !== null && this.getArguments()!!.size > args.size) {
+        if (args.isEmpty() && (
+                    this.getArguments()!!.isNotEmpty() || this.getSubCommands()!!.isNotEmpty()
+           ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
+        ) {
             val componentBuilder = ComponentBuilder("\n")
                 .append("§2Comandos disponíveis:")
                 .append("\n\n")
