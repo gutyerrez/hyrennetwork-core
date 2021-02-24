@@ -132,7 +132,7 @@ interface Commandable<T> {
                 }
             } else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
                 this.sendAvailableCommands(commandName, commandSender, args)
-            } else this.sendAvailableCommands(commandName, commandSender, args)
+            }
 
             this.onCommand(commandSender, user, args)
         } catch (ex: Exception) {
