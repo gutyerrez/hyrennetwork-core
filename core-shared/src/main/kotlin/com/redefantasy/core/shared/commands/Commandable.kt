@@ -97,6 +97,8 @@ interface Commandable<T> {
             lateinit var commandName: String
             var parent: Commandable<T>? = this.getParent()
 
+            println(parent === null)
+
             do {
                 parent = parent?.getParent() ?: this.getParent()
 
@@ -108,7 +110,11 @@ interface Commandable<T> {
             } while (parent !== null)
 
             commandName
-        } else this.getName()
+        } else {
+            println("Aqui")
+
+            this.getName()
+        }
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
