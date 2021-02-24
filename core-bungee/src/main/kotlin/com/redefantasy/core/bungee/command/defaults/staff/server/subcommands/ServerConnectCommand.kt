@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.staff.server.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.staff.server.ServerCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
@@ -19,6 +20,8 @@ class ServerConnectCommand : CustomCommand("conectar") {
     override fun getArguments() = listOf(
         Argument("servidor")
     )
+
+    override fun getParent() = ServerCommand()
 
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
         val targetServer = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(args[0])

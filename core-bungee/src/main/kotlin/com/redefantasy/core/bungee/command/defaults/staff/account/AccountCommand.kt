@@ -9,7 +9,7 @@ import com.redefantasy.core.shared.groups.Group
 /**
  * @author Gutyerrez
  */
-class AccountCommand : CustomCommand("conta"), GroupCommandRestrictable {
+open class AccountCommand : CustomCommand("conta"), GroupCommandRestrictable {
 
     override fun getCommandRestriction() = CommandRestriction.CONSOLE_AND_GAME
 

@@ -103,18 +103,12 @@ interface Commandable<T> {
                 parent = parent?.getParent() ?: this.getParent()
 
                 if (parent !== null) {
-                    println(parent.getName())
-
                     commandName = parent.getName()
                 }
             } while (parent !== null)
 
             commandName
-        } else {
-            println("Aqui")
-
-            this.getName()
-        }
+        } else this.getName()
 
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {

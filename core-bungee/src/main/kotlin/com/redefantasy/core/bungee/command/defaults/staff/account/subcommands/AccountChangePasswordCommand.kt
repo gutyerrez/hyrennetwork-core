@@ -22,6 +22,8 @@ class AccountChangePasswordCommand : CustomCommand("senha") {
         Argument("nova senha")
     )
 
+    override fun getParent() = AccountChangeCommand()
+
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
         val targetUser = CoreProvider.Cache.Local.USERS.provide().fetchByName(args[0])
 
