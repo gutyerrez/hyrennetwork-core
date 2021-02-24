@@ -51,37 +51,37 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
             .append("\n\n")
             .append(" ${color}Informações básicas")
             .append("\n\n")
-            .append("   Id: §7${targetUser.getUniqueId()}")
+            .append("   §fId: §7${targetUser.getUniqueId()}")
             .append("\n")
-            .append("   Data de registro: §7${DateFormatter.formatToDefault(targetUser.createdAt)}")
+            .append("   §fData de registro: §7${DateFormatter.formatToDefault(targetUser.createdAt)}")
             .append("\n")
-            .append("   Última autenticação: §7${DateFormatter.formatToDefault(targetUser.lastLoginAt)}")
+            .append("   §fÚltima autenticação: §7${DateFormatter.formatToDefault(targetUser.lastLoginAt)}")
             .append("\n")
-            .append("   Punido: ${
+            .append("   §fPunido: ${
                 if (punishments === null || punishments.isEmpty() || punishments.stream()
                         .filter { it.startTime === null || (it.startTime!! + it.duration).millis > System.currentTimeMillis() && it.revokeCategory === null }
                         .findFirst()
                         .isPresent
                 ) {
-                    "§cSim"
-                } else {
                     "§aNão"
+                } else {
+                    "§cSim"
                 }
             }")
             .append("\n\n")
             .append(" ${color}Informações avançadas:")
             .append("\n\n")
-            .append("   Endereço conectado: §7${if (address === null || address.isEmpty()) "§7[Desconhecido]" else address}")
+            .append("   §fEndereço conectado: §7${if (address === null || address.isEmpty()) "§7[Desconhecido]" else address}")
             .append("\n")
-            .append("   Último IP: §7${if (user!!.hasGroup(Group.MANAGER)) targetUser.lastAddress else "§c[Sem permissão]"}")
+            .append("   §fÚltimo IP: §7${if (user!!.hasGroup(Group.MANAGER)) targetUser.lastAddress else "§c[Sem permissão]"}")
             .append("\n\n")
             .append(" ${color}Associações:")
             .append("\n\n")
-            .append("   E-mail: §7[Não implementado]")
+            .append("   §fE-mail: §7[Não implementado]")
             .append("\n")
-            .append("   Discord: §7[Não implementado]")
+            .append("   §fDiscord: §7[Não implementado]")
             .append("\n")
-            .append("   Twitter: §7[Não implementado]")
+            .append("   §fTwitter: §7[Não implementado]")
             .append("\n\n")
             .append(" ${color}Servidores:")
             .append("\n\n")
@@ -97,11 +97,15 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
             val groupsToString = _groups.stream().map { group -> group.getFancyDisplayName() }
                 .collect(Collectors.joining("§f, "))
 
-            message.append("   ${if (server === null) "Todos" else server.displayName}: $groupsToString")
+            message.append("   §f${if (server === null) "Todos" else server.displayName}: $groupsToString")
 
             if (i + 1 < groups.size) message.append("\n")
 
             i++
+        }
+
+        if (groups.isEmpty()) {
+            message.append("   §c--/--")
         }
 
         val proxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(targetUser)
@@ -110,11 +114,11 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
         message.append("\n\n")
             .append(" ${color}Conexão:")
             .append("\n\n")
-            .append("   Conectado: ${if (targetUser.isOnline()) "§aSim" else "§cNão"}")
+            .append("   §fConectado: ${if (targetUser.isOnline()) "§aSim" else "§cNão"}")
             .append("\n")
-            .append("   Proxy: §7${if (proxyApplication === null) "[Desconhecido]" else proxyApplication.displayName}")
+            .append("   §fProxy: §7${if (proxyApplication === null) "[Desconhecido]" else proxyApplication.displayName}")
             .append("\n")
-            .append("   Servidor: §7${if (bukkitApplication === null || bukkitApplication.server === null) "Nenhum" else bukkitApplication.server!!.displayName}")
+            .append("   §fServidor: §7${if (bukkitApplication === null || bukkitApplication.server === null) "Nenhum" else bukkitApplication.server!!.displayName}")
             .append("\n")
 
         commandSender.sendMessage(*message.create())
