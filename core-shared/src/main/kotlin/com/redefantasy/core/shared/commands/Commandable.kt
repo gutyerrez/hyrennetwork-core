@@ -95,16 +95,18 @@ interface Commandable<T> {
 
         val commandName = if (this.getParent() !== null) {
             lateinit var commandName: String
-            var parent: Commandable<T>? = this.getParent()
 
-            println(parent === null)
+            var parent: Commandable<T>? = this.getParent()
+            var i = 0
 
             do {
-                parent = parent?.getParent() ?: this.getParent()
+                parent = if (i != 0) parent?.getParent() else this.getParent()
 
                 if (parent !== null) {
                     commandName = parent.getName()
                 }
+
+                i++
             } while (parent !== null)
 
             commandName
