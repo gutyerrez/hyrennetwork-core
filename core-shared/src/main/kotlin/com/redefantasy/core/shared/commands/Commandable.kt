@@ -129,7 +129,12 @@ interface Commandable<T> {
                 } else {
                     this.sendAvailableCommands(commandName, commandSender, args)
                 }
-            } else if (this::onCommand.javaMethod === null && this.getSubCommands() === null || this::onCommand.javaMethod === null && this.getSubCommands() !== null) {
+            } else if (this::onCommand.javaMethod === null && this.getSubCommands() === null) {
+                return CoreWrapper.WRAPPER.sendMessage(
+                    this.getSenderName(commandSender),
+                    this.getUsage()
+                )
+            } else if (this::onCommand.javaMethod === null && this.getSubCommands() !== null) {
                 return this.sendAvailableCommands(commandName, commandSender, args)
             }
 
