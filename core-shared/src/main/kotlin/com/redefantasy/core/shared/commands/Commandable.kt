@@ -140,8 +140,6 @@ interface Commandable<T> {
 
                 return this.sendAvailableCommands(commandName, commandSender, args)
             } else {
-                println(this::onCommand.javaMethod?.isAccessible)
-
                 println(3)
 
                 this.onCommand(commandSender, user, args)
