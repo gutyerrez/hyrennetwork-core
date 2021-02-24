@@ -182,7 +182,7 @@ interface Commandable<T> {
                                 "$commandName ${commandable.getName()}",
                                 commandable,
                                 index,
-                                commandable.getSubCommands()!!.size
+                                this.getSubCommands()!!.size
                             )
                         }
                     }
