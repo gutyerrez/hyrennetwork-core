@@ -121,22 +121,34 @@ interface Commandable<T> {
                     .findFirst()
                     .orElse(null)
 
+                println(4)
+
                 return if (subCommand !== null) {
+                    println(5)
+
                     subCommand.executeRaw(
                         commandSender,
                         args.copyOfRange(1, args.size)
                     )
                 } else {
+                    println(6)
+
                     this.sendAvailableCommands(commandName, commandSender, args)
                 }
             } else if (this::onCommand.javaMethod === null && this.getSubCommands() === null) {
+                println(1)
+
                 return CoreWrapper.WRAPPER.sendMessage(
                     this.getSenderName(commandSender),
                     this.getUsage()
                 )
             } else if (this::onCommand.javaMethod === null && this.getSubCommands() !== null) {
+                println(2)
+
                 return this.sendAvailableCommands(commandName, commandSender, args)
             }
+
+            println(3)
 
             this.onCommand(commandSender, user, args)
         } catch (ex: Exception) {
