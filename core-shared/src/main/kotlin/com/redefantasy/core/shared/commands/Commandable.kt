@@ -121,18 +121,18 @@ interface Commandable<T> {
                     .findFirst()
                     .orElse(null)
 
-                if (subCommand !== null) {
-                    return subCommand.executeRaw(
+                return if (subCommand !== null) {
+                    subCommand.executeRaw(
                         commandSender,
                         args.copyOfRange(1, args.size)
                     )
                 } else {
                     this.sendAvailableCommands(commandName, commandSender, args)
-                    return
                 }
             } else if (this::onCommand.javaMethod === null) {
-                this.sendAvailableCommands(commandName, commandSender, args)
-                return
+                return this.sendAvailableCommands(commandName, commandSender, args)
+            } else if (this::onCommand.javaMethod === null && this.getSubCommands() !== null) {
+                return this.sendAvailableCommands(commandName, commandSender, args)
             }
 
             this.onCommand(commandSender, user, args)
@@ -141,7 +141,7 @@ interface Commandable<T> {
         }
     }
 
-    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>): Boolean {
+    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>) {
         if (args.isEmpty() && (
                     this.getArguments() !== null || this.getSubCommands() !== null
                     ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
@@ -196,10 +196,10 @@ interface Commandable<T> {
                 componentBuilder.create()
             )
 
-            return false
+            return
         }
 
-        return true
+        return
     }
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
