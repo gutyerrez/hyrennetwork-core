@@ -135,24 +135,17 @@ interface Commandable<T> {
 
                     this.sendAvailableCommands(commandName, commandSender, args)
                 }
-            } else if (this::onCommand.javaMethod?.isAccessible == false && this.getSubCommands() === null) {
-                println(1)
-
-                return CoreWrapper.WRAPPER.sendMessage(
-                    this.getSenderName(commandSender),
-                    this.getUsage()
-                )
-            } else if (this::onCommand.javaMethod?.isAccessible == false && this.getSubCommands() !== null) {
+            } else if (this.onCommand(commandSender, user, args) === null && this.getSubCommands() === null || this.onCommand(commandSender, user, args) === null && this.getSubCommands() !== null) {
                 println(2)
 
                 return this.sendAvailableCommands(commandName, commandSender, args)
+            } else {
+                println(this::onCommand.javaMethod?.isAccessible)
+
+                println(3)
+
+                this.onCommand(commandSender, user, args)
             }
-
-            println(this::onCommand.javaMethod?.isAccessible)
-
-            println(3)
-
-            this.onCommand(commandSender, user, args)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
