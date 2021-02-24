@@ -140,7 +140,11 @@ interface Commandable<T> {
                     /**
                      * Verificar uma maneira de checar se o "onCommand" não é nullo sem executá-lo
                      */
-                    val onCommand = commandable::class.java.getMethod("onCommand")
+                    val onCommand = commandable::class.java.getMethod("onCommand",
+                        commandSender!!::class.java,
+                        User::class.java,
+                        Array<out String>::class.java
+                    )
 
                     println("${commandable.getName()} --> ${onCommand.isDefault}")
 
