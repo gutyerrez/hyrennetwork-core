@@ -109,7 +109,7 @@ interface Commandable<T> {
                 i++
             } while (parent !== null)
 
-            commandName
+            "$commandName ${this.getName()}"
         } else this.getName()
 
         try {
