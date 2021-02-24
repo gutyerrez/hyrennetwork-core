@@ -132,10 +132,9 @@ interface Commandable<T> {
                 }
             } else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
                 return this.sendAvailableCommands(commandName, commandSender, args)
-            } else if (args.isEmpty() && (
-                        this.getArguments() !== null || this.getSubCommands() !== null
-                ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
-            ) return this.sendAvailableCommands(commandName, commandSender, args)
+            } else if (args.isEmpty() && this.getArguments() !== null) {
+                return this.sendAvailableCommands(commandName, commandSender, args)
+            }
 
             this.onCommand(commandSender, user, args)
         } catch (ex: Exception) {
