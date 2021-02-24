@@ -52,8 +52,6 @@ class ApplicationsLocalCache : LocalCache {
         CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
             this.CACHE_BY_NAME.put(name, application)
 
-            println("Carregando aplicação ${application.displayName} --> ${application.address}")
-
             CACHE_BY_ADDRESS.put(
                 ApplicationByAddressLookup(application.address),
                 application
