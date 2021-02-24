@@ -34,6 +34,8 @@ class LoginCommand : CustomCommand("logar") {
         commandSender as ProxiedPlayer
 
         if (user === null) {
+            println("uai")
+
             commandSender.sendMessage(TextComponent("§cVocê não está registrado."))
             return false
         }

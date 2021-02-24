@@ -77,6 +77,8 @@ interface Commandable<T> {
             user = CoreProvider.Cache.Local.USERS.provide().fetchByName(this.getSenderName(commandSender))
 
             if (user === null && !this.canBeExecuteWithoutLogin()) {
+                println("Não tá registrado")
+
                 CoreWrapper.WRAPPER.sendMessage(
                     this.getSenderName(commandSender),
                     TextComponent("${ChatColor.RED}Você não está registrado.")
