@@ -137,7 +137,12 @@ interface Commandable<T> {
 
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
-                    if (commandable::onCommand === null) {
+                    /**
+                     * Verificar uma maneira de checar se o "onCommand" não é nullo sem executá-lo
+                     */
+                    val onCommand = commandable::class.java.getMethod("onCommand")
+
+                    if (!onCommand.returnType.equals(null)) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
