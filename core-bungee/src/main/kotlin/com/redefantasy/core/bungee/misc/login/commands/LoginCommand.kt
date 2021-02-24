@@ -68,8 +68,6 @@ class LoginCommand : CustomCommand("logar") {
             return false
         }
 
-        println("Logou")
-
         user.setLogged(successfully)
 
         val packet = TitlePacket()

@@ -100,8 +100,11 @@ interface Commandable<T> {
             do {
                 parent = parent?.getParent() ?: this.getParent()
 
-                if (parent !== null)
+                if (parent !== null) {
+                    println(parent.getName())
+
                     commandName = parent.getName()
+                }
             } while (parent !== null)
 
             commandName
@@ -112,9 +115,6 @@ interface Commandable<T> {
                 val subCommand = this.getSubCommands()!!
                     .stream()
                     .filter {
-                        println(it.getName())
-                        println(it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0]))
-
                         it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
                     }
                     .findFirst()
