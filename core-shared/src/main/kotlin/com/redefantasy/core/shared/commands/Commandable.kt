@@ -152,7 +152,7 @@ interface Commandable<T> {
 
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
-                    if (commandable::onCommand.javaMethod !== null) {
+                    if (commandable::onCommand.javaMethod?.returnType?.equals(null) != false) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
