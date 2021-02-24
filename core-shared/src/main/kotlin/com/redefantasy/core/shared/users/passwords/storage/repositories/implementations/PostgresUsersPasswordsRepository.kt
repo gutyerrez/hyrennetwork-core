@@ -8,6 +8,7 @@ import com.redefantasy.core.shared.users.passwords.storage.repositories.IUsersPa
 import com.redefantasy.core.shared.users.passwords.storage.table.UserPasswordTable
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -30,8 +31,9 @@ class PostgresUsersPasswordsRepository : IUsersPasswordsRepository {
     override fun create(createUserPasswordDTO: CreateUserPasswordDTO) {
         transaction {
             UserPasswordDAO.find {
-                UserPasswordTable.userId eq createUserPasswordDTO.userId
-                UserPasswordTable.enabled eq true
+                UserPasswordTable.userId eq createUserPasswordDTO.userId and (
+                    UserPasswordTable.enabled eq true
+                )
             }.forEach { it.enabled = false }
 
             UserPasswordDAO.new {
