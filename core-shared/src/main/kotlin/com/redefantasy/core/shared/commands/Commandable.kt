@@ -127,7 +127,7 @@ interface Commandable<T> {
     private fun sendAvailableCommands(commandSender: T, args: Array<out String>): Boolean {
         if (args.isEmpty() && (
                     this.getArguments() !== null || this.getSubCommands() !== null
-           ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
+                    ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
         ) {
             val componentBuilder = ComponentBuilder("\n")
                 .append("§2Comandos disponíveis:")
@@ -142,7 +142,9 @@ interface Commandable<T> {
                      */
                     val onCommand = commandable::class.java.getMethod("onCommand")
 
-                    if (!onCommand.returnType.equals(null)) {
+                    println("${commandable.getName()} --> ${onCommand.isDefault}")
+
+                    if (!onCommand.isDefault) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
@@ -218,6 +220,10 @@ interface Commandable<T> {
 
             if (index + 1 < max) this.append("\n")
         }
+    }
+
+    fun <T : Any, R> whenNotNull(input: T?, callback: (T) -> R): R? {
+        return input?.let(callback)
     }
 
 }
