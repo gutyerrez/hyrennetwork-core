@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
 import java.util.stream.Collectors
+import kotlin.reflect.jvm.javaMethod
 
 /**
  * @author SrGutyerrez
@@ -140,15 +141,7 @@ interface Commandable<T> {
                     /**
                      * Verificar uma maneira de checar se o "onCommand" não é nullo sem executá-lo
                      */
-                    val onCommand = commandable::class.java.getMethod("onCommand",
-                        commandSender!!::class.java,
-                        null,
-                        args::class.java
-                    )
-
-                    println("${commandable.getName()} --> ${onCommand.isDefault}")
-
-                    if (!onCommand.isDefault) {
+                    if (commandable::onCommand.javaMethod !== null) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
