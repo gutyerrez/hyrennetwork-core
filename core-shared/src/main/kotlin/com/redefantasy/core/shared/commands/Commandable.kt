@@ -165,6 +165,8 @@ interface Commandable<T> {
                         println("Vai")
 
                         if (commandable.getSubCommands() !== null) {
+                            println("hmmmm")
+
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
                                 componentBuilder.append(
                                     "$commandName ${commandable.getName()}",
