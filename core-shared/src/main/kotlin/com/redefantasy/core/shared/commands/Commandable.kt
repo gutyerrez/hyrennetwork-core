@@ -130,15 +130,12 @@ interface Commandable<T> {
                     this.sendAvailableCommands(commandName, commandSender, args)
                     return
                 }
-            } else if (this.onCommand(commandSender, user, args) === null) {
-                println("Nulo")
-
+            } else if (this::onCommand.javaMethod === null) {
                 this.sendAvailableCommands(commandName, commandSender, args)
-            } else {
-                println("uai?")
-
-                this.sendAvailableCommands(commandName, commandSender, args)
+                return
             }
+
+            this.onCommand(commandSender, user, args)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
