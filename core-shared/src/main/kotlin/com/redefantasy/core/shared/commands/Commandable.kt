@@ -93,6 +93,8 @@ interface Commandable<T> {
             }
         }
 
+        val commandName = this.getParent()?.getName() ?: this.getName()
+
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
                 val subCommand = this.getSubCommands()!!
@@ -112,20 +114,20 @@ interface Commandable<T> {
                         args.copyOfRange(1, args.size)
                     )
                 } else {
-                    this.sendAvailableCommands(commandSender, args)
+                    this.sendAvailableCommands(commandName, commandSender, args)
                     return
                 }
-            } else if (!this.sendAvailableCommands(commandSender, args)) return
+            } else if (!this.sendAvailableCommands(commandName, commandSender, args)) return
 
             if (this.onCommand(commandSender, user, args) === null) {
-                this.sendAvailableCommands(commandSender, args)
+                this.sendAvailableCommands(commandName, commandSender, args)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    private fun sendAvailableCommands(commandSender: T, args: Array<out String>): Boolean {
+    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>): Boolean {
         if (args.isEmpty() && (
                     this.getArguments() !== null || this.getSubCommands() !== null
                     ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
@@ -134,13 +136,8 @@ interface Commandable<T> {
                 .append("§2Comandos disponíveis:")
                 .append("\n\n")
 
-            val commandName = this.getParent()?.getName() ?: this.getName()
-
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
-                    /**
-                     * Verificar uma maneira de checar se o "onCommand" não é nullo sem executá-lo
-                     */
                     if (commandable::onCommand.javaMethod !== null) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
