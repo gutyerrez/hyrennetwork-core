@@ -48,7 +48,7 @@ class ServerCommand : CustomCommand("server"), GroupCommandRestrictable {
         }
 
         commandSender.sendMessage(*message.create())
-        return false
+        return true
     }
 
 }
