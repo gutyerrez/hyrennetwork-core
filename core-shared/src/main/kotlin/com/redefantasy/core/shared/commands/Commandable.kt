@@ -11,7 +11,6 @@ import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
-import java.util.*
 import java.util.stream.Collectors
 import kotlin.reflect.jvm.javaMethod
 
@@ -49,7 +48,7 @@ interface Commandable<T> {
 
     fun getSenderName(commandSender: T): String
 
-    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean? = null
+    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean?
 
     fun executeRaw(commandSender: T, args: Array<out String>) {
         if (this.getCommandRestriction() !== null) {
@@ -95,7 +94,7 @@ interface Commandable<T> {
         }
 
         val commandName = if (this.getParent() !== null) {
-            val commandName = StringJoiner(" ")
+            lateinit var commandName: String
 
             var parent: Commandable<T>? = this.getParent()
             var i = 0
@@ -103,7 +102,9 @@ interface Commandable<T> {
             do {
                 parent = if (i != 0) parent?.getParent() else this.getParent()
 
-                if (parent !== null) commandName.add(parent.getName())
+                if (parent !== null) {
+                    commandName = parent.getName()
+                }
 
                 i++
             } while (parent !== null)
@@ -121,39 +122,26 @@ interface Commandable<T> {
                     .findFirst()
                     .orElse(null)
 
-                println(4)
-
-                return if (subCommand !== null) {
-                    println(5)
-
-                    subCommand.executeRaw(
+                if (subCommand !== null) {
+                    return subCommand.executeRaw(
                         commandSender,
                         args.copyOfRange(1, args.size)
                     )
                 } else {
-                    println(6)
-
                     this.sendAvailableCommands(commandName, commandSender, args)
+                    return
                 }
-            } else if (this.onCommand(commandSender, user, args) === null && this.getSubCommands() === null || this.onCommand(commandSender, user, args) === null && this.getSubCommands() !== null) {
-                println(2)
+            } else if (!this.sendAvailableCommands(commandName, commandSender, args)) return
 
-                return this.sendAvailableCommands(commandName, commandSender, args)
-            } else {
-                println(3)
-
-                return this.sendAvailableCommands(commandName, commandSender, args, {
-                    this.onCommand(commandSender, user, args)
-                })
+            if (this.onCommand(commandSender, user, args) === null) {
+                this.sendAvailableCommands(commandName, commandSender, args)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>, callback: () -> Unit = {
-        TODO("not implemented-yet")
-    }) {
+    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>): Boolean {
         if (args.isEmpty() && (
                     this.getArguments() !== null || this.getSubCommands() !== null
                     ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
@@ -208,10 +196,10 @@ interface Commandable<T> {
                 componentBuilder.create()
             )
 
-            return
+            return false
         }
 
-        return callback()
+        return true
     }
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
