@@ -67,7 +67,7 @@ class LoginListeners : Listener {
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(sender.uniqueId)
 
-        if (user === null || !user.isLogged() && !UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { it.contentEquals(message) }) {
+        if (!UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { it.contentEquals(message) } && (user === null || !user.isLogged())) {
             event.isCancelled = true
 
             sender.sendMessage(TextComponent("§cVocê precisa estar autenticado para utilizar o chat."))

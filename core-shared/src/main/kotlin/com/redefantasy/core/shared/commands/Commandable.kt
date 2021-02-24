@@ -46,6 +46,8 @@ interface Commandable<T> {
 
     fun isPlayer(commandSender: T): Boolean = false
 
+    fun canBeExecuteWithoutLogin(): Boolean = false
+
     fun getSenderName(commandSender: T): String
 
     fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean?
@@ -74,7 +76,7 @@ interface Commandable<T> {
         if (isPlayer(commandSender)) {
             user = CoreProvider.Cache.Local.USERS.provide().fetchByName(this.getSenderName(commandSender))
 
-            if (user === null) {
+            if (user === null && !this.canBeExecuteWithoutLogin()) {
                 CoreWrapper.WRAPPER.sendMessage(
                     this.getSenderName(commandSender),
                     TextComponent("${ChatColor.RED}Você não está registrado.")

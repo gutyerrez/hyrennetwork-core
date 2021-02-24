@@ -28,6 +28,8 @@ class LoginCommand : CustomCommand("logar") {
         Argument("senha")
     )
 
+    override fun canBeExecuteWithoutLogin() = true
+
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
         commandSender as ProxiedPlayer
 

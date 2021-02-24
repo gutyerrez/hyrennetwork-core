@@ -31,6 +31,8 @@ class RegisterCommand : CustomCommand("registrar") {
         Argument("confirme a senha")
     )
 
+    override fun canBeExecuteWithoutLogin() = true
+
     override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
         if (user !== null && CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
                 FetchUserPasswordByUserIdDTO(user.getUniqueId())
