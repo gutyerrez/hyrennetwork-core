@@ -142,14 +142,18 @@ interface Commandable<T> {
             } else {
                 println(3)
 
-                this.onCommand(commandSender, user, args)
+                return this.sendAvailableCommands(commandName, commandSender, args, {
+                    this.onCommand(commandSender, user, args)
+                })
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>) {
+    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>, callback: () -> Unit = {
+        TODO("not implemented-yet")
+    }) {
         if (args.isEmpty() && (
                     this.getArguments() !== null || this.getSubCommands() !== null
                     ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
@@ -207,7 +211,7 @@ interface Commandable<T> {
             return
         }
 
-        return
+        return callback()
     }
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
