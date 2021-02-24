@@ -175,6 +175,15 @@ interface Commandable<T> {
                                     commandable.getSubCommands()!!.size
                                 )
                             }
+                        } else {
+                            println("eae")
+
+                            componentBuilder.append(
+                                "$commandName ${commandable.getName()}",
+                                commandable,
+                                index,
+                                commandable.getSubCommands()!!.size
+                            )
                         }
                     }
 
