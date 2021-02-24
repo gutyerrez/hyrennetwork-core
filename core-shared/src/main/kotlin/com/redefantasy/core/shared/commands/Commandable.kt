@@ -148,6 +148,8 @@ interface Commandable<T> {
                 return this.sendAvailableCommands(commandName, commandSender, args)
             }
 
+            println(this::onCommand.javaMethod === null)
+
             println(3)
 
             this.onCommand(commandSender, user, args)
