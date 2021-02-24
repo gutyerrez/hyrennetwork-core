@@ -52,7 +52,7 @@ class LoginCommand : CustomCommand("logar") {
             .orElse(null)
 
         if (currentPassword === null) {
-            commandSender.sendMessage(TextComponent("§cVocê não está registrado."))
+            commandSender.sendMessage(TextComponent("§cVocê não está registrado. ¹"))
             return false
         }
 

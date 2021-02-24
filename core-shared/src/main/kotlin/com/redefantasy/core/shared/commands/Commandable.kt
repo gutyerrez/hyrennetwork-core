@@ -81,7 +81,7 @@ interface Commandable<T> {
 
                 CoreWrapper.WRAPPER.sendMessage(
                     this.getSenderName(commandSender),
-                    TextComponent("${ChatColor.RED}Você não está registrado.")
+                    TextComponent("${ChatColor.RED}Você não está registrado. ²")
                 )
                 return
             }
