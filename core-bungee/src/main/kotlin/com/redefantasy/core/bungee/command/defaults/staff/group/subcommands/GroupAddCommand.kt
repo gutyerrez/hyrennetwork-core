@@ -11,6 +11,8 @@ import net.md_5.bungee.api.CommandSender
  */
 class GroupAddCommand : CustomCommand("adicionar") {
 
+    override fun getDescription() = "Adicionar um grupo a um usuário."
+
     override fun getArguments() = listOf(
         Argument("usuário"),
         Argument("grupo"),

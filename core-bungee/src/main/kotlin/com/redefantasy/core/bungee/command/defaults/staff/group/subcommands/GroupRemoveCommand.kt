@@ -11,6 +11,8 @@ import net.md_5.bungee.api.CommandSender
  */
 class GroupRemoveCommand : CustomCommand("remover") {
 
+    override fun getDescription() = "Remover um grupo de um usuário."
+
     override fun getArguments() = listOf(
         Argument("usuário"),
         Argument("grupo"),

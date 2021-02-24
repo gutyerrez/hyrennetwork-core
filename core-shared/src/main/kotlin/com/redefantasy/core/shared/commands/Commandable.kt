@@ -157,9 +157,13 @@ interface Commandable<T> {
 
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
+                    println("aqui")
+
                     if (commandable::onCommand.javaMethod?.returnType?.equals(null) != false) {
                         componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
                     } else {
+                        println("Vai")
+
                         if (commandable.getSubCommands() !== null) {
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
                                 componentBuilder.append(
@@ -171,6 +175,8 @@ interface Commandable<T> {
                             }
                         }
                     }
+
+                    println("Chorei")
                 }
             } else if (this.getArguments() !== null) {
                 val arguments = this.getArguments()!!.stream().map {
