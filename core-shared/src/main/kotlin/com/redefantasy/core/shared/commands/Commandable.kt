@@ -130,11 +130,9 @@ interface Commandable<T> {
                     this.sendAvailableCommands(commandName, commandSender, args)
                     return
                 }
-            } else if (!this.sendAvailableCommands(commandName, commandSender, args)) return
-
-            if (this.onCommand(commandSender, user, args) === null) {
+            } else if (this.onCommand(commandSender, user, args) === null) {
                 this.sendAvailableCommands(commandName, commandSender, args)
-            }
+            } else this.sendAvailableCommands(commandName, commandSender, args)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
