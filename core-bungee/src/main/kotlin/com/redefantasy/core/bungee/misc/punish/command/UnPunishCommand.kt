@@ -34,7 +34,7 @@ class UnPunishCommand : CustomCommand("despunir") {
             args: Array<out String>
     ): Boolean {
         val userPunishment = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchById(
-                EntityID(args[0].toInt(), UsersPunishmentsTable)
+                EntityID(args[0].toIntOrNull() ?: 0, UsersPunishmentsTable)
         )
         val revokeCategory = CoreProvider.Cache.Local.REVOKE_CATEGORIES.provide().fetchByName(args[1])
 

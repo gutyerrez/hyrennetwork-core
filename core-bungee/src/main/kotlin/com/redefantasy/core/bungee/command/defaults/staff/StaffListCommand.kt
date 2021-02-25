@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.users.data.User
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -43,7 +44,7 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
 
         users.forEach {
             val highestGroup = it!!.getHighestGroup()
-            val prefix = "${highestGroup.color}${highestGroup.prefix}"
+            val prefix = "${ChatColor.fromHEX(highestGroup.color!!)}${highestGroup.prefix}"
             val bukkitApplication = it.getConnectedBukkitApplication()
 
             message.append(
