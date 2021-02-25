@@ -4,7 +4,10 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.users.punishments.data.UserPunishment
+import com.redefantasy.core.shared.users.punishments.storage.dto.FetchUserPunishmentByIdDTO
 import com.redefantasy.core.shared.users.punishments.storage.dto.FetchUserPunishmentsByUserIdDTO
+import com.redefantasy.core.shared.users.storage.table.UsersTable
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -13,9 +16,19 @@ import java.util.concurrent.TimeUnit
  **/
 class UsersPunishmentsLocalCache : LocalCache {
 
-    private val CACHE = Caffeine.newBuilder()
+    private val CACHE_BY_ID = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build<UUID, List<UserPunishment>> {
+            .build<EntityID<Int>, UserPunishment> {
+                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().fetchById(
+                        FetchUserPunishmentByIdDTO(
+                                it
+                        )
+                )
+            }
+
+    private val CACHE_BY_UUID = Caffeine.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build<EntityID<UUID>, List<UserPunishment>> {
                 CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().fetchByUserId(
                         FetchUserPunishmentsByUserIdDTO(
                                 it
@@ -23,6 +36,12 @@ class UsersPunishmentsLocalCache : LocalCache {
                 )
             }
 
-    fun fetchByUserId(userId: UUID) = this.CACHE.get(userId)
+    fun fetchById(id: EntityID<Int>) = this.CACHE_BY_ID.get(id)
+
+    fun fetchByUserId(userId: EntityID<UUID>) = this.CACHE_BY_UUID.get(userId)
+
+    fun invalidate(userId: UUID) = this.CACHE_BY_UUID.invalidate(
+            EntityID(userId, UsersTable)
+    )
 
 }

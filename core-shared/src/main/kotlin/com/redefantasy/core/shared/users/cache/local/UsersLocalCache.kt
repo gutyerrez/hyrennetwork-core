@@ -20,9 +20,9 @@ class UsersLocalCache : LocalCache {
 
     private val CACHE_BY_ID = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build<UUID, User?> {
+            .build<EntityID<UUID>, User?> {
                 CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchById(
-                        FetchUserByIdDTO(EntityID(it, UsersTable))
+                        FetchUserByIdDTO(it)
                 )
             }
 
@@ -50,7 +50,11 @@ class UsersLocalCache : LocalCache {
             )
         }
 
-    fun fetchById(id: UUID) = this.CACHE_BY_ID.get(id)
+    fun fetchById(id: EntityID<UUID>) = this.CACHE_BY_ID.get(id)
+
+    fun fetchById(id: UUID) = this.CACHE_BY_ID.get(
+            EntityID(id, UsersTable)
+    )
 
     fun fetchByName(name: String) = this.CACHE_BY_NAME.get(name)
 

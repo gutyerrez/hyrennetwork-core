@@ -1,8 +1,10 @@
 package com.redefantasy.core.shared.users.punishments.storage.dto
 
+import org.jetbrains.exposed.dao.id.EntityID
+
 /**
  * @author SrGutyerrez
  **/
 class FetchUserPunishmentByIdDTO(
-        val id: Int
+        val id: EntityID<Int>
 )

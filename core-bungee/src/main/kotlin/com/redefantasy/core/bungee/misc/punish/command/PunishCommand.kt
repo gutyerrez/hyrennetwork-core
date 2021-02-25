@@ -34,7 +34,11 @@ class PunishCommand : CustomCommand("punir") {
 
     override fun getDescription() = "Punir um usuário."
 
-    override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
+    override fun onCommand(
+            commandSender: CommandSender,
+            user: User?,
+            args: Array<out String>
+    ): Boolean {
         if (user === null) return false
 
         when (args.size) {

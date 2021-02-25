@@ -8,13 +8,16 @@ import com.redefantasy.core.bungee.command.defaults.staff.*
 import com.redefantasy.core.bungee.command.defaults.staff.account.AccountCommand
 import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
 import com.redefantasy.core.bungee.command.defaults.staff.server.ServerCommand
-import com.redefantasy.core.bungee.echo.packets.listeners.TellPacketListener
+import com.redefantasy.core.bungee.echo.packets.listeners.TellEchoPacketListener
 import com.redefantasy.core.bungee.misc.login.commands.LoginCommand
 import com.redefantasy.core.bungee.misc.login.commands.RegisterCommand
 import com.redefantasy.core.bungee.misc.login.listeners.LoginListeners
 import com.redefantasy.core.bungee.misc.plugin.CustomPlugin
+import com.redefantasy.core.bungee.misc.punish.command.CheckPunishCommand
 import com.redefantasy.core.bungee.misc.punish.command.PunishCommand
+import com.redefantasy.core.bungee.misc.punish.command.UnPunishCommand
 import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserPunishedEchoPacketListener
+import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserUnPunishedEchoPacketListener
 import com.redefantasy.core.bungee.misc.server.connector.ServerConnector
 import com.redefantasy.core.bungee.wrapper.BungeeWrapper
 import com.redefantasy.core.shared.CoreProvider
@@ -36,9 +39,11 @@ class CoreBungeePlugin : CustomPlugin(true) {
 
         val pluginManager = ProxyServer.getInstance().pluginManager
 
-        pluginManager.registerCommand(this, PunishCommand())
         pluginManager.registerCommand(this, LoginCommand())
         pluginManager.registerCommand(this, RegisterCommand())
+        pluginManager.registerCommand(this, PunishCommand())
+        pluginManager.registerCommand(this, UnPunishCommand())
+        pluginManager.registerCommand(this, CheckPunishCommand())
         pluginManager.registerCommand(this, AccountCommand())
         pluginManager.registerCommand(this, GroupCommand())
         pluginManager.registerCommand(this, ServerCommand())
@@ -57,7 +62,8 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerListener(this, LoginListeners())
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(UserPunishedEchoPacketListener())
-        CoreProvider.Databases.Redis.ECHO.provide().registerListener(TellPacketListener())
+        CoreProvider.Databases.Redis.ECHO.provide().registerListener(UserUnPunishedEchoPacketListener())
+        CoreProvider.Databases.Redis.ECHO.provide().registerListener(TellEchoPacketListener())
     }
 
     override fun onDisable() {
