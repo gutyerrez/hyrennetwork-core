@@ -24,12 +24,11 @@ interface Commandable<T> {
     fun getDescription(): String? = null
 
     fun getUsage(): Array<BaseComponent> {
-        val commandName = this.getParent()?.getName() ?: this.getName()
         val arguments = this.getArguments()?.stream()?.map {
             "<${it.name}>"
         }?.distinct()?.collect(Collectors.joining(" ")) ?: ""
 
-        return ComponentBuilder("${ChatColor.RED}Utilize /$commandName $arguments.").create()
+        return ComponentBuilder("${ChatColor.RED}Utilize /${this.getNameExact()} $arguments.").create()
     }
 
     fun getAliases(): Array<String>
@@ -56,16 +55,16 @@ interface Commandable<T> {
         if (this.getCommandRestriction() !== null) {
             if (this.getCommandRestriction() === CommandRestriction.CONSOLE && !this.isConsole(commandSender)) {
                 CoreWrapper.WRAPPER.sendMessage(
-                    this.getSenderName(commandSender),
-                    TextComponent("${ChatColor.RED}Este comando só pode ser executado por console.")
+                        this.getSenderName(commandSender),
+                        TextComponent("${ChatColor.RED}Este comando só pode ser executado por console.")
                 )
                 return
             }
 
             if (this.getCommandRestriction() === CommandRestriction.GAME && !this.isPlayer(commandSender)) {
                 CoreWrapper.WRAPPER.sendMessage(
-                    this.getSenderName(commandSender),
-                    TextComponent("${ChatColor.RED}Este comando só pode ser executado por jogadores.")
+                        this.getSenderName(commandSender),
+                        TextComponent("${ChatColor.RED}Este comando só pode ser executado por jogadores.")
                 )
                 return
             }
@@ -78,8 +77,8 @@ interface Commandable<T> {
 
             if (user === null && !this.canBeExecuteWithoutLogin()) {
                 CoreWrapper.WRAPPER.sendMessage(
-                    this.getSenderName(commandSender),
-                    TextComponent("${ChatColor.RED}Você não está registrado.")
+                        this.getSenderName(commandSender),
+                        TextComponent("${ChatColor.RED}Você não está registrado.")
                 )
                 return
             }
@@ -87,55 +86,36 @@ interface Commandable<T> {
             if (this is CommandRestrictable) {
                 if (!this.canExecute(user)) {
                     CoreWrapper.WRAPPER.sendMessage(
-                        this.getSenderName(commandSender),
-                        this.getErrorMessage()
+                            this.getSenderName(commandSender),
+                            this.getErrorMessage()
                     )
                     return
                 }
             }
         }
 
-        val commandName = if (this.getParent() !== null) {
-            lateinit var commandName: String
-
-            var parent: Commandable<T>? = this.getParent()
-            var i = 0
-
-            do {
-                parent = if (i != 0) parent?.getParent() else this.getParent()
-
-                if (parent !== null) {
-                    commandName = parent.getName()
-                }
-
-                i++
-            } while (parent !== null)
-
-            "$commandName ${this.getName()}"
-        } else this.getName()
-
         try {
             if (args.isNotEmpty() && this.getSubCommands() !== null) {
                 val subCommand = this.getSubCommands()!!
-                    .stream()
-                    .filter {
-                        it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
-                    }
-                    .findFirst()
-                    .orElse(null)
+                        .stream()
+                        .filter {
+                            it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
+                        }
+                        .findFirst()
+                        .orElse(null)
 
                 return if (subCommand !== null) {
                     subCommand.executeRaw(
-                        commandSender,
-                        args.copyOfRange(1, args.size)
+                            commandSender,
+                            args.copyOfRange(1, args.size)
                     )
                 } else {
-                    this.sendAvailableCommands(commandName, commandSender, args)
+                    this.sendAvailableCommands(commandSender, args)
                 }
             } else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
-                return this.sendAvailableCommands(commandName, commandSender, args)
+                return this.sendAvailableCommands(commandSender, args)
             } else if (args.isEmpty() && this.getArguments() !== null) {
-                return this.sendAvailableCommands(commandName, commandSender, args)
+                return this.sendAvailableCommands(commandSender, args)
             } else if (this.getArguments() !== null && args.size < this.getArguments()!!.size) {
                 return CoreWrapper.WRAPPER.sendMessage(
                         this.getSenderName(commandSender),
@@ -146,42 +126,42 @@ interface Commandable<T> {
             val result = this.onCommand(commandSender, user, args)
 
             if (result === null && args.isEmpty() && this.getSubCommands() !== null) {
-                return this.sendAvailableCommands(commandName, commandSender, args)
+                return this.sendAvailableCommands(commandSender, args)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    private fun sendAvailableCommands(commandName: String, commandSender: T, args: Array<out String>) {
+    private fun sendAvailableCommands(commandSender: T, args: Array<out String>) {
         if (args.isEmpty() && (
-                    this.getArguments() !== null || this.getSubCommands() !== null
-                    ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
+                        this.getArguments() !== null || this.getSubCommands() !== null
+                        ) || this.getArguments() !== null && this.getArguments()!!.size > args.size
         ) {
             val componentBuilder = ComponentBuilder("\n")
-                .append("§2Comandos disponíveis:")
-                .append("\n\n")
+                    .append("§2Comandos disponíveis:")
+                    .append("\n\n")
 
             if (this.getSubCommands() !== null) {
                 this.getSubCommands()!!.forEachIndexed { index, commandable ->
                     if (commandable::onCommand.javaMethod?.returnType?.equals(null) != false) {
-                        componentBuilder.append(commandName, commandable, index, this.getSubCommands()!!.size)
+                        componentBuilder.append(this.getNameExact(), commandable, index, this.getSubCommands()!!.size)
                     } else {
                         if (commandable.getSubCommands() !== null) {
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
                                 componentBuilder.append(
-                                    "$commandName ${commandable.getName()}",
-                                    _commandable,
-                                    _index,
-                                    commandable.getSubCommands()!!.size
+                                        "${this.getNameExact()} ${commandable.getName()}",
+                                        _commandable,
+                                        _index,
+                                        commandable.getSubCommands()!!.size
                                 )
                             }
                         } else {
                             componentBuilder.append(
-                                commandName,
-                                commandable,
-                                index,
-                                this.getSubCommands()!!.size
+                                    this.getNameExact(),
+                                    commandable,
+                                    index,
+                                    this.getSubCommands()!!.size
                             )
                         }
                     }
@@ -191,28 +171,28 @@ interface Commandable<T> {
                     "<${it.name}>"
                 }.distinct().collect(Collectors.joining(" "))
 
-                componentBuilder.append("§a/$commandName $arguments §8- §7${this.getDescription() ?: ""}")
-                    .event(
-                        ClickEvent(
-                            ClickEvent.Action.SUGGEST_COMMAND,
-                            "/$commandName "
+                componentBuilder.append("§a/${this.getNameExact()} $arguments §8- §7${this.getDescription() ?: ""}")
+                        .event(
+                                ClickEvent(
+                                        ClickEvent.Action.SUGGEST_COMMAND,
+                                        "/${this.getNameExact()} "
+                                )
                         )
-                    )
             } else {
-                componentBuilder.append("§a/$commandName §8- §7${this.getDescription() ?: ""}")
-                    .event(
-                        ClickEvent(
-                            ClickEvent.Action.SUGGEST_COMMAND,
-                            "/$commandName "
+                componentBuilder.append("§a/${this.getNameExact()} §8- §7${this.getDescription() ?: ""}")
+                        .event(
+                                ClickEvent(
+                                        ClickEvent.Action.SUGGEST_COMMAND,
+                                        "/${this.getNameExact()} "
+                                )
                         )
-                    )
             }
 
             componentBuilder.append("\n")
 
             CoreWrapper.WRAPPER.sendMessage(
-                this.getSenderName(commandSender),
-                componentBuilder.create()
+                    this.getSenderName(commandSender),
+                    componentBuilder.create()
             )
 
             return
@@ -221,6 +201,25 @@ interface Commandable<T> {
         return
     }
 
+    private fun getNameExact() = if (this.getParent() !== null) {
+        lateinit var commandName: String
+
+        var parent: Commandable<T>? = this.getParent()
+        var i = 0
+
+        do {
+            parent = if (i != 0) parent?.getParent() else this.getParent()
+
+            if (parent !== null) {
+                commandName = parent.getName()
+            }
+
+            i++
+        } while (parent !== null)
+
+        "$commandName ${this.getName()}"
+    } else this.getName()
+
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
         if (commandable.getArguments() !== null) {
             val arguments = commandable.getArguments()!!.stream().map { argument ->
@@ -228,22 +227,22 @@ interface Commandable<T> {
             }.distinct().collect(Collectors.joining(" "))
 
             this.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${commandable.getDescription() ?: ""}")
-                .event(
-                    ClickEvent(
-                        ClickEvent.Action.SUGGEST_COMMAND,
-                        "/$commandName ${commandable.getName()} "
+                    .event(
+                            ClickEvent(
+                                    ClickEvent.Action.SUGGEST_COMMAND,
+                                    "/$commandName ${commandable.getName()} "
+                            )
                     )
-                )
 
             if (index + 1 < max) this.append("\n")
         } else {
             this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription() ?: ""}")
-                .event(
-                    ClickEvent(
-                        ClickEvent.Action.SUGGEST_COMMAND,
-                        "/$commandName ${commandable.getName()} "
+                    .event(
+                            ClickEvent(
+                                    ClickEvent.Action.SUGGEST_COMMAND,
+                                    "/$commandName ${commandable.getName()} "
+                            )
                     )
-                )
 
             if (index + 1 < max) this.append("\n")
         }
