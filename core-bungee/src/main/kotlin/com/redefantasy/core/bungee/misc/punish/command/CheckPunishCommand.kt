@@ -92,7 +92,7 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
                                     Text(hoverMessage.create())
                             )
                     )
-                    .append("[Prova]")
+                    .append("[Prova] ")
                     .event(
                             ClickEvent(
                                     ClickEvent.Action.OPEN_URL,
@@ -109,6 +109,8 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
 
             if (index + 1 < userPunishments.size) message.append("\n")
         }
+
+        message.append("\n")
 
         commandSender.sendMessage(*message.create())
         return false
