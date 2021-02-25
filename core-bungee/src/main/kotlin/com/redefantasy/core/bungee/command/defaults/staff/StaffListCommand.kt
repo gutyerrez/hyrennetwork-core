@@ -30,9 +30,9 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
                 .map {
                     val _user = CoreProvider.Cache.Local.USERS.provide().fetchById(it)
 
-                    _user!!
+                    _user
                 }
-                .filter { it.hasGroup(Group.HELPER) }
+                .filter { it !== null && it.hasGroup(Group.HELPER) }
 
         val message = ComponentBuilder()
                 .append("\n")
@@ -40,7 +40,7 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
                 .append("\n\n")
 
         users.forEach {
-            val highestGroup = it.getHighestGroup()
+            val highestGroup = it!!.getHighestGroup()
             val prefix = "${highestGroup.color}${highestGroup.prefix}"
             val bukkitApplication = it.getConnectedBukkitApplication()
 
