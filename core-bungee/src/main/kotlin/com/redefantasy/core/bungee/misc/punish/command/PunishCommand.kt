@@ -6,6 +6,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
 import com.redefantasy.core.shared.misc.utils.Patterns
 import com.redefantasy.core.shared.misc.utils.TimeCode
@@ -50,6 +51,8 @@ class PunishCommand : CustomCommand("punir") {
                     .append("§eLista de infração disponíveís (${punishCategories.size})")
                     .append("\n\n")
 
+                var color = ChatColor.WHITE
+
                 punishCategories.forEach {
                     val _componentBuilder = ComponentBuilder("§e${it.displayName}")
                         .append("\n\n")
@@ -68,7 +71,7 @@ class PunishCommand : CustomCommand("punir") {
                         if (index + 1 < it.punishDurations.size) _componentBuilder.append("\n")
                     }
 
-                    componentBuilder.append(" - ")
+                    componentBuilder.append("$color - ")
                         .append(it.displayName)
                         .event(
                             HoverEvent(
@@ -82,6 +85,8 @@ class PunishCommand : CustomCommand("punir") {
                                 "/punir ${args[0]} ${it.name} "
                             )
                         )
+
+                    if (color === ChatColor.WHITE) color = ChatColor.GRAY else color = ChatColor.WHITE
                 }
 
                 componentBuilder.append("\n")
