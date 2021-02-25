@@ -132,7 +132,7 @@ data class User(
     }
 
     fun getPunishments(): List<UserPunishment> {
-        return CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
+        return CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
     }
 
     fun getActivePunishments(): List<UserPunishment> {
