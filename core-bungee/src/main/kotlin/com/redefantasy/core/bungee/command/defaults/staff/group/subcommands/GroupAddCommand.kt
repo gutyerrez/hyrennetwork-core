@@ -38,9 +38,7 @@ class GroupAddCommand : CustomCommand("adicionar") {
         val targetUser = CoreProvider.Cache.Local.USERS.provide().fetchByName(args[0])
         val group = Enums.getIfPresent(Group::class.java, args[1])
         val server = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(args[2])
-        val dueAt = DateTime(
-                System.currentTimeMillis() + TimeUnit.DAYS.toMicros(args[3].toLong())
-        )
+        val dueAt = DateTime.now() + TimeUnit.DAYS.toMicros(args[3].toLong())
 
         if (targetUser === null) {
             commandSender.sendMessage(DefaultMessage.USER_NOT_FOUND)

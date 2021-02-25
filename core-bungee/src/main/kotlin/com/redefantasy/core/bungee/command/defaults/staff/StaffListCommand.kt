@@ -8,6 +8,7 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.users.data.User
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.ComponentBuilder
+import java.util.stream.Collectors
 
 /**
  * @author Gutyerrez
@@ -33,10 +34,11 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
                     _user
                 }
                 .filter { it !== null && it.hasGroup(Group.HELPER) }
+                .collect(Collectors.toList())
 
         val message = ComponentBuilder()
                 .append("\n")
-                .append("§2Membros da equipe online (${users.count().toInt()}):")
+                .append("§2Membros da equipe online (${users.size}):")
                 .append("\n\n")
 
         users.forEach {
