@@ -205,11 +205,11 @@ interface Commandable<T> {
     private fun getNameExact() = if (this.getParent() !== null) {
         val joiner = StringJoiner(" ")
 
-        var parent: Commandable<T>? = this.getParent()
+        var parent: Commandable<T>? = null
         var i = 0
 
         do {
-            parent = if (i != 0) parent?.getParent() else this.getParent()
+            parent = if (i != 0) this.getParent() else parent?.getParent()
 
             if (parent !== null) {
                 joiner.add(parent.getName())
@@ -218,7 +218,7 @@ interface Commandable<T> {
             i++
         } while (parent !== null)
 
-        "${joiner.toString().reversed()} ${this.getName()}"
+        "$joiner ${this.getName()}"
     } else this.getName()
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
