@@ -43,7 +43,7 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
 
         val color = if (targetUser.isOnline()) ChatColor.GREEN else ChatColor.RED
         val address = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchConnectedAddress(targetUser)
-        val punishments = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(targetUser.getUniqueId())
+        val punishments = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(targetUser.id)
 
         val message = ComponentBuilder()
             .append("\n")
