@@ -51,7 +51,7 @@ dependencies {
     implementation("com.squareup.okio:okio:2.8.0")
 
     // caffeine
-    implementation("com.github.ben-manes.caffeine:caffeine:3.0.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")
 
     // waterfall-chat
     api("io.github.waterfallmc:waterfall-chat:1.16-R0.5-SNAPSHOT")
