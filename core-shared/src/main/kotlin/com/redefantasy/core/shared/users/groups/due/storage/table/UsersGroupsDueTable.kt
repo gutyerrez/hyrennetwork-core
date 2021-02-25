@@ -12,8 +12,8 @@ import org.jetbrains.exposed.sql.jodatime.datetime
 object UsersGroupsDueTable : IntIdTable("users_groups_due") {
 
     val userId = reference("user_id", UsersTable)
-    val groupName = enumerationByName("group_name", 255, Group::class)
-    val serverName = reference("server_name", ServersTable)
+    val group = enumerationByName("group_name", 255, Group::class)
+    val serverName = reference("server_name", ServersTable).nullable()
     val dueAt = datetime("due_at")
 
 }

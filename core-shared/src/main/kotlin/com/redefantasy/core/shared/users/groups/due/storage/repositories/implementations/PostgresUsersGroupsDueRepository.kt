@@ -3,6 +3,8 @@ package com.redefantasy.core.shared.users.groups.due.storage.repositories.implem
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.groups.due.storage.dao.UserGroupDueDAO
+import com.redefantasy.core.shared.users.groups.due.storage.dto.CreateUserGroupDueDTO
+import com.redefantasy.core.shared.users.groups.due.storage.dto.DeleteUserGroupDueDTO
 import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdAndServerNameDTO
 import com.redefantasy.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
@@ -32,7 +34,7 @@ class PostgresUsersGroupsDueRepository : IUsersGroupsDueRepository {
 
                 val currentGroups = groups.getOrDefault(server, mutableListOf())
 
-                currentGroups.add(it.group())
+                currentGroups.add(it.group)
 
                 groups[server] = currentGroups
             }
@@ -58,12 +60,41 @@ class PostgresUsersGroupsDueRepository : IUsersGroupsDueRepository {
 
                 val currentGroups = groups.getOrDefault(server, mutableListOf())
 
-                currentGroups.add(it.group())
+                currentGroups.add(it.group)
 
                 groups[server] = currentGroups
             }
 
             return@transaction groups
+        }
+    }
+
+    override fun create(createUserGroupDueDTO: CreateUserGroupDueDTO) {
+        transaction {
+            UserGroupDueDAO.new {
+                this.userId = createUserGroupDueDTO.userId
+                this.serverName = createUserGroupDueDTO.server?.name
+                this.group = createUserGroupDueDTO.group
+                this.dueAt = createUserGroupDueDTO.dueAt
+            }
+        }
+    }
+
+    override fun delete(deleteUserGroupDueDTO: DeleteUserGroupDueDTO): Boolean {
+        return transaction {
+            val userGroupDue = UserGroupDueDAO.find {
+                UsersGroupsDueTable.userId eq deleteUserGroupDueDTO.userId and (
+                        UsersGroupsDueTable.serverName eq deleteUserGroupDueDTO.server?.name
+                ) and (
+                        UsersGroupsDueTable.group eq deleteUserGroupDueDTO.group
+                )
+            }
+
+            if (userGroupDue.empty()) return@transaction false
+
+            userGroupDue.first().delete()
+
+            return@transaction true
         }
     }
 

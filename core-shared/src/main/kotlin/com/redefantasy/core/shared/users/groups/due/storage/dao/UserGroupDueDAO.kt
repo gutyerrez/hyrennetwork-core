@@ -15,14 +15,13 @@ class UserGroupDueDAO(
 
     companion object : IntEntityClass<UserGroupDueDAO>(UsersGroupsDueTable)
 
-    val userId by UsersGroupsDueTable.userId
-    val groupName by UsersGroupsDueTable.groupName
-    val serverName by UsersGroupsDueTable.serverName
+    var userId by UsersGroupsDueTable.userId
+    var group by UsersGroupsDueTable.group
+    var serverName by UsersGroupsDueTable.serverName
+    var dueAt by UsersGroupsDueTable.dueAt
 
-    fun server() = com.redefantasy.core.shared.CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-        this.serverName.value
+    fun server() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+        this.serverName?.value
     )
-
-    fun group() = this.groupName
 
 }

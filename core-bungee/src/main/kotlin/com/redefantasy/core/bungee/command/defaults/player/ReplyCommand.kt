@@ -16,6 +16,8 @@ class ReplyCommand : CustomCommand("r") {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
+    override fun getDescription() = "Responder uma mensagem privada de um jogador."
+
     override fun getArguments() = listOf(
             Argument("mensagem")
     )

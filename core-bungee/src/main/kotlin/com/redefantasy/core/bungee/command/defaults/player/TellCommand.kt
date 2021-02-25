@@ -17,6 +17,8 @@ class TellCommand : CustomCommand("tell") {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
+    override fun getDescription() = "Enviar uma mensagem privada para um usuário"
+
     override fun getArguments() = listOf(
             Argument("usuário"),
             Argument("mensagem")
@@ -44,11 +46,13 @@ class TellCommand : CustomCommand("tell") {
             return false
         }
 
+        user!!.directMessage = targetUser
+
         val message = args.copyOfRange(1, args.size).joinToString(" ")
 
         val packet = TellPacket()
 
-        packet.senderId = user!!.getUniqueId()
+        packet.senderId = user.getUniqueId()
         packet.receiverId = targetUser.getUniqueId()
         packet.message = message
 
