@@ -3,6 +3,7 @@ package com.redefantasy.core.shared.misc.cooldowns
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.misc.cooldowns.data.Cooldown
 import com.redefantasy.core.shared.users.data.User
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 
 /**
@@ -11,14 +12,14 @@ import java.util.*
 class CooldownManager {
 
     private val CACHE = Caffeine.newBuilder()
-            .build<UUID, Cooldown>()
+            .build<EntityID<UUID>, Cooldown>()
 
     fun start(user: User, any: Any, duration: Long) {
         val cooldown = this.CACHE.getIfPresent(user.id) ?: Cooldown()
 
         cooldown.start(any, duration)
 
-        this.CACHE.put(user.getUniqueId(), cooldown)
+        this.CACHE.put(user.id, cooldown)
     }
 
     fun inCooldown(user: User, any: Any): Boolean {
