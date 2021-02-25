@@ -1,5 +1,9 @@
 package com.redefantasy.core.bungee
 
+import com.redefantasy.core.bungee.command.defaults.player.LobbyCommand
+import com.redefantasy.core.bungee.command.defaults.player.OnlineCommand
+import com.redefantasy.core.bungee.command.defaults.player.ReplyCommand
+import com.redefantasy.core.bungee.command.defaults.player.TellCommand
 import com.redefantasy.core.bungee.command.defaults.staff.*
 import com.redefantasy.core.bungee.command.defaults.staff.account.AccountCommand
 import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
@@ -45,11 +49,22 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerCommand(this, SendCommand())
         pluginManager.registerCommand(this, StaffChatCommand())
         pluginManager.registerCommand(this, StaffListCommand())
+        pluginManager.registerCommand(this, LobbyCommand())
+        pluginManager.registerCommand(this, OnlineCommand())
+        pluginManager.registerCommand(this, ReplyCommand())
+        pluginManager.registerCommand(this, TellCommand())
 
         pluginManager.registerListener(this, LoginListeners())
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(UserPunishedEchoPacketListener())
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(TellPacketListener())
+    }
+
+    override fun onDisable() {
+        super.onDisable()
+
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete()
+        CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete()
     }
 
 }

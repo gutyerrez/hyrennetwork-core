@@ -133,6 +133,12 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun delete() {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            it.del("users:*")
+        }
+    }
+
     fun delete(user: User) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())

@@ -28,4 +28,10 @@ class UsersLoggedRedisCache : RedisCache {
         }
     }
 
+    fun delete() {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            it.del("user_logged:*")
+        }
+    }
+
 }
