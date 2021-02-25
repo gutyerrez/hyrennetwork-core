@@ -134,7 +134,9 @@ interface Commandable<T> {
                 }
             } else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
                 return this.sendAvailableCommands(commandName, commandSender, args)
-            } else if (args.isEmpty() && this.getArguments() !== null || args.size < this.getArguments()!!.size) {
+            } else if (args.isEmpty() && this.getArguments() !== null) {
+                return this.sendAvailableCommands(commandName, commandSender, args)
+            } else if (this.getArguments() !== null && args.size < this.getArguments()!!.size) {
                 return CoreWrapper.WRAPPER.sendMessage(
                         this.getSenderName(commandSender),
                         this.getUsage()
