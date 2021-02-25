@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
+import java.util.*
 import java.util.stream.Collectors
 import kotlin.reflect.jvm.javaMethod
 
@@ -202,7 +203,7 @@ interface Commandable<T> {
     }
 
     private fun getNameExact() = if (this.getParent() !== null) {
-        lateinit var commandName: String
+        val joiner = StringJoiner(" ")
 
         var parent: Commandable<T>? = this.getParent()
         var i = 0
@@ -211,13 +212,13 @@ interface Commandable<T> {
             parent = if (i != 0) parent?.getParent() else this.getParent()
 
             if (parent !== null) {
-                commandName = parent.getName()
+                joiner.add(parent.getName())
             }
 
             i++
         } while (parent !== null)
 
-        "$commandName ${this.getName()}"
+        "$joiner ${this.getName()}"
     } else this.getName()
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
