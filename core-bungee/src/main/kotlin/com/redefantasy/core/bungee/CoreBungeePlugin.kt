@@ -4,6 +4,7 @@ import com.redefantasy.core.bungee.command.defaults.staff.*
 import com.redefantasy.core.bungee.command.defaults.staff.account.AccountCommand
 import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
 import com.redefantasy.core.bungee.command.defaults.staff.server.ServerCommand
+import com.redefantasy.core.bungee.echo.packets.listeners.TellPacketListener
 import com.redefantasy.core.bungee.misc.login.commands.LoginCommand
 import com.redefantasy.core.bungee.misc.login.commands.RegisterCommand
 import com.redefantasy.core.bungee.misc.login.listeners.LoginListeners
@@ -48,6 +49,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerListener(this, LoginListeners())
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(UserPunishedEchoPacketListener())
+        CoreProvider.Databases.Redis.ECHO.provide().registerListener(TellPacketListener())
     }
 
 }

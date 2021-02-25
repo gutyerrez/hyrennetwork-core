@@ -22,7 +22,11 @@ class GroupAddCommand : CustomCommand("adicionar") {
 
     override fun getParent() = GroupCommand()
 
-    override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
+    override fun onCommand(
+            commandSender: CommandSender,
+            user: User?,
+            args: Array<out String>
+    ): Boolean {
         return false
     }
 

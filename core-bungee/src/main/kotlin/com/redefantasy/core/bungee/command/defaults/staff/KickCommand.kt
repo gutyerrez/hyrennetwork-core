@@ -55,7 +55,7 @@ class KickCommand : CustomCommand("kick"), GroupCommandRestrictable {
 
         CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
 
-        commandSender.sendMessage(TextComponent("§eVocê chutou ${targetUser.name} para fora do servidor por: $reason."))
+        commandSender.sendMessage(TextComponent("§eVocê chutou ${targetUser.name} para fora do servidor por: ${if (reason.isEmpty()) "Nenhum motivo informado" else reason}."))
         return false
     }
 

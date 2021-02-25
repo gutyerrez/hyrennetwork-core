@@ -24,7 +24,11 @@ class ServerCommand : CustomCommand("server"), GroupCommandRestrictable {
 
     override fun getGroup() = Group.MODERATOR
 
-    override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean {
+    override fun onCommand(
+            commandSender: CommandSender,
+            user: User?,
+            args: Array<out String>
+    ): Boolean {
         val servers = CoreProvider.Cache.Local.SERVERS.provide().fetchAll()
 
         val message = ComponentBuilder()

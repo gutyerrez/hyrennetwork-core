@@ -165,7 +165,7 @@ interface Commandable<T> {
                         if (commandable.getSubCommands() !== null) {
                             commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
                                 componentBuilder.append(
-                                    "$commandName ${commandable.getName()}",
+                                    commandName,
                                     _commandable,
                                     _index,
                                     commandable.getSubCommands()!!.size
