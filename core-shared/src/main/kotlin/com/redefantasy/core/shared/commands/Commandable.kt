@@ -135,7 +135,10 @@ interface Commandable<T> {
             } else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
                 return this.sendAvailableCommands(commandName, commandSender, args)
             } else if (args.isEmpty() && this.getArguments() !== null || args.size < this.getArguments()!!.size) {
-                return this.sendAvailableCommands(commandName, commandSender, args)
+                return CoreWrapper.WRAPPER.sendMessage(
+                        this.getSenderName(commandSender),
+                        this.getUsage()
+                )
             }
 
             val result = this.onCommand(commandSender, user, args)
