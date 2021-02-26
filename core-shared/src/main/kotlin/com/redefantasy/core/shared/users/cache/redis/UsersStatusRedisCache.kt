@@ -29,6 +29,8 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
 
+            if (!it.hexists(key, "connected_address")) return null
+
             return@use it.hget(key, "connected_address")
         }
     }
@@ -36,6 +38,8 @@ class UsersStatusRedisCache : RedisCache {
     fun fetchProxyApplication(user: User): Application? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
+
+            if (!it.hexists(key, "proxy_application")) return null
 
             return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                 it.hget(key, "proxy_application")
@@ -46,6 +50,8 @@ class UsersStatusRedisCache : RedisCache {
     fun fetchBukkitApplication(user: User): Application? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
+
+            if (!it.hexists(key, "bukkit_application")) return null
 
             return@use CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
                 it.hget(key, "bukkit_application")
