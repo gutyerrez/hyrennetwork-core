@@ -46,6 +46,11 @@ class TellCommand : CustomCommand("tell") {
             return false
         }
 
+        if (!targetUser.isLogged()) {
+            commandSender.sendMessage(TextComponent("§cVocê não pode interagir com usuários que ainda não logaram."))
+            return false
+        }
+
         user!!.directMessage = targetUser
 
         val message = args.copyOfRange(1, args.size).joinToString(" ")

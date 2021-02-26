@@ -27,6 +27,8 @@ enum class Group(
     PREMIUM,
     DEFAULT;
 
+    fun getColoredPrefix() = "${ChatColor.fromHEX(color ?: "")}$prefix"
+
     fun getFancyDisplayName() = "${ChatColor.fromHEX(color ?: "")}$displayName"
 
 }

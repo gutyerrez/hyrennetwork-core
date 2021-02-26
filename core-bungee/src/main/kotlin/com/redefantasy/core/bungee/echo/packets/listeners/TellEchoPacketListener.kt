@@ -24,12 +24,12 @@ class TellEchoPacketListener : EchoListener {
         val receiver = CoreProvider.Cache.Local.USERS.provide().fetchById(receiverId!!)!!
 
         val toMessage = ComponentBuilder()
-                .append("§8[Para ${receiver.name}]: §6")
+                .append("§8[Para ${receiver.getHighestGroup().getColoredPrefix()}${receiver.name}§8]: §6")
                 .append(message)
                 .create()
 
         val fromMessage = ComponentBuilder()
-                .append("§8[De ${sender.name}]: §6")
+                .append("§8[De ${sender.getHighestGroup().getColoredPrefix()}${sender.name}§8]: §6")
                 .append(message)
                 .create()
 
