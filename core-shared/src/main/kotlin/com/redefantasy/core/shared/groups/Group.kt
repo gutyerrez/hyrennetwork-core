@@ -15,7 +15,7 @@ enum class Group(
         var discordRoleId: Long? = null
 ) {
 
-    GAME_MASTER,
+    MASTER,
     DIRECTOR,
     MANAGER,
     ADMINISTRATOR,

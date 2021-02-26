@@ -60,7 +60,7 @@ data class UserPunishment(
     }
 
     fun canBeRevokedFrom(revoker: User): Boolean {
-        if (revoker.hasGroup(Group.GAME_MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
+        if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
             return true
         } else if (revoker.hasGroup(Group.MANAGER)) {
             return this.createdAt + TimeUnit.DAYS.toMillis(7) > DateTime.now()

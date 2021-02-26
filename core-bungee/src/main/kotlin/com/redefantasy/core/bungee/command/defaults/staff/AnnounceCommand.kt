@@ -24,7 +24,7 @@ class AnnounceCommand : CustomCommand("alerta"), GroupCommandRestrictable {
         Argument("mensagem")
     )
 
-    override fun getGroup() = Group.GAME_MASTER
+    override fun getGroup() = Group.MASTER
 
     override fun onCommand(
         commandSender: CommandSender,
