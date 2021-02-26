@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.users.storage.repositories.implementation
 
+import com.redefantasy.core.shared.misc.exposed.ilike
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.dao.UserDAO
 import com.redefantasy.core.shared.users.storage.dto.*
@@ -31,7 +32,7 @@ class PostgresUsersRepository : IUsersRepository {
             var user: User? = null
 
             val result = UserDAO.find {
-                UsersTable.name eq fetchUserByName.name
+                UsersTable.name ilike fetchUserByName.name
             }
 
             if (!result.empty()) user = result.first().asUser()
