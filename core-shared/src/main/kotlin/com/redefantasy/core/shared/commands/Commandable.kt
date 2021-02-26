@@ -202,7 +202,7 @@ interface Commandable<T> {
     }
 
     private fun getNameExact() = if (this.getParent() !== null) {
-        var joiner = ""
+        var joiner = mutableListOf<String>()
 
         var parent: Commandable<T>? = null
         var i = 0
@@ -210,7 +210,7 @@ interface Commandable<T> {
         do {
             parent = if (i == 0) this.getParent() else parent?.getParent()
 
-            if (parent !== null) joiner += parent.getName()
+            if (parent !== null) joiner.add(parent.getName())
 
             i++
         } while (parent !== null)
