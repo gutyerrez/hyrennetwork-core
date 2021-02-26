@@ -215,7 +215,7 @@ interface Commandable<T> {
             i++
         } while (parent !== null)
 
-        "$joiner ${this.getName()}"
+        "${joiner.reversed()} ${this.getName()}"
     } else this.getName()
 
     private fun ComponentBuilder.append(commandName: String, commandable: Commandable<*>, index: Int, max: Int) {
