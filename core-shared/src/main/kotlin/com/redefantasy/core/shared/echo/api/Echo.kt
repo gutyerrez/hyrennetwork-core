@@ -220,7 +220,7 @@ open class Echo(
         channels.add(
             String.format(
                 this.APPLICATION_CHANNEL_NAME,
-                source.server?.name ?: "undefined",
+                source.server?.name ?: "null",
                 source.name
             )
         )
