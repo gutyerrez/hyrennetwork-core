@@ -42,7 +42,9 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
                 .append("§2Membros da equipe online (${users.size}):")
                 .append("\n\n")
 
-        users.forEach {
+        users.stream()
+            .sorted { user1, user2 -> user2!!.getHighestGroup().priority!!.compareTo(user1!!.getHighestGroup().priority!!) }
+            .forEach {
             val highestGroup = it!!.getHighestGroup()
             val prefix = "${ChatColor.fromHEX(highestGroup.color!!)}${highestGroup.prefix}"
             val bukkitApplication = it.getConnectedBukkitApplication()

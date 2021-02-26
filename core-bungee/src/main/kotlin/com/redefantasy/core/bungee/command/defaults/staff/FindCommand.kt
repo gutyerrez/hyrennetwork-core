@@ -55,7 +55,10 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
                 .append("\n")
                 .append("   §fData de registro: §7${DateFormatter.formatToDefault(targetUser.createdAt)}")
                 .append("\n")
-                .append("   §fÚltima autenticação: §7${DateFormatter.formatToDefault(targetUser.lastLoginAt)}")
+                .append("   §fÚltima autenticação: §7${
+                    if (targetUser.lastLoginAt === null) {
+                        "[Desconhecida]"
+                    } else DateFormatter.formatToDefault(targetUser.lastLoginAt)}")
                 .append("\n")
                 .append("   §fPunido: ${
                     if (punishments !== null && punishments.isNotEmpty() && punishments.stream()
