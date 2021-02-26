@@ -32,6 +32,8 @@ class ReplyCommand : CustomCommand("r") {
             return false
         }
 
+        user.directMessage = user.directMessage
+
         val message = args.joinToString(" ")
 
         val packet = TellPacket()
