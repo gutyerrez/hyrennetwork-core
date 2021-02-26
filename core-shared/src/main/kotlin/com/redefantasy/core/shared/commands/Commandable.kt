@@ -209,7 +209,7 @@ interface Commandable<T> {
         var i = 0
 
         do {
-            parent = if (i == 0) parent?.getParent() else this.getParent()
+            parent = if (i == 0) this.getParent() else parent?.getParent()
 
             joiner.add(parent?.getName())
 
