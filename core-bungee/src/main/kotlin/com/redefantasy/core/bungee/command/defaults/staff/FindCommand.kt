@@ -58,14 +58,14 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
                 .append("   §fÚltima autenticação: §7${DateFormatter.formatToDefault(targetUser.lastLoginAt)}")
                 .append("\n")
                 .append("   §fPunido: ${
-                    if (punishments === null || punishments.isEmpty() || punishments.stream()
+                    if (punishments !== null && punishments.isNotEmpty() && punishments.stream()
                                     .anyMatch {
                                         it.startTime === null && it.revokeCategory === null || it.isActive()
                                     }
                     ) {
-                        "§aNão"
-                    } else {
                         "§cSim"
+                    } else {
+                        "§aNão"
                     }
                 }")
                 .append("\n\n")
