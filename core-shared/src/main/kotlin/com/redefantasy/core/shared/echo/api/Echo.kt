@@ -73,14 +73,6 @@ open class Echo(
         targetServerName: String?,
         targetApplicationName: String?
     ) {
-        println(
-            String.format(
-                this.APPLICATION_CHANNEL_NAME,
-                targetServerName,
-                targetApplicationName
-            )
-        )
-
         this._publish(
             packet,
             this.createHeader(null),
