@@ -2,6 +2,7 @@ package com.redefantasy.core.bungee.command.defaults.player
 
 import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.users.data.User
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -21,7 +22,7 @@ class OnlineCommand : CustomCommand("online") {
 
         val message = ComponentBuilder()
                 .append("\n")
-                .append("§b§l * §r§e${users.size} jogadores online na rede.")
+                .append("§b§l * ${ChatColor.RESET}§e${users.size} jogadores online na rede.")
                 .append("\n")
 
         if (commandSender is ProxiedPlayer) {
@@ -31,7 +32,7 @@ class OnlineCommand : CustomCommand("online") {
             if (server !== null) {
                 val usersByServer = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByServer(server)
 
-                message.append("§b§l * §r§e${usersByServer.size} jogadores no servidor atual.")
+                message.append("§b§l * ${ChatColor.RESET}§e${usersByServer.size} jogadores no servidor atual.")
                         .append("\n")
             }
         }
