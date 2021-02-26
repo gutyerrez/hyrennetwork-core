@@ -186,9 +186,9 @@ open class Echo(
 
         this.subscribers.forEach { it.callPacket(channel, packet) }
 
-        val jedis = this.redisDatabaseProvider.provide().resource
-
-        jedis.publish(channel.toByteArray(), buffer.toByteArray())
+        this.redisDatabaseProvider.provide().resource.use {
+            it.publish(channel.toByteArray(), buffer.toByteArray())
+        }
     }
 
     fun subscribe(dispatcher: BiConsumer<EchoPacket, Runnable>? = null): EchoSubscriber {
