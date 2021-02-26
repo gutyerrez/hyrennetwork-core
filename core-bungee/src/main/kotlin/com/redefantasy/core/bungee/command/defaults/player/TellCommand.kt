@@ -72,7 +72,9 @@ class TellCommand : CustomCommand("tell") {
             packet,
             arrayOf(
                 senderUserProxyApplication,
-                targetUserProxyApplication
+                if (senderUserProxyApplication !== targetUserProxyApplication) {
+                    targetUserProxyApplication
+                } else null
             )
         )
         return true

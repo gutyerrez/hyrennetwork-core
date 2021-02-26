@@ -139,10 +139,10 @@ open class Echo(
         targetApplications: Array<Application?>
     ) {
         targetApplications.forEach {
-            this.publishToApplication(
+            if (it !== null) this.publishToApplication(
                 packet,
-                it?.server?.getName(),
-                it?.name
+                it.server?.getName(),
+                it.name
             )
         }
     }

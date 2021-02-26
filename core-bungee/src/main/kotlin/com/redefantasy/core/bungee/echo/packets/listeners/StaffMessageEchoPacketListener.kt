@@ -31,10 +31,10 @@ class StaffMessageEchoPacketListener : EchoListener {
         val group = user!!.getHighestGroup()
 
         val message = ComponentBuilder()
-                .append("§d[S] ")
+                .append("§a[S] ")
                 .append("${ChatColor.fromHEX(group.color!!)}${group.prefix}")
                 .append(user.name)
-                .append("§d: ")
+                .append("§a: ")
                 .append(packet.message)
                 .create()
 

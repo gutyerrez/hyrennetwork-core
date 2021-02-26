@@ -53,7 +53,9 @@ class ReplyCommand : CustomCommand("r") {
             packet,
             arrayOf(
                 senderUserProxyApplication,
-                targetUserProxyApplication
+                if (senderUserProxyApplication !== targetUserProxyApplication) {
+                    targetUserProxyApplication
+                } else null
             )
         )
         return true
