@@ -32,7 +32,7 @@ class StaffMessageEchoPacketListener : EchoListener {
 
         val message = ComponentBuilder()
                 .append("§d[S] ")
-                .append("${ChatColor.fromHEX(group.color!!)}$group.prefix")
+                .append("${ChatColor.fromHEX(group.color!!)}${group.prefix}")
                 .append(user.name)
                 .append("§d: ")
                 .append(packet.message)
