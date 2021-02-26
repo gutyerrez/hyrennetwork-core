@@ -61,7 +61,20 @@ class TellCommand : CustomCommand("tell") {
         packet.receiverId = targetUser.getUniqueId()
         packet.message = message
 
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
+        val senderUserProxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(
+            user
+        )
+        val targetUserProxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(
+            targetUser
+        )
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToApplications(
+            packet,
+            arrayOf(
+                senderUserProxyApplication,
+                targetUserProxyApplication
+            )
+        )
         return true
     }
 

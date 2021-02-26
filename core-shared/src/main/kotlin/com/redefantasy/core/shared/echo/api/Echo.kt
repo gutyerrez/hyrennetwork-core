@@ -126,6 +126,19 @@ open class Echo(
         )
     }
 
+    fun <T : EchoPacket> publishToApplications(
+        packet: T,
+        targetApplications: Array<Application?>
+    ) {
+        targetApplications.forEach {
+            this.publishToApplication(
+                packet,
+                it?.server?.getName(),
+                it?.name
+            )
+        }
+    }
+
     fun <T : EchoPacket> publishToAll(packet: T) {
         this._publish(
             packet,
