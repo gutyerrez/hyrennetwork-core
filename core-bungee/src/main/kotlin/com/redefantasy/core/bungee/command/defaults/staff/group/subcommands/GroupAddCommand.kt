@@ -50,7 +50,7 @@ class GroupAddCommand : CustomCommand("adicionar") {
             return false
         }
 
-        if (user!!.getHighestGroup().priority == group.get().priority) {
+        if (user!!.getHighestGroup().priority!! <= group.get().priority!!) {
             commandSender.sendMessage(TextComponent("§cVocê não pode gerenciar este grupo."))
             return false
         }

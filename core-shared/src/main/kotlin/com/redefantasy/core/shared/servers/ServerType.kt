@@ -5,6 +5,7 @@ package com.redefantasy.core.shared.servers
  **/
 enum class ServerType {
 
+    RANK_UP,
     FACTIONS;
 
 }

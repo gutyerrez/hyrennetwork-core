@@ -106,7 +106,7 @@ class FindCommand : CustomCommand("find"), GroupCommandRestrictable {
         }
 
         if (groups.isEmpty()) {
-            message.append("   §c--/--")
+            message.append("   §f--/--")
         }
 
         val proxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(targetUser)

@@ -24,17 +24,17 @@ class UnPunishCommand : CustomCommand("despunir") {
     override fun getCommandRestriction() = CommandRestriction.GAME
 
     override fun getArguments() = listOf(
-            Argument("id"),
-            Argument("motivo")
+        Argument("id"),
+        Argument("motivo")
     )
 
     override fun onCommand(
-            commandSender: CommandSender,
-            user: User?,
-            args: Array<out String>
+        commandSender: CommandSender,
+        user: User?,
+        args: Array<out String>
     ): Boolean {
         val userPunishment = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchById(
-                EntityID(args[0].toIntOrNull() ?: 0, UsersPunishmentsTable)
+            EntityID(args[0].toIntOrNull() ?: 0, UsersPunishmentsTable)
         )
         val revokeCategory = CoreProvider.Cache.Local.REVOKE_CATEGORIES.provide().fetchByName(args[1])
 
@@ -53,28 +53,36 @@ class UnPunishCommand : CustomCommand("despunir") {
             return false
         }
 
+        if (!userPunishment.canBeRevokedFrom(user!!) || userPunishment.punishCategory !== null && !user.hasGroup(
+                userPunishment.punishCategory!!.group
+            )
+        ) {
+            commandSender.sendMessage(TextComponent("§cVocê não pode revogar esta punição."))
+            return false
+        }
+
         CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
-                UpdateUserPunishmentByIdDTO(
-                        userPunishment.id
-                ) {
-                    it.revokeStafferId = user!!.id
-                    it.revokeTime = DateTime.now()
-                    it.revokeCategory = revokeCategory.name
-                }
+            UpdateUserPunishmentByIdDTO(
+                userPunishment.id
+            ) {
+                it.revokeStafferId = user.id
+                it.revokeTime = DateTime.now()
+                it.revokeCategory = revokeCategory.name
+            }
         )
 
         val punisherUser = CoreProvider.Cache.Local.USERS.provide().fetchById(userPunishment.stafferId)
         val punishedUser = CoreProvider.Cache.Local.USERS.provide().fetchById(userPunishment.userId)
 
         val message = ComponentBuilder()
-                .append("\n")
-                .append("§e * ${user!!.name} revogou uma punição de ${punishedUser!!.name}.")
-                .append("\n")
-                .append("§e * Aplicada inicialmente por ${punisherUser!!.name}.")
-                .append("\n")
-                .append("§e * Motivo: ${revokeCategory.displayName}.")
-                .append("\n")
-                .create()
+            .append("\n")
+            .append("§e * ${user!!.name} revogou uma punição de ${punishedUser!!.name}.")
+            .append("\n")
+            .append("§e * Aplicada inicialmente por ${punisherUser!!.name}.")
+            .append("\n")
+            .append("§e * Motivo: ${revokeCategory.displayName}.")
+            .append("\n")
+            .create()
 
         val packet = UserUnPunishedPacket()
 

@@ -1,12 +1,15 @@
 package com.redefantasy.core.shared.users.punishments.data
 
+import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.punish.category.data.PunishCategory
 import com.redefantasy.core.shared.misc.revoke.category.data.RevokeCategory
 import com.redefantasy.core.shared.misc.utils.ChatColor
+import com.redefantasy.core.shared.users.data.User
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * @author SrGutyerrez
@@ -54,6 +57,22 @@ data class UserPunishment(
         }
 
         return (this.startTime.millis + this.duration) > System.currentTimeMillis()
+    }
+
+    fun canBeRevokedFrom(revoker: User): Boolean {
+        if (revoker.hasGroup(Group.GAME_MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
+            return true
+        } else if (revoker.hasGroup(Group.MANAGER)) {
+            return this.createdAt + TimeUnit.DAYS.toMillis(7) > DateTime.now()
+        } else if (revoker.hasGroup(Group.ADMINISTRATOR)) {
+            return this.createdAt + TimeUnit.DAYS.toMillis(3) > DateTime.now()
+        } else if (revoker.hasGroup(Group.MODERATOR)) {
+            return this.createdAt + TimeUnit.HOURS.toMillis(12) > DateTime.now()
+        } else if (revoker.hasGroup(Group.MANAGER)) {
+            return this.createdAt + TimeUnit.HOURS.toMillis(2) > DateTime.now()
+        }
+
+        return false
     }
 
     override fun equals(other: Any?): Boolean {

@@ -47,7 +47,7 @@ class PunishCommand : CustomCommand("punir") {
 
                 if (targetUser === null) {
                     commandSender.sendMessage(TextComponent(DefaultMessage.USER_NOT_FOUND))
-                    return true
+                    return false
                 }
 
                 val punishCategories = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchAll()
@@ -103,19 +103,24 @@ class PunishCommand : CustomCommand("punir") {
 
                 if (targetUser === null) {
                     commandSender.sendMessage(TextComponent(DefaultMessage.USER_NOT_FOUND))
-                    return true
+                    return false
                 }
 
                 if (user === targetUser) {
                     commandSender.sendMessage(TextComponent("§cVocê não pode punir a si mesmo."))
-                    return true
+                    return false
                 }
 
                 val punishCategory = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(args[1])
 
                 if (punishCategory === null) {
                     commandSender.sendMessage(TextComponent("§cEsta categoria não existe"))
-                    return true;
+                    return false
+                }
+
+                if (!user.hasGroup(punishCategory.group)) {
+                    commandSender.sendMessage(TextComponent("§cÉ necessário o grupo ${punishCategory.group.getFancyDisplayName()} §cpara punir por esta categoria."))
+                    return false
                 }
 
                 val proof = if (args.size >= 3) args[2] else null
@@ -137,7 +142,7 @@ class PunishCommand : CustomCommand("punir") {
                         .anyMatch { it.createdAt.isBefore(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15)) }
                 ) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
-                    return true
+                    return false
                 }
 
                 val punishDuration = punishCategory.punishDurations[

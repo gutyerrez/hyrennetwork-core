@@ -110,6 +110,10 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
             if (index + 1 < userPunishments.size) message.append("\n")
         }
 
+        if (userPunishments.isEmpty()) {
+            message.append("§f   --/--")
+        }
+
         message.append("\n")
 
         commandSender.sendMessage(*message.create())
