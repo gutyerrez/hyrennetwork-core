@@ -23,36 +23,36 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
     override fun getGroup() = Group.HELPER
 
     override fun onCommand(
-            commandSender: CommandSender,
-            user: User?,
-            args: Array<out String>
+        commandSender: CommandSender,
+        user: User?,
+        args: Array<out String>
     ): Boolean {
         val users = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
-                .stream()
-                .map {
-                    val _user = CoreProvider.Cache.Local.USERS.provide().fetchById(it)
+            .stream()
+            .map {
+                val _user = CoreProvider.Cache.Local.USERS.provide().fetchById(it)
 
-                    _user
-                }
-                .filter { it !== null && it.hasGroup(Group.HELPER) }
-                .collect(Collectors.toList())
+                _user
+            }
+            .filter { it !== null && it.hasGroup(Group.HELPER) }
+            .collect(Collectors.toList())
 
         val message = ComponentBuilder()
-                .append("\n")
-                .append("§2Membros da equipe online (${users.size}):")
-                .append("\n\n")
+            .append("\n")
+            .append("§2Membros da equipe online (${users.size}):")
+            .append("\n\n")
 
         users.stream()
             .sorted { user1, user2 -> user2!!.getHighestGroup().priority!!.compareTo(user1!!.getHighestGroup().priority!!) }
             .forEach {
-            val highestGroup = it!!.getHighestGroup()
-            val prefix = "${ChatColor.fromHEX(highestGroup.color!!)}${highestGroup.prefix}"
-            val bukkitApplication = it.getConnectedBukkitApplication()
+                val highestGroup = it!!.getHighestGroup()
+                val prefix = "${ChatColor.fromHEX(highestGroup.color!!)}${highestGroup.prefix}"
+                val bukkitApplication = it.getConnectedBukkitApplication()
 
-            message.append(
-                    "${if (it === user) " §f*" else ""} $prefix${it.name} §7(${if (bukkitApplication === null) "Desconhecido" else bukkitApplication.displayName})"
-            ).append("\n")
-        }
+                message.append(
+                    "${if (it === user!!) " §f*" else ""} $prefix${it.name} §7(${if (bukkitApplication === null) "Desconhecido" else bukkitApplication.displayName})"
+                ).append("\n")
+            }
 
         commandSender.sendMessage(*message.create())
         return false
