@@ -50,7 +50,7 @@ class EchoBufferOutput {
     }
 
     fun <T : Enum<T>> writeEnum(enum: T?) = this.writeString(
-            Optional.ofNullable(enum).map { it.name }.orElse(null)
+        Optional.ofNullable(enum).map { it.name }.orElse(null)
     )
 
     fun writeUUID(uuid: UUID?) {
@@ -118,11 +118,10 @@ class EchoBufferOutput {
 
     fun writeBaseComponent(baseComponents: Array<BaseComponent>?) {
         if (baseComponents === null) {
-            this.writeBoolean(false)
+            this.writeString(null)
         } else {
             val serialized = ComponentSerializer.toString(*baseComponents)
 
-            this.writeBoolean(true)
             this.writeString(serialized)
         }
     }
