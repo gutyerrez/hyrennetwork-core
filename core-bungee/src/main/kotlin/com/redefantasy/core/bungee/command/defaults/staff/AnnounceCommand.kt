@@ -39,8 +39,8 @@ class AnnounceCommand : CustomCommand("alerta"), GroupCommandRestrictable {
 
         packet.message = ComponentBuilder()
             .append("\n")
-            .append("${highestGroup.color}${highestGroup.prefix}§e: $message")
-            .append("\n\n")
+            .append("${highestGroup.getColoredPrefix()}${user.name}§e: $message")
+            .append("\n")
             .create()
 
         CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
