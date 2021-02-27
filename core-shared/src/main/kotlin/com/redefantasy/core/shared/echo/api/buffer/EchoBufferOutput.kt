@@ -8,6 +8,9 @@ import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.net.Inet6Address
 import java.net.InetSocketAddress
 import java.util.*
@@ -40,6 +43,15 @@ class EchoBufferOutput {
 
     fun writeDouble(double: Double) = this.buffer.writeDouble(double)
 
+    fun writeFloat(float: Float?) {
+        if (float === null) {
+            this.writeBoolean(false)
+        } else {
+            this.writeBoolean(true)
+            this.buffer.writeFloat(float)
+        }
+    }
+
     fun writeString(string: String?) {
         if (string == null) {
             this.writeBoolean(false)
@@ -61,6 +73,11 @@ class EchoBufferOutput {
             this.writeLong(uuid.mostSignificantBits)
             this.writeLong(uuid.leastSignificantBits)
         }
+    }
+
+    fun writeByteArray(byteArray: ByteArray) {
+        this.writeBoolean(true)
+        this.buffer.write(byteArray)
     }
 
     fun writeAddress(address: InetSocketAddress) {
@@ -134,6 +151,31 @@ class EchoBufferOutput {
 
             this.writeBoolean(true)
             this.writeString(serialized)
+        }
+    }
+
+    inline fun <reified T : Serializable> writeList(list: List<T>?) {
+        if (list === null) {
+            this.writeBoolean(false)
+        } else {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+
+            list.forEach {
+                this.writeBoolean(true)
+
+                objectOutputStream.use { objectOutputStream ->
+                    objectOutputStream.writeObject(it)
+                    objectOutputStream.flush()
+                }
+            }
+
+            val bytes = byteArrayOutputStream.toByteArray()
+
+            byteArrayOutputStream.close()
+            objectOutputStream.close()
+
+            this.writeByteArray(bytes)
         }
     }
 

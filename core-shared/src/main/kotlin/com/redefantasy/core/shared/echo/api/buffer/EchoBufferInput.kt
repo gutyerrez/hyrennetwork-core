@@ -11,6 +11,9 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
+import java.io.ByteArrayInputStream
+import java.io.ObjectInputStream
+import java.io.Serializable
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -46,9 +49,15 @@ class EchoBufferInput(
 
     fun readLong() = this.buffer.readLong()
 
-    fun readFloat() = this.buffer.readFloat()
-
     fun readDouble() = this.buffer.readDouble()
+
+    fun readFloat(): Float? {
+        val valid = this.readBoolean()
+
+        if (valid) return this.buffer.readFloat()
+
+        return null
+    }
 
     fun readString(): String? {
         val valid = this.readBoolean()
@@ -79,6 +88,18 @@ class EchoBufferInput(
         }
 
         return null
+    }
+
+    fun readByteArray(): ByteArray {
+        val bytes = mutableListOf<Byte>()
+
+        do {
+            val byte = this.buffer.readByte()
+
+            bytes.add(byte)
+        } while (this.readBoolean())
+
+        return bytes.toByteArray()
     }
 
     fun readAddress(): InetSocketAddress? {
@@ -134,6 +155,27 @@ class EchoBufferInput(
     fun readSerializedLocation() = SerializedLocation.of(this.readString())
 
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
+
+    fun <T: Serializable> readList(): List<T>? {
+        val valid = this.readBoolean()
+
+        if (!valid) return null
+
+        val list = mutableListOf<T>()
+
+        val byteArray = this.readByteArray()
+
+        val byteArrayInputStream = ByteArrayInputStream(byteArray)
+        val objectOutputStream = ObjectInputStream(byteArrayInputStream)
+
+        do {
+            val `object` = objectOutputStream.readObject() as T
+
+            list.add(`object`)
+        } while (`object` !== null)
+
+        return list
+    }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
 
