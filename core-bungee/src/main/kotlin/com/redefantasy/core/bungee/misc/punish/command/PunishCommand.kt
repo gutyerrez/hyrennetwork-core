@@ -148,7 +148,7 @@ class PunishCommand : CustomCommand("punir") {
                 }
 
                 val punishDuration = punishCategory.punishDurations[
-                        if (punishCategory.punishDurations.size < userPunishments.size) punishCategory.punishDurations.size else userPunishments.size
+                        if (punishCategory.punishDurations.size <= userPunishments.size) punishCategory.punishDurations.size else userPunishments.size
                 ]
 
                 CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().create(
