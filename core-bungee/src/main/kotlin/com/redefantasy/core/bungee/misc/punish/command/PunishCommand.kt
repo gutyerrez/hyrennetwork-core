@@ -19,6 +19,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.chat.hover.content.Text
+import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
@@ -139,9 +140,9 @@ class PunishCommand : CustomCommand("punir") {
                         it.punishCategory === punishCategory
                     }.collect(Collectors.toList())
 
-                if (userPunishments.stream()
-                        .anyMatch { it.createdAt.isAfter(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(3)) }
-                ) {
+                if (userPunishments.stream().anyMatch {
+                        it.createdAt.isBefore(DateTime.now().withMillis(TimeUnit.MINUTES.toMillis(3)))
+                }) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
                     return false
                 }
