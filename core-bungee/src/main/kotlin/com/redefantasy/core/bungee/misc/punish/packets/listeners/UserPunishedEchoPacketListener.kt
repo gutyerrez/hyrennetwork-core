@@ -14,15 +14,19 @@ import org.greenrobot.eventbus.Subscribe
 class UserPunishedEchoPacketListener : EchoListener {
 
     @Subscribe
-    fun on(packet: UserPunishedPacket) {
-        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.userId)
-        val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.stafferId)
+    fun on(
+        packet: UserPunishedPacket
+    ) {
+        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.userId!!)
+        val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(packet.stafferId!!)
         val punishType = packet.punishType
         val punishDuration = packet.punishDuration
-        val punishCategory = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(packet.punishCategoryName)
+        val punishCategory = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(
+            packet.punishCategoryName ?: ""
+        )
 
         val message = ComponentBuilder("\n")
-            .append("§c * ${user?.name} foi ${punishType.sampleName} por ${staffer?.name}.")
+            .append("§c * ${user?.name} foi ${punishType?.sampleName} por ${staffer?.name}.")
             .append("\n")
             .append("§c * Motivo: ${punishCategory?.displayName}")
             .append("\n")
