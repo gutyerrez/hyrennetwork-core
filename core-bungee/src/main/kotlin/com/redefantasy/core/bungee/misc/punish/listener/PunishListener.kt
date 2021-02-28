@@ -19,10 +19,6 @@ class PunishListener : Listener {
         event: PreLoginEvent
     ) {
         val connection = event.connection
-
-        println(connection.name)
-        println(connection.uniqueId)
-
         val userId = connection.uniqueId
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
         val userPunishments = user?.getPunishments() ?: emptyList()
