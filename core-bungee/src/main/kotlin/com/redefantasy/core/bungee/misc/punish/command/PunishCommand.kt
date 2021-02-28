@@ -140,7 +140,7 @@ class PunishCommand : CustomCommand("punir") {
                     }.collect(Collectors.toList())
 
                 if (userPunishments.stream()
-                        .anyMatch { it.createdAt.isBefore(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(3)) }
+                        .anyMatch { it.createdAt.isAfter(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(3)) }
                 ) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
                     return false
