@@ -11,15 +11,26 @@ import java.util.*
  * @author Gutyerrez
  */
 @ServerPacket
-class UserPunishedPacket(
-    var userId: UUID,
-    var stafferId: UUID,
-    var punishCategoryName: String,
-    var punishType: PunishType,
-    var punishDuration: Long,
-    var proof: String?,
-    var hidden: Boolean
-) : EchoPacket() {
+class UserPunishedPacket : EchoPacket() {
+
+    /**
+     * redis.getResource().hset(slaoq, aaasad)
+     *
+     * try (Jedis jedis = redis.getResource()) {
+     *  // executa
+     * } catch (JedisDataException e) {
+     *  e.printStackTrace();
+     * }
+     *
+     */
+
+    var userId: UUID? = null
+    var stafferId: UUID? = null
+    var punishCategoryName: String? = null
+    var punishType: PunishType? = null
+    var punishDuration: Long = 0
+    var proof: String? = null
+    var hidden: Boolean = true
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeUUID(userId)
