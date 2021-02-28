@@ -6,6 +6,7 @@ import com.redefantasy.core.shared.misc.revoke.category.storage.table.RevokeCate
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.jodatime.datetime
+import org.joda.time.DateTime
 
 /**
  * @author SrGutyerrez
@@ -25,7 +26,7 @@ object UsersPunishmentsTable : IntIdTable("users_punishments") {
     val revokeCategory = reference("revoke_category_name", RevokeCategoriesTable).nullable()
     val hidden = bool("hidden")
     val perpetual = bool("perpetual")
-    val createdAt = datetime("created_at")
+    val createdAt = datetime("created_at").default(DateTime.now())
     val updatedAt = datetime("updated_at").nullable()
 
 }
