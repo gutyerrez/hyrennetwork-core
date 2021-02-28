@@ -18,15 +18,15 @@ data class UserPunishment(
     val id: EntityID<Int>,
     val userId: EntityID<UUID>,
     val stafferId: EntityID<UUID>,
-    val startTime: DateTime? = null,
+    var startTime: DateTime? = null,
     val punishType: PunishType,
     val punishCategory: PunishCategory? = null,
     val duration: Long,
     val customReason: String? = null,
     val proof: String? = null,
-    val revokeStafferId: EntityID<UUID>? = null,
-    val revokeTime: DateTime? = null,
-    val revokeCategory: RevokeCategory? = null,
+    var revokeStafferId: EntityID<UUID>? = null,
+    var revokeTime: DateTime? = null,
+    var revokeCategory: RevokeCategory? = null,
     val hidden: Boolean = false,
     val perpetual: Boolean = false,
     val createdAt: DateTime = DateTime.now(),
@@ -34,13 +34,13 @@ data class UserPunishment(
 ) {
 
     fun getColor(): ChatColor {
-        if (this.startTime == null) {
-            if (this.revokeTime != null) return ChatColor.GRAY
+        if (this.startTime === null) {
+            if (this.revokeTime !== null) return ChatColor.GRAY
 
             return ChatColor.YELLOW
         }
 
-        return if (this.startTime.millis + this.duration > System.currentTimeMillis()) {
+        return if (this.startTime!!.millis + this.duration > System.currentTimeMillis()) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
@@ -50,13 +50,13 @@ data class UserPunishment(
     }
 
     fun isActive(): Boolean {
-        if (this.startTime == null) {
-            if (this.revokeTime != null) return false
+        if (this.startTime === null) {
+            if (this.revokeTime !== null) return false
 
             return true
         }
 
-        return (this.startTime.millis + this.duration) > System.currentTimeMillis()
+        return (this.startTime!!.millis + this.duration) > System.currentTimeMillis()
     }
 
     fun canBeRevokedFrom(revoker: User): Boolean {

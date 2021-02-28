@@ -18,6 +18,7 @@ import com.redefantasy.core.bungee.misc.plugin.CustomPlugin
 import com.redefantasy.core.bungee.misc.punish.command.CheckPunishCommand
 import com.redefantasy.core.bungee.misc.punish.command.PunishCommand
 import com.redefantasy.core.bungee.misc.punish.command.UnPunishCommand
+import com.redefantasy.core.bungee.misc.punish.listener.PunishListener
 import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserPunishedEchoPacketListener
 import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserUnPunishedEchoPacketListener
 import com.redefantasy.core.bungee.misc.server.connector.ServerConnector
@@ -61,6 +62,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerCommand(this, ReplyCommand())
         pluginManager.registerCommand(this, TellCommand())
 
+        pluginManager.registerListener(this, PunishListener())
         pluginManager.registerListener(this, LoginListeners())
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(UserPunishedEchoPacketListener())

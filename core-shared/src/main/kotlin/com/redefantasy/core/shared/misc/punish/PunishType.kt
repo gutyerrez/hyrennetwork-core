@@ -7,7 +7,7 @@ enum class PunishType(
     val sampleName: String
 ) {
 
-    BAN("banido"),
+    BAN("permanentemente banido"),
     TEMP_BAN("temporariamente banido"),
     MUTE("silenciado")
 
