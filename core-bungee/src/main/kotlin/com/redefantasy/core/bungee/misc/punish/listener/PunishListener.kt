@@ -4,7 +4,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
 import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.event.PlayerHandshakeEvent
+import net.md_5.bungee.api.event.PreLoginEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
 import org.joda.time.DateTime
@@ -16,7 +16,7 @@ class PunishListener : Listener {
 
     @EventHandler
     fun on(
-        event: PlayerHandshakeEvent
+        event: PreLoginEvent
     ) {
         val connection = event.connection
         val userId = connection.uniqueId
