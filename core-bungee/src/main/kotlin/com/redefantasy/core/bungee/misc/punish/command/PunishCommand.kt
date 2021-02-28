@@ -164,15 +164,15 @@ class PunishCommand : CustomCommand("punir") {
                     )
                 )
 
-                val packet = UserPunishedPacket(
-                    targetUser.getUniqueId(),
-                    user.getUniqueId(),
-                    punishCategory.getName(),
-                    punishDuration.punishType,
-                    punishDuration.duration,
-                    proof,
-                    hidden
-                )
+                val packet = UserPunishedPacket()
+
+                packet.userId = targetUser.getUniqueId()
+                packet.stafferId = user.getUniqueId()
+                packet.punishCategoryName = punishCategory.getName()
+                packet.punishType = punishDuration.punishType
+                packet.punishDuration = punishDuration.duration
+                packet.proof = proof
+                packet.hidden = hidden
 
                 val proxyApplications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.PROXY)
 
