@@ -3,6 +3,7 @@ package com.redefantasy.core.bungee.command.defaults.player
 import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.bungee.echo.packets.TellPacket
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
@@ -61,21 +62,11 @@ class TellCommand : CustomCommand("tell") {
         packet.receiverId = targetUser.getUniqueId()
         packet.message = message
 
-        val senderUserProxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(
-            user
-        )
-        val targetUserProxyApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(
-            targetUser
-        )
+        val proxyApplications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.PROXY)
 
         CoreProvider.Databases.Redis.ECHO.provide().publishToApplications(
             packet,
-            arrayOf(
-                senderUserProxyApplication,
-                if (senderUserProxyApplication !== targetUserProxyApplication) {
-                    targetUserProxyApplication
-                } else null
-            )
+            proxyApplications
         )
         return true
     }

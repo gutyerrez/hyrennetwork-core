@@ -3,6 +3,7 @@ package com.redefantasy.core.bungee.misc.punish.command
 import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.bungee.misc.punish.packets.UserUnPunishedPacket
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.users.data.User
@@ -89,7 +90,12 @@ class UnPunishCommand : CustomCommand("despunir") {
         packet.userId = punishedUser.getUniqueId()
         packet.message = message
 
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
+        val proxyApplications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.PROXY)
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToApplications(
+            packet,
+            proxyApplications
+        )
 
         commandSender.sendMessage(TextComponent("§eVocê revogou a punição §b#${userPunishment.id.value} por ${revokeCategory.displayName}."))
         return true
