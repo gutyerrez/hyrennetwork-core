@@ -40,7 +40,7 @@ data class UserPunishment(
             return ChatColor.YELLOW
         }
 
-        return if (this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())) {
+        return if (this.startTime!!.withMillis(this.duration).isAfter(System.currentTimeMillis())) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
@@ -62,7 +62,7 @@ data class UserPunishment(
 
         println("Verificar aqui")
 
-        val result = this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())
+        val result = this.startTime!!.withMillis(this.duration).isAfter(System.currentTimeMillis())
 
         println("Resultado: ${if (result) "ativo" else "não está ativo"}")
 
