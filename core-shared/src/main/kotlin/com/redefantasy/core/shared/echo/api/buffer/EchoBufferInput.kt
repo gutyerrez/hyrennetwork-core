@@ -148,10 +148,17 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.JACKSON.readValue(
+        val result = CoreConstants.JACKSON.readValue(
             this.readString(),
-            object : TypeReference<List<T>>() {}
+            object : TypeReference<List<T>>() {
+                //
+            }
         )
+
+        println(result)
+        println(result::class)
+
+        return result
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject

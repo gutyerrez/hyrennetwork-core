@@ -21,7 +21,7 @@ class SoundEchoPacketListener : EchoListener {
         packet.usersId?.forEach {
             val player = Bukkit.getPlayer(it)
 
-            player.playSound(
+            if (player !== null) player.playSound(
                 player.location,
                 sound.name,
                 packet.volume1!!,
