@@ -46,16 +46,16 @@ class KickCommand : CustomCommand("kick"), GroupCommandRestrictable {
             return false
         }
 
-        val reason = args.copyOfRange(1, args.size).joinToString(" ")
+        val message = args.copyOfRange(1, args.size).joinToString(" ")
 
         val packet = DisconnectUserPacket()
 
         packet.userId = targetUser.getUniqueId()
-        packet.reason = reason
+        packet.message = arrayOf(TextComponent(message))
 
         CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
 
-        commandSender.sendMessage(TextComponent("§eVocê chutou ${targetUser.name} para fora do servidor por: ${if (reason.isEmpty()) "Nenhum motivo informado" else reason}."))
+        commandSender.sendMessage(TextComponent("§eVocê chutou ${targetUser.name} para fora do servidor por: ${if (message.isEmpty()) "Nenhum motivo informado" else message}."))
         return false
     }
 

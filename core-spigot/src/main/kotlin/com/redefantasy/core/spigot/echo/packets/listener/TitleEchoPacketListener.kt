@@ -14,8 +14,6 @@ class TitleEchoPacketListener : EchoListener {
 
     @Subscribe
     fun on(packet: TitlePacket) {
-        println("Opa")
-
         val title = Title(
             packet.title,
             packet.subTitle,

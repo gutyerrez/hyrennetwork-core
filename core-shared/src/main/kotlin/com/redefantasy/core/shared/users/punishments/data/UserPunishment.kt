@@ -40,7 +40,7 @@ data class UserPunishment(
             return ChatColor.YELLOW
         }
 
-        return if (this.startTime!!.millis + this.duration > System.currentTimeMillis()) {
+        return if (this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
@@ -56,7 +56,7 @@ data class UserPunishment(
             return true
         }
 
-        return (this.startTime!!.millis + this.duration) > System.currentTimeMillis()
+        return this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())
     }
 
     fun canBeRevokedFrom(revoker: User): Boolean {

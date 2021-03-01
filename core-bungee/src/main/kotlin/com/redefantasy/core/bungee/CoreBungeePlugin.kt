@@ -9,6 +9,7 @@ import com.redefantasy.core.bungee.command.defaults.staff.account.AccountCommand
 import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
 import com.redefantasy.core.bungee.command.defaults.staff.server.ServerCommand
 import com.redefantasy.core.bungee.echo.packets.listeners.BroadCastMessageEchoPacketListener
+import com.redefantasy.core.bungee.echo.packets.listeners.DisconnectUserEchoPacketListener
 import com.redefantasy.core.bungee.echo.packets.listeners.StaffMessageEchoPacketListener
 import com.redefantasy.core.bungee.echo.packets.listeners.TellEchoPacketListener
 import com.redefantasy.core.bungee.misc.login.commands.LoginCommand
@@ -70,6 +71,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(TellEchoPacketListener())
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(StaffMessageEchoPacketListener())
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(BroadCastMessageEchoPacketListener())
+        CoreProvider.Databases.Redis.ECHO.provide().registerListener(DisconnectUserEchoPacketListener())
     }
 
     override fun onDisable() {

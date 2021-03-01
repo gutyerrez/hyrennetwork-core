@@ -18,7 +18,11 @@ class UserPunishedEchoPacketListener : EchoListener {
         val userId = packet.userId
         val message = packet.message
 
-        CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId!!)
+        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId!!)
+
+        user?.validatePunishments()
+
+        CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId)
 
         ProxyServer.getInstance().broadcast(*message!!)
     }

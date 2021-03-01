@@ -3,12 +3,18 @@ package com.redefantasy.core.shared.users.data
 import com.google.common.primitives.Ints
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
+import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
+import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import com.redefantasy.core.shared.users.punishments.data.UserPunishment
+import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ComponentBuilder
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
@@ -39,6 +45,76 @@ data class User(
 
     fun setLogged(logged: Boolean) {
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)
+    }
+
+    fun disconnect(message: Array<BaseComponent>) {
+        val packet = DisconnectUserPacket()
+
+        packet.userId = this.id.value
+        packet.message = message
+    }
+
+    fun disconnect(message: BaseComponent) {
+        val packet = DisconnectUserPacket()
+
+        packet.userId = this.id.value
+        packet.message = arrayOf(message)
+    }
+
+    fun validatePunishments(): Boolean {
+        val userPunishments = this.getPunishments()
+
+        userPunishments.forEach {
+            if (it.startTime === null) {
+                it.startTime = DateTime.now()
+
+                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
+                    UpdateUserPunishmentByIdDTO(
+                        it.id
+                    ) { userPunishmentDAO ->
+                        userPunishmentDAO.startTime = it.startTime
+                    }
+                )
+            }
+        }
+
+        val activePunishment = userPunishments.stream().filter {
+            it.isActive() && it.punishType !== PunishType.MUTE
+        }.findFirst().orElse(null)
+
+        if (activePunishment !== null) {
+            val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)
+
+            val message = ComponentBuilder()
+                .append("§c§lREDE FANTASY")
+                .append("\n\n")
+                .append("§cVocê está ${activePunishment.punishType.sampleName} do servidor")
+                .append("\n\n")
+                .append("§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason} - ${activePunishment.proof}")
+                .append("\n")
+                .append("§cAutor: ${staffer?.name}")
+
+            if (activePunishment.punishType !== PunishType.BAN) {
+                message.append("\n")
+                    .append(
+                        "§cDuração: ${
+                            DateFormatter.formatToDefault(
+                                activePunishment.startTime!!.withMillis(activePunishment.duration),
+                                " às "
+                            )
+                        }"
+                    )
+            }
+
+            message.append("\n\n")
+                .append("§cUse o ID §b#${activePunishment.id.value} §cpara criar uma revisão em &mdiscord.gg/redefantasy§r§c.")
+
+            this.disconnect(message.create())
+            return false
+        }
+
+
+        return true
     }
 
     fun attemptLogin(password: String): Boolean {
@@ -209,6 +285,12 @@ data class User(
     }
 
     fun isLogged() = CoreProvider.Cache.Redis.USERS_LOGGED.provide().isLogged(this)
+
+    fun isMuted() = getActivePunishments()
+        .stream()
+        .filter { it.punishType === PunishType.MUTE }
+        .findFirst()
+        .orElse(null)
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false

@@ -1,13 +1,13 @@
 package com.redefantasy.core.bungee.misc.punish.listener
 
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.misc.punish.PunishType
-import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
+import com.redefantasy.core.shared.misc.utils.TimeCode
 import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.connection.ProxiedPlayer
+import net.md_5.bungee.api.event.ChatEvent
 import net.md_5.bungee.api.event.PreLoginEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
-import org.joda.time.DateTime
 
 /**
  * @author Gutyerrez
@@ -21,43 +21,37 @@ class PunishListener : Listener {
         val connection = event.connection
         val userId = connection.uniqueId
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
-        val userPunishments = user?.getPunishments() ?: emptyList()
 
-        userPunishments.forEach {
-            if (it.startTime === null) {
-                it.startTime = DateTime.now()
+        if (user === null) return
 
-                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
-                    UpdateUserPunishmentByIdDTO(
-                        it.id
-                    ) { userPunishmentDAO ->
-                        userPunishmentDAO.startTime = it.startTime
-                    }
-                )
-            }
-        }
+        user.validatePunishments()
+    }
 
-        val activePunishment = userPunishments.stream().filter {
-            it.isActive() && it.punishType !== PunishType.MUTE
-        }.findFirst().orElse(null)
+    @EventHandler
+    fun on(
+        event: ChatEvent
+    ) {
+        val proxiedPlayer = event.sender as ProxiedPlayer
+        val userId = proxiedPlayer.uniqueId
+        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
-        if (activePunishment !== null) {
-            val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)
+        if (user === null ) return
 
-            connection.disconnect(
-                *ComponentBuilder()
-                    .append("§c§lREDE FANTASY")
-                    .append("\n\n")
-                    .append("§cVocê está ${activePunishment.punishType.sampleName} do servidor")
-                    .append("\n\n")
-                    .append("§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason} - ${activePunishment.proof}")
+        val currentActiveMutePunishment = user.isMuted()
+
+        if (currentActiveMutePunishment !== null) {
+            event.isCancelled = true
+
+            proxiedPlayer.sendMessage(
+                *ComponentBuilder("\n")
+                    .append("§c * Você foi ${currentActiveMutePunishment.punishType.sampleName} por ${user.name}.")
                     .append("\n")
-                    .append("§cAutor: ${staffer?.name}")
-                    .append("\n\n")
-                    .append("§cUse o ID §b#${activePunishment.id.value} §cpara criar uma revisão em &mdiscord.gg/redefantasy§r§c.")
+                    .append("§c * Motivo: ${currentActiveMutePunishment.punishCategory?.displayName}")
+                    .append("\n")
+                    .append("§c * Duração: ${TimeCode.toText(currentActiveMutePunishment.duration, 1)}")
+                    .append("\n")
                     .create()
             )
-            return
         }
     }
 
