@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.echo.api.buffer
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
@@ -155,10 +156,7 @@ class EchoBufferInput(
 
         return CoreConstants.JACKSON.readValue(
             byteArray,
-            CoreConstants.JACKSON.typeFactory.constructCollectionType(
-                List::class.java,
-                T::class.java
-            )
+            object : TypeReference<List<T>>() {}
         )
     }
 
