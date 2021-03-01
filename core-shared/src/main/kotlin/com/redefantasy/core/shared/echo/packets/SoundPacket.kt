@@ -14,23 +14,20 @@ class SoundPacket : EchoPacket() {
     var sound: Sound? = null
     var volume1: Float? = null
     var volume2: Float? = null
-    var usersId: List<UUID>? = null
+    var usersId: Array<UUID>? = null
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeEnum(this.sound)
         buffer.writeFloat(this.volume1)
         buffer.writeFloat(this.volume2)
-        buffer.writeList(this.usersId)
+        buffer.writeArray(this.usersId)
     }
 
     override fun read(buffer: EchoBufferInput) {
         this.sound = buffer.readEnum(Sound::class)
         this.volume1 = buffer.readFloat()
         this.volume2 = buffer.readFloat()
-
-        val list = buffer.readList<UUID>()
-
-        this.usersId = list
+        this.usersId = buffer.readArray()
     }
 
 }

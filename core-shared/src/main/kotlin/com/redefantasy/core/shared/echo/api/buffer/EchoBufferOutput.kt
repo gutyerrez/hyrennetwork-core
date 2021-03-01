@@ -167,6 +167,20 @@ class EchoBufferOutput {
         }
     }
 
+    inline fun <reified T : Serializable> writeArray(list: Array<T>?) {
+        if (list === null) {
+            this.writeBoolean(false)
+        } else {
+            this.writeBoolean(true)
+
+            this.writeString(
+                CoreConstants.JACKSON.writeValueAsString(
+                    list
+                )
+            )
+        }
+    }
+
     fun toByteArray() = this.buffer.toByteArray()
 
 }
