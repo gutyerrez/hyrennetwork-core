@@ -1,8 +1,10 @@
 package com.redefantasy.core.spigot.echo.packets.listener
 
+import com.google.common.base.Enums
 import com.redefantasy.core.shared.echo.api.listener.EchoListener
 import com.redefantasy.core.shared.echo.packets.SoundPacket
 import org.bukkit.Bukkit
+import org.bukkit.Sound
 import org.greenrobot.eventbus.Subscribe
 
 /**
@@ -25,11 +27,17 @@ class SoundEchoPacketListener : EchoListener {
             if (player !== null) {
                 println("Tocar pra ele")
 
+                println(sound.name)
+
+                val _sound = Enums.getIfPresent(Sound::class.java, sound.name)
+
+                println("Dps -> ${_sound.isPresent}")
+
                 player.playSound(
                     player.location,
                     sound.name,
-                    1F,
-                    1F
+                    1f,
+                    1f
                 )
             }
         }
