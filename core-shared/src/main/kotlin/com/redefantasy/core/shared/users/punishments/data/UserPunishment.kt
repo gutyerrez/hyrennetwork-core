@@ -51,12 +51,22 @@ data class UserPunishment(
 
     fun isActive(): Boolean {
         if (this.startTime === null) {
+            println("Start time é nulo")
+
             if (this.revokeTime !== null) return false
+
+            println("Não foi revogado")
 
             return true
         }
 
-        return this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())
+        println("Verificar aqui")
+
+        val result = this.startTime!!.withMillis(this.duration).isBefore(System.currentTimeMillis())
+
+        println("Resultado: ${if (result) "ativo" else "não está ativo"}")
+
+        return result
     }
 
     fun canBeRevokedFrom(revoker: User): Boolean {

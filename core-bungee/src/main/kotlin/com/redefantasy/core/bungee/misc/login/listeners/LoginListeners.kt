@@ -1,5 +1,6 @@
 package com.redefantasy.core.bungee.misc.login.listeners
 
+import com.redefantasy.core.bungee.CoreBungeeConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.users.storage.dto.UpdateUserByIdDTO
 import net.md_5.bungee.api.chat.TextComponent
@@ -17,8 +18,6 @@ import java.net.InetSocketAddress
  * @author Gutyerrez
  */
 class LoginListeners : Listener {
-
-    private val UNLOGGED_ALLOWED_COMMANDS = listOf("/logar", "/registrar", "/login", "/register")
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun on(event: PostLoginEvent) {
@@ -67,7 +66,9 @@ class LoginListeners : Listener {
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(sender.uniqueId)
 
-        if (!UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch { it.contentEquals(message) } && (user === null || !user.isLogged())) {
+        if (!CoreBungeeConstants.UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch {
+                it.contentEquals(message)
+        } && (user === null || !user.isLogged())) {
             event.isCancelled = true
 
             sender.sendMessage(TextComponent("§cVocê precisa estar autenticado para utilizar o chat."))
