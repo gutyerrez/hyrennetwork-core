@@ -160,10 +160,6 @@ class EchoBufferInput(
 
         println(byteArrayInputStream)
 
-        byteArrayInputStream.readAllBytes().forEach {
-            println(it)
-        }
-
 //        val objectOutputStream = ObjectInputStream(byteArrayInputStream)
 //
 //        do {
