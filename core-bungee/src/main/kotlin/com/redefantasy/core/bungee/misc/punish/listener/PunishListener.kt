@@ -43,7 +43,7 @@ class PunishListener : Listener {
 
         val currentActiveMutePunishment = user.isMuted()
 
-        if (currentActiveMutePunishment !== null && CoreBungeeConstants.UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch {
+        if (currentActiveMutePunishment !== null && !CoreBungeeConstants.UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch {
                 it.contentEquals(message)
         }) {
             event.isCancelled = true
