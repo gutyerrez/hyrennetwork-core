@@ -157,6 +157,10 @@ class EchoBufferInput(
 
         val byteArray = this.readByteArray()
 
+        byteArray.forEach {
+            println(it)
+        }
+
         val byteArrayInputStream = ByteArrayInputStream(byteArray)
         val objectInputStream = ObjectInputStream(byteArrayInputStream)
 
