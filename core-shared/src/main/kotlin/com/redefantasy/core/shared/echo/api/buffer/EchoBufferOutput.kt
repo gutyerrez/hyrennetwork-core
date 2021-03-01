@@ -162,8 +162,6 @@ class EchoBufferOutput {
             val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
 
             list.forEach {
-                this.writeBoolean(true)
-
                 objectOutputStream.use { objectOutputStream ->
                     objectOutputStream.writeObject(it)
                     objectOutputStream.flush()
