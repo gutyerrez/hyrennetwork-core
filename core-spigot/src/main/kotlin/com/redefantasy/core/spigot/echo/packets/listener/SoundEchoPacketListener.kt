@@ -22,12 +22,16 @@ class SoundEchoPacketListener : EchoListener {
             println(it)
             println(player === null)
 
-            if (player !== null) player.playSound(
-                player.location,
-                sound.name,
-                packet.volume1!!,
-                packet.volume2!!
-            )
+            if (player !== null) {
+                println("Tocar pra ele")
+
+                player.playSound(
+                    player.location,
+                    sound.name,
+                    1F,
+                    1F
+                )
+            }
         }
     }
 
