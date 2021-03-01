@@ -82,7 +82,6 @@ class LoginCommand : CustomCommand("logar") {
 
         val packet2 = SoundPacket()
 
-        packet2.usersId = listOf(user.getUniqueId())
         packet2.sound = Sound.LEVEL_UP
         packet2.volume1 = 25F
         packet2.volume2 = 5F
