@@ -1,11 +1,10 @@
 package com.redefantasy.core.bungee.misc.punish.command
 
 import com.redefantasy.core.bungee.command.CustomCommand
-import com.redefantasy.core.bungee.misc.punish.packets.UserPunishedPacket
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.echo.packets.UserPunishedPacket
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
@@ -174,12 +173,10 @@ class PunishCommand : CustomCommand("punir") {
                 packet.proof = proof
                 packet.hidden = hidden
 
-                val proxyApplications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.PROXY)
+                CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
 
-                CoreProvider.Databases.Redis.ECHO.provide().publishToApplications(
-                    packet,
-                    proxyApplications
-                )
+                CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(targetUser.getUniqueId())
+
                 commandSender.sendMessage(TextComponent("§eUsuário punido com sucesso!"))
                 return true
             }

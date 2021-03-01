@@ -1,4 +1,4 @@
-package com.redefantasy.core.bungee.misc.punish.packets
+package com.redefantasy.core.shared.echo.packets
 
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferInput
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
