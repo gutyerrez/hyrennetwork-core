@@ -155,23 +155,23 @@ class EchoBufferOutput {
     }
 
     inline fun <reified T : Serializable> writeList(list: List<T>?) {
-        if (list === null) {
-            this.writeBoolean(false)
-        } else {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+        try {
+            if (list === null) {
+                this.writeBoolean(false)
+            } else {
+                this.writeBoolean(true)
 
-            objectOutputStream.use { objectOutputStream ->
-                list.forEach {
-                    objectOutputStream.writeObject(it)
-                    objectOutputStream.flush()
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+
+                objectOutputStream.use {
+                    it.writeObject(list)
                 }
 
                 this.writeByteArray(byteArrayOutputStream.toByteArray())
             }
-
-            byteArrayOutputStream.close()
-            objectOutputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

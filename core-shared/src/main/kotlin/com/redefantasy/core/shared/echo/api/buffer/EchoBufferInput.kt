@@ -149,35 +149,22 @@ class EchoBufferInput(
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
     fun <T: Serializable> readList(): List<T>? {
-        val valid = this.readBoolean()
+        try {
+            val valid = this.readBoolean()
 
-        if (!valid) return null
+            if (!valid) return null
 
-        val list = mutableListOf<T>()
+            val byteArrayInputStream = ByteArrayInputStream(this.bytes)
+            val objectInputStream = ObjectInputStream(byteArrayInputStream)
 
-        val byteArray = this.readByteArray()
-
-        byteArray.forEach {
-            println(it)
+            objectInputStream.use {
+                return@use it.readObject() as List<T>
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        val byteArrayInputStream = ByteArrayInputStream(byteArray)
-
-        byteArrayInputStream.markSupported()
-
-        val objectInputStream = ObjectInputStream(byteArrayInputStream)
-
-        println(objectInputStream)
-
-//        val objectOutputStream = ObjectInputStream(byteArrayInputStream)
-//
-//        do {
-//            val `object` = objectOutputStream.readObject()
-//
-//            list.add(`object` as T)
-//        } while (`object` !== null)
-
-        return list
+        return null
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
