@@ -161,8 +161,8 @@ class EchoBufferOutput {
             val byteArrayOutputStream = ByteArrayOutputStream()
             val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
 
-            list.forEach {
-                objectOutputStream.use { objectOutputStream ->
+            objectOutputStream.use { objectOutputStream ->
+                list.forEach {
                     objectOutputStream.writeObject(it)
                     objectOutputStream.flush()
                 }
@@ -170,10 +170,10 @@ class EchoBufferOutput {
 
             val bytes = byteArrayOutputStream.toByteArray()
 
+            this.writeByteArray(bytes)
+
             byteArrayOutputStream.close()
             objectOutputStream.close()
-
-            this.writeByteArray(bytes)
         }
     }
 
