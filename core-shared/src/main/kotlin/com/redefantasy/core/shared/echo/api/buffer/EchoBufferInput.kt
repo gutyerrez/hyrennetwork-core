@@ -162,6 +162,9 @@ class EchoBufferInput(
         }
 
         val byteArrayInputStream = ByteArrayInputStream(byteArray)
+
+        byteArrayInputStream.markSupported()
+
         val objectInputStream = ObjectInputStream(byteArrayInputStream)
 
         println(objectInputStream)
