@@ -27,7 +27,10 @@ class SoundPacket : EchoPacket() {
         this.sound = buffer.readEnum(Sound::class)
         this.volume1 = buffer.readFloat()
         this.volume2 = buffer.readFloat()
-        this.usersId = buffer.readList()
+
+        val list = buffer.readList<UUID>()
+
+        this.usersId = list
     }
 
 }
