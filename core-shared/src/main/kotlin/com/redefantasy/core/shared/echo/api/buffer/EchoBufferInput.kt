@@ -157,10 +157,6 @@ class EchoBufferInput(
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
     fun <T: Serializable> readList(): List<T>? {
-        val valid = this.readBoolean()
-
-        if (!valid) return null
-
         val list = mutableListOf<T>()
 
         val byteArray = this.readByteArray()
@@ -169,10 +165,11 @@ class EchoBufferInput(
         val objectOutputStream = ObjectInputStream(byteArrayInputStream)
 
         do {
+            val valid = this.readBoolean()
             val `object` = objectOutputStream.readObject() as T
 
             list.add(`object`)
-        } while (`object` !== null)
+        } while (valid)
 
         return list
     }
