@@ -13,17 +13,6 @@ import java.util.*
 @ServerPacket
 class UserPunishedPacket : EchoPacket() {
 
-    /**
-     * redis.getResource().hset(slaoq, aaasad)
-     *
-     * try (Jedis jedis = redis.getResource()) {
-     *  // executa
-     * } catch (JedisDataException e) {
-     *  e.printStackTrace();
-     * }
-     *
-     */
-
     var userId: UUID? = null
     var stafferId: UUID? = null
     var punishCategoryName: String? = null
@@ -43,12 +32,13 @@ class UserPunishedPacket : EchoPacket() {
     }
 
     override fun read(buffer: EchoBufferInput) {
-        userId = buffer.readUUID()!!
-        stafferId = buffer.readUUID()!!
-        punishCategoryName = buffer.readString()!!
-        punishType = buffer.readEnum(PunishType::class)!!
-        proof = buffer.readString()
-        hidden = buffer.readBoolean()
+        this.userId = buffer.readUUID()!!
+        this.stafferId = buffer.readUUID()!!
+        this.punishCategoryName = buffer.readString()!!
+        this.punishType = buffer.readEnum(PunishType::class)!!
+        this.punishDuration = buffer.readLong()
+        this.proof = buffer.readString()
+        this.hidden = buffer.readBoolean()
     }
 
 }

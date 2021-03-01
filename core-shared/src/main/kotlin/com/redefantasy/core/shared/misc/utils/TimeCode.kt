@@ -63,7 +63,9 @@ enum class TimeCode(
             }
         }
 
-        fun toText(time: Long, length: Int): String {
+        fun toText(time: Long, length: Int, zeroDefaultMessage: String = "Permanente"): String {
+            if (time == 0L) return zeroDefaultMessage
+
             var remainingTime = time
             val builder = StringBuilder()
 
