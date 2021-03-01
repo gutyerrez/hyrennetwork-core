@@ -57,7 +57,7 @@ enum class TimeCode(
                 val number = Regex("[^0-9]").replace(text, "").toInt()
                 val duration = Regex("[^a-zA-Z]").replace(text, "")
 
-                val timeCode = this.getUnit(duration) ?: TimeCode.SECOND
+                val timeCode = this.getUnit(duration) ?: SECOND
 
                 return timeCode.milliseconds * number
             }

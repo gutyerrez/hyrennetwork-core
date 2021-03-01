@@ -25,6 +25,8 @@ class UserPunishedEchoPacketListener : EchoListener {
             packet.punishCategoryName ?: ""
         )
 
+        println(punishDuration)
+
         val message = ComponentBuilder("\n")
             .append("§c * ${user?.name} foi ${punishType?.sampleName} por ${staffer?.name}.")
             .append("\n")
