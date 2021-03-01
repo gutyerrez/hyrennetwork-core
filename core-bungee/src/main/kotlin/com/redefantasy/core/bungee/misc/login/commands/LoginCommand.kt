@@ -5,9 +5,7 @@ import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
-import com.redefantasy.core.shared.echo.packets.SoundPacket
 import com.redefantasy.core.shared.echo.packets.TitlePacket
-import com.redefantasy.core.shared.misc.utils.Sound
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import net.md_5.bungee.api.CommandSender
@@ -80,15 +78,7 @@ class LoginCommand : CustomCommand("logar") {
         packet.title = "§a§lAutenticado!"
         packet.subTitle = "§fRedirecionando..."
 
-        val packet2 = SoundPacket()
-
-        packet2.usersId = listOf(user.getUniqueId())
-        packet2.sound = Sound.LEVEL_UP
-        packet2.volume1 = 25F
-        packet2.volume2 = 5F
-
         CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet2)
         return true
     }
 
