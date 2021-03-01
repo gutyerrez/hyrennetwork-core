@@ -3,8 +3,10 @@ package com.redefantasy.core.spigot.echo.packets.listener
 import com.google.common.base.Enums
 import com.redefantasy.core.shared.echo.api.listener.EchoListener
 import com.redefantasy.core.shared.echo.packets.SoundPacket
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect
 import org.bukkit.Bukkit
 import org.bukkit.Sound
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.greenrobot.eventbus.Subscribe
 
 /**
@@ -33,12 +35,19 @@ class SoundEchoPacketListener : EchoListener {
 
                 println("Dps -> ${_sound.isPresent}")
 
-                player.playSound(
-                    player.location,
+                val _packet = PacketPlayOutNamedSoundEffect(
                     sound.name,
-                    1f,
-                    1f
+                    0.0,
+                    60.0,
+                    0.0,
+                    0f,
+                    0f
                 )
+
+                val handle = (player as CraftPlayer).handle
+                val playerConnection = handle.playerConnection
+
+                playerConnection.sendPacket(_packet)
             }
         }
     }
