@@ -166,11 +166,9 @@ class EchoBufferOutput {
                     objectOutputStream.writeObject(it)
                     objectOutputStream.flush()
                 }
+
+                this.writeByteArray(byteArrayOutputStream.toByteArray())
             }
-
-            val bytes = byteArrayOutputStream.toByteArray()
-
-            this.writeByteArray(bytes)
 
             byteArrayOutputStream.close()
             objectOutputStream.close()
