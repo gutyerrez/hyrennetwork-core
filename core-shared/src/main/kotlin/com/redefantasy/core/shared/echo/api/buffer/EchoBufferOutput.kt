@@ -159,8 +159,8 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
 
-            this.writeByteArray(
-                CoreConstants.JACKSON.writeValueAsBytes(list)
+            this.writeString(
+                CoreConstants.JACKSON.writeValueAsString(list)
             )
         }
     }

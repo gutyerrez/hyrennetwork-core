@@ -89,10 +89,6 @@ class EchoBufferInput(
         return null
     }
 
-    fun readByteArray(): ByteArray {
-        return this.bytes
-    }
-
     fun readAddress(): InetSocketAddress? {
         val value = this.readString() ?: return null
 
@@ -152,10 +148,8 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        val byteArray = this.readByteArray()
-
         return CoreConstants.JACKSON.readValue(
-            byteArray,
+            this.readString(),
             object : TypeReference<List<T>>() {}
         )
     }
