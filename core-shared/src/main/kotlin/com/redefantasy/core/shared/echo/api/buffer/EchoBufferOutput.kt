@@ -3,13 +3,12 @@ package com.redefantasy.core.shared.echo.api.buffer
 import com.google.common.io.ByteArrayDataOutput
 import com.google.common.io.ByteStreams
 import com.google.gson.JsonObject
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
 import java.io.Serializable
 import java.net.Inet6Address
 import java.net.InetSocketAddress
@@ -155,25 +154,14 @@ class EchoBufferOutput {
     }
 
     inline fun <reified T : Serializable> writeList(list: List<T>?) {
-        try {
-            if (list === null) {
-                this.writeBoolean(false)
-            } else {
-                this.writeBoolean(true)
+        if (list === null) {
+            this.writeBoolean(false)
+        } else {
+            this.writeBoolean(true)
 
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
-
-                objectOutputStream.use {
-                    it.writeObject(UUID.fromString("16b98e39-d1b5-3c8d-bd8f-7ca4d5a50cb8"))
-                }
-
-                objectOutputStream.flush()
-
-                this.writeByteArray(byteArrayOutputStream.toByteArray())
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            this.writeByteArray(
+                CoreConstants.JACKSON.writeValueAsBytes(list)
+            )
         }
     }
 

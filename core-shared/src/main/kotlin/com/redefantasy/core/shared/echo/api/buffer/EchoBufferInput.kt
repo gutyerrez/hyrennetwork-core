@@ -4,6 +4,7 @@ import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
 import com.google.gson.JsonParser
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
@@ -11,8 +12,6 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
-import java.io.ByteArrayInputStream
-import java.io.ObjectInputStream
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -21,7 +20,7 @@ import kotlin.reflect.KClass
  * @author SrGutyerrez
  **/
 class EchoBufferInput(
-        private val bytes: ByteArray
+    private val bytes: ByteArray
 ) {
 
     private val buffer: ByteArrayDataInput = ByteStreams.newDataInput(bytes)
@@ -124,14 +123,14 @@ class EchoBufferInput(
         val valid = this.buffer.readBoolean()
 
         if (valid) return Application(
-                this.readString()!!,
-                this.readString()!!,
-                this.readString(),
-                this.readInt(),
-                this.readAddress()!!,
-                this.readEnum(ApplicationType::class)!!,
-                this.readServer(),
-                this.readEnum(Group::class)
+            this.readString()!!,
+            this.readString()!!,
+            this.readString(),
+            this.readInt(),
+            this.readAddress()!!,
+            this.readEnum(ApplicationType::class)!!,
+            this.readServer(),
+            this.readEnum(Group::class)
         )
 
         return null
@@ -147,23 +146,20 @@ class EchoBufferInput(
 
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
-    fun <T> readList(): List<T>? {
-        try {
-            val valid = this.readBoolean()
+    inline fun <reified T> readList(): List<T>? {
+        val valid = this.readBoolean()
 
-            if (!valid) return null
+        if (!valid) return null
 
-            val byteArrayInputStream = ByteArrayInputStream(this.bytes)
-            val objectInputStream = ObjectInputStream(byteArrayInputStream)
+        val byteArray = this.readByteArray()
 
-            objectInputStream.use {
-                return@use it.readObject() as List<T>
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return null
+        return CoreConstants.JACKSON.readValue(
+            byteArray,
+            CoreConstants.JACKSON.typeFactory.constructCollectionType(
+                List::class.java,
+                T::class.java
+            )
+        )
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
