@@ -4,7 +4,7 @@ import com.redefantasy.core.shared.echo.api.buffer.EchoBufferInput
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
 import com.redefantasy.core.shared.echo.api.packets.EchoPacket
 import com.redefantasy.core.shared.echo.api.packets.annotations.ServerPacket
-import com.redefantasy.core.shared.misc.punish.PunishType
+import net.md_5.bungee.api.chat.BaseComponent
 import java.util.*
 
 /**
@@ -14,31 +14,16 @@ import java.util.*
 class UserPunishedPacket : EchoPacket() {
 
     var userId: UUID? = null
-    var stafferId: UUID? = null
-    var punishCategoryName: String? = null
-    var punishType: PunishType? = null
-    var punishDuration: Long = 0
-    var proof: String? = null
-    var hidden: Boolean = true
+    var message: Array<BaseComponent>? = null
 
     override fun write(buffer: EchoBufferOutput) {
-        buffer.writeUUID(userId)
-        buffer.writeUUID(stafferId)
-        buffer.writeString(punishCategoryName)
-        buffer.writeEnum(punishType)
-        buffer.writeLong(punishDuration)
-        buffer.writeString(proof)
-        buffer.writeBoolean(hidden)
+        buffer.writeUUID(this.userId)
+        buffer.writeBaseComponent(this.message)
     }
 
     override fun read(buffer: EchoBufferInput) {
-        this.userId = buffer.readUUID()!!
-        this.stafferId = buffer.readUUID()!!
-        this.punishCategoryName = buffer.readString()!!
-        this.punishType = buffer.readEnum(PunishType::class)!!
-        this.punishDuration = buffer.readLong()
-        this.proof = buffer.readString()
-        this.hidden = buffer.readBoolean()
+        this.userId = buffer.readUUID()
+        this.message = buffer.readBaseComponent()
     }
 
 }

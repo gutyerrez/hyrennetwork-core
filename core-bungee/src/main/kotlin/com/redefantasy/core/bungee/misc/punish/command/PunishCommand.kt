@@ -163,19 +163,21 @@ class PunishCommand : CustomCommand("punir") {
                     )
                 )
 
+                val message = ComponentBuilder("\n")
+                    .append("§c * ${user?.name} foi ${punishDuration.punishType.sampleName} por ${user.name}.")
+                    .append("\n")
+                    .append("§c * Motivo: ${punishCategory.displayName}")
+                    .append("\n")
+                    .append("§c * Duração: ${TimeCode.toText(punishDuration.duration, 1)}")
+                    .append("\n")
+                    .create()
+
                 val packet = UserPunishedPacket()
 
                 packet.userId = targetUser.getUniqueId()
-                packet.stafferId = user.getUniqueId()
-                packet.punishCategoryName = punishCategory.getName()
-                packet.punishType = punishDuration.punishType
-                packet.punishDuration = punishDuration.duration
-                packet.proof = proof
-                packet.hidden = hidden
+                packet.message = message
 
                 CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
-
-                CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(targetUser.getUniqueId())
 
                 commandSender.sendMessage(TextComponent("§eUsuário punido com sucesso!"))
                 return true
