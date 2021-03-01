@@ -96,6 +96,8 @@ class EchoBufferInput(
         do {
             val byte = this.buffer.readByte()
 
+            println(byte)
+
             bytes.add(byte)
         } while (this.readBoolean())
 
@@ -160,6 +162,8 @@ class EchoBufferInput(
         val list = mutableListOf<T>()
 
         val byteArray = this.readByteArray()
+
+        println(byteArray)
 
         val byteArrayInputStream = ByteArrayInputStream(byteArray)
         val objectOutputStream = ObjectInputStream(byteArrayInputStream)
