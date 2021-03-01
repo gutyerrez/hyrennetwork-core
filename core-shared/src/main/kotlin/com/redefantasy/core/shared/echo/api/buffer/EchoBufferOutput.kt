@@ -165,7 +165,7 @@ class EchoBufferOutput {
                 val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
 
                 objectOutputStream.use {
-                    it.writeObject(list)
+                    it.writeObject(UUID.fromString("16b98e39-d1b5-3c8d-bd8f-7ca4d5a50cb8"))
                 }
 
                 this.writeByteArray(byteArrayOutputStream.toByteArray())

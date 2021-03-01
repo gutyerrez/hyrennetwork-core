@@ -13,7 +13,6 @@ import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import java.io.ByteArrayInputStream
 import java.io.ObjectInputStream
-import java.io.Serializable
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -148,7 +147,7 @@ class EchoBufferInput(
 
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
-    fun <T: Serializable> readList(): List<T>? {
+    fun <T> readList(): List<T>? {
         try {
             val valid = this.readBoolean()
 
