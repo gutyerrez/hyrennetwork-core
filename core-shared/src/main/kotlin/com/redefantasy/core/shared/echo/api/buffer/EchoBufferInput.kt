@@ -12,7 +12,6 @@ import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import java.io.ByteArrayInputStream
-import java.io.ObjectInputStream
 import java.io.Serializable
 import java.net.InetSocketAddress
 import java.util.*
@@ -157,18 +156,21 @@ class EchoBufferInput(
 
         val byteArray = this.readByteArray()
 
-        byteArray.forEach {
-            println("--> ${it}")
+        val byteArrayInputStream = ByteArrayInputStream(byteArray)
+
+        println(byteArrayInputStream)
+
+        byteArrayInputStream.readAllBytes().forEach {
+            println(it)
         }
 
-        val byteArrayInputStream = ByteArrayInputStream(byteArray)
-        val objectOutputStream = ObjectInputStream(byteArrayInputStream)
-
-        do {
-            val `object` = objectOutputStream.readObject()
-
-            list.add(`object` as T)
-        } while (`object` !== null)
+//        val objectOutputStream = ObjectInputStream(byteArrayInputStream)
+//
+//        do {
+//            val `object` = objectOutputStream.readObject()
+//
+//            list.add(`object` as T)
+//        } while (`object` !== null)
 
         return list
     }
