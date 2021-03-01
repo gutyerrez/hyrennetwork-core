@@ -160,7 +160,9 @@ class EchoBufferOutput {
             this.writeBoolean(true)
 
             this.writeString(
-                CoreConstants.JACKSON.writeValueAsString(list)
+                CoreConstants.JACKSON.writeValueAsString(
+                    list
+                )
             )
         }
     }

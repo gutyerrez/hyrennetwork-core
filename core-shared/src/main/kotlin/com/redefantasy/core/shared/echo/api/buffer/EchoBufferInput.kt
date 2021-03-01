@@ -150,7 +150,7 @@ class EchoBufferInput(
 
         val result = CoreConstants.JACKSON.readValue(
             this.readString(),
-            object : TypeReference<List<T>>() {
+            object : TypeReference<List<*>>() {
                 //
             }
         )
@@ -158,7 +158,7 @@ class EchoBufferInput(
         println(result)
         println(result::class)
 
-        return result
+        return result as List<T>
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
