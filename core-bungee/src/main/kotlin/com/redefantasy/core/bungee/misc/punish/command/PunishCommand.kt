@@ -164,7 +164,7 @@ class PunishCommand : CustomCommand("punir") {
                 )
 
                 val message = ComponentBuilder("\n")
-                    .append("§c * ${user?.name} foi ${punishDuration.punishType.sampleName} por ${user.name}.")
+                    .append("§c * ${targetUser.name} foi ${punishDuration.punishType.sampleName} por ${user.name}.")
                     .append("\n")
                     .append("§c * Motivo: ${punishCategory.displayName}")
                     .append("\n")
