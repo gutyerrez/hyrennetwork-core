@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  * @author SrGutyerrez
  **/
 class EchoBufferInput(
-        bytes: ByteArray
+        private val bytes: ByteArray
 ) {
 
     private val buffer: ByteArrayDataInput = ByteStreams.newDataInput(bytes)
@@ -91,17 +91,7 @@ class EchoBufferInput(
     }
 
     fun readByteArray(): ByteArray {
-        val bytes = mutableListOf<Byte>()
-
-        do {
-            val byte = this.buffer.readByte()
-
-            println(byte)
-
-            bytes.add(byte)
-        } while (this.readBoolean())
-
-        return bytes.toByteArray()
+        return this.bytes
     }
 
     fun readAddress(): InetSocketAddress? {
