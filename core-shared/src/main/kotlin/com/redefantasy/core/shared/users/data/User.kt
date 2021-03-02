@@ -53,6 +53,8 @@ data class User(
 
         packet.userId = this.id.value
         packet.message = message
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
     }
 
     fun disconnect(message: BaseComponent) {
@@ -60,6 +62,8 @@ data class User(
 
         packet.userId = this.id.value
         packet.message = arrayOf(message)
+
+        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
     }
 
     fun validatePunishments(): Array<BaseComponent>? {

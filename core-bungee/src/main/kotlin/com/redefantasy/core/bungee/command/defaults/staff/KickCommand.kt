@@ -5,7 +5,6 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
-import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
 import com.redefantasy.core.shared.users.data.User
@@ -46,14 +45,16 @@ class KickCommand : CustomCommand("kick"), GroupCommandRestrictable {
             return false
         }
 
+        if (user === targetUser) {
+            commandSender.sendMessage(TextComponent("§cVocê não pode expulsar a si mesmo."))
+            return false
+        }
+
         val message = args.copyOfRange(1, args.size).joinToString(" ")
 
-        val packet = DisconnectUserPacket()
-
-        packet.userId = targetUser.getUniqueId()
-        packet.message = arrayOf(TextComponent(message))
-
-        CoreProvider.Databases.Redis.ECHO.provide().publishToAll(packet)
+        targetUser.disconnect(
+            TextComponent(message)
+        )
 
         commandSender.sendMessage(TextComponent("§eVocê chutou ${targetUser.name} para fora do servidor por: ${if (message.isEmpty()) "Nenhum motivo informado" else message}."))
         return false

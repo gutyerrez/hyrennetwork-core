@@ -16,6 +16,8 @@ class DisconnectUserEchoPacketListener : EchoListener {
     ) {
         val userId = packet.userId!!
 
+        println("Chamou")
+
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(userId)
 
         println("Pra desconectar")
