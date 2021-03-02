@@ -72,13 +72,13 @@ data class UserPunishment(
         if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
             return true
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt.withMillis(TimeUnit.DAYS.toMillis(7)) > currentDateTime
+            return this.createdAt + TimeUnit.DAYS.toMillis(7) > currentDateTime
         } else if (revoker.hasGroup(Group.ADMINISTRATOR)) {
-            return this.createdAt.withMillis(TimeUnit.DAYS.toMillis(3)) > currentDateTime
+            return this.createdAt + TimeUnit.DAYS.toMillis(3) > currentDateTime
         } else if (revoker.hasGroup(Group.MODERATOR)) {
-            return this.createdAt.withMillis(TimeUnit.HOURS.toMillis(12)) > currentDateTime
+            return this.createdAt + TimeUnit.HOURS.toMillis(12) > currentDateTime
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt.withMillis(TimeUnit.HOURS.toMillis(2)) > currentDateTime
+            return this.createdAt + TimeUnit.HOURS.toMillis(2) > currentDateTime
         }
 
         return false
