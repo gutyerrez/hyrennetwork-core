@@ -7,6 +7,7 @@ import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunis
 import net.md_5.bungee.api.ProxyServer
 import org.greenrobot.eventbus.Subscribe
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 /**
  * @author Gutyerrez
@@ -34,7 +35,7 @@ class UserPunishedEchoPacketListener : EchoListener {
                 UpdateUserPunishmentByIdDTO(
                     id!!
                 ) {
-                    it.startTime = DateTime.now()
+                    it.startTime = DateTime.now(DateTimeZone.forID("UTC-3"))
                 }
             )
         }
