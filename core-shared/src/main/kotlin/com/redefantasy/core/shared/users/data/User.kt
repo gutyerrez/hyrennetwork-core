@@ -62,7 +62,7 @@ data class User(
         packet.message = arrayOf(message)
     }
 
-    fun validatePunishments(): Boolean {
+    fun validatePunishments(): Array<BaseComponent>? {
         val userPunishments = this.getPunishments()
 
         userPunishments.forEach {
@@ -112,12 +112,10 @@ data class User(
             message.append("\n\n")
                 .append("§cUse o ID §b#${activePunishment.id.value} §cpara criar uma revisão em &mdiscord.gg/redefantasy§r§c.")
 
-            this.disconnect(message.create())
-            return false
+            return message.create()
         }
 
-
-        return true
+        return null
     }
 
     fun attemptLogin(password: String): Boolean {

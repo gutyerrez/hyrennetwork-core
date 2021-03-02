@@ -40,6 +40,11 @@ class UserPunishedEchoPacketListener : EchoListener {
                     )
                 }
             )
+
+            val message = user?.validatePunishments()
+
+            if (message !== null)
+                proxiedPlayer.disconnect(*message)
         }
 
         CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId)

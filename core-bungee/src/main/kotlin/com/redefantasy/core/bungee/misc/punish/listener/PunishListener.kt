@@ -25,7 +25,12 @@ class PunishListener : Listener {
 
         if (user === null) return
 
-        user.validatePunishments()
+        val message = user.validatePunishments()
+
+        if (message !== null) {
+            event.setCancelReason(*message)
+            event.isCancelled = true
+        }
     }
 
     @EventHandler
