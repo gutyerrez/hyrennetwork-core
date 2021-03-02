@@ -153,7 +153,7 @@ class RevokeCommand : CustomCommand("despunir") {
                     proxyApplications
                 )
 
-                commandSender.sendMessage(TextComponent("§eVocê revogou a punição §b#${userPunishment.id.value} por ${revokeCategory.displayName}."))
+                commandSender.sendMessage(TextComponent("§eVocê revogou a punição §b#${userPunishment.id.value}§e por ${revokeCategory.displayName}."))
                 return true
             }
             else -> {
