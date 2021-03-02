@@ -28,6 +28,8 @@ class UserPunishedEchoPacketListener : EchoListener {
 
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(userId)
 
+        CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId)
+
         if (proxiedPlayer !== null) {
             CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
                 UpdateUserPunishmentByIdDTO(
@@ -49,8 +51,6 @@ class UserPunishedEchoPacketListener : EchoListener {
                 proxiedPlayer.disconnect(*message)
             }
         }
-
-        CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId)
 
         ProxyServer.getInstance().broadcast(*message!!)
     }
