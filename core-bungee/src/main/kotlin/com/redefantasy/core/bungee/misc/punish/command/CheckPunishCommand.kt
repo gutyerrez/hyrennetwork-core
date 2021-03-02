@@ -85,21 +85,24 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
 
             val color = userPunishment.getColor()
 
-            message.append("$color - [${DateFormatter.formatToDefault(userPunishment.createdAt)}] [${userPunishment.punishCategory?.displayName ?: userPunishment.customReason}] ")
+            message.append("$color - ")
+                    .append("$color[${DateFormatter.formatToDefault(userPunishment.createdAt)}] [${userPunishment.punishCategory?.displayName ?: userPunishment.customReason}]")
                     .event(
                             HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
                                     Text(hoverMessage.create())
                             )
                     )
-                    .append("[Prova] ")
+                    .append(" ")
+                    .append("$color[Prova]")
                     .event(
                             ClickEvent(
                                     ClickEvent.Action.OPEN_URL,
                                     userPunishment.proof
                             )
                     )
-                    .append("[Revogar]")
+                    .append(" ")
+                    .append("$color[Revogar]")
                     .event(
                             ClickEvent(
                                     ClickEvent.Action.SUGGEST_COMMAND,

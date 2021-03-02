@@ -32,12 +32,12 @@ class StaffMessageEchoPacketListener : EchoListener {
         val group = user!!.getHighestGroup()
 
         val message = ComponentBuilder()
-                .append("§d[S] ")
+                .append("§d§l[S] ")
                 .append("§7(${bukkitApplication?.getFancyDisplayName()}) ")
                 .append("${ChatColor.fromHEX(group.color!!)}${group.prefix}")
                 .append(user.name)
-                .append("§d: ")
-                .append(packet.message)
+                .append(": ")
+                .append("§d${packet.message}")
                 .create()
 
         staffers.forEach { it.sendMessage(*message) }
