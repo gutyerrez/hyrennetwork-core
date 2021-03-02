@@ -84,6 +84,30 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun fetchUsersByProxyApplication(application: Application): List<UUID> {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val users = mutableListOf<UUID>()
+
+            val scanParams = ScanParams().match("users:*")
+
+            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+
+            scan.result.forEach { key ->
+                val proxyApplicationName = it.hget(key, "proxy_application")
+
+                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+
+                if (proxyApplication === application) {
+                    val uuid = UUID.fromString(key.split("users:")[1])
+
+                    users.add(uuid)
+                }
+            }
+
+            return users
+        }
+    }
+
     fun fetchUsersByServer(server: Server): List<UUID> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()

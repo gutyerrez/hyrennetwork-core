@@ -74,10 +74,12 @@ class CoreBungeePlugin : CustomPlugin(true) {
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(DisconnectUserEchoPacketListener())
 
         // delete data
-        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
-            CoreProvider.application
-        )
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete(
+            CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByProxyApplication(
+                CoreProvider.application
+            )
+        )
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
             CoreProvider.application
         )
     }
@@ -85,10 +87,12 @@ class CoreBungeePlugin : CustomPlugin(true) {
     override fun onDisable() {
         super.onDisable()
 
-        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
-            CoreProvider.application
-        )
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete(
+            CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByProxyApplication(
+                CoreProvider.application
+            )
+        )
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
             CoreProvider.application
         )
     }

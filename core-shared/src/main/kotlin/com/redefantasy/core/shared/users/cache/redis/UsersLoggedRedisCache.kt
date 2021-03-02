@@ -1,10 +1,8 @@
 package com.redefantasy.core.shared.users.cache.redis
 
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.redis.RedisCache
 import com.redefantasy.core.shared.users.data.User
-import redis.clients.jedis.ScanParams
 import java.util.*
 
 /**
@@ -30,21 +28,17 @@ class UsersLoggedRedisCache : RedisCache {
         }
     }
 
-    fun delete(application: Application) {
+    fun delete(usersId: List<UUID>) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val scanParams = ScanParams().match("user_logged:*")
-
-            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
-
-            scan.result.forEach { key ->
-                println(key)
-
-                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
-                    it.hget(key, "proxy_application")
-                )
-
-                if (proxyApplication === application) it.del(key)
+            usersId.forEach { userId ->
+                it.del("user_logged:$userId")
             }
+        }
+    }
+
+    fun delete(userId: UUID) {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            it.del("user_logged:$userId")
         }
     }
 
