@@ -6,6 +6,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.NumberUtils
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
@@ -51,6 +52,11 @@ class RevokeCommand : CustomCommand("despunir") {
             return false
         }
 
+        if (!userPunishment.isActive()) {
+            commandSender.sendMessage(TextComponent("§cEsta punição não está mais ativa."))
+            return false
+        }
+
         when (args.size) {
             1 -> {
                 val revokeCategories = CoreProvider.Cache.Local.REVOKE_CATEGORIES.provide().fetchAll()
@@ -60,6 +66,8 @@ class RevokeCommand : CustomCommand("despunir") {
                     .append("§eMotivos de revogação de punição disponíveis (${revokeCategories.size}):")
                     .append("\n\n")
 
+                var color = ChatColor.WHITE
+
                 revokeCategories.forEachIndexed { index, it ->
                     val hoverMessage = ComponentBuilder()
                         .append("§e${it.displayName}")
@@ -68,7 +76,8 @@ class RevokeCommand : CustomCommand("despunir") {
                         .append("\n\n")
                         .append("§fGrupo mínimo: ${it.group.getFancyDisplayName()}")
 
-                    message.append(it.displayName)
+                    message.append("$color - ")
+                        .append("$color${it.displayName}")
                         .event(
                             HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
@@ -83,6 +92,8 @@ class RevokeCommand : CustomCommand("despunir") {
                         )
 
                     if (index + 1 < revokeCategories.size) message.append("\n")
+
+                    color = if (color === ChatColor.WHITE) ChatColor.GRAY else ChatColor.WHITE
                 }
 
                 message.append("\n")
@@ -95,11 +106,6 @@ class RevokeCommand : CustomCommand("despunir") {
 
                 if (revokeCategory === null) {
                     commandSender.sendMessage(TextComponent("§cMotivo de revogar inválido."))
-                    return false
-                }
-
-                if (!userPunishment.isActive()) {
-                    commandSender.sendMessage(TextComponent("§cEsta punição não está mais ativa."))
                     return false
                 }
 
