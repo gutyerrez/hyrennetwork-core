@@ -150,7 +150,7 @@ class PunishCommand : CustomCommand("punir") {
                         if (punishCategory.punishDurations.size <= userPunishments.size + 1) punishCategory.punishDurations.size - 1 else userPunishments.size
                 ]
 
-                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().create(
+                val userPunishment = CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().create(
                     CreateUserPunishmentDTO(
                         targetUser.id,
                         user.id,
@@ -174,6 +174,7 @@ class PunishCommand : CustomCommand("punir") {
 
                 val packet = UserPunishedPacket()
 
+                packet.id = userPunishment?.id
                 packet.userId = targetUser.getUniqueId()
                 packet.message = message
 
