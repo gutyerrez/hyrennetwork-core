@@ -83,6 +83,8 @@ data class User(
         }.findFirst().orElse(null)
 
         if (activePunishment !== null) {
+            println("Tá banido")
+
             val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)
 
             val message = ComponentBuilder()
