@@ -69,8 +69,9 @@ data class User(
     fun validatePunishments(): Array<BaseComponent>? {
         val userPunishments = this.getPunishments()
 
-        userPunishments.forEach {
-            if (it.startTime === null) {
+        userPunishments.stream()
+            .filter { it.revokeTime !== null && it.startTime === null }
+            .forEach {
                 it.startTime = DateTime.now(
                     CoreConstants.DATE_TIME_ZONE
                 )
@@ -83,7 +84,6 @@ data class User(
                     }
                 )
             }
-        }
 
         val activePunishment = userPunishments.stream().filter {
             it.isActive() && it.punishType !== PunishType.MUTE
@@ -97,10 +97,12 @@ data class User(
                 .append("\n\n")
                 .append("§cVocê está ${activePunishment.punishType.sampleName} do servidor")
                 .append("\n\n")
-                .append("§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason}${
-                    if (activePunishment.proof !== null) " - ${activePunishment.proof}"
-                    else ""
-                }")
+                .append(
+                    "§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason}${
+                        if (activePunishment.proof !== null) " - ${activePunishment.proof}"
+                        else ""
+                    }"
+                )
                 .append("\n")
                 .append("§cAutor: ${staffer?.name}")
 
@@ -194,30 +196,21 @@ data class User(
         return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
-    fun hasStrictGroup(group: Group, server: Server? = null): Boolean {
-        return this.getGroups(server).contains(group)
-    }
+    fun hasStrictGroup(group: Group, server: Server? = null) = this.getGroups(server).contains(group)
 
-    fun getConnectedProxyName(): String {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName
-            ?: "Desconhecido"
-    }
+    fun getConnectedProxyName() =
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "Desconhecido"
 
-    fun getConnectedAddress(): String {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchConnectedAddress(this) ?: "Desconhecido"
-    }
+    fun getConnectedAddress() =
+        CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchConnectedAddress(this) ?: "Desconhecido"
 
     fun getConnectedBukkitApplication(): Application? {
         return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchBukkitApplication(this)
     }
 
-    fun isOnline(): Boolean {
-        return CoreProvider.Cache.Redis.USERS_STATUS.provide().isOnline(this)
-    }
+    fun isOnline() = CoreProvider.Cache.Redis.USERS_STATUS.provide().isOnline(this)
 
-    fun getPunishments(): List<UserPunishment> {
-        return CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
-    }
+    fun getPunishments() = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
 
     fun getActivePunishments(): List<UserPunishment> {
         return this.getPunishments()

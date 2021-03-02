@@ -48,7 +48,9 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
                 .append("§e$SQUARE_SYMBOL Pendente §a$SQUARE_SYMBOL Ativo §c$SQUARE_SYMBOL Finalizado §7$SQUARE_SYMBOL Revogado")
                 .append("\n\n")
 
-        userPunishments.forEachIndexed { index, userPunishment ->
+        userPunishments.sortedBy {
+            it.id
+        }.forEachIndexed { index, userPunishment ->
             val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(userPunishment.stafferId)
             val revoker = if (userPunishment.revokeStafferId === null) {
                 null
@@ -58,15 +60,15 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
             } else null
 
             val hoverMessage = ComponentBuilder()
-                    .append("§fId: §7#${userPunishment.id.value}")
+                    .append("§fId: §b#${userPunishment.id.value}")
                     .append("\n")
                     .append("§fAplicada por: §7${staffer!!.name}")
                     .append("\n")
                     .append("§fData de início: §7${
-                        if (userPunishment.startTime == null) {
+                        if (userPunishment.startTime === null && userPunishment.revokeTime === null) {
                             "[Aguardando início]"
                         } else {
-                            DateFormatter.formatToDefault(userPunishment.startTime)
+                            DateFormatter.formatToDefault(userPunishment.startTime ?: userPunishment.revokeTime)
                         }
                     }")
                     .append("\n")
