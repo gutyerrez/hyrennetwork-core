@@ -97,7 +97,10 @@ data class User(
                 .append("\n\n")
                 .append("§cVocê está ${activePunishment.punishType.sampleName} do servidor")
                 .append("\n\n")
-                .append("§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason} - ${activePunishment.proof}")
+                .append("§cMotivo: ${activePunishment.punishCategory?.displayName ?: activePunishment.customReason}${
+                    if (activePunishment.proof !== null) " - ${activePunishment.proof}"
+                    else ""
+                }")
                 .append("\n")
                 .append("§cAutor: ${staffer?.name}")
 
