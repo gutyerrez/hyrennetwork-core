@@ -22,8 +22,6 @@ class UserPunishedEchoPacketListener : EchoListener {
         val userId = packet.userId
         val message = packet.message
 
-        println(id)
-
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId!!)
 
         user?.validatePunishments()
@@ -43,8 +41,13 @@ class UserPunishedEchoPacketListener : EchoListener {
 
             val message = user?.validatePunishments()
 
-            if (message !== null)
+            println("AA")
+
+            if (message !== null) {
+                println("BB")
+
                 proxiedPlayer.disconnect(*message)
+            }
         }
 
         CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().invalidate(userId)
