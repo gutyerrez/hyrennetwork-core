@@ -60,7 +60,7 @@ data class UserPunishment(
             return true
         }
 
-        return this.startTime!!.withMillis(this.duration) > DateTime.now(
+        return this.startTime!! + this.duration > DateTime.now(
             CoreConstants.DATE_TIME_ZONE
         )
     }
