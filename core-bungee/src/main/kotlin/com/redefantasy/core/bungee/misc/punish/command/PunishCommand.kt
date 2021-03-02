@@ -141,7 +141,7 @@ class PunishCommand : CustomCommand("punir") {
                     }.collect(Collectors.toList())
 
                 if (userPunishments.stream().anyMatch {
-                        it.createdAt > DateTime.now(
+                        it.createdAt <= DateTime.now(
                             CoreConstants.DATE_TIME_ZONE
                         ).withMillis(TimeUnit.MINUTES.toMillis(3))
                 }) {
