@@ -37,9 +37,11 @@ class UsersLoggedRedisCache : RedisCache {
             val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
             scan.result.forEach { key ->
-                val proxyApplicationName = it.hget(key, "proxy_application")
+                println(key)
 
-                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+                    it.hget(key, "proxy_application")
+                )
 
                 if (proxyApplication === application) it.del(key)
             }
