@@ -35,15 +35,14 @@ data class UserPunishment(
 ) {
 
     fun getColor(): ChatColor {
-        if (this.startTime === null) {
-            if (this.revokeTime !== null) return ChatColor.GRAY
+        if (this.revokeTime !== null) return ChatColor.GRAY
 
-            return ChatColor.YELLOW
-        }
+        if (this.startTime === null) return ChatColor.YELLOW
 
         return if (this.startTime!! + this.duration > DateTime.now(
                 CoreConstants.DATE_TIME_ZONE
-        )) {
+            )
+        ) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
@@ -53,11 +52,9 @@ data class UserPunishment(
     }
 
     fun isActive(): Boolean {
-        if (this.startTime === null) {
-            if (this.revokeTime !== null) return false
+        if (this.revokeTime !== null) return false
 
-            return true
-        }
+        if (this.startTime === null) return true
 
         return this.startTime!! + this.duration > DateTime.now(
             CoreConstants.DATE_TIME_ZONE
