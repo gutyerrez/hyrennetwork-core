@@ -114,7 +114,7 @@ data class User(
             }
 
             message.append("\n\n")
-                .append("§cUse o ID §b#${activePunishment.id.value} §cpara criar uma revisão em &mdiscord.gg/redefantasy§r§c.")
+                .append("§cUse o ID §b#${activePunishment.id.value} §cpara criar uma revisão em §mdiscord.gg/redefantasy§r§c.")
 
             return message.create()
         }
