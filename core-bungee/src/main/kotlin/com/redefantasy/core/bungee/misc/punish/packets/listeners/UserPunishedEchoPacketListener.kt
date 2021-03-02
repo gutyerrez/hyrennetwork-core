@@ -21,6 +21,8 @@ class UserPunishedEchoPacketListener : EchoListener {
         val userId = packet.userId
         val message = packet.message
 
+        println(id)
+
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId!!)
 
         user?.validatePunishments()
