@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.misc.punish.command
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
@@ -140,7 +141,9 @@ class PunishCommand : CustomCommand("punir") {
                     }.collect(Collectors.toList())
 
                 if (userPunishments.stream().anyMatch {
-                        it.createdAt.isBefore(DateTime.now().withMillis(TimeUnit.MINUTES.toMillis(3)))
+                        it.createdAt > DateTime.now(
+                            CoreConstants.DATE_TIME_ZONE
+                        ).withMillis(TimeUnit.MINUTES.toMillis(3))
                 }) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
                     return false

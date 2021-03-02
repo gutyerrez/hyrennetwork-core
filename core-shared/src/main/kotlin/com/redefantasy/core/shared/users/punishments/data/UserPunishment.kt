@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.users.punishments.data
 
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.punish.category.data.PunishCategory
@@ -40,7 +41,10 @@ data class UserPunishment(
             return ChatColor.YELLOW
         }
 
-        return if (this.startTime!!.withMillis(this.duration).isAfterNow) {
+        return if (this.startTime!!.withMillis(this.duration) > DateTime.now(
+                CoreConstants.DATE_TIME_ZONE
+            )
+        ) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
@@ -56,27 +60,26 @@ data class UserPunishment(
             return true
         }
 
-        println(this.startTime?.millis)
-        println(this.duration)
-        println(this.startTime!!.millis + this.duration)
-        println((this.startTime!!.millis + this.duration) > System.currentTimeMillis())
-
-        println(this.startTime!!.withMillis(this.duration).isAfterNow)
-
-        return this.startTime!!.withMillis(this.duration).isAfterNow
+        return this.startTime!!.withMillis(this.duration) > DateTime.now(
+            CoreConstants.DATE_TIME_ZONE
+        )
     }
 
     fun canBeRevokedFrom(revoker: User): Boolean {
+        val currentDateTime = DateTime.now(
+            CoreConstants.DATE_TIME_ZONE
+        )
+
         if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
             return true
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt + TimeUnit.DAYS.toMillis(7) > DateTime.now()
+            return this.createdAt.withMillis(TimeUnit.DAYS.toMillis(7)) > currentDateTime
         } else if (revoker.hasGroup(Group.ADMINISTRATOR)) {
-            return this.createdAt + TimeUnit.DAYS.toMillis(3) > DateTime.now()
+            return this.createdAt.withMillis(TimeUnit.DAYS.toMillis(3)) > currentDateTime
         } else if (revoker.hasGroup(Group.MODERATOR)) {
-            return this.createdAt + TimeUnit.HOURS.toMillis(12) > DateTime.now()
+            return this.createdAt.withMillis(TimeUnit.HOURS.toMillis(12)) > currentDateTime
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt + TimeUnit.HOURS.toMillis(2) > DateTime.now()
+            return this.createdAt.withMillis(TimeUnit.HOURS.toMillis(2)) > currentDateTime
         }
 
         return false

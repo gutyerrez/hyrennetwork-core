@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
+import org.joda.time.DateTimeZone
 import java.util.*
 
 /**
@@ -21,6 +22,7 @@ object CoreConstants {
     val GSON = Gson()
     val OK_HTTP = OkHttpClient()
     val RANDOM = Random()
+    val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
 
     init {
         JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
