@@ -3,6 +3,7 @@ package com.redefantasy.core.shared.applications.data
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
+import org.apache.commons.lang3.StringUtils
 import java.net.InetSocketAddress
 
 /**
@@ -18,6 +19,22 @@ data class Application(
         val server: Server? = null,
         val restrictJoin: Group? = null
 ) {
+
+    fun getFancyDisplayName(): String {
+        return StringUtils.replaceEach(
+            this.displayName,
+            arrayOf(
+                "Factions",
+                "Rankup",
+                "Lobby"
+            ),
+            arrayOf(
+                "F.",
+                "R.",
+                "L."
+            )
+        )
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false

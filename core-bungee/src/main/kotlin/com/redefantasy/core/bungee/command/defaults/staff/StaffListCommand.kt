@@ -50,7 +50,7 @@ class StaffListCommand : CustomCommand("staff"), GroupCommandRestrictable {
                 val bukkitApplication = it.getConnectedBukkitApplication()
 
                 message.append(
-                    "$prefix${it.name} §7(${if (bukkitApplication === null) "Desconhecido" else bukkitApplication.displayName})"
+                    "§f - $prefix${it.name} §7(${if (bukkitApplication === null) "Desconhecido" else bukkitApplication.displayName})"
                 ).append("\n")
             }
 

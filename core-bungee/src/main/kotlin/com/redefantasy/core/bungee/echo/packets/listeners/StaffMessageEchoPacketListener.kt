@@ -19,6 +19,7 @@ class StaffMessageEchoPacketListener : EchoListener {
     fun on(
             packet: StaffMessagePacket
     ) {
+        val bukkitApplication = packet.bukkitApplication
         val staffers = ProxyServer.getInstance().players.stream()
                 .filter {
                     val user = CoreProvider.Cache.Local.USERS.provide().fetchById(it.uniqueId)
@@ -31,10 +32,11 @@ class StaffMessageEchoPacketListener : EchoListener {
         val group = user!!.getHighestGroup()
 
         val message = ComponentBuilder()
-                .append("§a[S] ")
+                .append("§d[S] ")
+                .append("§7(${bukkitApplication?.getFancyDisplayName()}) ")
                 .append("${ChatColor.fromHEX(group.color!!)}${group.prefix}")
                 .append(user.name)
-                .append("§a: ")
+                .append("§d: ")
                 .append(packet.message)
                 .create()
 
