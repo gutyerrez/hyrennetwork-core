@@ -43,11 +43,7 @@ class UserPunishedEchoPacketListener : EchoListener {
 
             val message = user?.validatePunishments()
 
-            println("AA")
-
             if (message !== null) {
-                println("BB")
-
                 proxiedPlayer.disconnect(*message)
             }
         }
