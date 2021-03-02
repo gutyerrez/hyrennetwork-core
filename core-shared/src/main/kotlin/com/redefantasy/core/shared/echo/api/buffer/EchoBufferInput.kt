@@ -13,6 +13,7 @@ import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
+import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -84,6 +85,21 @@ class EchoBufferInput(
             val leastSignificantBits = this.buffer.readLong()
 
             return UUID(mostSignificantBits, leastSignificantBits)
+        }
+
+        return null
+    }
+
+    inline fun <reified T: Comparable<T>> readEntityID(): EntityID<T>? {
+        val valid = this.readBoolean()
+
+        if (valid) {
+            return CoreConstants.JACKSON.readValue(
+                this.readString(),
+                object : TypeReference<EntityID<T>>() {
+                    //
+                }
+            )
         }
 
         return null

@@ -9,6 +9,7 @@ import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
+import org.jetbrains.exposed.dao.id.EntityID
 import java.io.Serializable
 import java.net.Inet6Address
 import java.net.InetSocketAddress
@@ -65,12 +66,25 @@ class EchoBufferOutput {
     )
 
     fun writeUUID(uuid: UUID?) {
-        if (uuid == null) {
+        if (uuid === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
             this.writeLong(uuid.mostSignificantBits)
             this.writeLong(uuid.leastSignificantBits)
+        }
+    }
+
+    inline fun <reified T: Comparable<T>> writeEntityID(entityId: EntityID<T>?) {
+        if (entityId === null) {
+            this.writeBoolean(false)
+        } else {
+            this.writeBoolean(true)
+            this.writeString(
+                CoreConstants.JACKSON.writeValueAsString(
+                    entityId
+                )
+            )
         }
     }
 

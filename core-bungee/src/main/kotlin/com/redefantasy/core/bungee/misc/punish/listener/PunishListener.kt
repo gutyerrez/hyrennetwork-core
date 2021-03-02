@@ -46,11 +46,14 @@ class PunishListener : Listener {
         if (currentActiveMutePunishment !== null && !CoreBungeeConstants.UNLOGGED_ALLOWED_COMMANDS.stream().anyMatch {
                 it.contentEquals(message)
         }) {
+            val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(
+                currentActiveMutePunishment.stafferId
+            )
             event.isCancelled = true
 
             proxiedPlayer.sendMessage(
                 *ComponentBuilder("\n")
-                    .append("§c * Você foi ${currentActiveMutePunishment.punishType.sampleName} por ${user.name}.")
+                    .append("§c * Você foi ${currentActiveMutePunishment.punishType.sampleName} por ${staffer?.name}.")
                     .append("\n")
                     .append("§c * Motivo: ${currentActiveMutePunishment.punishCategory?.displayName}")
                     .append("\n")
