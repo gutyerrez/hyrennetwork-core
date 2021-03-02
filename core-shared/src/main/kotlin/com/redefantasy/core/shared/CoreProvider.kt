@@ -43,7 +43,7 @@ import com.redefantasy.core.shared.users.friends.storage.repositories.implementa
 import com.redefantasy.core.shared.users.groups.due.cache.local.UsersGroupsDueLocalCache
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.implementations.PostgresUsersGroupsDueRepository
-import com.redefantasy.core.shared.users.ignored.cache.local.UsersIgnoredLocalCache
+import com.redefantasy.core.shared.users.ignored.cache.local.IgnoredUsersLocalCache
 import com.redefantasy.core.shared.users.ignored.storage.repositories.IUsersIgnoredRepository
 import com.redefantasy.core.shared.users.ignored.storage.repositories.implementations.MongoUsersIgnoredRepository
 import com.redefantasy.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
@@ -287,7 +287,7 @@ object CoreProvider {
         object Mongo {
 
             val USERS_FRIENDS_REPOSITORY = MongoRepositoryProvider<IUsersFriendsRepository>(
-                CoreProvider.Databases.Mongo.MONGO_MAIN,
+                Databases.Mongo.MONGO_MAIN,
                 MongoUsersFriendsRepository::class
             )
 
@@ -346,7 +346,7 @@ object CoreProvider {
             )
 
             val USERS_IGNORED = LocalCacheProvider(
-                UsersIgnoredLocalCache()
+                IgnoredUsersLocalCache()
             )
 
             val USERS_PREFERENCES = LocalCacheProvider(

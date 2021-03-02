@@ -26,4 +26,8 @@ abstract class CustomPlugin(
         }
     }
 
+    override fun onDisable() {
+        CoreProvider.shutdown()
+    }
+
 }

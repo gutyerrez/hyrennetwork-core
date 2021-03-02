@@ -49,7 +49,7 @@ interface Commandable<T> {
 
     fun getSenderName(commandSender: T): String
 
-    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean?
+    fun onCommand(commandSender: T, user: User?, args: Array<out String>): Boolean? = null
 
     fun executeRaw(commandSender: T, args: Array<out String>) {
         if (this.getCommandRestriction() !== null) {

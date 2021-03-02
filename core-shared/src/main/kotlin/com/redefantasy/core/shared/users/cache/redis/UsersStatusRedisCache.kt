@@ -139,6 +139,22 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun delete(application: Application) {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val scanParams = ScanParams().match("users:*")
+
+            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+
+            scan.result.forEach { key ->
+                val proxyApplicationName = it.hget(key, "proxy_application")
+
+                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+
+                if (proxyApplication === application) it.del(key)
+            }
+        }
+    }
+
     fun delete() {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             it.del("users:*")

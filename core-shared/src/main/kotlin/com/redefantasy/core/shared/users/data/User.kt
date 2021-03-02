@@ -249,14 +249,14 @@ data class User(
         return friends
     }
 
-    fun getIgnored(): List<User> {
+    fun getIgnoredUsers(): List<User> {
         val ignored = mutableListOf<User>()
         val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
 
         _ignored.stream()
             .map {
                 CoreProvider.Cache.Local.USERS.provide().fetchById(
-                    it.friendUserId
+                    it.ignoredUserId
                 )
             }
             .forEach {
