@@ -35,7 +35,7 @@ class UserPunishedEchoPacketListener : EchoListener {
                 UpdateUserPunishmentByIdDTO(
                     id!!
                 ) {
-                    it.startTime = DateTime.now(DateTimeZone.forID("UTC-3"))
+                    it.startTime = DateTime.now(DateTimeZone.forID("BR"))
                 }
             )
         }
