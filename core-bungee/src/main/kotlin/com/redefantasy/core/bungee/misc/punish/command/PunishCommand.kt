@@ -141,9 +141,9 @@ class PunishCommand : CustomCommand("punir") {
                     }.collect(Collectors.toList())
 
                 if (userPunishments.stream().anyMatch {
-                        it.createdAt <= (DateTime.now(
+                        it.startTime === null || it.startTime!! + TimeUnit.MINUTES.toMillis(3) >= DateTime.now(
                             CoreConstants.DATE_TIME_ZONE
-                        ) + TimeUnit.MINUTES.toMillis(3))
+                        )
                 }) {
                     commandSender.sendMessage(TextComponent("§cEste usuário possui uma punição recente por essa categoria."))
                     return false
