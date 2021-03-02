@@ -59,6 +59,7 @@ data class UserPunishment(
         println(this.startTime?.millis)
         println(this.duration)
         println(this.startTime!!.millis + this.duration)
+        println((this.startTime!!.millis + this.duration) > System.currentTimeMillis())
 
         println(this.startTime!!.withMillis(this.duration).isAfterNow)
 
