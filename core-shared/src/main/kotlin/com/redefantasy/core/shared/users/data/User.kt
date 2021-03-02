@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.users.data
 
 import com.google.common.primitives.Ints
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
@@ -66,7 +67,9 @@ data class User(
 
         userPunishments.forEach {
             if (it.startTime === null) {
-                it.startTime = DateTime.now()
+                it.startTime = DateTime.now(
+                    CoreConstants.DATE_TIME_ZONE
+                )
 
                 CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
                     UpdateUserPunishmentByIdDTO(
@@ -83,8 +86,6 @@ data class User(
         }.findFirst().orElse(null)
 
         if (activePunishment !== null) {
-            println("Tá banido")
-
             val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)
 
             val message = ComponentBuilder()
