@@ -82,7 +82,7 @@ class EchoBufferOutput {
             this.writeBoolean(true)
             this.writeString(
                 CoreConstants.JACKSON.writeValueAsString(
-                    entityId
+                    entityId.value
                 )
             )
         }
