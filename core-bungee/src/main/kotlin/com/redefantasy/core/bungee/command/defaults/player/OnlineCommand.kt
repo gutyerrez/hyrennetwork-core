@@ -22,7 +22,6 @@ class OnlineCommand : CustomCommand("online") {
         val message = ComponentBuilder()
             .append("\n")
             .append("§b§l * ")
-            .reset()
             .append("§r§e${users.size} jogadores online na rede.")
             .append("\n")
 
@@ -34,7 +33,6 @@ class OnlineCommand : CustomCommand("online") {
                 val usersByServer = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByServer(server)
 
                 message.append("§b§l * ")
-                    .reset()
                     .append("§r§e${usersByServer.size} jogadores no servidor atual.")
                     .append("\n")
             }
