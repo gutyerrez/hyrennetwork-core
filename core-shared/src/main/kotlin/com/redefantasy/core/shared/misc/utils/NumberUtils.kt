@@ -61,4 +61,14 @@ object NumberUtils {
         )
     }
 
+    fun isValidInteger(string: String): Boolean {
+        return try {
+            string.toInt()
+
+            true
+        } catch (ignored: NumberFormatException) {
+            false
+        }
+    }
+
 }

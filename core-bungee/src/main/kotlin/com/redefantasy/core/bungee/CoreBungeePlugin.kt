@@ -18,7 +18,7 @@ import com.redefantasy.core.bungee.misc.login.listeners.LoginListeners
 import com.redefantasy.core.bungee.misc.plugin.CustomPlugin
 import com.redefantasy.core.bungee.misc.punish.command.CheckPunishCommand
 import com.redefantasy.core.bungee.misc.punish.command.PunishCommand
-import com.redefantasy.core.bungee.misc.punish.command.UnPunishCommand
+import com.redefantasy.core.bungee.misc.punish.command.RevokeCommand
 import com.redefantasy.core.bungee.misc.punish.listener.PunishListener
 import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserPunishedEchoPacketListener
 import com.redefantasy.core.bungee.misc.punish.packets.listeners.UserUnPunishedEchoPacketListener
@@ -46,7 +46,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
         pluginManager.registerCommand(this, LoginCommand())
         pluginManager.registerCommand(this, RegisterCommand())
         pluginManager.registerCommand(this, PunishCommand())
-        pluginManager.registerCommand(this, UnPunishCommand())
+        pluginManager.registerCommand(this, RevokeCommand())
         pluginManager.registerCommand(this, CheckPunishCommand())
         pluginManager.registerCommand(this, AccountCommand())
         pluginManager.registerCommand(this, GroupCommand())

@@ -13,6 +13,8 @@ class RevokeCategoriesLocalCache : LocalCache {
     private val CACHE = Caffeine.newBuilder()
             .build<String, RevokeCategory>()
 
+    fun fetchAll() = this.CACHE.asMap().values
+
     fun fetchByName(name: String) = this.CACHE.getIfPresent(name)
 
     override fun populate() {
