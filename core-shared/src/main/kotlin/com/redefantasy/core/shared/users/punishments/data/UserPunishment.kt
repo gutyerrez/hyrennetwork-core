@@ -41,10 +41,9 @@ data class UserPunishment(
             return ChatColor.YELLOW
         }
 
-        return if (this.startTime!!.withMillis(this.duration) > DateTime.now(
+        return if (this.startTime!! + this.duration > DateTime.now(
                 CoreConstants.DATE_TIME_ZONE
-            )
-        ) {
+        )) {
             ChatColor.GREEN
         } else ChatColor.RED
     }
