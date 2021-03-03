@@ -302,11 +302,11 @@ data class User(
 
         other as User
 
-        if (id != other.id) return false
+        if (id.value != other.id.value) return false
 
         return true
     }
 
-    override fun hashCode() = this.id.hashCode()
+    override fun hashCode() = this.id.value.hashCode()
 
 }
