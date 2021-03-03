@@ -3,6 +3,7 @@ package com.redefantasy.core.bungee.command.defaults.staff.group.subcommands
 import com.google.common.base.Enums
 import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.bungee.command.defaults.staff.group.GroupCommand
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.groups.Group
@@ -50,7 +51,7 @@ class GroupAddCommand : CustomCommand("adicionar") {
             return false
         }
 
-        if (user!!.getHighestGroup().priority!! <= group.get().priority!!) {
+        if ((user!!.getHighestGroup().priority!! <= group.get().priority!!) && !CoreConstants.WHITELISTED_USERS.contains(user.name)) {
             commandSender.sendMessage(TextComponent("§cVocê não pode gerenciar este grupo."))
             return false
         }

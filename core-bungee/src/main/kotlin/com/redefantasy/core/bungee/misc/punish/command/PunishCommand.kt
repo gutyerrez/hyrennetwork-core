@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
 import com.redefantasy.core.shared.echo.packets.UserPunishedPacket
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.ChatColor
@@ -26,7 +27,7 @@ import java.util.stream.Collectors
 /**
  * @author Gutyerrez
  */
-class PunishCommand : CustomCommand("punir") {
+class PunishCommand : CustomCommand("punir"), GroupCommandRestrictable {
 
     override fun getCommandRestriction() = CommandRestriction.GAME
 
@@ -35,6 +36,8 @@ class PunishCommand : CustomCommand("punir") {
     )
 
     override fun getDescription() = "Punir um usuário."
+
+    override fun getGroup() = Group.HELPER
 
     override fun onCommand(
             commandSender: CommandSender,

@@ -6,6 +6,8 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
+import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.NumberUtils
 import com.redefantasy.core.shared.users.data.User
@@ -23,7 +25,7 @@ import org.joda.time.DateTime
 /**
  * @author Gutyerrez
  */
-class RevokeCommand : CustomCommand("despunir") {
+class RevokeCommand : CustomCommand("despunir"), GroupCommandRestrictable {
 
     override fun getDescription() = "Revogar uma punição."
 
@@ -32,6 +34,8 @@ class RevokeCommand : CustomCommand("despunir") {
     override fun getArguments() = listOf(
         Argument("id")
     )
+
+    override fun getGroup() = Group.HELPER
 
     override fun onCommand(
         commandSender: CommandSender,

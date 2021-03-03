@@ -4,6 +4,8 @@ import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
+import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
+import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
 import com.redefantasy.core.shared.misc.utils.TimeCode
@@ -17,7 +19,7 @@ import net.md_5.bungee.api.chat.hover.content.Text
 /**
  * @author Gutyerrez
  */
-class CheckPunishCommand : CustomCommand("checkpunir") {
+class CheckPunishCommand : CustomCommand("checkpunir"), GroupCommandRestrictable {
 
     private val SQUARE_SYMBOL = '\u2588'
 
@@ -28,6 +30,8 @@ class CheckPunishCommand : CustomCommand("checkpunir") {
     override fun getArguments() = listOf(
             Argument("usuário")
     )
+
+    override fun getGroup() = Group.HELPER
 
     override fun onCommand(
             commandSender: CommandSender,

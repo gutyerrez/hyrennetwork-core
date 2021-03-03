@@ -21,6 +21,13 @@ class LobbyCommand : CustomCommand("lobby") {
             user: User?,
             args: Array<out String>
     ): Boolean {
+        val bukkitApplication = user?.getConnectedBukkitApplication()
+
+        if (bukkitApplication !== null && bukkitApplication.applicationType === ApplicationType.LOBBY) {
+            commandSender.sendMessage(TextComponent("§cVocê já está no saguão."))
+            return false
+        }
+
         val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOBBY)
 
         val liveApplication = applications.stream().sorted { application1, application2 ->

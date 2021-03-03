@@ -24,6 +24,11 @@ object CoreConstants {
     val RANDOM = Random()
     val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
 
+    val WHITELISTED_USERS = listOf(
+        "Gutyerrez",
+        "ImRamon"
+    )
+
     init {
         JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
