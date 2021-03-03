@@ -42,7 +42,7 @@ class TellCommand : CustomCommand("tell") {
             return false
         }
 
-        if (targetUser === user) {
+        if (targetUser == user) {
             commandSender.sendMessage(TextComponent("§cEnviar mensagem para si mesmo é algo um pouco estranho não acha? Por quê não faz novos amigos?"))
             return false
         }
