@@ -302,6 +302,9 @@ data class User(
 
         other as User
 
+        println(id.value)
+        println(other.id.value)
+
         if (id.value != other.id.value) return false
 
         return true
