@@ -4,6 +4,7 @@ import com.redefantasy.core.bungee.command.CustomCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
+import com.redefantasy.core.shared.misc.utils.NumberUtils
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.dto.UpdateUserByIdDTO
 import net.md_5.bungee.api.CommandSender
@@ -35,7 +36,21 @@ class AccountChangeDiscordIdCommand : CustomCommand("discord") {
             return false
         }
 
+        if (!NumberUtils.isValidLong(args[1])) {
+            commandSender.sendMessage(TextComponent("§cVocê inseriu um id inválido."))
+            return false
+        }
+
         val discordId = args[1].toLong()
+
+        val discordUser = CoreProvider.Cache.Local.USERS.provide().fetchByDiscordId(
+            discordId
+        )
+
+        if (discordUser !== null) {
+            commandSender.sendMessage(TextComponent("§cEste id de discord já está sendo utilizado."))
+            return false
+        }
 
         targetUser.discordId = discordId
 

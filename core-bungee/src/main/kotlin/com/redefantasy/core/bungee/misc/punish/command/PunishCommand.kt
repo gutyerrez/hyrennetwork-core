@@ -46,15 +46,20 @@ class PunishCommand : CustomCommand("punir"), GroupCommandRestrictable {
     ): Boolean {
         if (user === null) return false
 
+        val targetUser = CoreProvider.Cache.Local.USERS.provide().fetchByName(args[0])
+
+        if (targetUser === null) {
+            commandSender.sendMessage(DefaultMessage.USER_NOT_FOUND)
+            return false
+        }
+
+        if (targetUser == user) {
+            commandSender.sendMessage(TextComponent("§cVocê não pode punir a si mesmo."))
+            return false
+        }
+
         when (args.size) {
             1 -> {
-                val targetUser = CoreProvider.Cache.Local.USERS.provide().fetchByName(args[0])
-
-                if (targetUser === null) {
-                    commandSender.sendMessage(TextComponent(DefaultMessage.USER_NOT_FOUND))
-                    return false
-                }
-
                 val punishCategories = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchAll()
                 val componentBuilder = ComponentBuilder("\n")
                     .append("§eLista de infração disponíveís (${punishCategories.size})")
@@ -104,18 +109,6 @@ class PunishCommand : CustomCommand("punir"), GroupCommandRestrictable {
                 return true
             }
             2, 3, 4, 5 -> {
-                val targetUser = CoreProvider.Cache.Local.USERS.provide().fetchByName(args[0])
-
-                if (targetUser === null) {
-                    commandSender.sendMessage(TextComponent(DefaultMessage.USER_NOT_FOUND))
-                    return false
-                }
-
-                if (user === targetUser) {
-                    commandSender.sendMessage(TextComponent("§cVocê não pode punir a si mesmo."))
-                    return false
-                }
-
                 val punishCategory = CoreProvider.Cache.Local.PUNISH_CATEGORIES.provide().fetchByName(args[1])
 
                 if (punishCategory === null) {

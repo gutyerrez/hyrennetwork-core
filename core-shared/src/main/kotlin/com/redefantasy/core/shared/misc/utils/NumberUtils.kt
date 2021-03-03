@@ -71,4 +71,14 @@ object NumberUtils {
         }
     }
 
+    fun isValidLong(string: String): Boolean {
+        return try {
+            string.toLong()
+
+            true
+        } catch (ignored: NumberFormatException) {
+            false
+        }
+    }
+
 }
