@@ -1,20 +1,27 @@
 package com.redefantasy.core.shared.users.friends.storage.repositories
 
 import com.redefantasy.core.shared.storage.repositories.IRepository
-import com.redefantasy.core.shared.users.friends.data.UserFriend
-import com.redefantasy.core.shared.users.friends.storage.dto.CreateUserFriendDTO
-import com.redefantasy.core.shared.users.friends.storage.dto.DeleteUserFriendDTO
-import com.redefantasy.core.shared.users.friends.storage.dto.FetchUsersFriendsByUserIdDTO
+import com.redefantasy.core.shared.users.friends.data.FriendUser
+import com.redefantasy.core.shared.users.friends.storage.dto.CreateFriendUserDTO
+import com.redefantasy.core.shared.users.friends.storage.dto.DeleteFriendUserDTO
+import com.redefantasy.core.shared.users.friends.storage.dto.FetchFriendRequestsByUserIdDTO
+import com.redefantasy.core.shared.users.friends.storage.dto.FetchFriendUsersByUserIdDTO
 
 /**
  * @author SrGutyerrez
  **/
 interface IUsersFriendsRepository : IRepository {
 
-    fun fetchByUserId(fetchUsersFriendsByUserIdDTO: FetchUsersFriendsByUserIdDTO): List<UserFriend>
+    fun fetchByUserId(
+        fetchFriendUsersByUserIdDTO: FetchFriendUsersByUserIdDTO
+    ): List<FriendUser>
 
-    fun create(createUserFriendDTO: CreateUserFriendDTO)
+    fun fetchFriendRequestsByUserId(
+        fetchFriendRequestsByUserId: FetchFriendRequestsByUserIdDTO
+    ): List<FriendUser>
 
-    fun delete(deleteUserFriendDTO: DeleteUserFriendDTO)
+    fun create(createFriendUserDTO: CreateFriendUserDTO)
+
+    fun delete(deleteFriendUserDTO: DeleteFriendUserDTO)
 
 }

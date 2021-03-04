@@ -10,7 +10,9 @@ import com.redefantasy.core.shared.users.preferences.storage.dto.FetchUserPrefer
  **/
 interface IUsersPreferencesRepository : IRepository {
 
-    fun fetchByUserId(fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO): List<UserPreference>
+    fun fetchByUserId(
+        fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
+    ): List<UserPreference>
 
     fun create(createUserPreferenceDTO: CreateUserPreferenceDTO)
 

@@ -13,18 +13,18 @@ import com.redefantasy.core.shared.users.preferences.storage.repositories.IUsers
  * @author SrGutyerrez
  **/
 class MongoUsersPreferencesRepository(
-        databaseProvider: MongoDatabaseProvider
+    databaseProvider: MongoDatabaseProvider
 ) : MongoRepository<UserPreference>(
-        databaseProvider,
-        "users_preferences",
-        UserPreference::class
+    databaseProvider,
+    "users_preferences",
+    UserPreference::class
 ), IUsersPreferencesRepository {
 
     override fun fetchByUserId(fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO): List<UserPreference> {
         val preferences = mutableListOf<UserPreference>()
 
         this.mongoCollection.find(
-                Filters.eq("user_id", fetchUserPreferencesByUserIdDTO.userId)
+            Filters.eq("user_id", fetchUserPreferencesByUserIdDTO.userId)
         ).forEach { preferences.add(it) }
 
         return preferences
@@ -32,20 +32,20 @@ class MongoUsersPreferencesRepository(
 
     override fun create(createUserPreferenceDTO: CreateUserPreferenceDTO) {
         this.mongoCollection.insertOne(
-                createUserPreferenceDTO.userPreference
+            createUserPreferenceDTO.userPreference
         )
     }
 
     override fun update(updateUserPreferenceDTO: CreateUserPreferenceDTO) {
         this.mongoCollection.updateOne(
-                Filters.and(
-                        Filters.eq("user_id", updateUserPreferenceDTO.userPreference.userId),
-                        Filters.eq("preference", updateUserPreferenceDTO.userPreference.preference)
-                ),
-                Updates.set(
-                        "status",
-                        updateUserPreferenceDTO.userPreference
-                )
+            Filters.and(
+                Filters.eq("user_id", updateUserPreferenceDTO.userPreference.userId),
+                Filters.eq("preference", updateUserPreferenceDTO.userPreference.preference)
+            ),
+            Updates.set(
+                "status",
+                updateUserPreferenceDTO.userPreference
+            )
         )
     }
 

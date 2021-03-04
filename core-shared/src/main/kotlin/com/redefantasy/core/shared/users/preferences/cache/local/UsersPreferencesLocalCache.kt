@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.users.preferences.data.UserPreference
 import com.redefantasy.core.shared.users.preferences.storage.dto.FetchUserPreferencesByUserIdDTO
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -15,7 +16,7 @@ class UsersPreferencesLocalCache : LocalCache {
 
     private val CACHE = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
-            .build<UUID, List<UserPreference>> {
+            .build<EntityID<UUID>, List<UserPreference>> {
                 CoreProvider.Repositories.Mongo.USERS_PREFERENCES_REPOSITORY.provide().fetchByUserId(
                         FetchUserPreferencesByUserIdDTO(
                                 it
@@ -23,6 +24,6 @@ class UsersPreferencesLocalCache : LocalCache {
                 )
             }
 
-    fun fetchByUserId(userId: UUID) = this.CACHE.get(userId)
+    fun fetchByUserId(userId: EntityID<UUID>) = this.CACHE.get(userId)
 
 }

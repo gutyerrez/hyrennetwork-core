@@ -8,6 +8,7 @@ import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
+import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.misc.utils.EncryptionUtil
 import com.redefantasy.core.shared.servers.data.Server
@@ -16,6 +17,7 @@ import com.redefantasy.core.shared.users.punishments.data.UserPunishment
 import com.redefantasy.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ComponentBuilder
+import okhttp3.internal.toImmutableList
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
@@ -148,6 +150,8 @@ data class User(
         return successfully
     }
 
+    fun getFancyName() = "${ChatColor.fromHEX(this.getHighestGroup().color!!)}$name"
+
     fun getUniqueId() = this.id.value
 
     fun getGroups(server: Server? = null): Map<Server?, List<Group>> {
@@ -227,7 +231,7 @@ data class User(
 
     fun getFriends(): List<User> {
         val friends = mutableListOf<User>()
-        val _friends = CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
+        val _friends = CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchByUserId(this.id) ?: emptyList()
 
         _friends.stream()
             .map {
@@ -242,9 +246,25 @@ data class User(
         return friends
     }
 
+    fun getFriendRequests(): List<User> {
+        return (CoreProvider.Cache.Local.USERS_FRIENDS.provide().fetchFriendRequestsByUserId(this.id) ?: emptyList())
+            .stream()
+            .filter {
+                this.getFriends().stream().anyMatch { user -> user.id != it.userId }
+            }
+            .filter {
+                CoreProvider.Cache.Local.USERS.provide().fetchById(it.friendUserId) !== null
+            }
+            .map {
+                CoreProvider.Cache.Local.USERS.provide().fetchById(it.friendUserId)!!
+            }
+            .collect(Collectors.toList())
+            .toImmutableList()
+    }
+
     fun getIgnoredUsers(): List<User> {
         val ignored = mutableListOf<User>()
-        val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.getUniqueId()) ?: emptyList()
+        val _ignored = CoreProvider.Cache.Local.USERS_IGNORED.provide().fetchByUserId(this.id) ?: emptyList()
 
         _ignored.stream()
             .map {
@@ -263,7 +283,7 @@ data class User(
         val preferences = mutableMapOf<String, Boolean>()
 
         val userPreferences = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
-            this.getUniqueId()
+            this.id
         ) ?: emptyList()
 
         userPreferences.forEach { preferences[it.preference.name] = it.status }
@@ -292,6 +312,8 @@ data class User(
         .filter { it.punishType === PunishType.MUTE }
         .findFirst()
         .orElse(null)
+
+    fun isAFriendOf(user: User) = user.getFriends().contains(this) && this.getFriends().contains(user)
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false
