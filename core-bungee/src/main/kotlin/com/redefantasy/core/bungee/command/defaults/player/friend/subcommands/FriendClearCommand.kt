@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.player.friend.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.player.friend.FriendCommand
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.misc.utils.NumberUtils
 import com.redefantasy.core.shared.misc.utils.TimeCode
@@ -19,6 +20,8 @@ class FriendClearCommand : CustomCommand("limpar") {
     override fun getArguments() = listOf(
         Argument("meses")
     )
+
+    override fun getParent() = FriendCommand()
 
     override fun onCommand(
         commandSender: CommandSender,

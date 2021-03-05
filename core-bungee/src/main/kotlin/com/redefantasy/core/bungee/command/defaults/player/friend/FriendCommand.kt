@@ -14,7 +14,6 @@ class FriendCommand : CustomCommand("amigo") {
     override fun getSubCommands() = listOf(
         FriendAcceptCommand(),
         FriendAddCommand(),
-        FriendHelpCommand(),
         FriendCancelCommand(),
         FriendDeleteCommand(),
         FriendClearCommand(),

@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.player.friend.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.player.friend.FriendCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
 import com.redefantasy.core.shared.users.data.User
@@ -16,6 +17,8 @@ import net.md_5.bungee.api.chat.TextComponent
 class FriendDeleteCommand : CustomCommand("excluir") {
 
     override fun getDescription() = "Desfazer uma amizade."
+
+    override fun getParent() = FriendCommand()
 
     override fun onCommand(
         commandSender: CommandSender,

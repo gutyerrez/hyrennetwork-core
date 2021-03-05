@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.player.friend.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.player.friend.FriendCommand
 import com.redefantasy.core.bungee.echo.packets.FriendAcceptedPacket
 import com.redefantasy.core.bungee.echo.packets.FriendRequestPacket
 import com.redefantasy.core.shared.CoreConstants
@@ -27,6 +28,8 @@ class FriendAddCommand : CustomCommand("adicionar") {
     override fun getArguments() = listOf(
         Argument("usuário")
     )
+
+    override fun getParent() = FriendCommand()
 
     override fun onCommand(
         commandSender: CommandSender,

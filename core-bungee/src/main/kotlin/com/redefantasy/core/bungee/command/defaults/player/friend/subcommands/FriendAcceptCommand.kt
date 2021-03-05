@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.player.friend.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.player.friend.FriendCommand
 import com.redefantasy.core.bungee.echo.packets.FriendAcceptedPacket
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
@@ -25,6 +26,8 @@ class FriendAcceptCommand : CustomCommand("aceitar") {
     override fun getArguments() = listOf(
         Argument("usuário")
     )
+
+    override fun getParent() = FriendCommand()
 
     override fun onCommand(
         commandSender: CommandSender,
@@ -68,7 +71,7 @@ class FriendAcceptCommand : CustomCommand("aceitar") {
 
         val _message = ComponentBuilder()
             .append("\n")
-            .append("§eO usuário ${user!!.getFancyName()}§e agora é seu amigo!")
+            .append("§eO usuário ${user.getFancyName()}§e agora é seu amigo!")
             .append("\n\n")
             .create()
 

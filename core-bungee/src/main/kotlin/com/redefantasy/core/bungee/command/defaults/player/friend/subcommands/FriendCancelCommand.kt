@@ -1,6 +1,7 @@
 package com.redefantasy.core.bungee.command.defaults.player.friend.subcommands
 
 import com.redefantasy.core.bungee.command.CustomCommand
+import com.redefantasy.core.bungee.command.defaults.player.friend.FriendCommand
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.misc.utils.DefaultMessage
@@ -19,6 +20,8 @@ class FriendCancelCommand : CustomCommand("cancelar") {
     override fun getArguments() = listOf(
         Argument("usuário")
     )
+
+    override fun getParent() = FriendCommand()
 
     override fun onCommand(
         commandSender: CommandSender,
