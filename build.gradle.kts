@@ -1,9 +1,8 @@
 import java.io.FileNotFoundException
 
 plugins {
-    kotlin("jvm") version "1.4.30-RC"
+    kotlin("jvm") version "1.4.31"
 
-    id("java")
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
@@ -18,7 +17,6 @@ subprojects {
     plugins.apply("com.github.johnrengelman.shadow")
     plugins.apply("org.jetbrains.kotlin.jvm")
     plugins.apply("maven-publish")
-    plugins.apply("java")
 
     tasks {
         compileKotlin {
@@ -58,5 +56,22 @@ subprojects {
         mavenLocal()
 
         jcenter()
+    }
+
+    val sources by tasks.registering(Jar::class) {
+        archiveFileName.set(project.name)
+        archiveClassifier.set("sources")
+        archiveVersion.set(null as String?)
+
+        from(sourceSets.main.get().allSource)
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["kotlin"])
+                artifact(sources.get())
+            }
+        }
     }
 }
