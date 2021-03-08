@@ -35,6 +35,6 @@ abstract class CustomCommand(
         return false
     }
 
-    abstract override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean
+    override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean? = null
 
 }
