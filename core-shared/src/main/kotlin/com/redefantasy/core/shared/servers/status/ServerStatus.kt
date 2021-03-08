@@ -15,13 +15,17 @@ class ServerStatus(
         server: Server,
         address: InetSocketAddress,
         onlineSince: Long
-) : ApplicationStatus(applicationName, applicationType, server, address, onlineSince) {
+) : ApplicationStatus(
+    applicationName,
+    applicationType,
+    server,
+    address,
+    onlineSince
+) {
 
-    var onlineCount = 0
     var loginsCount = 0
 
     override fun buildPoint(): Point.Builder = super.buildPoint()
-            .addField("online_count", this.onlineCount)
             .addField("logins_count", this.loginsCount)
 
 }

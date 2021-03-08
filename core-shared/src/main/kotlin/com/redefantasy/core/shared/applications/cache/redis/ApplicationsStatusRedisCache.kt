@@ -6,6 +6,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.cache.redis.RedisCache
+import com.redefantasy.core.shared.servers.data.Server
 import redis.clients.jedis.Pipeline
 import redis.clients.jedis.Response
 import redis.clients.jedis.ScanParams
@@ -26,8 +27,10 @@ class ApplicationsStatusRedisCache : RedisCache {
     private fun getKey(name: String) = "applications:$name"
 
     fun update(applicationStatus: ApplicationStatus) {
-        com.redefantasy.core.shared.CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val jackson = com.redefantasy.core.shared.CoreConstants.JACKSON.writeValueAsString(applicationStatus)
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val jackson = CoreConstants.JACKSON.writeValueAsString(
+                applicationStatus
+            )
 
             val key = this.getKey(applicationStatus.applicationName)
 
@@ -36,22 +39,65 @@ class ApplicationsStatusRedisCache : RedisCache {
         }
     }
 
-    fun fetchApplicationStatusByApplication(application: Application, applicationStatusClass: KClass<ApplicationStatus>): ApplicationStatus? {
-        return this.fetchApplicationStatusByApplicationName(application.name, applicationStatusClass)
+    fun fetchApplicationStatusByApplication(
+        application: Application,
+        applicationStatusClass: KClass<out ApplicationStatus>
+    ): ApplicationStatus? {
+        return this.fetchApplicationStatusByApplicationName(
+            application.name,
+            applicationStatusClass
+        )
     }
 
-    fun fetchApplicationStatusByApplicationName(applicationName: String, applicationStatusClass: KClass<ApplicationStatus>): ApplicationStatus? {
+    fun fetchApplicationStatusByServer(
+        server: Server,
+        applicationStatusClass: KClass<out ApplicationStatus>
+    ): Map<String, ApplicationStatus?> {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val applicationStatuses = mutableMapOf<String, ApplicationStatus?>()
+            val scanParams = ScanParams().match("applications:*")
+
+            do {
+                var cursor = ScanParams.SCAN_POINTER_START
+                val result = it.scan(cursor, scanParams)
+
+                result.result.forEach { key ->
+                    val value = it.get(key)
+
+                    val applicationStatus = CoreConstants.JACKSON.readValue(
+                        value,
+                        applicationStatusClass.java
+                    )
+
+                    if (applicationStatus.server == server)
+                        applicationStatuses[key] = applicationStatus
+                }
+
+                cursor = result.cursor
+            } while (cursor != ScanParams.SCAN_POINTER_START)
+
+            return@use applicationStatuses
+        }
+    }
+
+    fun fetchApplicationStatusByApplicationName(
+        applicationName: String,
+        applicationStatusClass: KClass<out ApplicationStatus>
+    ): ApplicationStatus? {
         var applicationStatus = this.CACHE.getIfPresent(applicationName)
 
         if (applicationStatus != null) return applicationStatus
 
         val key = this.getKey(applicationName)
 
-        com.redefantasy.core.shared.CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val value = it.get(key)
 
             if (value != null) {
-                applicationStatus = com.redefantasy.core.shared.CoreConstants.JACKSON.readValue(value, applicationStatusClass.java)
+                applicationStatus = CoreConstants.JACKSON.readValue(
+                    value,
+                    applicationStatusClass.java
+                )
 
                 this.CACHE.put(applicationName, applicationStatus!!)
             }
@@ -60,10 +106,12 @@ class ApplicationsStatusRedisCache : RedisCache {
         }
     }
 
-    fun fetchAllApplicationStatus(applicationStatusClass: KClass<ApplicationStatus>): Map<String, ApplicationStatus> {
-        val applications = mutableMapOf<String, ApplicationStatus>()
+    fun fetchAllApplicationStatus(
+        applicationStatusClass: KClass<out ApplicationStatus>
+    ): Map<String, ApplicationStatus> {
+        val applicationsStatuses = mutableMapOf<String, ApplicationStatus>()
 
-        com.redefantasy.core.shared.CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             var cursor = ScanParams.SCAN_POINTER_START
             val scanParams = ScanParams().match("applications:*")
 
@@ -73,7 +121,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applications[key] = com.redefantasy.core.shared.CoreConstants.JACKSON.readValue(
+                    applicationsStatuses[key] = CoreConstants.JACKSON.readValue(
                             value,
                             applicationStatusClass.java
                     )
@@ -83,11 +131,14 @@ class ApplicationsStatusRedisCache : RedisCache {
             } while (cursor != ScanParams.SCAN_POINTER_START)
         }
 
-        return applications
+        return applicationsStatuses
     }
 
-    fun fetchAllApplicationStatusByApplicationsNames(applicationsNames: Collection<String>, statusClass: KClass<ApplicationStatus>): Map<String, ApplicationStatus> {
-        com.redefantasy.core.shared.CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+    fun fetchAllApplicationStatusByApplicationsNames(
+        applicationsNames: Collection<String>,
+        statusClass: KClass<out ApplicationStatus>
+    ): Map<String, ApplicationStatus> {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
 
             val applications = mutableMapOf<String, ApplicationStatus>()
@@ -114,7 +165,7 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applications[applicationName] = com.redefantasy.core.shared.CoreConstants.JACKSON.readValue(
+                applications[applicationName] = CoreConstants.JACKSON.readValue(
                         value,
                         statusClass.java
                 )
@@ -124,6 +175,9 @@ class ApplicationsStatusRedisCache : RedisCache {
         }
     }
 
-    fun getResponse(applicationName: String, pipeline: Pipeline) = pipeline.get(if (applicationName.startsWith("applications:")) applicationName else this.getKey(applicationName))
+    fun getResponse(
+        applicationName: String,
+        pipeline: Pipeline
+    ) = pipeline.get(if (applicationName.startsWith("applications:")) applicationName else this.getKey(applicationName))
 
 }

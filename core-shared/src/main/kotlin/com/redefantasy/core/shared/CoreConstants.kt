@@ -16,7 +16,8 @@ import java.util.*
  **/
 object CoreConstants {
 
-    val HOME_FOLDER = "/home"
+    const val HOME_FOLDER = "/home"
+    const val MAX_LOGIN_ATTEMPTS = 3
 
     val JACKSON = ObjectMapper()
     val GSON = Gson()
@@ -27,6 +28,13 @@ object CoreConstants {
     val WHITELISTED_USERS = listOf(
         "Gutyerrez",
         "ImRamon"
+    )
+
+    val UN_LOGGED_ALLOWED_COMMANDS = listOf(
+        "/logar",
+        "/registrar",
+        "/login",
+        "/register"
     )
 
     init {
