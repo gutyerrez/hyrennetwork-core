@@ -6,7 +6,11 @@ import com.mongodb.MongoCredential
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoDatabase
+import com.redefantasy.core.shared.misc.preferences.data.Preference
 import com.redefantasy.core.shared.providers.databases.IDatabaseProvider
+import com.redefantasy.core.shared.users.friends.data.FriendUser
+import com.redefantasy.core.shared.users.ignored.data.IgnoredUser
+import com.redefantasy.core.shared.world.location.SerializedLocation
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 import java.net.InetSocketAddress
@@ -43,6 +47,12 @@ class MongoDatabaseProvider(
                     MongoClientSettings.getDefaultCodecRegistry(),
                     CodecRegistries.fromProviders(
                         PojoCodecProvider.builder()
+                            .register(
+                                SerializedLocation::class.java,
+                                FriendUser::class.java,
+                                IgnoredUser::class.java,
+                                Preference::class.java
+                            )
                             .automatic(true)
                             .build()
                     )
