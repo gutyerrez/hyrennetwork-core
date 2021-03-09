@@ -2,7 +2,7 @@ package com.redefantasy.core.shared.users.preferences.storage.repositories.imple
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
-import com.redefantasy.core.shared.providers.databases.mongo.MongoDatabaseProvider
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.providers.databases.mongo.repositories.MongoRepository
 import com.redefantasy.core.shared.users.preferences.data.UserPreference
 import com.redefantasy.core.shared.users.preferences.storage.dto.CreateUserPreferenceDTO
@@ -12,10 +12,8 @@ import com.redefantasy.core.shared.users.preferences.storage.repositories.IUsers
 /**
  * @author SrGutyerrez
  **/
-class MongoUsersPreferencesRepository(
-    databaseProvider: MongoDatabaseProvider
-) : MongoRepository<UserPreference>(
-    databaseProvider,
+class MongoUsersPreferencesRepository : MongoRepository<UserPreference>(
+    CoreProvider.Databases.Mongo.MONGO_MAIN,
     "users_preferences",
     UserPreference::class
 ), IUsersPreferencesRepository {

@@ -1,7 +1,7 @@
 package com.redefantasy.core.shared.users.ignored.storage.repositories.implementations
 
 import com.mongodb.client.model.Filters
-import com.redefantasy.core.shared.providers.databases.mongo.MongoDatabaseProvider
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.providers.databases.mongo.repositories.MongoRepository
 import com.redefantasy.core.shared.users.ignored.data.IgnoredUser
 import com.redefantasy.core.shared.users.ignored.storage.dto.CreateIgnoredUserDTO
@@ -12,10 +12,8 @@ import com.redefantasy.core.shared.users.ignored.storage.repositories.IUsersIgno
 /**
  * @author SrGutyerrez
  **/
-class MongoUsersIgnoredRepository(
-    databaseProvider: MongoDatabaseProvider
-) : MongoRepository<IgnoredUser>(
-    databaseProvider,
+class MongoUsersIgnoredRepository : MongoRepository<IgnoredUser>(
+    CoreProvider.Databases.Mongo.MONGO_MAIN,
     "users_ignored",
     IgnoredUser::class
 ), IUsersIgnoredRepository {

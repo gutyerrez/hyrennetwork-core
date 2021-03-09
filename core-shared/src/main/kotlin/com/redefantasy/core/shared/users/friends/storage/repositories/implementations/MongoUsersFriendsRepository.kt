@@ -1,7 +1,7 @@
 package com.redefantasy.core.shared.users.friends.storage.repositories.implementations
 
 import com.mongodb.client.model.Filters
-import com.redefantasy.core.shared.providers.databases.mongo.MongoDatabaseProvider
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.providers.databases.mongo.repositories.MongoRepository
 import com.redefantasy.core.shared.users.friends.data.FriendUser
 import com.redefantasy.core.shared.users.friends.storage.dto.CreateFriendUserDTO
@@ -13,10 +13,8 @@ import com.redefantasy.core.shared.users.friends.storage.repositories.IUsersFrie
 /**
  * @author SrGutyerrez
  **/
-class MongoUsersFriendsRepository(
-    databaseProvider: MongoDatabaseProvider
-) : MongoRepository<FriendUser>(
-    databaseProvider,
+class MongoUsersFriendsRepository : MongoRepository<FriendUser>(
+    CoreProvider.Databases.Mongo.MONGO_MAIN,
     "users_friends",
     FriendUser::class
 ), IUsersFriendsRepository {
