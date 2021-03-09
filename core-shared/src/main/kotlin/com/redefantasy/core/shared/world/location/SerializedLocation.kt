@@ -8,7 +8,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty
 /**
  * @author SrGutyerrez
  **/
-open class SerializedLocation @BsonCreator constructor(
+class SerializedLocation @BsonCreator constructor(
     @param:BsonProperty("application_name")
     @field:BsonProperty("application_name")
     val applicationName: String,
