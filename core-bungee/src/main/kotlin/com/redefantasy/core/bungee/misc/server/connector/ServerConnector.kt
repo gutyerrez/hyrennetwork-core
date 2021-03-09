@@ -17,6 +17,8 @@ import java.net.InetSocketAddress
 class ServerConnector : ServerConnector {
 
     override fun fetchLobbyServer(): InetSocketAddress? {
+        println("Teste")
+
         val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 
         println(applications.isEmpty())
