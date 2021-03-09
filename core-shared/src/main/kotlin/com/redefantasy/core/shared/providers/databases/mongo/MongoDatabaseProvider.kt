@@ -7,10 +7,12 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoDatabase
 import com.redefantasy.core.shared.providers.databases.IDatabaseProvider
+import com.redefantasy.core.shared.world.location.SerializedLocation
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecProvider
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.configuration.CodecRegistry
+import org.bson.codecs.pojo.PojoCodecProvider
 import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
 
@@ -45,7 +47,11 @@ class MongoDatabaseProvider(
                 CodecRegistries.fromRegistries(
                     MongoClientSettings.getDefaultCodecRegistry(),
                     CodecRegistries.fromProviders(
-                        CustomCodecProvider
+                        CustomCodecProvider,
+                        PojoCodecProvider.builder()
+                            .register(SerializedLocation::class.java)
+                            .automatic(true)
+                            .build()
                     )
                 )
             )
