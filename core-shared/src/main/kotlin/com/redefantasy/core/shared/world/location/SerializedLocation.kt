@@ -27,7 +27,7 @@ data class SerializedLocation @BsonCreator constructor(
     val pitch: Float
 ) {
 
-    @BsonCreator constructor(
+    constructor(
         application: Application,
         worldName: String,
         x: Double,
