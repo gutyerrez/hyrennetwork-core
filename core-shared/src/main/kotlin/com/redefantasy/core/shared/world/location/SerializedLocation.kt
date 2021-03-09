@@ -2,12 +2,13 @@ package com.redefantasy.core.shared.world.location
 
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.utils.NumberUtils
+import org.bson.codecs.pojo.annotations.BsonCreator
 import org.bson.codecs.pojo.annotations.BsonProperty
 
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation(
+class SerializedLocation @BsonCreator constructor(
     @param:BsonProperty("application_name")
     @field:BsonProperty("application_name")
     val applicationName: String,
