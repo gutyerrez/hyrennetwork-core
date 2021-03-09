@@ -31,7 +31,7 @@ class MongoDatabaseProvider(
                 ))
                 .credential(MongoCredential.createCredential(
                         this.user,
-                        this.database,
+                        "admin",
                         this.password.toCharArray()
                 ))
                 .codecRegistry(CodecRegistries.fromRegistries(
