@@ -29,12 +29,18 @@ class ServerConnector : ServerConnector {
                 ApplicationStatus::class
             )
 
+            println(application1)
+            println("--------------")
+            println(application2)
+
             if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
 
             if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0)
-                applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
+                return@sorted applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
 
-            0
+            println("...")
+
+            return@sorted 0
         }.findFirst().orElse(null)
 
         if (liveApplication === null) return null
