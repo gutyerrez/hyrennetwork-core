@@ -8,31 +8,26 @@ import org.bson.codecs.pojo.annotations.BsonProperty
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation @BsonCreator constructor(
+open class SerializedLocation @BsonCreator constructor(
     @param:BsonProperty("application_name")
     @field:BsonProperty("application_name")
     val applicationName: String,
     @param:BsonProperty("world_name")
     @field:BsonProperty("world_name")
     val worldName: String = "world",
-    @param:BsonProperty("x")
-    @field:BsonProperty("x")
+    @BsonProperty
     val x: Double,
-    @param:BsonProperty("y")
-    @field:BsonProperty("y")
+    @BsonProperty
     val y: Double,
-    @param:BsonProperty("z")
-    @field:BsonProperty("z")
+    @BsonProperty
     val z: Double,
-    @param:BsonProperty("yaw")
-    @field:BsonProperty("yaw")
+    @BsonProperty
     val yaw: Float,
-    @param:BsonProperty("pitch")
-    @field:BsonProperty("pitch")
+    @BsonProperty
     val pitch: Float
 ) {
 
-    constructor(
+    @BsonCreator constructor(
         application: Application,
         worldName: String,
         x: Double,

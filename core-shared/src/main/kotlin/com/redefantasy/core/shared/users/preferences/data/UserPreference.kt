@@ -8,12 +8,12 @@ import java.util.*
 /**
  * @author SrGutyerrez
  **/
-class UserPreference @BsonCreator constructor(
-        @param:BsonProperty("user_id")
-        @field:BsonProperty("user_id")
-        val userId: UUID,
-        @BsonProperty
-        val preference: Preference,
-        @BsonProperty
-        val status: Boolean
+open class UserPreference @BsonCreator constructor(
+    @param:BsonProperty("user_id")
+    @field:BsonProperty("user_id")
+    val userId: UUID,
+    @BsonProperty
+    val preference: Preference,
+    @BsonProperty
+    val status: Boolean
 )
