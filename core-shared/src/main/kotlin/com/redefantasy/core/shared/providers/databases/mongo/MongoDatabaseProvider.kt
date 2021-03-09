@@ -38,21 +38,20 @@ class MongoDatabaseProvider(
                     this.password.toCharArray()
                 )
             )
-            .codecRegistry(
-                CodecRegistries.fromRegistries(
-                    MongoClientSettings.getDefaultCodecRegistry(),
-                    CodecRegistries.fromProviders(
-                        PojoCodecProvider.builder()
-                            .automatic(true)
-                            .build()
-                    )
-                )
-            )
             .build()
 
         this.mongoClient = MongoClients.create(mongoClientSettings)
 
-        this.mongoDatabase = mongoClient.getDatabase(this.database)
+        this.mongoDatabase = mongoClient.getDatabase(this.database).withCodecRegistry(
+            CodecRegistries.fromRegistries(
+                MongoClientSettings.getDefaultCodecRegistry(),
+                CodecRegistries.fromProviders(
+                    PojoCodecProvider.builder()
+                        .automatic(true)
+                        .build()
+                )
+            )
+        )
     }
 
     override fun provide() = this.mongoDatabase
