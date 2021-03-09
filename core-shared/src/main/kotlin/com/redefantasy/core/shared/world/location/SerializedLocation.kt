@@ -1,5 +1,7 @@
 package com.redefantasy.core.shared.world.location
 
+import com.redefantasy.core.shared.CoreConstants
+import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.utils.NumberUtils
 import org.bson.codecs.pojo.annotations.BsonCreator
@@ -44,7 +46,7 @@ data class SerializedLocation @BsonCreator constructor(
         z: Double,
         yaw: Float,
         pitch: Float
-    ) : this(com.redefantasy.core.shared.CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
+    ) : this(CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
 
     companion object {
 
@@ -52,7 +54,7 @@ data class SerializedLocation @BsonCreator constructor(
         fun of(string: String?): SerializedLocation? {
             if (string == null) return null
 
-            return com.redefantasy.core.shared.CoreConstants.JACKSON.readValue(
+            return CoreConstants.JACKSON.readValue(
                 string,
                 SerializedLocation::class.java
             )
@@ -66,8 +68,7 @@ data class SerializedLocation @BsonCreator constructor(
 
     fun getBlockZ() = NumberUtils.floorInt(this.z)
 
-    fun getApplication() =
-        com.redefantasy.core.shared.CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(this.applicationName)
+    fun getApplication() = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(this.applicationName)
 
     fun <U : LocationParser<T>, T> parser(parser: U) = parser.apply(this)
 
@@ -83,6 +84,6 @@ data class SerializedLocation @BsonCreator constructor(
         )
     }
 
-    override fun toString() = com.redefantasy.core.shared.CoreConstants.JACKSON.writeValueAsString(this)
+    override fun toString() = CoreConstants.JACKSON.writeValueAsString(this)
 
 }
