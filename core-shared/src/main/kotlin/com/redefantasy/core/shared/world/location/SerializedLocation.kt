@@ -4,17 +4,28 @@ import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.utils.NumberUtils
+import org.bson.codecs.pojo.annotations.BsonCreator
+import org.bson.codecs.pojo.annotations.BsonProperty
 
 /**
  * @author SrGutyerrez
  **/
-data class SerializedLocation constructor(
+data class SerializedLocation @BsonCreator constructor(
+    @param:BsonProperty("application_name")
+    @field:BsonProperty("application_name")
     val applicationName: String,
+    @param:BsonProperty("world_name")
+    @field:BsonProperty("world_name")
     val worldName: String = "world",
+    @BsonProperty
     val x: Double,
+    @BsonProperty
     val y: Double,
+    @BsonProperty
     val z: Double,
+    @BsonProperty
     val yaw: Float,
+    @BsonProperty
     val pitch: Float
 ) {
 
