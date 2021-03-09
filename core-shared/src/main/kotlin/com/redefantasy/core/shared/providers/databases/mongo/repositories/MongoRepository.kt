@@ -10,12 +10,12 @@ import kotlin.reflect.KClass
 open class MongoRepository<T : Any>(
     private val mongoDatabaseProvider: MongoDatabaseProvider,
     private val collectionName: String,
-    private val tClass: KClass<T>
+    private val tKlass: KClass<T>
 ) {
 
     var mongoCollection: MongoCollection<T> = this.mongoDatabaseProvider.provide().getCollection(
         this.collectionName,
-        this.tClass.java
+        this.tKlass.java
     )
 
 }
