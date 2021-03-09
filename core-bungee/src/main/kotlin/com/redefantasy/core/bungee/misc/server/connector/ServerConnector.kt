@@ -17,11 +17,7 @@ import java.net.InetSocketAddress
 class ServerConnector : ServerConnector {
 
     override fun fetchLobbyServer(): InetSocketAddress? {
-        println("Teste")
-
         val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
-
-        println(applications.isEmpty())
 
         val liveApplication = applications.stream().sorted { application1, application2 ->
             val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
@@ -33,25 +29,15 @@ class ServerConnector : ServerConnector {
                 ApplicationStatus::class
             )
 
-            println(application1)
-            println("--------------")
-            println(application2)
-
             if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
 
             if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0)
                 return@sorted applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
 
-            println("...")
-
             return@sorted 0
         }.findFirst().orElse(null)
 
-        println(">>")
-
         if (liveApplication === null) return null
-
-        println("é")
 
         return liveApplication.address
     }

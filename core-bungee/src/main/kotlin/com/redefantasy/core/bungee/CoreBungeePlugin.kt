@@ -27,8 +27,6 @@ class CoreBungeePlugin : CustomPlugin(true) {
         CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
             CoreProvider.application
         )
-
-        println("Aopa")
     }
 
     override fun onDisable() {
