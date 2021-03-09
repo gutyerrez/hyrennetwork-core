@@ -19,6 +19,8 @@ class ServerConnector : ServerConnector {
     override fun fetchLobbyServer(): InetSocketAddress? {
         val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 
+        println(applications.isEmpty())
+
         val liveApplication = applications.stream().sorted { application1, application2 ->
             val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
                 application1,
@@ -43,7 +45,11 @@ class ServerConnector : ServerConnector {
             return@sorted 0
         }.findFirst().orElse(null)
 
+        println(">>")
+
         if (liveApplication === null) return null
+
+        println("é")
 
         return liveApplication.address
     }
