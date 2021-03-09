@@ -1,6 +1,8 @@
 package com.redefantasy.core.bungee.misc.server.connector
 
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.applications.ApplicationType
+import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -14,27 +16,30 @@ import java.net.InetSocketAddress
  */
 class ServerConnector : ServerConnector {
 
-    override fun fetchLobbyServer(): InetSocketAddress {
-//        val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOBBY)
-//
-//        val liveApplication = applications.stream().sorted { application1, application2 ->
-//            val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-//                application1,
-//                ApplicationStatus::class
-//            )
-//            val applicationStatus2 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-//                application2,
-//                ApplicationStatus::class
-//            )
-//
-//            if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
-//
-//            applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
-//        }.findFirst().orElse(null)
-//
-//        if (liveApplication === null) return null
+    override fun fetchLobbyServer(): InetSocketAddress? {
+        val applications = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 
-        return InetSocketAddress("149.56.242.214", 10004)
+        val liveApplication = applications.stream().sorted { application1, application2 ->
+            val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+                application1,
+                ApplicationStatus::class
+            )
+            val applicationStatus2 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+                application2,
+                ApplicationStatus::class
+            )
+
+            if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
+
+            if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0)
+                applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
+
+            0
+        }.findFirst().orElse(null)
+
+        if (liveApplication === null) return null
+
+        return liveApplication.address
     }
 
     override fun changedUserApplication(
