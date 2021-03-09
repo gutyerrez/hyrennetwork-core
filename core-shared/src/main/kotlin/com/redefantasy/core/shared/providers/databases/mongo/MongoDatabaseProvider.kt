@@ -7,9 +7,12 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoDatabase
 import com.redefantasy.core.shared.providers.databases.IDatabaseProvider
+import org.bson.codecs.Codec
+import org.bson.codecs.configuration.CodecProvider
 import org.bson.codecs.configuration.CodecRegistries
-import org.bson.codecs.pojo.PojoCodecProvider
+import org.bson.codecs.configuration.CodecRegistry
 import java.net.InetSocketAddress
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author SrGutyerrez
@@ -42,9 +45,7 @@ class MongoDatabaseProvider(
                 CodecRegistries.fromRegistries(
                     MongoClientSettings.getDefaultCodecRegistry(),
                     CodecRegistries.fromProviders(
-                        PojoCodecProvider.builder()
-                            .automatic(true)
-                            .build()
+                        CustomCodecProvider
                     )
                 )
             )
@@ -58,5 +59,21 @@ class MongoDatabaseProvider(
     override fun provide() = this.mongoDatabase
 
     override fun shutdown() = this.mongoClient.close()
+
+}
+
+internal object CustomCodecProvider : CodecProvider {
+
+    private val customCodecMap = ConcurrentHashMap<Class<*>, Codec<*>>()
+
+    fun <T> addCustomCodec(codec: Codec<T>) {
+        customCodecMap[codec.encoderClass] = codec
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any?> get(
+        clazz: Class<T>,
+        registry: CodecRegistry
+    ): Codec<T>? = customCodecMap[clazz] as? Codec<T>
 
 }
