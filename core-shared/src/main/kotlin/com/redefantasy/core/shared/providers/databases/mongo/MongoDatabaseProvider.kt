@@ -15,10 +15,10 @@ import java.net.InetSocketAddress
  * @author SrGutyerrez
  **/
 class MongoDatabaseProvider(
-        private val address: InetSocketAddress,
-        private val user: String,
-        private val password: String,
-        private val database: String
+    private val address: InetSocketAddress,
+    private val user: String,
+    private val password: String,
+    private val database: String
 ) : IDatabaseProvider<MongoDatabase> {
 
     private lateinit var mongoClient: MongoClient
@@ -26,23 +26,29 @@ class MongoDatabaseProvider(
 
     override fun prepare() {
         val mongoClientSettings = MongoClientSettings.builder()
-                .applyConnectionString(ConnectionString(
-                        "mongodb://${this.address.address.hostAddress}:${this.address.port}"
-                ))
-                .credential(MongoCredential.createCredential(
-                        this.user,
-                        "admin",
-                        this.password.toCharArray()
-                ))
-                .codecRegistry(CodecRegistries.fromRegistries(
-                        MongoClientSettings.getDefaultCodecRegistry(),
-                        CodecRegistries.fromProviders(
-                                PojoCodecProvider.builder()
-                                        .automatic(true)
-                                        .build()
-                        )
-                ))
-                .build()
+            .applyConnectionString(
+                ConnectionString(
+                    "mongodb://${this.address.address.hostAddress}:${this.address.port}"
+                )
+            )
+            .credential(
+                MongoCredential.createCredential(
+                    this.user,
+                    "admin",
+                    this.password.toCharArray()
+                )
+            )
+            .codecRegistry(
+                CodecRegistries.fromRegistries(
+                    MongoClientSettings.getDefaultCodecRegistry(),
+                    CodecRegistries.fromProviders(
+                        PojoCodecProvider.builder()
+                            .automatic(true)
+                            .build()
+                    )
+                )
+            )
+            .build()
 
         this.mongoClient = MongoClients.create(mongoClientSettings)
 
