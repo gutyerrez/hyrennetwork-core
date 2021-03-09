@@ -19,7 +19,7 @@ class SpigotWrapper : Wrapper<CommandSender> {
 
         if (commandSender is Player) {
             commandSender.sendMessage(
-                *messages
+                messages
             )
         } else {
             messages.forEach {

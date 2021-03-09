@@ -287,17 +287,14 @@ object CoreProvider {
         object Mongo {
 
             val USERS_FRIENDS_REPOSITORY = MongoRepositoryProvider<IUsersFriendsRepository>(
-                Databases.Mongo.MONGO_MAIN,
                 MongoUsersFriendsRepository::class
             )
 
             val USERS_IGNORED_REPOSITORY = MongoRepositoryProvider<IUsersIgnoredRepository>(
-                Databases.Mongo.MONGO_MAIN,
                 MongoUsersIgnoredRepository::class
             )
 
             val USERS_PREFERENCES_REPOSITORY = MongoRepositoryProvider<IUsersPreferencesRepository>(
-                Databases.Mongo.MONGO_MAIN,
                 MongoUsersPreferencesRepository::class
             )
 
