@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoDatabase
 import com.redefantasy.core.shared.providers.databases.IDatabaseProvider
+import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 import java.net.InetSocketAddress
@@ -43,8 +44,12 @@ class MongoDatabaseProvider(
                     MongoClientSettings.getDefaultCodecRegistry(),
                     CodecRegistries.fromProviders(
                         PojoCodecProvider.builder()
-                            .automatic(true)
                             .build()
+                    ),
+                    CodecRegistries.fromCodecs(
+                        MongoClientSettings.getDefaultCodecRegistry().get(
+                            Document::class.java
+                        )
                     )
                 )
             )

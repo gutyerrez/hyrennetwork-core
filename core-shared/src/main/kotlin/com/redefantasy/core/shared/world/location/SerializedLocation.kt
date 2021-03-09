@@ -4,7 +4,6 @@ import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.utils.NumberUtils
-import org.bson.Document
 import org.bson.codecs.pojo.annotations.BsonCreator
 import org.bson.codecs.pojo.annotations.BsonProperty
 
@@ -28,7 +27,7 @@ data class SerializedLocation @BsonCreator constructor(
     val yaw: Float,
     @BsonProperty
     val pitch: Float
-) : Document() {
+) {
 
     constructor(
         application: Application,
