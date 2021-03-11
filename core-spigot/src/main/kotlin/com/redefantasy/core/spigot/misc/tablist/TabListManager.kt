@@ -5,7 +5,6 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.CoreSpigotConstants
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.misc.scoreboard.bukkit.GroupScoreboard
-import com.redefantasy.core.spigot.misc.utils.TinyProtocol
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo
 import org.bukkit.Bukkit
 import java.util.function.Function
