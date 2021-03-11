@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.Table
 object SpawnTable : Table("applications_spawn") {
 
     val applicationName = reference("application_name", ApplicationsTable)
-    val worldName = varchar("world", 20)
+    val worldName = varchar("world_name", 20)
     val x = double("x")
     val y = double("y")
     val z = double("z")
