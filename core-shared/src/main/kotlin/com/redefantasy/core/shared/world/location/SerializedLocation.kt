@@ -10,7 +10,7 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation @JsonCreator constructor(
+class SerializedLocation @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
     @JsonProperty
     var _id: String,
     @JsonProperty("application_name")
