@@ -1,16 +1,19 @@
 package com.redefantasy.core.shared.commands
 
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.commands.argument.Argument
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
 import com.redefantasy.core.shared.commands.restriction.entities.CommandRestrictable
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import com.redefantasy.core.shared.users.data.User
+import com.redefantasy.core.shared.users.storage.table.UsersTable
 import com.redefantasy.core.shared.wrapper.CoreWrapper
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.stream.Collectors
 import kotlin.reflect.jvm.javaMethod
 
@@ -70,7 +73,15 @@ interface Commandable<T> {
             }
         }
 
-        var user: User? = null
+        var user: User? = if (this.isConsole(commandSender)) {
+            User(
+                EntityID(
+                    CoreConstants.CONSOLE_UUID,
+                    UsersTable
+                ),
+                "CONSOLE"
+            )
+        } else null
 
         if (isPlayer(commandSender)) {
             user = CoreProvider.Cache.Local.USERS.provide().fetchByName(this.getSenderName(commandSender))

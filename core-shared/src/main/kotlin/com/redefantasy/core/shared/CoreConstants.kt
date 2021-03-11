@@ -19,6 +19,8 @@ object CoreConstants {
     const val HOME_FOLDER = "/home"
     const val MAX_LOGIN_ATTEMPTS = 3
 
+    val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
+
     val JACKSON = ObjectMapper()
     val GSON = Gson()
     val OK_HTTP = OkHttpClient()

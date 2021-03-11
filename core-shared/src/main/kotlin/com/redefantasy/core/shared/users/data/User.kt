@@ -180,6 +180,8 @@ data class User(
     }
 
     fun hasGroup(group: Group, server: Server? = null): Boolean {
+        if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return true
+
         val groups = if (server === null) {
             val groups = mutableListOf<Group>()
 
@@ -200,7 +202,11 @@ data class User(
         return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
-    fun hasStrictGroup(group: Group, server: Server? = null) = this.getGroups(server)[server]?.contains(group) ?: false
+    fun hasStrictGroup(group: Group, server: Server? = null): Boolean {
+        if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return true
+
+        return this.getGroups(server)[server]?.contains(group) ?: false
+    }
 
     fun getConnectedProxyName() =
         CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "Desconhecido"
