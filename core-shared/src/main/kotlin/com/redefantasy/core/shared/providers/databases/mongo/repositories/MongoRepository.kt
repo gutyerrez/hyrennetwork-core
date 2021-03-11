@@ -19,7 +19,7 @@ open class MongoRepository<T : Any>(
             this.mongoDatabaseProvider.provide(),
             this.collectionName,
             this.tKlass.java,
-            UuidRepresentation.JAVA_LEGACY
+            UuidRepresentation.UNSPECIFIED
         )
 
 }

@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.world.location
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
@@ -9,8 +8,8 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
-@JsonIgnoreProperties("_id")
 class SerializedLocation constructor(
+    private val _key: String,
     val applicationName: String,
     val worldName: String = "world",
     val x: Double,
@@ -28,7 +27,7 @@ class SerializedLocation constructor(
         z: Double,
         yaw: Float,
         pitch: Float
-    ) : this(application.name, worldName, x, y, z, yaw, pitch)
+    ) : this("", application.name, worldName, x, y, z, yaw, pitch)
 
     constructor(
         worldName: String,
@@ -37,7 +36,7 @@ class SerializedLocation constructor(
         z: Double,
         yaw: Float,
         pitch: Float
-    ) : this(CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
+    ) : this("", CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
 
     companion object {
 
@@ -65,6 +64,7 @@ class SerializedLocation constructor(
 
     fun clone(): SerializedLocation {
         return SerializedLocation(
+            this._key,
             this.applicationName,
             this.worldName,
             this.x,
