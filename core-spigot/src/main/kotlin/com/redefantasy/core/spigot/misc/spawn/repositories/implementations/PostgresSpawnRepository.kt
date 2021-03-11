@@ -14,9 +14,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class PostgresSpawnRepository : ISpawnRepository {
 
     override fun fetch(): SerializedLocation? = transaction {
-        return@transaction SpawnTable.select {
+        val result = SpawnTable.select {
             SpawnTable.applicationName eq CoreProvider.application.name
-        }.first().asSerializedLocation()
+        }
+
+        if (result.empty()) return@transaction null
+
+        return@transaction result.first().asSerializedLocation()
     }
 
 }
