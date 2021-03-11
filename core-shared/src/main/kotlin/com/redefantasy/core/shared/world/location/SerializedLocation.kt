@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.world.location
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
@@ -10,24 +9,42 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
+class SerializedLocation {
+
     @JsonProperty
-    var _id: String,
+    var _id: String = ""
     @JsonProperty("application_name")
-    var applicationName: String,
+    var applicationName: String = ""
     @JsonProperty("world_name")
-    var worldName: String = "world",
+    var worldName: String = "world"
     @JsonProperty
-    var x: Double,
+    var x: Double = 0.0
     @JsonProperty
-    var y: Double,
+    var y: Double = 0.0
     @JsonProperty
-    var z: Double,
+    var z: Double = 0.0
     @JsonProperty
-    var yaw: Float,
+    var yaw: Float = 0F
     @JsonProperty
-    var pitch: Float
-) {
+    var pitch: Float = 0F
+
+    constructor(
+        applicationName: String,
+        worldName: String,
+        x: Double,
+        y: Double,
+        z: Double,
+        yaw: Float,
+        pitch: Float
+    ) {
+        this.applicationName = applicationName
+        this.worldName = worldName
+        this.x = x
+        this.y = y
+        this.z = z
+        this.yaw = yaw
+        this.pitch = pitch
+    }
 
     constructor(
         application: Application,
@@ -37,7 +54,15 @@ class SerializedLocation @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constr
         z: Double,
         yaw: Float,
         pitch: Float
-    ) : this("", application.name, worldName, x, y, z, yaw, pitch)
+    ) {
+        this.applicationName = application.name
+        this.worldName = worldName
+        this.x = x
+        this.y = y
+        this.z = z
+        this.yaw = yaw
+        this.pitch = pitch
+    }
 
     constructor(
         worldName: String,
@@ -46,7 +71,14 @@ class SerializedLocation @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constr
         z: Double,
         yaw: Float,
         pitch: Float
-    ) : this("", CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
+    ) {
+        this.worldName = worldName
+        this.x = x
+        this.y = y
+        this.z = z
+        this.yaw = yaw
+        this.pitch = pitch
+    }
 
     companion object {
 
@@ -74,7 +106,6 @@ class SerializedLocation @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constr
 
     fun clone(): SerializedLocation {
         return SerializedLocation(
-            this._id,
             this.applicationName,
             this.worldName,
             this.x,
