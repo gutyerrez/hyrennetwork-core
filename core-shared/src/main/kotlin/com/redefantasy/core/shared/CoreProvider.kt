@@ -25,8 +25,6 @@ import com.redefantasy.core.shared.providers.IProvider
 import com.redefantasy.core.shared.providers.cache.local.LocalCacheProvider
 import com.redefantasy.core.shared.providers.cache.redis.RedisCacheProvider
 import com.redefantasy.core.shared.providers.databases.influx.InfluxDatabaseProvider
-import com.redefantasy.core.shared.providers.databases.mongo.MongoDatabaseProvider
-import com.redefantasy.core.shared.providers.databases.mongo.providers.MongoRepositoryProvider
 import com.redefantasy.core.shared.providers.databases.postgres.PostgresDatabaseProvider
 import com.redefantasy.core.shared.providers.databases.postgres.providers.PostgresRepositoryProvider
 import com.redefantasy.core.shared.providers.databases.redis.RedisDatabaseProvider
@@ -39,18 +37,18 @@ import com.redefantasy.core.shared.users.cache.redis.UsersLoggedRedisCache
 import com.redefantasy.core.shared.users.cache.redis.UsersStatusRedisCache
 import com.redefantasy.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import com.redefantasy.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
-import com.redefantasy.core.shared.users.friends.storage.repositories.implementations.MongoUsersFriendsRepository
+import com.redefantasy.core.shared.users.friends.storage.repositories.implementations.PostgresUsersFriendsRepository
 import com.redefantasy.core.shared.users.groups.due.cache.local.UsersGroupsDueLocalCache
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
 import com.redefantasy.core.shared.users.groups.due.storage.repositories.implementations.PostgresUsersGroupsDueRepository
 import com.redefantasy.core.shared.users.ignored.cache.local.IgnoredUsersLocalCache
-import com.redefantasy.core.shared.users.ignored.storage.repositories.IUsersIgnoredRepository
-import com.redefantasy.core.shared.users.ignored.storage.repositories.implementations.MongoUsersIgnoredRepository
+import com.redefantasy.core.shared.users.ignored.storage.repositories.IIgnoredUsersRepository
+import com.redefantasy.core.shared.users.ignored.storage.repositories.implementations.PostgresIgnoredUsersRepository
 import com.redefantasy.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
 import com.redefantasy.core.shared.users.passwords.storage.repositories.implementations.PostgresUsersPasswordsRepository
 import com.redefantasy.core.shared.users.preferences.cache.local.UsersPreferencesLocalCache
 import com.redefantasy.core.shared.users.preferences.storage.repositories.IUsersPreferencesRepository
-import com.redefantasy.core.shared.users.preferences.storage.repositories.implementations.MongoUsersPreferencesRepository
+import com.redefantasy.core.shared.users.preferences.storage.repositories.implementations.PostgresUsersPreferencesRepository
 import com.redefantasy.core.shared.users.punishments.cache.local.UsersPunishmentsLocalCache
 import com.redefantasy.core.shared.users.punishments.storage.repositories.IUsersPunishmentsRepository
 import com.redefantasy.core.shared.users.punishments.storage.repositories.implementations.PostgresUsersPunishmentsRepository
@@ -78,9 +76,9 @@ object CoreProvider {
         PROVIDERS.add(Repositories.Postgres.REVOKE_CATEGORIES_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_PASSWORDS_REPOSITORY)
-        PROVIDERS.add(Repositories.Mongo.USERS_FRIENDS_REPOSITORY)
-        PROVIDERS.add(Repositories.Mongo.USERS_IGNORED_REPOSITORY)
-        PROVIDERS.add(Repositories.Mongo.USERS_PREFERENCES_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.USERS_FRIENDS_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.IGNORED_USERS_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.USERS_PREFERENCES_REPOSITORY)
 
         // local cache
         PROVIDERS.add(Cache.Local.SERVERS)
@@ -149,7 +147,6 @@ object CoreProvider {
             primaryPrepared = true
 
             Databases.Postgres.POSTGRE_MAIN.prepare()
-            Databases.Mongo.MONGO_MAIN.prepare()
             Databases.Redis.REDIS_MAIN.prepare()
             Databases.Redis.REDIS_ECHO.prepare()
             Databases.Influx.INFLUX_MAIN.prepare()
@@ -182,20 +179,6 @@ object CoreProvider {
                 Env.getString("databases.postgresql.password"),
                 Env.getString("databases.postgresql.database"),
                 Env.getString("databases.postgresql.schema")
-            )
-
-        }
-
-        object Mongo {
-
-            val MONGO_MAIN = MongoDatabaseProvider(
-                InetSocketAddress(
-                    Env.getString("databases.mongo_db.host"),
-                    Env.getInt("databases.mongo_db.port")
-                ),
-                Env.getString("databases.mongo_db.user"),
-                Env.getString("databases.mongo_db.password"),
-                Env.getString("databases.mongo_db.database")
             )
 
         }
@@ -282,20 +265,16 @@ object CoreProvider {
                 PostgresUsersPasswordsRepository::class
             )
 
-        }
-
-        object Mongo {
-
-            val USERS_FRIENDS_REPOSITORY = MongoRepositoryProvider<IUsersFriendsRepository>(
-                MongoUsersFriendsRepository::class
+            val USERS_FRIENDS_REPOSITORY = PostgresRepositoryProvider<IUsersFriendsRepository>(
+                PostgresUsersFriendsRepository::class
             )
 
-            val USERS_IGNORED_REPOSITORY = MongoRepositoryProvider<IUsersIgnoredRepository>(
-                MongoUsersIgnoredRepository::class
+            val IGNORED_USERS_REPOSITORY = PostgresRepositoryProvider<IIgnoredUsersRepository>(
+                PostgresIgnoredUsersRepository::class
             )
 
-            val USERS_PREFERENCES_REPOSITORY = MongoRepositoryProvider<IUsersPreferencesRepository>(
-                MongoUsersPreferencesRepository::class
+            val USERS_PREFERENCES_REPOSITORY = PostgresRepositoryProvider<IUsersPreferencesRepository>(
+                PostgresUsersPreferencesRepository::class
             )
 
         }

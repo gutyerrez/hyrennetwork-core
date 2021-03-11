@@ -15,6 +15,8 @@ class CoreSpigotPlugin : CustomPlugin(true) {
     override fun onEnable() {
         super.onEnable()
 
+        CoreSpigotProvider.prepare()
+
         CoreWrapper.WRAPPER = SpigotWrapper()
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(TitleEchoPacketListener())

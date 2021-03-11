@@ -25,14 +25,6 @@ dependencies {
     // postgres
     implementation("org.postgresql:postgresql:42.2.16")
 
-    // mongodb
-    implementation("org.mongodb:mongodb-driver-core:4.2.2")
-    implementation("org.mongodb:mongodb-driver-sync:4.2.2")
-    implementation("org.mongodb:bson:4.2.2")
-
-    // mongojack
-    implementation("org.mongojack:mongojack:4.0.2")
-
     // jedis
     implementation("redis.clients:jedis:3.3.0")
 

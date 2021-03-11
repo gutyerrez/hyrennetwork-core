@@ -9,7 +9,7 @@ import com.redefantasy.core.shared.users.ignored.storage.dto.FetchIgnoredUsersBy
 /**
  * @author SrGutyerrez
  **/
-interface IUsersIgnoredRepository : IRepository {
+interface IIgnoredUsersRepository : IRepository {
 
     fun fetchByUserId(
         fetchIgnoredUsersByUserIdDTO: FetchIgnoredUsersByUserIdDTO

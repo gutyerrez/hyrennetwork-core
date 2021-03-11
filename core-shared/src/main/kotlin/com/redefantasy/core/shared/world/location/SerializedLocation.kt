@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.world.location
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
@@ -9,42 +8,15 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation {
-
-    @JsonProperty
-    var _id: String = ""
-    @JsonProperty("application_name")
-    var applicationName: String = ""
-    @JsonProperty("world_name")
-    var worldName: String = "world"
-    @JsonProperty
-    var x: Double = 0.0
-    @JsonProperty
-    var y: Double = 0.0
-    @JsonProperty
-    var z: Double = 0.0
-    @JsonProperty
-    var yaw: Float = 0F
-    @JsonProperty
-    var pitch: Float = 0F
-
-    constructor(
-        applicationName: String,
-        worldName: String,
-        x: Double,
-        y: Double,
-        z: Double,
-        yaw: Float,
-        pitch: Float
-    ) {
-        this.applicationName = applicationName
-        this.worldName = worldName
-        this.x = x
-        this.y = y
-        this.z = z
-        this.yaw = yaw
-        this.pitch = pitch
-    }
+data class SerializedLocation(
+    val applicationName: String,
+    val worldName: String = "world",
+    val x: Double,
+    val y: Double,
+    val z: Double,
+    val yaw: Float,
+    val pitch: Float
+) {
 
     constructor(
         application: Application,
@@ -54,15 +26,7 @@ class SerializedLocation {
         z: Double,
         yaw: Float,
         pitch: Float
-    ) {
-        this.applicationName = application.name
-        this.worldName = worldName
-        this.x = x
-        this.y = y
-        this.z = z
-        this.yaw = yaw
-        this.pitch = pitch
-    }
+    ) : this(application.name, worldName, x, y, z, yaw, pitch)
 
     constructor(
         worldName: String,
@@ -71,14 +35,7 @@ class SerializedLocation {
         z: Double,
         yaw: Float,
         pitch: Float
-    ) {
-        this.worldName = worldName
-        this.x = x
-        this.y = y
-        this.z = z
-        this.yaw = yaw
-        this.pitch = pitch
-    }
+    ) : this(CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
 
     companion object {
 
