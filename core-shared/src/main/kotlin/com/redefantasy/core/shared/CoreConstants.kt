@@ -29,7 +29,9 @@ object CoreConstants {
 
     val WHITELISTED_USERS = listOf(
         "Gutyerrez",
-        "ImRamon"
+        "ImRamon",
+        "CONSOLE",
+        "VICTORBBBBR"
     )
 
     val UN_LOGGED_ALLOWED_COMMANDS = listOf(

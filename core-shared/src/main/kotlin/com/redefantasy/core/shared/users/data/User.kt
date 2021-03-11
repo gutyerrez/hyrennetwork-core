@@ -168,6 +168,8 @@ data class User(
     }
 
     fun getHighestGroup(server: Server? = null): Group {
+        if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return Group.MASTER
+
         val groups = this.getGroups()[server]
 
         if (groups === null) return Group.DEFAULT
