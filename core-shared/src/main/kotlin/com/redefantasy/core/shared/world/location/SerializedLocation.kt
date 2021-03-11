@@ -11,21 +11,21 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
  **/
 class SerializedLocation(
     @JsonProperty
-    val _id: String,
+    var _id: String,
     @JsonProperty("application_name")
-    val applicationName: String,
+    var applicationName: String,
     @JsonProperty("world_name")
-    val worldName: String = "world",
+    var worldName: String = "world",
     @JsonProperty
-    val x: Double,
+    var x: Double,
     @JsonProperty
-    val y: Double,
+    var y: Double,
     @JsonProperty
-    val z: Double,
+    var z: Double,
     @JsonProperty
-    val yaw: Float,
+    var yaw: Float,
     @JsonProperty
-    val pitch: Float
+    var pitch: Float
 ) {
 
     constructor(
@@ -46,6 +46,17 @@ class SerializedLocation(
         yaw: Float,
         pitch: Float
     ) : this("", CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
+
+    constructor() : this(
+        "",
+        "",
+        "world",
+        0.0,
+        0.0,
+        0.0,
+        0F,
+        0F
+    )
 
     companion object {
 
