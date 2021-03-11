@@ -6,6 +6,11 @@ import com.redefantasy.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
+import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 /**
  * @author Gutyerrez
@@ -29,6 +34,24 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(TitleEchoPacketListener())
         CoreProvider.Databases.Redis.ECHO.provide().registerListener(SoundEchoPacketListener())
+
+        val pluginManager = Bukkit.getServer().pluginManager
+
+        pluginManager.registerEvents(object : Listener {
+            @EventHandler
+            fun on(
+                event: PlayerJoinEvent
+            ) {
+                event.joinMessage = null
+            }
+
+            @EventHandler
+            fun on(
+                event: PlayerQuitEvent
+            ) {
+                event.quitMessage = null
+            }
+        }, this)
     }
 
 }
