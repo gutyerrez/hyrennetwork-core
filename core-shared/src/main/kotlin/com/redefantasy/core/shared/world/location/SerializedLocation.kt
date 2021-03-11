@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.world.location
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
@@ -8,14 +9,22 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
-class SerializedLocation constructor(
-    private val _id: String,
+class SerializedLocation(
+    @JsonProperty
+    val _id: String,
+    @JsonProperty("application_name")
     val applicationName: String,
+    @JsonProperty("world_name")
     val worldName: String = "world",
+    @JsonProperty
     val x: Double,
+    @JsonProperty
     val y: Double,
+    @JsonProperty
     val z: Double,
+    @JsonProperty
     val yaw: Float,
+    @JsonProperty
     val pitch: Float
 ) {
 
