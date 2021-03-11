@@ -200,7 +200,7 @@ data class User(
         return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
-    fun hasStrictGroup(group: Group, server: Server? = null) = this.getGroups(server).contains(group)
+    fun hasStrictGroup(group: Group, server: Server? = null) = this.getGroups(server)[server]?.contains(group) ?: false
 
     fun getConnectedProxyName() =
         CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchProxyApplication(this)?.displayName ?: "Desconhecido"
