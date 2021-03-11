@@ -1,7 +1,8 @@
 package com.redefantasy.core.shared.providers.databases.mongo.repositories
 
-import com.mongodb.client.MongoCollection
 import com.redefantasy.core.shared.providers.databases.mongo.MongoDatabaseProvider
+import org.bson.UuidRepresentation
+import org.mongojack.JacksonMongoCollection
 import kotlin.reflect.KClass
 
 /**
@@ -13,9 +14,12 @@ open class MongoRepository<T : Any>(
     private val tKlass: KClass<T>
 ) {
 
-    var mongoCollection: MongoCollection<T> = this.mongoDatabaseProvider.provide().getCollection(
-        this.collectionName,
-        this.tKlass.java
-    )
+    val mongoCollection = JacksonMongoCollection.builder()
+        .build(
+            this.mongoDatabaseProvider.provide(),
+            this.collectionName,
+            this.tKlass.java,
+            UuidRepresentation.JAVA_LEGACY
+        )
 
 }
