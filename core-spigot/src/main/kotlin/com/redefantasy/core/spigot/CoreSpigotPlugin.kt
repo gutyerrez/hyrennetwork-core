@@ -12,6 +12,14 @@ import com.redefantasy.core.spigot.wrapper.SpigotWrapper
  */
 class CoreSpigotPlugin : CustomPlugin(true) {
 
+    companion object {
+        lateinit var instance: CustomPlugin
+    }
+
+    init {
+        instance = this
+    }
+
     override fun onEnable() {
         super.onEnable()
 
