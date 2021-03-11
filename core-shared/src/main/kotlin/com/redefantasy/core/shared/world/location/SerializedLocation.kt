@@ -9,7 +9,7 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
  * @author SrGutyerrez
  **/
 class SerializedLocation constructor(
-    private val _key: String,
+    private val _id: String,
     val applicationName: String,
     val worldName: String = "world",
     val x: Double,
@@ -64,7 +64,7 @@ class SerializedLocation constructor(
 
     fun clone(): SerializedLocation {
         return SerializedLocation(
-            this._key,
+            this._id,
             this.applicationName,
             this.worldName,
             this.x,
