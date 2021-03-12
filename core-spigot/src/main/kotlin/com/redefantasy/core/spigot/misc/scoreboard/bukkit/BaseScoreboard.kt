@@ -22,22 +22,14 @@ open class BaseScoreboard : Boardable {
     private val TEAMS = Maps.newTreeMap<Int, Team>()
     private val ENTRIES = Maps.newTreeMap<Int, String>()
 
-    var scoreboard: Scoreboard
-    var objective: Objective
+    private var scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
+    private var objective: Objective = this.scoreboard.registerNewObjective(
+        this.SCORE_BOARD_NAME,
+        "dummy"
+    )
 
-    constructor() {
-        this.scoreboard = Bukkit.getScoreboardManager().newScoreboard
-        this.objective = this.scoreboard.registerNewObjective(
-            this.SCORE_BOARD_NAME,
-            "dummy"
-        )
-
+    init {
         this.objective.displaySlot = DisplaySlot.SIDEBAR
-    }
-
-    constructor(player: Player) {
-        this.scoreboard = player.scoreboard
-        this.objective = this.scoreboard.getObjective(this.SCORE_BOARD_NAME)
     }
 
     override fun set(
