@@ -52,7 +52,7 @@ class ApplicationsLocalCache : LocalCache {
         CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
             this.CACHE_BY_NAME.put(name, application)
 
-            CACHE_BY_ADDRESS.put(
+            this.CACHE_BY_ADDRESS.put(
                 application.address,
                 application
             )
