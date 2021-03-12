@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.misc.utils
 
+import org.apache.commons.lang3.ArrayUtils
 import java.awt.Color
 import java.util.*
 import java.util.regex.Pattern
@@ -66,19 +67,21 @@ class ChatColor(
         }
 
         fun getLastColors(input: String): String {
-            lateinit var result: String
+            var result = ""
+
             val length = input.length
 
-            for (i in 0 until length) {
-                val section = input[i]
+            for (index in length - 1 downTo -1 + 1) {
+                val section = input[index]
 
-                if (section.toInt() == 167 && i < length - 1) {
-                    val color = this.getByChar(section)
+                if (section == COLOR_CHAR && index < length - 1) {
+                    val c = input[index + 1]
+                    val color = this.getByChar(c)
 
-                    if (color !== null) {
-                        result = "$color$result"
+                    if (color != null) {
+                        result = color.toString() + result
 
-                        if (color === RESET) {
+                        if (color.isColor() || color == RESET) {
                             break
                         }
                     }
@@ -122,6 +125,27 @@ class ChatColor(
         BY_CHAR[code] = this
         BY_NAME[name.toUpperCase(Locale.ROOT)] = this
     }
+
+    fun isColor() = ArrayUtils.contains(
+        arrayOf(
+            DARK_BLUE,
+            DARK_AQUA,
+            DARK_GRAY,
+            DARK_GREEN,
+            DARK_PURPLE,
+            DARK_RED,
+            LIGHT_PURPLE,
+            BLACK,
+            WHITE,
+            RED,
+            GREEN,
+            YELLOW,
+            GOLD,
+            BLUE,
+            AQUA
+        ),
+        this
+    )
 
     override fun toString() = String(
         charArrayOf(
