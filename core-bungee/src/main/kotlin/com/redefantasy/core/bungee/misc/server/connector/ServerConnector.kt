@@ -46,8 +46,6 @@ class ServerConnector : ServerConnector {
         proxiedPlayer: ProxiedPlayer,
         bukkitApplicationAddress: InetSocketAddress
     ) {
-        println(bukkitApplicationAddress)
-
         val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
             bukkitApplicationAddress
         )

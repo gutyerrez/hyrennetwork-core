@@ -110,8 +110,6 @@ class EchoBufferOutput {
             }
         }
 
-        println(" >>>>>>> $host")
-
         this.writeString("$host:${address.port}")
     }
 
