@@ -110,7 +110,7 @@ class EchoBufferOutput {
             }
         }
 
-        println(host)
+        println(" >>>>>>> $host")
 
         this.writeString(host)
     }
