@@ -57,7 +57,7 @@ open class BaseScoreboard : Boardable {
             suffixBuilder.insert(0, ChatColor.COLOR_CHAR)
         }
 
-//        suffixBuilder.insert(0, ChatColor.)
+        suffixBuilder.insert(0, ChatColor.getLastColors(prefixBuilder.toString()))
 
         val prefix = prefixBuilder.toString()
         val suffix = suffixBuilder.toString()

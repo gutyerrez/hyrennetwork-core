@@ -65,6 +65,29 @@ class ChatColor(
             return BY_CHAR[code]
         }
 
+        fun getLastColors(input: String): String {
+            lateinit var result: String
+            val length = input.length
+
+            for (i in 0 until length) {
+                val section = input[i]
+
+                if (section.toInt() == 167 && i < length - 1) {
+                    val color = this.getByChar(section)
+
+                    if (color !== null) {
+                        result = "$color$result"
+
+                        if (color === RESET) {
+                            break
+                        }
+                    }
+                }
+            }
+
+            return result
+        }
+
         fun fromHEX(hexCode: String): ChatColor? {
             when (hexCode) {
                 "#0000AA" -> return DARK_BLUE
