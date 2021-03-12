@@ -18,6 +18,29 @@ class Title(
     val stay: Int
 ) {
 
+    companion object {
+
+        fun clear(player: Player) {
+            val packet = PacketPlayOutTitle(
+                PacketPlayOutTitle.EnumTitleAction.CLEAR,
+                arrayOf(),
+                0,
+                0,
+                0
+            )
+
+            player.sendPacket(packet)
+        }
+
+        private fun Player.sendPacket(packet: Packet<*>) {
+            val handle = (this as CraftPlayer).handle
+            val playerConnection = handle.playerConnection
+
+            playerConnection.sendPacket(packet)
+        }
+
+    }
+
     fun sendToPlayer(player: Player) {
         var packet: Packet<*>
 
@@ -72,13 +95,6 @@ class Title(
 
             player.sendPacket(packet)
         }
-    }
-
-    private fun Player.sendPacket(packet: Packet<*>) {
-        val handle = (this as CraftPlayer).handle
-        val playerConnection = handle.playerConnection
-
-        playerConnection.sendPacket(packet)
     }
 
 }
