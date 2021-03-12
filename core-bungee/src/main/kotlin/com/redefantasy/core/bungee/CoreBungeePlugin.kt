@@ -1,5 +1,6 @@
 package com.redefantasy.core.bungee
 
+import com.redefantasy.core.bungee.echo.packet.listener.ConnectUserToApplicationEchoPacketListener
 import com.redefantasy.core.bungee.misc.plugin.CustomPlugin
 import com.redefantasy.core.bungee.misc.server.connector.ServerConnector
 import com.redefantasy.core.bungee.wrapper.BungeeWrapper
@@ -18,6 +19,10 @@ class CoreBungeePlugin : CustomPlugin(true) {
         CoreWrapper.WRAPPER = BungeeWrapper()
 
         BungeeCordConstants.SERVER_CONNECTOR = ServerConnector()
+
+        CoreProvider.Databases.Redis.ECHO.provide().registerListener(
+            ConnectUserToApplicationEchoPacketListener()
+        )
 
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete(
             CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByProxyApplication(
