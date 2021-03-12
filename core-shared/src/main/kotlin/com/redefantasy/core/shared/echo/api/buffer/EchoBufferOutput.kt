@@ -112,7 +112,7 @@ class EchoBufferOutput {
 
         println(" >>>>>>> $host")
 
-        this.writeString(host)
+        this.writeString("$host:${address.port}")
     }
 
     fun writeApplication(application: Application?) {
