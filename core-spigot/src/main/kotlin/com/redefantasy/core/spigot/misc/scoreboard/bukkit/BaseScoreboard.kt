@@ -22,7 +22,8 @@ open class BaseScoreboard : Boardable {
     private val TEAMS = Maps.newTreeMap<Int, Team>()
     private val ENTRIES = Maps.newTreeMap<Int, String>()
 
-    private var scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
+    protected var scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
+
     private var objective: Objective = this.scoreboard.registerNewObjective(
         this.SCORE_BOARD_NAME,
         "dummy"
