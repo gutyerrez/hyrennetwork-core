@@ -44,8 +44,10 @@ open class BaseScoreboard : Boardable {
 
         val iterator = Splitter.fixedLength(16).split(text).iterator()
 
-        val prefixBuilder = StringBuilder()
-        val suffixBuilder = StringBuilder()
+        val prefixBuilder = StringBuilder(iterator.next())
+        val suffixBuilder = if (iterator.hasNext()) {
+            StringBuilder(iterator.next())
+        } else StringBuilder()
 
         val index = prefixBuilder.length - 1
 
