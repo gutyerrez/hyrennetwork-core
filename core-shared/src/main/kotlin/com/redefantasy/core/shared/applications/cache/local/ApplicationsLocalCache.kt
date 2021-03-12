@@ -20,17 +20,17 @@ class ApplicationsLocalCache : LocalCache {
 
     private val CACHE_BY_ADDRESS = Caffeine
         .newBuilder()
-        .build<ApplicationByAddressLookup, Application>()
+        .build<InetSocketAddress, Application>()
 
     fun fetchByName(name: String) = this.CACHE_BY_NAME.getIfPresent(name)
 
     fun fetchByAddress(
         address: InetSocketAddress
-    ) = this.CACHE_BY_ADDRESS.getIfPresent(
-        ApplicationByAddressLookup(address)
-    )
+    ) = this.CACHE_BY_ADDRESS.getIfPresent(address)
 
-    fun fetchByApplicationType(applicationType: ApplicationType) = this.CACHE_BY_NAME.asMap()
+    fun fetchByApplicationType(
+        applicationType: ApplicationType
+    ): List<Application> = this.CACHE_BY_NAME.asMap()
         .values
         .stream()
         .filter { it.applicationType === applicationType }
@@ -53,12 +53,10 @@ class ApplicationsLocalCache : LocalCache {
             this.CACHE_BY_NAME.put(name, application)
 
             CACHE_BY_ADDRESS.put(
-                ApplicationByAddressLookup(application.address),
+                application.address,
                 application
             )
         }
     }
-
-    private data class ApplicationByAddressLookup(val address: InetSocketAddress)
 
 }
