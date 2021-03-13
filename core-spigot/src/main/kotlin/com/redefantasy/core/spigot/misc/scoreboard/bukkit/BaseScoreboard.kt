@@ -23,7 +23,8 @@ open class BaseScoreboard : Boardable {
     private val ENTRIES = Maps.newTreeMap<Int, String>()
 
     protected val scoreboard: Scoreboard
-    private val objective: Objective
+
+    private var objective: Objective
 
     constructor() {
         this.scoreboard = Bukkit.getScoreboardManager().newScoreboard
@@ -37,10 +38,15 @@ open class BaseScoreboard : Boardable {
 
     constructor(player: Player) {
         this.scoreboard = player.scoreboard
-        this.objective = player.scoreboard.getObjective(this.SCORE_BOARD_NAME) ?: player.scoreboard.registerNewObjective(
+
+        try {
+            this.objective = player.scoreboard.getObjective(this.SCORE_BOARD_NAME)
+        } catch (e: NullPointerException) {
+            this.objective = player.scoreboard.registerNewObjective(
                 this.SCORE_BOARD_NAME,
                 "dummy"
             )
+        }
     }
 
     override fun set(
