@@ -41,7 +41,11 @@ class CoreBungeePlugin : CustomPlugin(true) {
 
         AsyncScheduler.scheduleAsyncRepeatingTask(
             {
+                println("Vai atualizar")
+
                 ProxyServer.getInstance().players.forEach {
+                    println("Atualizando ${it.name}...")
+
                     var user = CoreProvider.Cache.Local.USERS.provide().fetchById(it.uniqueId)
 
                     if (user === null) user = User(

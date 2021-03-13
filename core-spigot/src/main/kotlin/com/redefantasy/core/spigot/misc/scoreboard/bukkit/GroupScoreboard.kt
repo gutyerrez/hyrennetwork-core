@@ -24,8 +24,6 @@ open class GroupScoreboard : BaseScoreboard {
     fun registerUser(user: User) {
         val group = user.getHighestGroup()
 
-        println("Usuário: ${group.getColoredPrefix()}")
-
         val previousTeam = this.scoreboard.getEntryTeam(user.name)
 
         val newTeam = this.fetchOrCreateTeam(group)
@@ -39,8 +37,6 @@ open class GroupScoreboard : BaseScoreboard {
 
     private fun fetchOrCreateTeam(group: Group): Team {
         val teamName = this.getName(group)
-
-        println("$group --> $teamName")
 
         var team: Team? = this.scoreboard.getTeam(teamName)
 
