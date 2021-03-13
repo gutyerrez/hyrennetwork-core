@@ -159,6 +159,7 @@ class UsersStatusRedisCache : RedisCache {
             val key = this.getKey(user.getUniqueId())
 
             pipeline.hmset(key, map)
+            pipeline.expire(key, 15)
             pipeline.sync()
         }
     }
