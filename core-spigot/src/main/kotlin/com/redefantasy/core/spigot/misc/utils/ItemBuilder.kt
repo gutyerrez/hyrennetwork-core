@@ -16,7 +16,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BannerMeta
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.material.MaterialData
@@ -31,7 +30,7 @@ class ItemBuilder(
     private val itemStack: ItemStack
 ) {
 
-    lateinit var itemMeta: ItemMeta
+    private var itemMeta = this.itemStack.itemMeta
 
     constructor(
         material: Material
