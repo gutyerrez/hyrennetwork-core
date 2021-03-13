@@ -20,7 +20,6 @@ class GroupDAO(
     val suffix by GroupsTable.suffix
     val color by GroupsTable.color
     val priority by GroupsTable.priority
-    val tabListOrder by GroupsTable.tabListOrder
     val discordRoleId by GroupsTable.discordRoleId
 
     fun asGroup(): Group {
@@ -31,7 +30,6 @@ class GroupDAO(
         group.suffix = this.suffix
         group.color = this.color
         group.priority = this.priority
-        group.tabListOrder = this.tabListOrder
         group.discordRoleId = this.discordRoleId
 
         return group

@@ -12,7 +12,6 @@ object GroupsTable : StringTable("groups") {
     val suffix = varchar("suffix", 32).nullable()
     val color = varchar("color", 7)
     val priority = integer("priority")
-    val tabListOrder = integer("tab_list_order")
     val discordRoleId = long("discord_role_id").nullable()
 
 }

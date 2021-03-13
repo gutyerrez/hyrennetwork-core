@@ -22,7 +22,7 @@ enum class Group(
     MODERATOR,
     HELPER,
     BUILDER,
-    YOUTUBE,
+    YOUTUBER,
     SOVEREIGN,
     EMPEROR,
     LEGENDARY,
