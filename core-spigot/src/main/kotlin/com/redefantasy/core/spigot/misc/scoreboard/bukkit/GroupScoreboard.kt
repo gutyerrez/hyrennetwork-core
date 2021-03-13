@@ -54,7 +54,7 @@ open class GroupScoreboard : BaseScoreboard {
     }
 
     private fun getName(group: Group): String {
-        val index = group.priority!! + Group.MASTER.priority!! + 1
+        val index = -group.priority!! + Group.MASTER.priority!! + 1
 
         val sequencePrefix = SequencePrefix()
 
