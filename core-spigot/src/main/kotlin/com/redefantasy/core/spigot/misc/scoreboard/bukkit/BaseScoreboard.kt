@@ -36,7 +36,14 @@ open class BaseScoreboard : Boardable {
     }
 
     constructor(player: Player) {
+        println(player.scoreboard === null)
+
         this.scoreboard = player.scoreboard
+
+        this.scoreboard.objectives.forEach {
+            println("${it.name} --> ${it.criteria}")
+        }
+
         this.objective = player.scoreboard.getObjective(this.SCORE_BOARD_NAME)
     }
 
