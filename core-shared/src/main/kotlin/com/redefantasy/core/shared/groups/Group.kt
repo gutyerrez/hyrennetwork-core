@@ -11,7 +11,6 @@ enum class Group(
         var suffix: String? = null,
         var color: String? = null,
         var priority: Int? = null,
-        var tabListOrder: Int? = null,
         var discordRoleId: Long? = null
 ) {
 
