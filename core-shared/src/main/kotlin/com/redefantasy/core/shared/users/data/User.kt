@@ -175,7 +175,9 @@ open class User(
 
         return groups
             .stream()
-            .sorted { o1, o2 -> o1.priority!!.compareTo(o2.priority!!) }
+            .sorted { group1, group2 ->
+                group2.priority!!.compareTo(group1.priority!!)
+            }
             .findFirst()
             .orElse(Group.DEFAULT)
     }
