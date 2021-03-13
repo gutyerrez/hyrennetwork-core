@@ -27,20 +27,20 @@ import java.util.stream.Collectors
 /**
  * @author SrGutyerrez
  **/
-data class User(
-    val id: EntityID<UUID>,
-    val name: String,
-    var email: String? = null,
-    var discordId: Long? = null,
-    var twoFactorAuthenticationEnabled: Boolean? = null,
-    var twoFactorAuthenticationCode: String? = null,
-    var twitterAccessToken: String? = null,
-    var twitterTokenSecret: String? = null,
-    var lastAddress: String? = null,
-    var lastLobbyName: String? = null,
-    var lastLoginAt: DateTime? = null,
-    var createdAt: DateTime? = null,
-    var updatedAt: DateTime? = null
+open class User(
+    open val id: EntityID<UUID>,
+    open val name: String,
+    open var email: String? = null,
+    open var discordId: Long? = null,
+    open var twoFactorAuthenticationEnabled: Boolean? = null,
+    open var twoFactorAuthenticationCode: String? = null,
+    open var twitterAccessToken: String? = null,
+    open var twitterTokenSecret: String? = null,
+    open var lastAddress: String? = null,
+    open var lastLobbyName: String? = null,
+    open var lastLoginAt: DateTime? = null,
+    open var createdAt: DateTime? = null,
+    open var updatedAt: DateTime? = null
 ) {
 
     val loginAttempts = AtomicInteger(0)

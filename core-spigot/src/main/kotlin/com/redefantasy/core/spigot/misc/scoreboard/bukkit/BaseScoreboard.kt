@@ -22,15 +22,22 @@ open class BaseScoreboard : Boardable {
     private val TEAMS = Maps.newTreeMap<Int, Team>()
     private val ENTRIES = Maps.newTreeMap<Int, String>()
 
-    protected var scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
+    protected val scoreboard: Scoreboard
+    private val objective: Objective
 
-    private var objective: Objective = this.scoreboard.registerNewObjective(
-        this.SCORE_BOARD_NAME,
-        "dummy"
-    )
+    constructor() {
+        this.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+        this.objective = this.scoreboard.registerNewObjective(
+            this.SCORE_BOARD_NAME,
+            "dummy"
+        )
 
-    init {
         this.objective.displaySlot = DisplaySlot.SIDEBAR
+    }
+
+    constructor(player: Player) {
+        this.scoreboard = player.scoreboard
+        this.objective = player.scoreboard.getObjective(this.SCORE_BOARD_NAME)
     }
 
     override fun set(
@@ -111,6 +118,10 @@ open class BaseScoreboard : Boardable {
     fun exists(score: Int) = this.ENTRIES.containsKey(score)
 
     fun send(players: Array<Player>) {
+        players.forEach { it.scoreboard = this.scoreboard }
+    }
+
+    fun send(players: Collection<Player>) {
         players.forEach { it.scoreboard = this.scoreboard }
     }
 

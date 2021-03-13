@@ -3,12 +3,17 @@ package com.redefantasy.core.spigot.misc.scoreboard.bukkit
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.utils.SequencePrefix
 import com.redefantasy.core.shared.users.data.User
+import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Team
 
 /**
  * @author Gutyerrez
  */
-class GroupScoreboard : BaseScoreboard() {
+open class GroupScoreboard : BaseScoreboard {
+
+    constructor() : super()
+
+    constructor(player: Player): super(player)
 
     fun registerTeams() {
         Group.values().forEach {
@@ -17,27 +22,31 @@ class GroupScoreboard : BaseScoreboard() {
     }
 
     fun registerUser(user: User) {
-        val entryTeam = this.scoreboard.getEntryTeam(user.name)
+        val group = user.getHighestGroup()
 
-        if (entryTeam !== null) {
-            entryTeam.removeEntry(user.name)
+        val previousTeam = this.scoreboard.getEntryTeam(user.name)
+
+        val newTeam = this.fetchOrCreateTeam(group)
+
+        if (newTeam != previousTeam) {
+            if (previousTeam !== null) previousTeam.removeEntry(user.name)
+
+            newTeam.addEntry(user.name)
         }
-
-        this.fetchOrCreateTeam(user.getHighestGroup())?.addEntry(user.name)
     }
 
-    private fun fetchOrCreateTeam(group: Group): Team? {
+    private fun fetchOrCreateTeam(group: Group): Team {
         val teamName = this.getName(group)
 
         var team: Team? = this.scoreboard.getTeam(teamName)
 
-        if (team === null) {
+        return if (team === null) {
             team = this.scoreboard.registerNewTeam(teamName)
 
             team.prefix = group.getColoredPrefix()
-        }
 
-        return team
+            team
+        } else team
     }
 
     private fun getName(group: Group): String {
