@@ -64,7 +64,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
                 }
             },
             0,
-            20,
+            10,
             TimeUnit.SECONDS
         )
     }
