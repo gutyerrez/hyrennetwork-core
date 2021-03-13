@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.users.data
 
-import com.google.common.primitives.Ints
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
@@ -176,7 +175,7 @@ open class User(
 
         return groups
             .stream()
-            .sorted { o1, o2 -> Ints.compare(o2.priority!!, o1.priority!!) }
+            .sorted { o1, o2 -> o2.priority!!.compareTo(o1.priority!!) }
             .findFirst()
             .orElse(Group.DEFAULT)
     }
