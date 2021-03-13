@@ -22,8 +22,7 @@ open class BaseScoreboard : Boardable {
     private val TEAMS = Maps.newTreeMap<Int, Team>()
     private val ENTRIES = Maps.newTreeMap<Int, String>()
 
-    protected val scoreboard: Scoreboard
-
+    protected var scoreboard: Scoreboard
     private var objective: Objective
 
     constructor() {
@@ -37,11 +36,11 @@ open class BaseScoreboard : Boardable {
     }
 
     constructor(player: Player) {
-        this.scoreboard = player.scoreboard
-
         try {
+            this.scoreboard = player.scoreboard
             this.objective = player.scoreboard.getObjective(this.SCORE_BOARD_NAME)
         } catch (e: NullPointerException) {
+            this.scoreboard = player.scoreboard
             this.objective = player.scoreboard.registerNewObjective(
                 this.SCORE_BOARD_NAME,
                 "dummy"
