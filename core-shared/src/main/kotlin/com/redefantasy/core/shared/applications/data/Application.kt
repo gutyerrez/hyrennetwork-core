@@ -12,7 +12,6 @@ import java.net.InetSocketAddress
 data class Application(
         val name: String,
         val displayName: String,
-        val description: String? = null,
         val slots: Int? = null,
         val address: InetSocketAddress,
         val applicationType: ApplicationType,

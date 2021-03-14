@@ -11,7 +11,6 @@ import com.redefantasy.core.shared.servers.storage.table.ServersTable
 object ApplicationsTable : StringTable("applications") {
 
     val displayName = varchar("display_name", 255)
-    val description = varchar("description", 255)
     val slots = integer("slots")
     val address = varchar("address", 255)
     val port = integer("port")

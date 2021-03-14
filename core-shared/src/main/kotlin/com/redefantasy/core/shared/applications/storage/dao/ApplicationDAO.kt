@@ -18,7 +18,6 @@ class ApplicationDAO(
     companion object : StringEntityClass<ApplicationDAO>(ApplicationsTable)
 
     val displayName by ApplicationsTable.displayName
-    val description by ApplicationsTable.description
     val slots by ApplicationsTable.slots
     val address by ApplicationsTable.address
     val port by ApplicationsTable.port
@@ -29,7 +28,6 @@ class ApplicationDAO(
     fun asApplication() = Application(
         this.name.value,
         this.displayName,
-        this.description,
         this.slots,
         InetSocketAddress(
             this.address,
