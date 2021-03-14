@@ -21,11 +21,7 @@ class GeneralListener : Listener {
         val craftInventory = inventory as CraftInventory
         val iInventory = craftInventory.inventory
 
-        println("b")
-
         if (iInventory is CustomInventory.MinecraftInventory) {
-            println("bb")
-
             iInventory.parent.on(event)
         }
     }

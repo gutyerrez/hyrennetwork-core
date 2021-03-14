@@ -8,7 +8,7 @@ import java.net.InetSocketAddress
 /**
  * @author SrGutyerrez
  **/
-open class ApplicationStatus(
+data class ApplicationStatus(
         val applicationName: String,
         val applicationType: ApplicationType,
         val server: Server?,
