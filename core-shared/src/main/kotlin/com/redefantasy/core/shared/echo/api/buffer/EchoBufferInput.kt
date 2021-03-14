@@ -23,7 +23,7 @@ import kotlin.reflect.KClass
  * @author SrGutyerrez
  **/
 class EchoBufferInput(
-    private val bytes: ByteArray
+    bytes: ByteArray
 ) {
 
     private val buffer: ByteArrayDataInput = ByteStreams.newDataInput(bytes)
@@ -109,8 +109,17 @@ class EchoBufferInput(
         return null
     }
 
-    fun readAddress(): InetSocketAddress? {
+    @Deprecated(
+        "read address is deprecated",
+        ReplaceWith("readAddressInetSocketAddress()"),
+        DeprecationLevel.WARNING
+    )
+    fun readAddress() = this.readAddressInetSocketAddress()
+
+    fun readAddressInetSocketAddress(): InetSocketAddress? {
         val value = this.readString() ?: return null
+
+        println(value)
 
         if (value.startsWith("[")) {
             val i = value.lastIndexOf(']')
@@ -143,7 +152,7 @@ class EchoBufferInput(
             this.readString()!!,
             this.readString()!!,
             this.readInt(),
-            this.readAddress()!!,
+            this.readAddressInetSocketAddress()!!,
             this.readEnum(ApplicationType::class)!!,
             this.readServer(),
             this.readEnum(Group::class)
