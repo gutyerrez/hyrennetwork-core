@@ -62,8 +62,6 @@ class EchoBufferInput(
     fun readString(): String? {
         val valid = this.readBoolean()
 
-        println("String: $valid")
-
         if (valid) return this.buffer.readUTF()
 
         return null
@@ -119,8 +117,6 @@ class EchoBufferInput(
 
     fun readAddressInetSocketAddress(): InetSocketAddress? {
         val value = this.readString() ?: return null
-
-        println(value)
 
         if (value.startsWith("[")) {
             val i = value.lastIndexOf(']')
