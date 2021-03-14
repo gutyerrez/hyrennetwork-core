@@ -88,7 +88,11 @@ open class CustomInventory(
         this.setItem(slot, itemStack)
 
         if (itemStack !== null && callback !== null) {
-            this.LISTENERS[slot] = callback as ICustomInventory.ClickListener
+            if (callback is ICustomInventory.ClickListener) {
+                this.LISTENERS[slot] = callback
+            } else this.LISTENERS[slot] = object : ICustomInventory.ConsumerClickListener {
+                override fun accept(event: InventoryClickEvent) = callback.accept(event)
+            }
         }
     }
 
@@ -103,7 +107,11 @@ open class CustomInventory(
         )
 
         if (itemStack !== null && callback !== null) {
-            this.LISTENERS[slot] = callback as ICustomInventory.RunnableClickListener
+            if (callback is ICustomInventory.RunnableClickListener) {
+                this.LISTENERS[slot] = callback
+            } else this.LISTENERS[slot] = object : ICustomInventory.RunnableClickListener {
+                override fun run() = callback.run()
+            }
         }
     }
 
