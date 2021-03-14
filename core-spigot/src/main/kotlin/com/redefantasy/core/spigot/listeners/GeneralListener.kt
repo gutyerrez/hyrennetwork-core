@@ -6,6 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
+import kotlin.reflect.full.isSubclassOf
 
 /**
  * @author Gutyerrez
@@ -21,6 +22,10 @@ class GeneralListener : Listener {
         if (clickedInventory === null) return
 
         println("aaa")
+
+        println(clickedInventory is CustomInventory)
+
+        println(clickedInventory::class.isSubclassOf(CustomInventory::class))
 
         if (clickedInventory is CustomInventory) {
             println("bb")

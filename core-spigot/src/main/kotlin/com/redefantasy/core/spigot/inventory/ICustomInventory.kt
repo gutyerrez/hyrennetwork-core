@@ -13,7 +13,7 @@ interface ICustomInventory {
 
     fun getSize(): Int
 
-    fun <T: ClickListener> getListener(slot: Int): T?
+    fun getListener(slot: Int): ClickListener?
 
     fun setItem(
         slot: Int,
@@ -58,7 +58,7 @@ interface ICustomInventory {
             println("opa")
 
             if (event.clickedInventory !== null && event.clickedInventory.type !== InventoryType.PLAYER) {
-                val clickListener = this.getListener<ClickListener>(event.slot)
+                val clickListener = this.getListener(event.slot)
 
                 println(clickListener)
 

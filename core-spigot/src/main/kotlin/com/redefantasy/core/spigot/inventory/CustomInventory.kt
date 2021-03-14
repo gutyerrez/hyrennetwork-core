@@ -45,9 +45,9 @@ open class CustomInventory(
         (this.inventory as MinecraftInventory).init(this)
     }
 
-    override fun <T : ICustomInventory.ClickListener> getListener(
+    override fun getListener(
         slot: Int
-    ): T? = this.LISTENERS[slot] as T?
+    ): ICustomInventory.ClickListener? = this.LISTENERS[slot]
 
     override fun clear() {
         super.clear()
@@ -88,11 +88,7 @@ open class CustomInventory(
         this.setItem(slot, itemStack)
 
         if (itemStack !== null && callback !== null) {
-            this.LISTENERS[slot] = object : ICustomInventory.ConsumerClickListener {
-                override fun accept(event: InventoryClickEvent) {
-                    callback.accept(event)
-                }
-            }
+            this.LISTENERS[slot] = callback as ICustomInventory.ClickListener
         }
     }
 
@@ -101,13 +97,14 @@ open class CustomInventory(
         itemStack: org.bukkit.inventory.ItemStack?,
         callback: Runnable?
     ) {
-        this.setItem(slot, itemStack, object : ICustomInventory.RunnableClickListener {
-            override fun run() {
-                if (callback !== null) {
-                    callback.run()
-                }
-            }
-        })
+        this.setItem(
+            slot,
+            itemStack
+        )
+
+        if (itemStack !== null && callback !== null) {
+            this.LISTENERS[slot] = callback as ICustomInventory.RunnableClickListener
+        }
     }
 
     override fun addItem(
@@ -126,11 +123,7 @@ open class CustomInventory(
         itemStack: org.bukkit.inventory.ItemStack,
         callback: Runnable
     ) {
-        this.addItem(itemStack, object : ICustomInventory.RunnableClickListener {
-            override fun run() {
-                callback.run()
-            }
-        })
+        this.addItem(itemStack, callback)
     }
 
     override fun on(
