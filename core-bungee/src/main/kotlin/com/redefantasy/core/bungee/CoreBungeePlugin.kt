@@ -41,11 +41,7 @@ class CoreBungeePlugin : CustomPlugin(true) {
 
         AsyncScheduler.scheduleAsyncRepeatingTask(
             {
-                println("Vai atualizar")
-
                 ProxyServer.getInstance().players.forEach {
-                    println("Atualizando ${it.name}...")
-
                     var user = CoreProvider.Cache.Local.USERS.provide().fetchById(it.uniqueId)
 
                     if (user === null) user = User(
@@ -56,9 +52,11 @@ class CoreBungeePlugin : CustomPlugin(true) {
                         it.name
                     )
 
+                    val bukkitApplication = user.getConnectedBukkitApplication()
+
                     CoreProvider.Cache.Redis.USERS_STATUS.provide().create(
                         user,
-                        CoreProvider.application,
+                        bukkitApplication,
                         it.pendingConnection.version
                     )
                 }

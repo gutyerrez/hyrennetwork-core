@@ -143,15 +143,11 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
-    fun create(user: User, application: Application, version: Int) {
+    fun create(user: User, application: Application?, version: Int) {
         val map = mutableMapOf<String, String>()
 
-        println(application)
-
-        println(application.name)
-
         map["proxy_application"] = CoreProvider.application.name
-        map["bukkit_application"] = application.name
+        map["bukkit_application"] = application?.name ?: "desconhecida"
         map["connected_address"] = CoreProvider.application.address.address.hostAddress
         map["connected_version"] = version.toString()
         map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
