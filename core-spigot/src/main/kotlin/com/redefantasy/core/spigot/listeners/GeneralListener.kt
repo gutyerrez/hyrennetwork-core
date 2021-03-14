@@ -17,14 +17,15 @@ class GeneralListener : Listener {
     fun on(
         event: InventoryClickEvent
     ) {
+        val inventory = event.inventory
         val clickedInventory = event.clickedInventory
 
         if (clickedInventory === null) return
 
         println("aaa")
 
+        println(inventory is CustomInventory)
         println(clickedInventory is CustomInventory)
-
         println(clickedInventory::class.isSubclassOf(CustomInventory::class))
 
         if (clickedInventory is CustomInventory) {
