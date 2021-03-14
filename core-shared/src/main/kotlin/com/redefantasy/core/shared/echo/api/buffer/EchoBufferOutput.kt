@@ -53,7 +53,7 @@ class EchoBufferOutput {
     }
 
     fun writeString(string: String?) {
-        if (string == null) {
+        if (string === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)

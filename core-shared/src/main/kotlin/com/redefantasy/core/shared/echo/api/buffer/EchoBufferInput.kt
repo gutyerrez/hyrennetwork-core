@@ -10,7 +10,6 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.groups.Group
-import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
@@ -62,6 +61,8 @@ class EchoBufferInput(
 
     fun readString(): String? {
         val valid = this.readBoolean()
+
+        println("String: $valid")
 
         if (valid) return this.buffer.readUTF()
 
@@ -161,11 +162,7 @@ class EchoBufferInput(
         return null
     }
 
-    fun readServer(): Server? {
-        val serverName = this.readString() ?: return null
-
-        return CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
-    }
+    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(this.readString())
 
     fun readSerializedLocation() = SerializedLocation.of(this.readString())
 
