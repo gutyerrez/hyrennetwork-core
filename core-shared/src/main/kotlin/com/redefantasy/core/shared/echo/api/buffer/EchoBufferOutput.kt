@@ -129,12 +129,7 @@ class EchoBufferOutput {
     }
 
     fun writeServer(server: Server?) {
-        if (server === null) {
-            this.writeBoolean(false)
-        } else {
-            this.writeBoolean(true)
-            this.writeString(server.getName())
-        }
+        this.writeString(server?.getName())
     }
 
     fun writeSerializedLocation(serializedLocation: SerializedLocation) {
