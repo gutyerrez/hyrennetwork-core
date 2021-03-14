@@ -55,13 +55,23 @@ interface ICustomInventory {
         if (event.whoClicked is Player) {
             event.isCancelled = true
 
+            println("opa")
+
             if (event.clickedInventory !== null && event.clickedInventory.type !== InventoryType.PLAYER) {
                 val clickListener = this.getListener<ClickListener>(event.slot)
 
+                println(clickListener)
+
                 if (clickListener !== null) {
+                    println("dale")
+
                     if (clickListener is ConsumerClickListener) {
+                        println("hm")
+
                         clickListener.accept(event)
                     } else if (clickListener is RunnableClickListener) {
+                        println("...")
+
                         clickListener.run()
                     }
                 }

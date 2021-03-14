@@ -20,7 +20,11 @@ class GeneralListener : Listener {
 
         if (clickedInventory === null) return
 
+        println("aaa")
+
         if (clickedInventory is CustomInventory) {
+            println("bb")
+
             clickedInventory.on(event)
         }
     }
