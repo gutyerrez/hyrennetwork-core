@@ -69,6 +69,8 @@ interface ICustomInventory {
                         println("hm")
 
                         clickListener.accept(event)
+
+                        println("aceitei")
                     } else if (clickListener is RunnableClickListener) {
                         println("...")
 
