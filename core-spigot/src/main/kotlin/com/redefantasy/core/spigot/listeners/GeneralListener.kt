@@ -1,12 +1,12 @@
 package com.redefantasy.core.spigot.listeners
 
 import com.redefantasy.core.spigot.inventory.CustomInventory
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import kotlin.reflect.full.isSubclassOf
 
 /**
  * @author Gutyerrez
@@ -18,20 +18,15 @@ class GeneralListener : Listener {
         event: InventoryClickEvent
     ) {
         val inventory = event.inventory
-        val clickedInventory = event.clickedInventory
+        val craftInventory = inventory as CraftInventory
+        val iInventory = craftInventory.inventory
 
-        if (clickedInventory === null) return
+        println("b")
 
-        println("aaa")
-
-        println(inventory is CustomInventory)
-        println(clickedInventory is CustomInventory)
-        println(clickedInventory::class.isSubclassOf(CustomInventory::class))
-
-        if (clickedInventory is CustomInventory) {
+        if (iInventory is CustomInventory) {
             println("bb")
 
-            clickedInventory.on(event)
+            iInventory.on(event)
         }
     }
 
@@ -39,12 +34,12 @@ class GeneralListener : Listener {
     fun on(
         event: InventoryCloseEvent
     ) {
-        val closedInventory = event.inventory
+        val inventory = event.inventory
+        val craftInventory = inventory as CraftInventory
+        val iInventory = craftInventory.inventory
 
-        if (closedInventory === null) return
-
-        if (closedInventory is CustomInventory) {
-            closedInventory.on(event)
+        if (iInventory is CustomInventory) {
+            iInventory.on(event)
         }
     }
 
@@ -52,12 +47,12 @@ class GeneralListener : Listener {
     fun on(
         event: InventoryOpenEvent
     ) {
-        val openedInventory = event.inventory
+        val inventory = event.inventory
+        val craftInventory = inventory as CraftInventory
+        val iInventory = craftInventory.inventory
 
-        if (openedInventory === null) return
-
-        if (openedInventory is CustomInventory) {
-            openedInventory.on(event)
+        if (iInventory is CustomInventory) {
+            iInventory.on(event)
         }
     }
 
