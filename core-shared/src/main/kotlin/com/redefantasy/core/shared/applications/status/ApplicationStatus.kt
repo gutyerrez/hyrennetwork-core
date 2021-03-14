@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.applications.status
 
-import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.servers.data.Server
 import org.influxdb.dto.Point
@@ -68,6 +67,20 @@ open class ApplicationStatus(
         return this.applicationName.hashCode()
     }
 
-    override fun toString(): String = CoreConstants.GSON.toJson(this)
+    override fun toString(): String {
+        return "{" +
+                "application_name: $applicationName" +
+                "\n" +
+                "application_type: $applicationType" +
+                "\n" +
+                "server: ${server?.name}" +
+                "\n" +
+                "address: $address" +
+                "\n" +
+                "online_since: $onlineSince" +
+                "\n" +
+                "online_players: $onlinePlayers" +
+                "}"
+    }
 
 }
