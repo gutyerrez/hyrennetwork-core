@@ -142,7 +142,6 @@ class EchoBufferInput(
         if (valid) return Application(
             this.readString()!!,
             this.readString()!!,
-            this.readString(),
             this.readInt(),
             this.readAddress()!!,
             this.readEnum(ApplicationType::class)!!,

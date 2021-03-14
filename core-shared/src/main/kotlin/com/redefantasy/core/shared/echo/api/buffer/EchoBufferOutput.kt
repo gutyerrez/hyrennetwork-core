@@ -120,7 +120,6 @@ class EchoBufferOutput {
             this.writeBoolean(true)
             this.writeString(application.name)
             this.writeString(application.displayName)
-            this.writeString(application.description)
             this.writeInt(application.slots)
             this.writeAddress(application.address)
             this.writeEnum(application.applicationType)
