@@ -23,10 +23,10 @@ class GeneralListener : Listener {
 
         println("b")
 
-        if (iInventory is CustomInventory) {
+        if (iInventory is CustomInventory.MinecraftInventory) {
             println("bb")
 
-            iInventory.on(event)
+            iInventory.parent.on(event)
         }
     }
 
@@ -38,8 +38,8 @@ class GeneralListener : Listener {
         val craftInventory = inventory as CraftInventory
         val iInventory = craftInventory.inventory
 
-        if (iInventory is CustomInventory) {
-            iInventory.on(event)
+        if (iInventory is CustomInventory.MinecraftInventory) {
+            iInventory.parent.on(event)
         }
     }
 
@@ -51,8 +51,8 @@ class GeneralListener : Listener {
         val craftInventory = inventory as CraftInventory
         val iInventory = craftInventory.inventory
 
-        if (iInventory is CustomInventory) {
-            iInventory.on(event)
+        if (iInventory is CustomInventory.MinecraftInventory) {
+            iInventory.parent.on(event)
         }
     }
 
