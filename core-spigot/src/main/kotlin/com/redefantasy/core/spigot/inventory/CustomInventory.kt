@@ -91,11 +91,9 @@ open class CustomInventory(
             if (callback is ICustomInventory.ClickListener) {
                 this.LISTENERS[slot] = callback
             } else this.LISTENERS[slot] = object : ICustomInventory.ConsumerClickListener {
-                override fun accept(event: InventoryClickEvent) {
-                    println("asdsa")
-
-                    callback.accept(event)
-                }
+                override fun accept(
+                    event: InventoryClickEvent
+                ) = callback.accept(event)
             }
         }
     }

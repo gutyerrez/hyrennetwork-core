@@ -26,6 +26,8 @@ class ConnectUserToApplicationEchoPacketListener : EchoListener {
 
         if (proxiedPlayer === null) return
 
+        println("Conectar para aplicação $application")
+
         proxiedPlayer.connect { application.address }
     }
 
