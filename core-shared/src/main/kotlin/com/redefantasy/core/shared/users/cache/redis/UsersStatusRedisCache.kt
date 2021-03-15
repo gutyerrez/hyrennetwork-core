@@ -65,7 +65,7 @@ class UsersStatusRedisCache : RedisCache {
             val users = mutableListOf<UUID>()
 
             try {
-                val scanParams = ScanParams().match("users:*")
+                val scanParams = ScanParams().match("users:")
 
                 println(scanParams)
 
@@ -96,7 +96,7 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
-            val scanParams = ScanParams().match("users:*")
+            val scanParams = ScanParams().match("users:")
 
             val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
@@ -119,7 +119,7 @@ class UsersStatusRedisCache : RedisCache {
     fun fetchUsersByServer(server: Server): List<UUID> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
-            val scanParams = ScanParams().match("users:*")
+            val scanParams = ScanParams().match("users:")
 
             val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
