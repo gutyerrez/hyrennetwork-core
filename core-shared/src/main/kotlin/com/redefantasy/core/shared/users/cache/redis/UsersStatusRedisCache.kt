@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.users.cache.redis
 
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.redis.RedisCache
@@ -160,6 +161,8 @@ class UsersStatusRedisCache : RedisCache {
 
             if (!it.hexists(key, "joined_at")) return@use null
 
+            println("Entrou: ${it.hget(key, "joined_at")}")
+
             return@use DateTime.parse(it.hget(key, "joined_at"))
         }
     }
@@ -175,7 +178,9 @@ class UsersStatusRedisCache : RedisCache {
             map["connected_address"] = CoreProvider.application.address.address.hostAddress
             map["connected_version"] = version.toString()
             map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
-                DateTime.now().toString()
+                DateTime.now(
+                    CoreConstants.DATE_TIME_ZONE
+                ).toString()
             } else this.fetchJoinedAt(user).toString()
 
             CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
