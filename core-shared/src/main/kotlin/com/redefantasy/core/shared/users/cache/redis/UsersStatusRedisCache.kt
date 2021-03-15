@@ -167,21 +167,36 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun fetchDirectMessage(user: User): User? {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val key = this.getKey(user.getUniqueId())
+
+            if (!it.hexists(key, "direct_message")) return@use null
+
+            val stringifiedUUID = it.hget(key, "direct_message")
+
+            if (stringifiedUUID === null) return@use null
+
+            return@use CoreProvider.Cache.Local.USERS.provide().fetchById(
+                UUID.fromString(stringifiedUUID)
+            )
+        }
+    }
+
     fun create(user: User, application: Application?, version: Int) {
         try {
             println("Criar status do usuário ${user.id}")
 
-            val map = mutableMapOf<String, String>()
+            val map = mutableMapOf<String, String?>()
 
             map["proxy_application"] = CoreProvider.application.name
             map["bukkit_application"] = application?.name ?: "desconhecida"
             map["connected_address"] = CoreProvider.application.address.address.hostAddress
             map["connected_version"] = version.toString()
-            map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
-                DateTime.now(
-                    CoreConstants.DATE_TIME_ZONE
-                ).toString()
-            } else this.fetchJoinedAt(user).toString()
+            map["direct_message"] = this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()?.toString()
+            map["joined_at"] = this.fetchJoinedAt(user)?.toString() ?: DateTime.now(
+                CoreConstants.DATE_TIME_ZONE
+            ).toString()
 
             CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
                 try {

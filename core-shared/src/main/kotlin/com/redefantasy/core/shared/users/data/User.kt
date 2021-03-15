@@ -43,7 +43,9 @@ open class User(
 ) {
 
     val loginAttempts = AtomicInteger(0)
-    var directMessage: User? = null
+    var directMessage = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchDirectMessage(
+        this
+    )
 
     fun setLogged(logged: Boolean) {
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)
