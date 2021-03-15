@@ -42,6 +42,8 @@ class CoreBungeePlugin : CustomPlugin(true) {
         AsyncScheduler.scheduleAsyncRepeatingTask(
             {
                 ProxyServer.getInstance().players.forEach {
+                    println("Iniciando criação do status do usuário ${it.uniqueId}")
+
                     var user = CoreProvider.Cache.Local.USERS.provide().fetchById(it.uniqueId)
 
                     if (user === null) user = User(
@@ -61,8 +63,8 @@ class CoreBungeePlugin : CustomPlugin(true) {
                     )
                 }
             },
-            0,
-            5,
+            3,
+            3,
             TimeUnit.SECONDS
         )
     }
