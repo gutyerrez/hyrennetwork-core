@@ -65,25 +65,25 @@ class UsersStatusRedisCache : RedisCache {
             val users = mutableListOf<UUID>()
 
             try {
-                val scanParams = ScanParams().match("users:")
+                val scanParams = ScanParams()
 
-                println(scanParams)
+                scanParams.match("users:*")
 
-                val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+                do {
+                    val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
-                println("Scan")
+                    println(scan.result)
 
-                println("Result:")
-                println(scan.result)
-                println("!!!!!!!!!!!!!!!!")
+                    scan.result.forEach { key ->
+                        println("key: $key")
 
-                scan.result.forEach { key ->
-                    println("K: $key")
+                        val uuid = UUID.fromString(key.split("users:")[1])
 
-                    val uuid = UUID.fromString(key.split("users:")[1])
+                        users.add(uuid)
+                    }
 
-                    users.add(uuid)
-                }
+                    val cursor = scan.cursor
+                } while (!cursor.equals("0"))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
