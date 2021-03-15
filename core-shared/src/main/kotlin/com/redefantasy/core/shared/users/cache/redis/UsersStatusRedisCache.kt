@@ -69,8 +69,10 @@ class UsersStatusRedisCache : RedisCache {
 
                 scanParams.match("users:*")
 
+                var cursor = "0"
+
                 do {
-                    val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+                    val scan = it.scan(cursor, scanParams)
 
                     println(scan.result)
 
@@ -82,8 +84,8 @@ class UsersStatusRedisCache : RedisCache {
                         users.add(uuid)
                     }
 
-                    val cursor = scan.cursor
-                } while (!cursor.equals("0"))
+                    cursor = scan.cursor
+                } while (cursor != "0")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
