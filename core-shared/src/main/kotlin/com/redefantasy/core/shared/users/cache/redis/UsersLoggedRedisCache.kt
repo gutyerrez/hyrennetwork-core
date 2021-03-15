@@ -16,7 +16,9 @@ class UsersLoggedRedisCache : RedisCache {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
 
-            it.set(key, logged.toString())
+            if (logged) {
+                it.set(key, logged.toString())
+            } else it.del(key)
         }
     }
 
