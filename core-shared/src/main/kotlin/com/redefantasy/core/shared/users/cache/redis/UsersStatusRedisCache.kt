@@ -59,12 +59,9 @@ class UsersStatusRedisCache : RedisCache {
     }
 
     fun fetchUsers(): List<UUID> {
-        println("Pegar usuários")
-
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
-            try {
                 val scanParams = ScanParams()
 
                 scanParams.match("users:*")
@@ -74,11 +71,7 @@ class UsersStatusRedisCache : RedisCache {
                 do {
                     val scan = it.scan(cursor, scanParams)
 
-                    println(scan.result)
-
                     scan.result.forEach { key ->
-                        println("key: $key")
-
                         val uuid = UUID.fromString(key.split("users:")[1])
 
                         users.add(uuid)
@@ -86,9 +79,6 @@ class UsersStatusRedisCache : RedisCache {
 
                     cursor = scan.cursor
                 } while (cursor != "0")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
 
             return@use users
         }
@@ -98,46 +88,62 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
-            val scanParams = ScanParams().match("users:")
+            val scanParams = ScanParams()
 
-            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+            scanParams.match("users:*")
 
-            scan.result.forEach { key ->
-                val proxyApplicationName = it.hget(key, "proxy_application")
+            var cursor = "0"
 
-                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+            do {
+                val scan = it.scan(cursor, scanParams)
 
-                if (proxyApplication === application) {
-                    val uuid = UUID.fromString(key.split("users:")[1])
+                scan.result.forEach { key ->
+                    val proxyApplicationName = it.hget(key, "proxy_application")
 
-                    users.add(uuid)
+                    val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+
+                    if (proxyApplication === application) {
+                        val uuid = UUID.fromString(key.split("users:")[1])
+
+                        users.add(uuid)
+                    }
                 }
-            }
 
-            return users
+                cursor = scan.cursor
+            } while (cursor != "0")
+
+            return@use users
         }
     }
 
     fun fetchUsersByServer(server: Server): List<UUID> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
-            val scanParams = ScanParams().match("users:")
+            val scanParams = ScanParams()
 
-            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+            scanParams.match("users:*")
 
-            scan.result.forEach { key ->
-                val bukkitApplication = it.hget(key, "bukkit_application")
+            var cursor = "0"
 
-                val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
-                    bukkitApplication
-                )
+            do {
+                val scan = it.scan(cursor, scanParams)
 
-                if (application != null && application.server !== null && application.server === server) {
-                    val uuid = UUID.fromString(key.split("users:")[1])
+                scan.result.forEach { key ->
+                    val bukkitApplication = it.hget(key, "bukkit_application")
 
-                    users.add(uuid)
+                    val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+                        bukkitApplication
+                    )
+
+                    if (application != null && application.server !== null && application.server === server) {
+                        val uuid = UUID.fromString(key.split("users:")[1])
+
+                        users.add(uuid)
+                    }
                 }
-            }
+
+                cursor = scan.cursor
+            } while (cursor != "0")
 
             return@use users
         }
