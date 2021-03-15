@@ -46,9 +46,13 @@ class ServerConnector : ServerConnector {
         proxiedPlayer: ProxiedPlayer,
         bukkitApplicationAddress: InetSocketAddress
     ) {
+        println(proxiedPlayer)
+
         val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
             bukkitApplicationAddress
         )
+
+        println(bukkitApplication)
 
         if (bukkitApplication === null) {
             val disconnectMessage = ComponentBuilder()
@@ -58,15 +62,21 @@ class ServerConnector : ServerConnector {
                 .create()
 
             proxiedPlayer.disconnect(*disconnectMessage)
+
+            println(":/")
             return
         }
 
         var user = CoreProvider.Cache.Local.USERS.provide().fetchById(proxiedPlayer.uniqueId)
 
+        println(user)
+
         if (user === null) user = User(
             EntityID(proxiedPlayer.uniqueId, UsersTable),
             proxiedPlayer.name
         )
+
+        println("criar")
 
         CoreProvider.Cache.Redis.USERS_STATUS.provide().create(
             user,

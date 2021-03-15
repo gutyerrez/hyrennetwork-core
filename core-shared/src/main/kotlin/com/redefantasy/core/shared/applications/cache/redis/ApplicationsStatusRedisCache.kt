@@ -28,14 +28,16 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     fun update(applicationStatus: ApplicationStatus) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val jackson = CoreConstants.JACKSON.writeValueAsString(
+            val pipeline = it.pipelined()
+            val key = this.getKey(applicationStatus.applicationName)
+
+            val json = CoreConstants.JACKSON.writeValueAsString(
                 applicationStatus
             )
 
-            val key = this.getKey(applicationStatus.applicationName)
-
-            it.set(key, jackson)
-            it.expire(key, this.TTL_SECONDS)
+            pipeline.set(key, json)
+            pipeline.expire(key, this.TTL_SECONDS)
+            pipeline.sync()
         }
     }
 
@@ -86,18 +88,12 @@ class ApplicationsStatusRedisCache : RedisCache {
     ): ApplicationStatus? {
         var applicationStatus = this.CACHE.getIfPresent(applicationName)
 
-        println(applicationStatus)
-
         if (applicationStatus != null) return applicationStatus
-
-        println("asd")
 
         val key = this.getKey(applicationName)
 
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val value = it.get(key)
-
-            println(value)
 
             if (value != null) {
                 applicationStatus = CoreConstants.JACKSON.readValue(
