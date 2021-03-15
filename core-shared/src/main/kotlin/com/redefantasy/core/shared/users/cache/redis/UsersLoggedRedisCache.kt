@@ -10,7 +10,7 @@ import java.util.*
  */
 class UsersLoggedRedisCache : RedisCache {
 
-    fun getKey(userId: UUID) = "user_logged:$userId"
+    fun getKey(userId: UUID) = "logged_users:$userId"
 
     fun setLogged(user: User, logged: Boolean) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
@@ -25,6 +25,8 @@ class UsersLoggedRedisCache : RedisCache {
     fun isLogged(user: User): Boolean {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
+
+            if (!it.exists(key)) return@use false
 
             it.get(key).toBoolean()
         }

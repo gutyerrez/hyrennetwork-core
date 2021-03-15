@@ -60,29 +60,23 @@ class UsersStatusRedisCache : RedisCache {
 
     fun fetchUsers(): List<UUID> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val pipeline = it.pipelined()
             val users = mutableListOf<UUID>()
-            val scanParams = ScanParams().match("users:*")
 
-//            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+            try {
+                val scanParams = ScanParams().match("users:*")
 
-            val result = pipeline.hgetAll("users:*")
+                val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
-            pipeline.close()
+                scan.result.forEach { key ->
+                    println("K: $key")
 
-            println(result)
+                    val uuid = UUID.fromString(key.split("users:")[1])
 
-            println(result.get())
+                    users.add(uuid)
+                }
 
-            println(result.get().keys)
-            println(result.get().values)
-
-            result.get().values.forEach { key ->
-                println("K: $key")
-
-                val uuid = UUID.fromString(key.split("users:")[1])
-
-                users.add(uuid)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
             return@use users
