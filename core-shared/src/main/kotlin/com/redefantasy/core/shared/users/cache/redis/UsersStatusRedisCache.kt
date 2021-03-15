@@ -161,8 +161,6 @@ class UsersStatusRedisCache : RedisCache {
 
     fun create(user: User, application: Application?, version: Int) {
         try {
-            println("Criar o usuário $user")
-
             val map = mutableMapOf<String, String>()
 
             map["proxy_application"] = CoreProvider.application.name
