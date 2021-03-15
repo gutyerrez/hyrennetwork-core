@@ -73,6 +73,10 @@ class UsersStatusRedisCache : RedisCache {
 
                 println("Scan")
 
+                println("Result:")
+                println(scan.result)
+                println("!!!!!!!!!!!!!!!!")
+
                 scan.result.forEach { key ->
                     println("K: $key")
 
