@@ -68,6 +68,8 @@ class UsersStatusRedisCache : RedisCache {
 
             val result = pipeline.hgetAll("users:*")
 
+            pipeline.close()
+
             println(result)
 
             println(result.get())
