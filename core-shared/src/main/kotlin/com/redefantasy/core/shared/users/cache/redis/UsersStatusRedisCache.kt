@@ -62,6 +62,7 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
+            try {
                 val scanParams = ScanParams()
 
                 scanParams.match("users:*")
@@ -79,6 +80,9 @@ class UsersStatusRedisCache : RedisCache {
 
                     cursor = scan.cursor
                 } while (cursor != "0")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
             return@use users
         }
@@ -100,7 +104,8 @@ class UsersStatusRedisCache : RedisCache {
                 scan.result.forEach { key ->
                     val proxyApplicationName = it.hget(key, "proxy_application")
 
-                    val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+                    val proxyApplication =
+                        CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
 
                     if (proxyApplication === application) {
                         val uuid = UUID.fromString(key.split("users:")[1])
@@ -160,27 +165,23 @@ class UsersStatusRedisCache : RedisCache {
     }
 
     fun create(user: User, application: Application?, version: Int) {
-        try {
-            val map = mutableMapOf<String, String>()
+        val map = mutableMapOf<String, String>()
 
-            map["proxy_application"] = CoreProvider.application.name
-            map["bukkit_application"] = application?.name ?: "desconhecida"
-            map["connected_address"] = CoreProvider.application.address.address.hostAddress
-            map["connected_version"] = version.toString()
-            map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
-                DateTime.now().toString()
-            } else this.fetchJoinedAt(user).toString()
+        map["proxy_application"] = CoreProvider.application.name
+        map["bukkit_application"] = application?.name ?: "desconhecida"
+        map["connected_address"] = CoreProvider.application.address.address.hostAddress
+        map["connected_version"] = version.toString()
+        map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
+            DateTime.now().toString()
+        } else this.fetchJoinedAt(user).toString()
 
-            CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-                val pipeline = it.pipelined()
-                val key = this.getKey(user.getUniqueId())
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val pipeline = it.pipelined()
+            val key = this.getKey(user.getUniqueId())
 
-                pipeline.hmset(key, map)
-                pipeline.expire(key, 10)
-                pipeline.sync()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            pipeline.hmset(key, map)
+            pipeline.expire(key, 10)
+            pipeline.sync()
         }
     }
 
