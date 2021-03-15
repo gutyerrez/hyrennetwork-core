@@ -59,13 +59,19 @@ class UsersStatusRedisCache : RedisCache {
     }
 
     fun fetchUsers(): List<UUID> {
+        println("Pegar usuários")
+
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
             try {
                 val scanParams = ScanParams().match("users:*")
 
+                println(scanParams)
+
                 val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+
+                println("Scan")
 
                 scan.result.forEach { key ->
                     println("K: $key")
@@ -74,7 +80,6 @@ class UsersStatusRedisCache : RedisCache {
 
                     users.add(uuid)
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
