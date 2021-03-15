@@ -165,23 +165,35 @@ class UsersStatusRedisCache : RedisCache {
     }
 
     fun create(user: User, application: Application?, version: Int) {
-        val map = mutableMapOf<String, String>()
+        try {
+            println("Criar status do usuário ${user.id}")
 
-        map["proxy_application"] = CoreProvider.application.name
-        map["bukkit_application"] = application?.name ?: "desconhecida"
-        map["connected_address"] = CoreProvider.application.address.address.hostAddress
-        map["connected_version"] = version.toString()
-        map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
-            DateTime.now().toString()
-        } else this.fetchJoinedAt(user).toString()
+            val map = mutableMapOf<String, String>()
 
-        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val pipeline = it.pipelined()
-            val key = this.getKey(user.getUniqueId())
+            map["proxy_application"] = CoreProvider.application.name
+            map["bukkit_application"] = application?.name ?: "desconhecida"
+            map["connected_address"] = CoreProvider.application.address.address.hostAddress
+            map["connected_version"] = version.toString()
+            map["joined_at"] = if (this.fetchJoinedAt(user) === null) {
+                DateTime.now().toString()
+            } else this.fetchJoinedAt(user).toString()
 
-            pipeline.hmset(key, map)
-            pipeline.expire(key, 10)
-            pipeline.sync()
+            CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+                try {
+                    val pipeline = it.pipelined()
+                    val key = this.getKey(user.getUniqueId())
+
+                    pipeline.hmset(key, map)
+                    pipeline.expire(key, 10)
+                    pipeline.sync()
+
+                    println("Criei")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
