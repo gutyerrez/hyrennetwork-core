@@ -5,7 +5,6 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.cache.redis.RedisCache
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.users.data.User
-import com.redefantasy.core.shared.world.location.SerializedLocation
 import org.joda.time.DateTime
 import redis.clients.jedis.ScanParams
 import java.util.*
@@ -59,22 +58,26 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
-    fun fetchBukkitLocation(user: User): SerializedLocation {
-        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val key = this.getKey(user.getUniqueId())
-
-            TODO("not implemented yet")
-        }
-    }
-
     fun fetchUsers(): List<UUID> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val pipeline = it.pipelined()
             val users = mutableListOf<UUID>()
             val scanParams = ScanParams().match("users:*")
 
-            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+//            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
 
-            scan.result.forEach { key ->
+            val result = pipeline.hgetAll("users:*")
+
+            println(result)
+
+            println(result.get())
+
+            println(result.get().keys)
+            println(result.get().values)
+
+            result.get().values.forEach { key ->
+                println("K: $key")
+
                 val uuid = UUID.fromString(key.split("users:")[1])
 
                 users.add(uuid)
