@@ -23,7 +23,17 @@ abstract class CustomCommand(
         return super.getUsage0()
     }
 
-    override fun getAliases0() = this.aliases.toTypedArray<String>()
+    override fun getAliases0(): Array<String> {
+        val aliases = arrayOf<String>()
+
+        println(this.aliases)
+
+        val _aliases = this.aliases.toTypedArray()
+
+        println(_aliases)
+
+        return aliases
+    }
 
     override fun isPlayer(commandSender: CommandSender) = commandSender is Player
 
