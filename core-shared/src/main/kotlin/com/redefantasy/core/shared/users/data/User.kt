@@ -73,7 +73,12 @@ open class User(
         val userPunishments = this.getPunishments()
 
         userPunishments.stream()
-            .filter { it.revokeTime !== null && it.startTime === null }
+            .filter {
+                println("Revoke ${it.revokeTime !== null}")
+                println("StarT: ${it.startTime === null}")
+
+                it.revokeTime !== null && it.startTime === null
+            }
             .forEach {
                 println("Ativando a punição ${it.id.value}")
 
