@@ -28,11 +28,11 @@ abstract class CustomCommand(
 
         println(this.aliases)
 
-        val _aliases = this.aliases.toTypedArray()
+        val _aliases = this.aliases.map { it.toString() }.toTypedArray()
 
         println(_aliases)
 
-        return aliases
+        return _aliases
     }
 
     override fun isPlayer(commandSender: CommandSender) = commandSender is Player
