@@ -52,9 +52,9 @@ data class UserPunishment(
     }
 
     fun isActive(): Boolean {
-        if (this.revokeTime !== null) return false
+        if (this.revokeTime !== null || this.startTime === null) return false
 
-        if (this.startTime === null || this.punishType === PunishType.BAN) return true
+        if (this.punishType === PunishType.BAN) return true
 
         return if (this.duration == -1L) {
             true
