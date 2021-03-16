@@ -26,4 +26,6 @@ abstract class CustomCommand(
         )
     }
 
+    override fun getAliases0(): Array<String> = this.aliases
+
 }

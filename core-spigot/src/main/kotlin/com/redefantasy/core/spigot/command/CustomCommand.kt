@@ -17,13 +17,13 @@ abstract class CustomCommand(
 
     override fun getSenderName(commandSender: CommandSender): String = commandSender.name
     
-    override fun getDescription() = ""
+    override fun getDescription0(): String = this.getDescription()
 
     override fun getUsage(): Array<BaseComponent> {
-        return super<Commandable>.getUsage()
+        return super.getUsage0()
     }
 
-    override fun getAliases() = arrayOf<String>()
+    override fun getAliases0() = this.aliases.toTypedArray()
 
     override fun isPlayer(commandSender: CommandSender) = commandSender is Player
 

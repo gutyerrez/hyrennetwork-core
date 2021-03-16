@@ -24,9 +24,9 @@ interface Commandable<T> {
 
     fun getName(): String
 
-    fun getDescription(): String? = null
+    fun getDescription0(): String? = null
 
-    fun getUsage(): Array<BaseComponent> {
+    fun getUsage0(): Array<BaseComponent> {
         val arguments = this.getArguments()?.stream()?.map {
             "<${it.name}>"
         }?.distinct()?.collect(Collectors.joining(" ")) ?: ""
@@ -34,7 +34,7 @@ interface Commandable<T> {
         return ComponentBuilder("${ChatColor.RED}Utilize /${this.getNameExact()} $arguments.").create()
     }
 
-    fun getAliases(): Array<String>
+    fun getAliases0(): Array<String>
 
     fun getParent(): Commandable<T>? = null
 
@@ -110,7 +110,7 @@ interface Commandable<T> {
                 val subCommand = this.getSubCommands()!!
                         .stream()
                         .filter {
-                            it.getName().contentEquals(args[0]) || it.getAliases().contains(args[0])
+                            it.getName().contentEquals(args[0]) || it.getAliases0().contains(args[0])
                         }
                         .findFirst()
                         .orElse(null)
@@ -128,7 +128,7 @@ interface Commandable<T> {
             } else if (args.isEmpty() && this.getArguments() !== null || this.getArguments() !== null && args.size < this.getArguments()!!.size) {
                 return CoreWrapper.WRAPPER.sendMessage(
                         this.getSenderName(commandSender),
-                        this.getUsage()
+                        this.getUsage0()
                 )
             }
 
@@ -180,7 +180,7 @@ interface Commandable<T> {
                     "<${it.name}>"
                 }.distinct().collect(Collectors.joining(" "))
 
-                componentBuilder.append("§a/${this.getNameExact()} $arguments §8- §7${this.getDescription() ?: ""}")
+                componentBuilder.append("§a/${this.getNameExact()} $arguments §8- §7${this.getDescription0() ?: ""}")
                         .event(
                                 ClickEvent(
                                         ClickEvent.Action.SUGGEST_COMMAND,
@@ -188,7 +188,7 @@ interface Commandable<T> {
                                 )
                         )
             } else {
-                componentBuilder.append("§a/${this.getNameExact()} §8- §7${this.getDescription() ?: ""}")
+                componentBuilder.append("§a/${this.getNameExact()} §8- §7${this.getDescription0() ?: ""}")
                         .event(
                                 ClickEvent(
                                         ClickEvent.Action.SUGGEST_COMMAND,
@@ -233,7 +233,7 @@ interface Commandable<T> {
                 "<${argument.name}>"
             }.distinct().collect(Collectors.joining(" "))
 
-            this.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${commandable.getDescription() ?: ""}")
+            this.append("§a/$commandName ${commandable.getName()} $arguments §8- §7${commandable.getDescription0() ?: ""}")
                     .event(
                             ClickEvent(
                                     ClickEvent.Action.SUGGEST_COMMAND,
@@ -243,7 +243,7 @@ interface Commandable<T> {
 
             if (index + 1 < max) this.append("\n")
         } else {
-            this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription() ?: ""}")
+            this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription0() ?: ""}")
                     .event(
                             ClickEvent(
                                     ClickEvent.Action.SUGGEST_COMMAND,
