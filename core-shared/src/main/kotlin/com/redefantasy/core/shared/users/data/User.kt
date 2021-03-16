@@ -75,6 +75,8 @@ open class User(
         userPunishments.stream()
             .filter { it.revokeTime !== null && it.startTime === null }
             .forEach {
+                println("Ativando a punição ${it.id.value}")
+
                 it.startTime = DateTime.now(
                     CoreConstants.DATE_TIME_ZONE
                 )
@@ -89,8 +91,10 @@ open class User(
             }
 
         val activePunishment = userPunishments.stream().filter {
-            it.isActive() && it.punishType !== PunishType.MUTE
+            it.isActive() && it.isBan()
         }.findFirst().orElse(null)
+
+        println(activePunishment)
 
         if (activePunishment !== null) {
             val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)

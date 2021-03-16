@@ -57,6 +57,8 @@ data class UserPunishment(
         if (this.punishType === PunishType.BAN) return true
 
         return if (this.duration == -1L) {
+            println("Chegou aqui")
+
             true
         } else this.startTime!! + this.duration > DateTime.now(
             CoreConstants.DATE_TIME_ZONE
