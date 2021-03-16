@@ -54,9 +54,11 @@ data class UserPunishment(
     fun isActive(): Boolean {
         if (this.revokeTime !== null) return false
 
-        if (this.startTime === null) return true
+        if (this.startTime === null || this.punishType === PunishType.BAN) return true
 
-        return this.startTime!! + this.duration > DateTime.now(
+        return if (this.duration == -1L) {
+            true
+        } else this.startTime!! + this.duration > DateTime.now(
             CoreConstants.DATE_TIME_ZONE
         )
     }
