@@ -34,17 +34,13 @@ data class UserPunishment(
     val updatedAt: DateTime? = null
 ) {
 
-    fun getColor(): ChatColor {
-        if (this.revokeTime !== null) return ChatColor.GRAY
-
-        if (this.startTime === null) return ChatColor.YELLOW
-
-        return if (this.startTime!! + this.duration > DateTime.now(
-                CoreConstants.DATE_TIME_ZONE
-            )
-        ) {
-            ChatColor.GREEN
-        } else ChatColor.RED
+    fun getColor() = when {
+        this.revokeTime !== null -> ChatColor.GRAY
+        this.startTime === null -> ChatColor.YELLOW
+        this.duration == -1L || this.startTime!! + this.duration > DateTime.now(
+            CoreConstants.DATE_TIME_ZONE
+        ) -> ChatColor.GREEN
+        else -> ChatColor.RED
     }
 
     fun isBan(): Boolean {
@@ -57,8 +53,6 @@ data class UserPunishment(
         if (this.punishType === PunishType.BAN) return true
 
         return if (this.duration == -1L) {
-            println("Chegou aqui")
-
             true
         } else this.startTime!! + this.duration > DateTime.now(
             CoreConstants.DATE_TIME_ZONE
