@@ -175,7 +175,7 @@ class UsersStatusRedisCache : RedisCache {
 
             val stringifiedUUID = it.hget(key, "direct_message")
 
-            if (stringifiedUUID === null) return@use null
+            if (stringifiedUUID === null || stringifiedUUID == "undefined") return@use null
 
             return@use CoreProvider.Cache.Local.USERS.provide().fetchById(
                 UUID.fromString(stringifiedUUID)
@@ -187,13 +187,13 @@ class UsersStatusRedisCache : RedisCache {
         try {
             println("Criar status do usuário ${user.id}")
 
-            val map = mutableMapOf<String, String?>()
+            val map = mutableMapOf<String, String>()
 
             map["proxy_application"] = CoreProvider.application.name
             map["bukkit_application"] = application?.name ?: "desconhecida"
             map["connected_address"] = CoreProvider.application.address.address.hostAddress
             map["connected_version"] = version.toString()
-            map["direct_message"] = this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()?.toString()
+            map["direct_message"] = this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()?.toString() ?: "undefined"
             map["joined_at"] = this.fetchJoinedAt(user)?.toString() ?: DateTime.now(
                 CoreConstants.DATE_TIME_ZONE
             ).toString()

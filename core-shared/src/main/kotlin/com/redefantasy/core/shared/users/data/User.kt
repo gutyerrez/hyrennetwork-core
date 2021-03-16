@@ -228,6 +228,8 @@ open class User(
     fun getPunishments() = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
 
     fun getActivePunishments(): List<UserPunishment> {
+        this.validatePunishments()
+
         return this.getPunishments()
             .stream()
             .filter { it.isActive() }
