@@ -77,7 +77,7 @@ open class User(
                 println("Revoke ${it.revokeTime !== null}")
                 println("StarT: ${it.startTime === null}")
 
-                it.revokeTime !== null && it.startTime === null
+                it.revokeTime === null && it.startTime === null
             }
             .forEach {
                 println("Ativando a punição ${it.id.value}")
