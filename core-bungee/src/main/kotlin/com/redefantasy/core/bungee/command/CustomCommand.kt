@@ -13,7 +13,7 @@ abstract class CustomCommand(
     name: String
 ) : Command(name), Commandable<CommandSender> {
 
-    fun getDescription(): String? = this.getDescription0()
+    open fun getDescription(): String? = this.getDescription0()
 
     override fun getSenderName(commandSender: CommandSender): String = commandSender.name
 
