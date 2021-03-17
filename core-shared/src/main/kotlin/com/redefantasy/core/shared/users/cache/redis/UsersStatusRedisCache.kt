@@ -155,6 +155,37 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun fetchUsersByApplication(application: Application): List<UUID> {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val users = mutableListOf<UUID>()
+            val scanParams = ScanParams()
+
+            scanParams.match("users:*")
+
+            var cursor = "0"
+
+            do {
+                val scan = it.scan(cursor, scanParams)
+
+                scan.result.forEach { key ->
+                    val bukkitApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+                        it.hget(key, "bukkit_application")
+                    )
+
+                    if (bukkitApplication != null && application == bukkitApplication) {
+                        val uuid = UUID.fromString(key.split("users:")[1])
+
+                        users.add(uuid)
+                    }
+                }
+
+                cursor = scan.cursor
+            } while (cursor != "0")
+
+            return@use users
+        }
+    }
+
     fun fetchJoinedAt(user: User): DateTime? {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val key = this.getKey(user.getUniqueId())
