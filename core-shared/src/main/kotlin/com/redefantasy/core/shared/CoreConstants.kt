@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
+import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
 import java.util.*
@@ -26,6 +27,8 @@ object CoreConstants {
     val OK_HTTP = OkHttpClient()
     val RANDOM = Random()
     val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
+
+    val COOLDOWNS = CooldownManager()
 
     val WHITELISTED_USERS = listOf(
         "Gutyerrez",
