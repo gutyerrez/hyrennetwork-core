@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
+import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
@@ -56,5 +57,27 @@ object CoreConstants {
                         .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
         )
     }
+
+
+    fun fetchLobbyApplication() = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
+        ApplicationType.LOBBY)
+        .stream()
+        .filter {
+            val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
+
+            usersByApplication.size < it.slots ?: 0
+        }
+        .min { application1, application2 ->
+            println("${application1.name} -> ${application2.name}")
+
+            val usersByApplication1 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application1)
+            val usersByApplication2 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application2)
+
+            println("${application1.name}:${usersByApplication1.size} || ${application2.name}:${usersByApplication2.size}")
+
+            usersByApplication1.size.compareTo(usersByApplication2.size)
+        }
+        .orElse(null)
+
 
 }
