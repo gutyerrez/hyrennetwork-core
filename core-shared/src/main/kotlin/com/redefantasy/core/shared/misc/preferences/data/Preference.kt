@@ -1,9 +1,16 @@
 package com.redefantasy.core.shared.misc.preferences.data
 
+import com.redefantasy.core.shared.misc.preferences.PreferenceState
+
 /**
  * @author SrGutyerrez
  **/
-abstract class Preference(
+abstract class Preference<T>(
     val name: String,
-    val description: String
-)
+) {
+
+    var preferenceState: PreferenceState = PreferenceState.ENABLED
+
+    abstract fun getIcon(): T
+
+}

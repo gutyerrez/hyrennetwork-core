@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.misc.preferences.PreferenceRegistry
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
 import com.redefantasy.core.shared.misc.utils.ChatColor
@@ -294,17 +295,9 @@ open class User(
         return ignored
     }
 
-    fun getPreferences(): Map<String, Boolean> {
-        val preferences = mutableMapOf<String, Boolean>()
-
-        val userPreferences = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
-            this.id
-        ) ?: emptyList()
-
-        userPreferences.forEach { preferences[it.preference.name] = it.status }
-
-        return preferences
-    }
+    fun getPreferences() = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
+        this.id
+    ) ?: PreferenceRegistry.fetchAll()
 
     fun getReports(): Map<ReportCategory, Int> {
         val reports = mutableMapOf<ReportCategory, Int>()
