@@ -48,9 +48,16 @@ class PostgresUsersPreferencesRepository : IUsersPreferencesRepository {
         updateUserPreferencesDTO: UpdateUserPreferencesDTO
     ) {
         transaction {
-            UsersPreferencesTable.update {
+            val update = UsersPreferencesTable.update {
                 it[preferences] = updateUserPreferencesDTO.preferences
             }
+
+            if (update == 0) this@PostgresUsersPreferencesRepository.create(
+                CreateUserPreferencesDTO(
+                    updateUserPreferencesDTO.userId,
+                    updateUserPreferencesDTO.preferences
+                )
+            )
         }
     }
 
