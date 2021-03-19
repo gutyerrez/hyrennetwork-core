@@ -21,6 +21,8 @@ object PreferenceRegistry {
                 .logSubscriberExceptions(true)
                 .build()
 
+            bus.register(it)
+
             this.BUS[it.name] = bus
         }
     }
