@@ -5,12 +5,13 @@ import com.redefantasy.core.shared.misc.preferences.PreferenceState
 /**
  * @author SrGutyerrez
  **/
-abstract class Preference<T>(
+abstract class Preference(
     val name: String,
 ) {
 
     var preferenceState: PreferenceState = PreferenceState.ENABLED
 
-    abstract fun getIcon(): T
+    abstract fun <T> getIcon(): T
 
 }
+

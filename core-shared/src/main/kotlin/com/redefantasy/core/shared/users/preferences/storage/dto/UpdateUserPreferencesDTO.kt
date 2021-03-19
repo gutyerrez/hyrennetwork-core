@@ -9,5 +9,5 @@ import java.util.*
  **/
 class UpdateUserPreferencesDTO(
     val userId: EntityID<UUID>,
-    val preferences: Array<Preference<*>>
+    val preferences: Array<Preference>
 )

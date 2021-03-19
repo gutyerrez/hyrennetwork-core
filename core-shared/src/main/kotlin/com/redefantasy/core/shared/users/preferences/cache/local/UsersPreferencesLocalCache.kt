@@ -16,7 +16,7 @@ class UsersPreferencesLocalCache : LocalCache {
 
     private val CACHE = Caffeine.newBuilder()
         .expireAfterWrite(10, TimeUnit.MINUTES)
-        .build<EntityID<UUID>, Array<Preference<*>>> {
+        .build<EntityID<UUID>, Array<Preference>> {
             CoreProvider.Repositories.Postgres.USERS_PREFERENCES_REPOSITORY.provide().fetchByUserId(
                 FetchUserPreferencesByUserIdDTO(
                     it

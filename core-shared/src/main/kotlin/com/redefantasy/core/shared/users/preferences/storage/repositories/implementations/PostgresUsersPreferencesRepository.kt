@@ -19,7 +19,7 @@ class PostgresUsersPreferencesRepository : IUsersPreferencesRepository {
 
     override fun fetchByUserId(
         fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
-    ): Array<Preference<*>> {
+    ): Array<Preference> {
         return transaction {
             val preferences = UsersPreferencesTable.select {
                 UsersPreferencesTable.userId eq fetchUserPreferencesByUserIdDTO.userId

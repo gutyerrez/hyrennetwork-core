@@ -13,7 +13,7 @@ interface IUsersPreferencesRepository : IRepository {
 
     fun fetchByUserId(
         fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
-    ): Array<Preference<*>>
+    ): Array<Preference>
 
     fun create(createUserPreferencesDTO: CreateUserPreferencesDTO)
 

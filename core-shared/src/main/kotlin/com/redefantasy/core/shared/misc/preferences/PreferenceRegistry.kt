@@ -8,11 +8,11 @@ import org.greenrobot.eventbus.EventBus
  */
 object PreferenceRegistry {
 
-    private val PREFERENCES = mutableMapOf<String, Preference<*>>()
+    private val PREFERENCES = mutableMapOf<String, Preference>()
 
     val BUS = mutableMapOf<String, EventBus>()
 
-    fun register(vararg preferences: Preference<*>) {
+    fun register(vararg preferences: Preference) {
         preferences.forEach {
             this.PREFERENCES[it.name] = it
 
