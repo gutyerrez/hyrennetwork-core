@@ -192,8 +192,6 @@ class UsersStatusRedisCache : RedisCache {
 
             if (!it.hexists(key, "joined_at")) return@use null
 
-            println("Entrou: ${it.hget(key, "joined_at")}")
-
             return@use DateTime.parse(it.hget(key, "joined_at"))
         }
     }
@@ -216,8 +214,6 @@ class UsersStatusRedisCache : RedisCache {
 
     fun create(user: User, application: Application?, version: Int) {
         try {
-            println("Criar status do usuário ${user.id}")
-
             val map = mutableMapOf<String, String>()
 
             map["proxy_application"] = CoreProvider.application.name
@@ -237,8 +233,6 @@ class UsersStatusRedisCache : RedisCache {
                     pipeline.hmset(key, map)
                     pipeline.expire(key, 10)
                     pipeline.sync()
-
-                    println("Criei")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
