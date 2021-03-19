@@ -35,6 +35,8 @@ class TellPreference : Preference<ItemStack>(
     fun on(
         event: InventoryClickEvent
     ) {
+        println("Chamou")
+
         val player = event.whoClicked as Player
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(player.uniqueId)!!
 
@@ -42,6 +44,8 @@ class TellPreference : Preference<ItemStack>(
         val preference = preferences.find { it == this }!!
 
         if (CoreConstants.COOLDOWNS.inCooldown(user, this.name)) return
+
+        println("Passou aqui")
 
         val currentPreferenceState = preference.preferenceState
         val switchPreferenceState = when (currentPreferenceState) {
@@ -57,6 +61,8 @@ class TellPreference : Preference<ItemStack>(
                 preferences
             )
         )
+
+        println("dale")
 
         CoreConstants.COOLDOWNS.start(user, this.name, TimeUnit.SECONDS.toMillis(3))
     }
