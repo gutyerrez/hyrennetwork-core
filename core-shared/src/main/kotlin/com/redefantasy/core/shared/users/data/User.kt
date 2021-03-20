@@ -47,6 +47,7 @@ open class User(
     var directMessage = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchDirectMessage(
         this
     )
+    var lastSentMessage: String? = null
 
     fun setLogged(logged: Boolean) {
         CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)

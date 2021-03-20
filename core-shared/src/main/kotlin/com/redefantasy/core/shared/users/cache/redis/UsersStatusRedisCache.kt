@@ -212,6 +212,16 @@ class UsersStatusRedisCache : RedisCache {
         }
     }
 
+    fun fetchLastSentMessage(user: User): String? {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+            val key = this.getKey(user.getUniqueId())
+
+            if (!it.hexists(key, "last_sent_message")) return@use null
+
+            return@use it.hget(key, "last_sent_message")
+        }
+    }
+
     fun create(user: User, application: Application?, version: Int) {
         try {
             val map = mutableMapOf<String, String>()
@@ -221,6 +231,7 @@ class UsersStatusRedisCache : RedisCache {
             map["connected_address"] = CoreProvider.application.address.address.hostAddress
             map["connected_version"] = version.toString()
             map["direct_message"] = this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()?.toString() ?: "undefined"
+            map["last_sent_message"] = this.fetchLastSentMessage(user) ?: user.lastSentMessage ?: "undefined"
             map["joined_at"] = this.fetchJoinedAt(user)?.toString() ?: DateTime.now(
                 CoreConstants.DATE_TIME_ZONE
             ).toString()

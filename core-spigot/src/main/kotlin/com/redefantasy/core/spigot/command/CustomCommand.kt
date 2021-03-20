@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
 /**
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player
  */
 abstract class CustomCommand(
     name: String
-) : Command(name), Commandable<CommandSender> {
+) : Command(name), Commandable<CommandSender>, TabCompleter {
 
     override fun getSenderName(commandSender: CommandSender): String = commandSender.name
     
@@ -35,16 +36,38 @@ abstract class CustomCommand(
         return _aliases
     }
 
-    override fun isPlayer(commandSender: CommandSender) = commandSender is Player
+    override fun isPlayer(
+        commandSender: CommandSender
+    ) = commandSender is Player
 
-    override fun isConsole(commandSender: CommandSender) = commandSender is ConsoleCommandSender
+    override fun isConsole(
+        commandSender: CommandSender
+    ) = commandSender is ConsoleCommandSender
 
-    override fun execute(commandSender: CommandSender, label: String, args: Array<out String>): Boolean {
+    override fun execute(
+        commandSender: CommandSender,
+        label: String,
+        args: Array<out String>
+    ): Boolean {
         executeRaw(commandSender, args)
 
         return false
     }
 
-    override fun onCommand(commandSender: CommandSender, user: User?, args: Array<out String>): Boolean? = null
+    override fun onCommand(
+        commandSender: CommandSender,
+        user: User?,
+        args: Array<out String>
+    ): Boolean? = null
+
+    override fun onTabComplete(
+        commandSender: CommandSender,
+        _command: Command,
+        _label: String,
+        args: Array<out String>
+    ): MutableList<String?> = this.onTabComplete0(
+        commandSender,
+        args
+    ).toMutableList()
 
 }

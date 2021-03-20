@@ -4,6 +4,7 @@ import com.redefantasy.core.shared.commands.Commandable
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Command
+import net.md_5.bungee.api.plugin.TabExecutor
 import net.md_5.bungee.command.ConsoleCommandSender
 
 /**
@@ -11,19 +12,28 @@ import net.md_5.bungee.command.ConsoleCommandSender
  */
 abstract class CustomCommand(
     name: String
-) : Command(name), Commandable<CommandSender> {
+) : Command(name), Commandable<CommandSender>, TabExecutor {
 
     open fun getDescription() = this.getDescription0()
 
     open fun getUsage() = this.getUsage0()
 
-    override fun getSenderName(commandSender: CommandSender): String = commandSender.name
+    override fun getSenderName(
+        commandSender: CommandSender
+    ): String = commandSender.name
 
-    override fun isPlayer(commandSender: CommandSender) = commandSender is ProxiedPlayer
+    override fun isPlayer(
+        commandSender: CommandSender
+    ) = commandSender is ProxiedPlayer
 
-    override fun isConsole(commandSender: CommandSender) = commandSender is ConsoleCommandSender
+    override fun isConsole(
+        commandSender: CommandSender
+    ) = commandSender is ConsoleCommandSender
 
-    override fun execute(commandSender: CommandSender, args: Array<out String>) {
+    override fun execute(
+        commandSender: CommandSender,
+        args: Array<out String>
+    ) {
         this.executeRaw(
             commandSender,
             args
@@ -31,5 +41,13 @@ abstract class CustomCommand(
     }
 
     override fun getAliases0(): Array<String> = this.aliases
+
+    override fun onTabComplete(
+        commandSender: CommandSender,
+        args: Array<out String>
+    ) = this.onTabComplete0(
+        commandSender,
+        args
+    )
 
 }

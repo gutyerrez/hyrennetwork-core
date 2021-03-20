@@ -2,6 +2,7 @@ package com.redefantasy.core.spigot.misc.preferences.tell
 
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.preferences.PreferenceRegistry
 import com.redefantasy.core.shared.misc.preferences.PreferenceState
 import com.redefantasy.core.shared.misc.preferences.data.Preference
 import com.redefantasy.core.shared.users.preferences.storage.dto.UpdateUserPreferencesDTO
@@ -15,8 +16,12 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Gutyerrez
  */
-class TellPreference : Preference(
-    "user-private-messages-preference"
+data class TellPreference(
+    override val name: String = "user-private-messages-preference",
+    override var preferenceState: PreferenceState = PreferenceState.ENABLED
+) : Preference(
+    name,
+    preferenceState
 ) {
 
     @Suppress("UNCHECKED_CAST")
@@ -40,7 +45,14 @@ class TellPreference : Preference(
         val player = event.whoClicked as Player
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(player.uniqueId)!!
 
-        val preferences = user.getPreferences()
+        var preferences = user.getPreferences()
+
+        if (preferences.size != PreferenceRegistry.fetchAll().size) {
+            preferences = preferences.plus(PreferenceRegistry.fetchAll())
+
+            println(preferences)
+        }
+
         val preference = preferences.find { it == this }!!
 
         if (CoreConstants.COOLDOWNS.inCooldown(user, this.name)) return
