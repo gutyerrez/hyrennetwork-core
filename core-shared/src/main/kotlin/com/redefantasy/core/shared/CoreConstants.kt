@@ -83,6 +83,7 @@ object CoreConstants {
             ApplicationStatus::class
         )
 
+        println(application)
         println(applicationStatus === null)
         println(applicationStatus)
 
