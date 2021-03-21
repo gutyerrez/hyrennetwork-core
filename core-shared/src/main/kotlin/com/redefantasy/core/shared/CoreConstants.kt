@@ -63,8 +63,9 @@ object CoreConstants {
 
     fun fetchLobbyApplication(): Application? {
         val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
-                ApplicationType.LOBBY
-            ).stream()
+            ApplicationType.LOBBY
+        ).shuffled()
+            .stream()
             .filter {
                 val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
 
