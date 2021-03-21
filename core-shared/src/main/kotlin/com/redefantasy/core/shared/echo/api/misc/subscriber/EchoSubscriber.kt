@@ -22,7 +22,8 @@ open class EchoSubscriber(
 
     private val EVENT_BUS = EventBus.builder()
             .logNoSubscriberMessages(false)
-            .throwSubscriberException(true)
+            .logSubscriberExceptions(true)
+            .throwSubscriberException(false)
             .build()
 
     fun callPacket(channel: String, packet: EchoPacket) {
