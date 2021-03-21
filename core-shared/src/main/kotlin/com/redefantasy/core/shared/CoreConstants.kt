@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
 import com.redefantasy.core.shared.applications.ApplicationType
+import com.redefantasy.core.shared.applications.data.Application
+import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
@@ -52,32 +54,41 @@ object CoreConstants {
         JACKSON.registerModule(KotlinModule())
         JACKSON.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         JACKSON.setVisibility(
-                JACKSON.serializationConfig.defaultVisibilityChecker
-                        .with(JsonAutoDetect.Visibility.NONE)
-                        .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+            JACKSON.serializationConfig.defaultVisibilityChecker
+                .with(JsonAutoDetect.Visibility.NONE)
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
         )
     }
 
 
-    fun fetchLobbyApplication() = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
-        ApplicationType.LOBBY)
-        .stream()
-        .filter {
-            val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
+    fun fetchLobbyApplication(): Application? {
+        val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
+                ApplicationType.LOBBY
+            ).stream()
+            .filter {
+                val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
 
-            usersByApplication.size < it.slots ?: 0
-        }
-        .min { application1, application2 ->
-            println("${application1.name} -> ${application2.name}")
+                usersByApplication.size < it.slots ?: 0
+            }
+            .min { application1, application2 ->
+                val usersByApplication1 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application1)
+                val usersByApplication2 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application2)
 
-            val usersByApplication1 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application1)
-            val usersByApplication2 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application2)
+                usersByApplication1.size.compareTo(usersByApplication2.size)
+            }
+            .orElse(null)
 
-            println("${application1.name}:${usersByApplication1.size} || ${application2.name}:${usersByApplication2.size}")
+        val applicationStatus = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+            application,
+            ApplicationStatus::class
+        )
 
-            usersByApplication1.size.compareTo(usersByApplication2.size)
-        }
-        .orElse(null)
+        println(applicationStatus === null)
+        println(applicationStatus)
 
+        if (applicationStatus === null) return this.fetchLobbyApplication()
+
+        return application
+    }
 
 }
