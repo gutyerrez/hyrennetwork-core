@@ -280,53 +280,57 @@ interface Commandable<T> {
         commandSender: T,
         args: Array<out String>
     ): Iterable<String?> {
-        println("tab")
+        try {
+            println("tab")
 
-        if (args.isNotEmpty()) {
-            val index = args.size - 1
-            val token = args[index]
+            if (args.isNotEmpty()) {
+                val index = args.size - 1
+                val token = args[index]
 
-            if (token.isNotEmpty()) {
-                when {
-                    this.getSubCommands() !== null -> {
-                        val subCommand: String? = this.getArguments()!!.stream()
-                            .filter { it.name.toLowerCase().startsWith(token.trim().toLowerCase()) }
-                            .findFirst()
-                            .map { it.name.trim() }
-                            .orElse(null)
+                if (token.isNotEmpty()) {
+                    when {
+                        this.getSubCommands() !== null -> {
+                            val subCommand: String? = this.getArguments()!!.stream()
+                                .filter { it.name.toLowerCase().startsWith(token.trim().toLowerCase()) }
+                                .findFirst()
+                                .map { it.name.trim() }
+                                .orElse(null)
 
-                        if (subCommand === null) return emptyList()
+                            if (subCommand === null) return emptyList()
 
-                        return immutableListOf(
-                            *args,
-                            subCommand
-                        )
-                    }
-                    this.getArguments() !== null -> {
-                        val argument: String? = this.getArguments()!!.stream()
-                            .filter { it.name.trim().toLowerCase().startsWith(token.trim().toLowerCase()) }
-                            .findFirst()
-                            .orElse(null)?.name ?: CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
-                            .stream()
-                            .filter {
-                                val _user =
-                                    CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
+                            return immutableListOf(
+                                *args,
+                                subCommand
+                            )
+                        }
+                        this.getArguments() !== null -> {
+                            val argument: String? = this.getArguments()!!.stream()
+                                .filter { it.name.trim().toLowerCase().startsWith(token.trim().toLowerCase()) }
+                                .findFirst()
+                                .orElse(null)?.name ?: CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
+                                .stream()
+                                .filter {
+                                    val _user =
+                                        CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
 
-                                _user.name.toLowerCase().startsWith(token.trim())
-                            }
-                            .map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
-                            .findFirst()
-                            .orElse(null)
+                                    _user.name.toLowerCase().startsWith(token.trim())
+                                }
+                                .map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
+                                .findFirst()
+                                .orElse(null)
 
-                        if (argument === null) return emptyList()
+                            if (argument === null) return emptyList()
 
-                        return immutableListOf(
-                            *args,
-                            argument
-                        )
+                            return immutableListOf(
+                                *args,
+                                argument
+                            )
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
         return immutableListOf()
