@@ -43,16 +43,6 @@ class ApplicationsStatusRedisCache : RedisCache {
         }
     }
 
-    fun fetchApplicationMaintenanceStatusByApplication(
-        application: Application,
-        applicationStatusClass: KClass<out ApplicationStatus> = ApplicationStatus::class
-    ): Boolean {
-        return this.fetchApplicationStatusByApplication(
-            application,
-            applicationStatusClass
-        )?.maintenance ?: false
-    }
-
     fun fetchApplicationStatusByApplication(
         application: Application,
         applicationStatusClass: KClass<out ApplicationStatus>

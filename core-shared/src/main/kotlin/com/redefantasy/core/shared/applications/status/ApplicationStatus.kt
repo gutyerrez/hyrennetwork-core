@@ -20,7 +20,6 @@ open class ApplicationStatus(
     var heapMaxSize: Long? = null
     var heapFreeSize: Long? = null
     var onlinePlayers: Int = 0
-    var maintenance: Boolean = false
 
     fun isSame(applicationName: String) = this.applicationName == applicationName
 

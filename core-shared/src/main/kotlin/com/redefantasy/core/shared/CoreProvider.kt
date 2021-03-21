@@ -12,6 +12,8 @@ import com.redefantasy.core.shared.exceptions.ApplicationAlreadyPreparedExceptio
 import com.redefantasy.core.shared.exceptions.InvalidApplicationException
 import com.redefantasy.core.shared.groups.storage.repositories.IGroupsRepository
 import com.redefantasy.core.shared.groups.storage.repositories.implementations.PostgresGroupsRepository
+import com.redefantasy.core.shared.misc.maintenance.repositories.IMaintenanceRepository
+import com.redefantasy.core.shared.misc.maintenance.repositories.implementations.PostgresMaintenanceRepository
 import com.redefantasy.core.shared.misc.punish.category.cache.local.PunishCategoriesLocalCache
 import com.redefantasy.core.shared.misc.punish.category.storage.repositories.IPunishCategoriesRepository
 import com.redefantasy.core.shared.misc.punish.category.storage.repositories.implementations.PostgresPunishCategoriesRepository
@@ -79,6 +81,7 @@ object CoreProvider {
         PROVIDERS.add(Repositories.Postgres.USERS_FRIENDS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.IGNORED_USERS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_PREFERENCES_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.MAINTENANCE_REPOSITORY)
 
         // local cache
         PROVIDERS.add(Cache.Local.SERVERS)
@@ -275,6 +278,10 @@ object CoreProvider {
 
             val USERS_PREFERENCES_REPOSITORY = PostgresRepositoryProvider<IUsersPreferencesRepository>(
                 PostgresUsersPreferencesRepository::class
+            )
+
+            val MAINTENANCE_REPOSITORY = PostgresRepositoryProvider<IMaintenanceRepository>(
+                PostgresMaintenanceRepository::class
             )
 
         }
