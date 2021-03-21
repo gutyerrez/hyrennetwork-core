@@ -10,30 +10,26 @@ import java.net.InetSocketAddress
  * @author SrGutyerrez
  **/
 data class Application(
-        val name: String,
-        val displayName: String,
-        val slots: Int? = null,
-        val address: InetSocketAddress,
-        val applicationType: ApplicationType,
-        val server: Server? = null,
-        val restrictJoin: Group? = null
+    val name: String,
+    val displayName: String,
+    val slots: Int? = null,
+    val address: InetSocketAddress,
+    val applicationType: ApplicationType,
+    val server: Server? = null,
+    val restrictJoin: Group? = null
 ) {
 
-    fun getFancyDisplayName(): String {
-        return StringUtils.replaceEach(
-            this.displayName,
-            arrayOf(
-                "Factions",
-                "Rankup",
-                "Lobby"
-            ),
-            arrayOf(
-                "F.",
-                "R.",
-                "L."
-            )
+    fun getFancyDisplayName() = StringUtils.replaceEach(
+        this.displayName,
+        arrayOf(
+            "Rankup",
+            "Lobby"
+        ),
+        arrayOf(
+            "R.",
+            "L."
         )
-    }
+    )
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false
