@@ -290,10 +290,10 @@ interface Commandable<T> {
                 if (token.isNotEmpty()) {
                     when {
                         this.getSubCommands() !== null -> {
-                            val subCommand: String? = this.getArguments()!!.stream()
-                                .filter { it.name.toLowerCase().startsWith(token.trim().toLowerCase()) }
+                            val subCommand: String? = this.getSubCommands()!!.stream()
+                                .filter { it.getName().toLowerCase().startsWith(token.trim().toLowerCase()) }
                                 .findFirst()
-                                .map { it.name.trim() }
+                                .map { it.getName().trim() }
                                 .orElse(null)
 
                             if (subCommand === null) return emptyList()
