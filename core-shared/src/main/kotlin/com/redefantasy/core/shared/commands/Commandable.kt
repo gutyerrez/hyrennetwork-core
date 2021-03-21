@@ -280,41 +280,53 @@ interface Commandable<T> {
         commandSender: T,
         args: Array<out String>
     ): Iterable<String?> {
-        try {
-            if (args.isNotEmpty()) {
-                val index = args.size - 1
-                println(index)
-                val token = args[index]
-                println(token)
+        if (args.isNotEmpty()) {
+            val index = args.size - 1
+            val token = args[index]
 
-                if (token.isNotEmpty() && !this.getArguments().isNullOrEmpty()) {
-                    println("daleee")
+            if (token.isNotEmpty()) {
+                when {
+                    this.getSubCommands() !== null -> {
+                        val subCommand: String? = this.getArguments()!!.stream()
+                            .filter { it.name.toLowerCase().startsWith(token.trim().toLowerCase()) }
+                            .findFirst()
+                            .map { it.name.trim() }
+                            .orElse(null)
 
-                    val argument: String? = this.getArguments()!!.stream()
-                        .filter { it.name.toLowerCase().startsWith(token.toLowerCase()) }
-                        .findFirst()
-                        .orElse(null)?.name ?: CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
-                        .stream()
-                        .filter {
-                            val _user =
-                                CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
+                        if (subCommand === null) return emptyList()
 
-                            _user.name.toLowerCase().startsWith(token)
-                        }
-                        .map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
-                        .findFirst()
-                        .orElse(null)
+                        return immutableListOf(
+                            *args,
+                            subCommand
+                        )
+                    }
+                    this.getArguments() !== null -> {
+                        val argument: String? = this.getArguments()!!.stream()
+                            .filter { it.name.trim().toLowerCase().startsWith(token.trim().toLowerCase()) }
+                            .findFirst()
+                            .orElse(null)?.name ?: CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
+                            .stream()
+                            .filter {
+                                val _user =
+                                    CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
 
-                    if (argument === null) return emptyList()
+                                _user.name.toLowerCase().startsWith(token.trim())
+                            }
+                            .map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
+                            .findFirst()
+                            .orElse(null)
 
-                    return immutableListOf(
-                        *args,
-                        argument
-                    ).asIterable()
+                        if (argument === null) return emptyList()
+
+                        return immutableListOf(
+                            *args,
+                            argument
+                        )
+                    }
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } else {
+            println(args)
         }
 
         return immutableListOf()
