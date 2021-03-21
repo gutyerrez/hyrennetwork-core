@@ -67,6 +67,12 @@ object CoreConstants {
         ).shuffled()
             .stream()
             .filter {
+                CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+                    it,
+                    ApplicationStatus::class
+                ) !== null
+            }
+            .filter {
                 val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
 
                 usersByApplication.size < it.slots ?: 0
@@ -78,17 +84,6 @@ object CoreConstants {
                 usersByApplication1.size.compareTo(usersByApplication2.size)
             }
             .orElse(null)
-
-        val applicationStatus = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-            application,
-            ApplicationStatus::class
-        )
-
-        println(application)
-        println(applicationStatus === null)
-        println(applicationStatus)
-
-        if (applicationStatus === null) return this.fetchLobbyApplication()
 
         return application
     }
