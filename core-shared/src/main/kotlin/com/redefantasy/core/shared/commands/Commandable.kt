@@ -283,22 +283,29 @@ interface Commandable<T> {
         try {
             if (args.isNotEmpty()) {
                 val index = args.size - 1
+                println(index)
                 val token = args[index]
+                println(token)
 
                 if (token.isNotEmpty() && !this.getArguments().isNullOrEmpty()) {
+                    println("daleee")
+
                     val argument: String? = this.getArguments()!!.stream()
                         .filter { it.name.toLowerCase().startsWith(token.toLowerCase()) }
                         .findFirst()
                         .orElse(null)?.name ?: CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
                         .stream()
                         .filter {
-                            val _user = CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
+                            val _user =
+                                CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
 
                             _user.name.toLowerCase().startsWith(token)
                         }
                         .map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
                         .findFirst()
                         .orElse(null)
+
+                    println(argument)
 
                     return immutableListOf(
                         *args,

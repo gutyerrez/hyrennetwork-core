@@ -26,7 +26,9 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     private fun getKey(name: String) = "applications:$name"
 
-    fun update(applicationStatus: ApplicationStatus) {
+    fun update(
+        applicationStatus: ApplicationStatus
+    ) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
@@ -39,6 +41,16 @@ class ApplicationsStatusRedisCache : RedisCache {
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
+    }
+
+    fun fetchApplicationMaintenanceStatusByApplication(
+        application: Application,
+        applicationStatusClass: KClass<out ApplicationStatus> = ApplicationStatus::class
+    ): Boolean {
+        return this.fetchApplicationStatusByApplication(
+            application,
+            applicationStatusClass
+        )?.maintenance ?: false
     }
 
     fun fetchApplicationStatusByApplication(

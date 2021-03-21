@@ -19,8 +19,9 @@ abstract class ApplicationStatusTask(
         this.buildApplicationStatus(this.applicationStatus)
 
         CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
-
-        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(ApplicationStatus::class)
+        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
+            ApplicationStatus::class
+        )
 
         val now = System.currentTimeMillis()
 

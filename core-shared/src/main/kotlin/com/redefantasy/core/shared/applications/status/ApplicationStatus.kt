@@ -43,7 +43,6 @@ open class ApplicationStatus(
             .addField("heap_size", this.heapSize)
             .addField("heap_max_size", this.heapMaxSize)
             .addField("heap_free_size", this.heapFreeSize)
-            .addField("maintenance", this.maintenance)
             .addField("online_players", this.onlinePlayers)
 
         return builder
@@ -65,22 +64,6 @@ open class ApplicationStatus(
 
     override fun hashCode(): Int {
         return this.applicationName.hashCode()
-    }
-
-    override fun toString(): String {
-        return "{" +
-                "application_name: $applicationName" +
-                "\n" +
-                "application_type: $applicationType" +
-                "\n" +
-                "server: ${server?.name}" +
-                "\n" +
-                "address: $address" +
-                "\n" +
-                "online_since: $onlineSince" +
-                "\n" +
-                "online_players: $onlinePlayers" +
-                "}"
     }
 
 }
