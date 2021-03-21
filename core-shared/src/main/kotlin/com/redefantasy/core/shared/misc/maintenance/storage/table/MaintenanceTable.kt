@@ -9,6 +9,6 @@ import org.jetbrains.exposed.sql.Table
 object MaintenanceTable : Table("maintenance") {
 
     val applicationName = reference("application_name", ApplicationsTable)
-    var current_state = bool("current_state")
+    var currentState = bool("current_state")
 
 }

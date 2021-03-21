@@ -3,6 +3,7 @@ package com.redefantasy.core.shared.misc.maintenance.repositories.implementation
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.maintenance.repositories.IMaintenanceRepository
 import com.redefantasy.core.shared.misc.maintenance.storage.table.MaintenanceTable
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -20,7 +21,7 @@ class PostgresMaintenanceRepository : IMaintenanceRepository {
 
             if (result.empty()) return@transaction false
 
-            return@transaction result.first()[MaintenanceTable.current_state]
+            return@transaction result.first()[MaintenanceTable.currentState]
         }
     }
 
@@ -29,8 +30,13 @@ class PostgresMaintenanceRepository : IMaintenanceRepository {
         newState: Boolean
     ) {
         transaction {
-            MaintenanceTable.update({ MaintenanceTable.applicationName eq application.name }) {
-                it[current_state] = newState
+            val updated = MaintenanceTable.update({ MaintenanceTable.applicationName eq application.name }) {
+                it[currentState] = newState
+            }
+
+            if (updated <= 0) MaintenanceTable.insert {
+                it[applicationName] = application.name
+                it[currentState] = newState
             }
         }
     }
