@@ -305,7 +305,7 @@ interface Commandable<T> {
                         .findFirst()
                         .orElse(null)
 
-                    println(argument)
+                    if (argument === null) return emptyList()
 
                     return immutableListOf(
                         *args,
