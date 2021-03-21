@@ -280,6 +280,8 @@ interface Commandable<T> {
         commandSender: T,
         args: Array<out String>
     ): Iterable<String?> {
+        println("tab")
+
         if (args.isNotEmpty()) {
             val index = args.size - 1
             val token = args[index]
@@ -325,8 +327,6 @@ interface Commandable<T> {
                     }
                 }
             }
-        } else {
-            println(args)
         }
 
         return immutableListOf()
