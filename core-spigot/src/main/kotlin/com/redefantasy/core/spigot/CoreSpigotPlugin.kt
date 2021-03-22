@@ -69,43 +69,45 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Start server task
          */
 
-        if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
-            println("daleeee")
-
-            try {
-                AsyncScheduler.scheduleAsyncRepeatingTask(
-                    object : ApplicationStatusTask(
-                        ApplicationStatus(
-                            CoreProvider.application.name,
-                            CoreProvider.application.applicationType,
-                            CoreProvider.application.server,
-                            CoreProvider.application.address,
-                            this.onlineSince
-                        )
-                    ) {
-                        override fun buildApplicationStatus(
-                            applicationStatus: ApplicationStatus
-                        ) {
-                            try {
-                                println("ue")
-
-                                val runtime = Runtime.getRuntime()
-
-                                applicationStatus.heapSize = runtime.totalMemory()
-                                applicationStatus.heapMaxSize = runtime.maxMemory()
-                                applicationStatus.heapFreeSize = runtime.freeMemory()
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                    },
-                    0,
-                    1,
-                    TimeUnit.SECONDS
+        if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide()
+                .fetchByName("FACTIONS_OMEGA")
+        ) {
+            println(
+                arrayOf(
+                    "daleeee",
+                    CoreProvider.application.name,
+                    CoreProvider.application.applicationType,
+                    CoreProvider.application.server,
+                    CoreProvider.application.address
                 )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            )
+
+            AsyncScheduler.scheduleAsyncRepeatingTask(
+                object : ApplicationStatusTask(
+                    ApplicationStatus(
+                        CoreProvider.application.name,
+                        CoreProvider.application.applicationType,
+                        CoreProvider.application.server,
+                        CoreProvider.application.address,
+                        this.onlineSince
+                    )
+                ) {
+                    override fun buildApplicationStatus(
+                        applicationStatus: ApplicationStatus
+                    ) {
+                        println("ue")
+
+                        val runtime = Runtime.getRuntime()
+
+                        applicationStatus.heapSize = runtime.totalMemory()
+                        applicationStatus.heapMaxSize = runtime.maxMemory()
+                        applicationStatus.heapFreeSize = runtime.freeMemory()
+                    }
+                },
+                0,
+                1,
+                TimeUnit.SECONDS
+            )
         }
     }
 
