@@ -73,13 +73,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 .fetchByName("FACTIONS_OMEGA")
         ) {
             println(
-                arrayOf(
-                    "daleeee",
-                    CoreProvider.application.name,
-                    CoreProvider.application.applicationType,
-                    CoreProvider.application.server,
-                    CoreProvider.application.address
-                )
+                "daleeee ${CoreProvider.application.name} ${CoreProvider.application.applicationType} ${CoreProvider.application.server} ${CoreProvider.application.address}"
             )
 
             AsyncScheduler.scheduleAsyncRepeatingTask(
