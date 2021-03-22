@@ -17,6 +17,8 @@ class MaintenanceLocalCache : LocalCache {
             CoreProvider.Repositories.Postgres.MAINTENANCE_REPOSITORY.provide().fetchByApplication(it)
         }
 
-    fun fetch(application: Application) = this.CACHE.get(application)
+    fun fetch(
+        application: Application
+    ) = this.CACHE.get(application)
 
 }
