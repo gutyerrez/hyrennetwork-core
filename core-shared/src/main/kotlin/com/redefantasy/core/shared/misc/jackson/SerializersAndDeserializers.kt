@@ -14,7 +14,7 @@ import com.redefantasy.core.shared.servers.data.Server
 /**
  * @author Gutyerrez
  */
-internal class ServerSerializer : StdScalarSerializer<Server>(
+open class ServerSerializer : StdScalarSerializer<Server>(
     Server::class.java
 ) {
 
@@ -48,7 +48,7 @@ internal class ServerSerializer : StdScalarSerializer<Server>(
 
 }
 
-internal class ServerDeserializer : FromStringDeserializer<Server>(
+open class ServerDeserializer : FromStringDeserializer<Server>(
     Server::class.java
 ) {
 
@@ -59,7 +59,7 @@ internal class ServerDeserializer : FromStringDeserializer<Server>(
 
 }
 
-internal class ApplicationSerializer : StdScalarSerializer<Application>(
+open class ApplicationSerializer : StdScalarSerializer<Application>(
     Application::class.java
 ) {
 
@@ -93,7 +93,7 @@ internal class ApplicationSerializer : StdScalarSerializer<Application>(
 
 }
 
-internal class ApplicationDeserializer : FromStringDeserializer<Application>(
+open class ApplicationDeserializer : FromStringDeserializer<Application>(
     Application::class.java
 ) {
 
