@@ -22,7 +22,7 @@ open class ServerSerializer : StdScalarSerializer<Server>(
         jsonGenerator: JsonGenerator,
         serializerProvider: SerializerProvider
     ) {
-        jsonGenerator.writeStringField("name", server.getName())
+        jsonGenerator.writeString(server.getName())
     }
 
     override fun serializeWithType(
