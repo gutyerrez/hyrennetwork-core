@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.servers.data
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.servers.ServerType
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.exposed.dao.id.EntityID
@@ -9,7 +8,6 @@ import org.jetbrains.exposed.dao.id.EntityID
  * @author SrGutyerrez
  **/
 data class Server(
-    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     val name: EntityID<String>,
     val displayName: String,
     val serverType: ServerType

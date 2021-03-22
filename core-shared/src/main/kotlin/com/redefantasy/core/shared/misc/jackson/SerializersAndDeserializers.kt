@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.servers.data.Server
 
 /**
@@ -56,50 +55,5 @@ open class ServerDeserializer : FromStringDeserializer<Server>(
         serverName: String,
         deserializationContext: DeserializationContext
     ) = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
-
-}
-
-open class ApplicationSerializer : StdScalarSerializer<Application>(
-    Application::class.java
-) {
-
-    override fun serialize(
-        application: Application,
-        jsonGenerator: JsonGenerator,
-        serializerProvider: SerializerProvider
-    ) {
-        jsonGenerator.writeStringField("name", application.name)
-    }
-
-    override fun serializeWithType(
-        application: Application,
-        jsonGenerator: JsonGenerator,
-        serializerProvider: SerializerProvider,
-        typeSerializer: TypeSerializer
-    ) {
-        val typeIdDef = typeSerializer.writeTypePrefix(
-            jsonGenerator,
-            typeSerializer.typeId(
-                application,
-                Application::class.java,
-                JsonToken.VALUE_STRING
-            )
-        )
-
-        this.serialize(application, jsonGenerator, serializerProvider)
-
-        typeSerializer.writeTypeSuffix(jsonGenerator, typeIdDef)
-    }
-
-}
-
-open class ApplicationDeserializer : FromStringDeserializer<Application>(
-    Application::class.java
-) {
-
-    override fun _deserialize(
-        applicationName: String,
-        deserializationContext: DeserializationContext
-    ) = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(applicationName)
 
 }
