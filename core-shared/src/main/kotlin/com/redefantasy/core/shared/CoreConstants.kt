@@ -11,7 +11,10 @@ import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
+import com.redefantasy.core.shared.misc.jackson.EntityIDDeserializer
+import com.redefantasy.core.shared.misc.jackson.EntityIDSerializer
 import okhttp3.OkHttpClient
+import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTimeZone
 import java.util.*
 
@@ -58,6 +61,13 @@ object CoreConstants {
                 .with(JsonAutoDetect.Visibility.NONE)
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
         )
+
+        val module = KotlinModule()
+
+        module.addSerializer(EntityIDSerializer())
+        module.addDeserializer(EntityID::class.java, EntityIDDeserializer())
+
+        JACKSON.registerModule(module)
     }
 
 
