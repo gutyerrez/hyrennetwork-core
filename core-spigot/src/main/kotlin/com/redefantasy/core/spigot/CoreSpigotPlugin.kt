@@ -68,12 +68,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
         /**
          * Start server task
          */
-        println("Server -> ${CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")}")
-        println(CoreProvider.application)
-
-        if (CoreProvider.application.server === CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
-            println("Aeee")
-
+        if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
             AsyncScheduler.scheduleAsyncRepeatingTask(
                 object : ApplicationStatusTask(
                     ApplicationStatus(
