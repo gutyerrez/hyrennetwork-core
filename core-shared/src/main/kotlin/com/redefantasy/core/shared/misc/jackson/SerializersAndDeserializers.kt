@@ -28,6 +28,8 @@ internal class EntityIDSerializer : StdScalarSerializer<EntityID<*>>(
     ) {
         jsonGenerator.writeObjectField("table_name", value.table::class.java)
         jsonGenerator.writeObjectField("value", value.value)
+
+        println("Serializar ${value.table} --> ${value.value}")
     }
 
     override fun serializeWithType(
