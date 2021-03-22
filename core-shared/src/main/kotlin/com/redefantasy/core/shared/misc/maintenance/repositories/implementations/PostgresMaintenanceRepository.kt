@@ -21,11 +21,7 @@ class PostgresMaintenanceRepository : IMaintenanceRepository {
                 MaintenanceTable.applicationName eq application.name
             }
 
-            println(result.empty())
-
             if (result.empty()) return@transaction false
-
-            println("aqui")
 
             return@transaction result.first()[MaintenanceTable.currentState]
         }
