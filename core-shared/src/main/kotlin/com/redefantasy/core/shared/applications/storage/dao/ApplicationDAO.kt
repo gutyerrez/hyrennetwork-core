@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.storage.table.ApplicationsTable
 import com.redefantasy.core.shared.providers.databases.postgres.dao.StringEntity
 import com.redefantasy.core.shared.providers.databases.postgres.dao.StringEntityClass
+import com.redefantasy.core.shared.servers.storage.dto.FetchServerByNameDTO
 import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
 
@@ -34,7 +35,13 @@ class ApplicationDAO(
             this.port,
         ),
         this.applicationType,
-        CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+        if (CoreProvider.Cache.Local.SERVERS.provide().fetchAll().isEmpty()) {
+            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
+                FetchServerByNameDTO(
+                    this.serverName?.value
+                )
+            )
+        } else CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
             this.serverName?.value
         ),
         this.restrictJoinGroupName

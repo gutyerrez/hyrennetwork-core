@@ -3,6 +3,7 @@ package com.redefantasy.core.shared.servers.storage.repositories.implementations
 import com.google.common.collect.Maps
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.servers.storage.dao.ServerDAO
+import com.redefantasy.core.shared.servers.storage.dto.FetchServerByNameDTO
 import com.redefantasy.core.shared.servers.storage.repositories.IServersRepository
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -20,6 +21,18 @@ class PostgresServersRepository : IServersRepository {
             }
 
             return@transaction servers
+        }
+    }
+
+    override fun fetchByName(
+        fetchServerByNameDTO: FetchServerByNameDTO
+    ): Server? {
+        return transaction {
+            if (fetchServerByNameDTO.name === null) return@transaction null
+
+            return@transaction ServerDAO.findById(
+                fetchServerByNameDTO.name
+            )?.asServer()
         }
     }
 

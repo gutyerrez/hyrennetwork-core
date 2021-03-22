@@ -4,6 +4,7 @@ import com.google.common.collect.Lists
 import com.redefantasy.core.shared.applications.cache.local.ApplicationsLocalCache
 import com.redefantasy.core.shared.applications.cache.redis.ApplicationsStatusRedisCache
 import com.redefantasy.core.shared.applications.data.Application
+import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationByAddressAndPortDTO
 import com.redefantasy.core.shared.applications.storage.repositories.IApplicationsRepository
 import com.redefantasy.core.shared.applications.storage.repositories.implementations.PostgresApplicationsRepository
 import com.redefantasy.core.shared.environment.Env
@@ -122,8 +123,11 @@ object CoreProvider {
             port
         )
 
-        val application = Cache.Local.APPLICATIONS.provide().fetchByAddress(
-            address
+        val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByAddressAndPort(
+            FetchApplicationByAddressAndPortDTO(
+                address.address.hostAddress,
+                address.port
+            )
         ) ?: throw InvalidApplicationException("Invalid application $address")
 
         println("aplicação $application")

@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.servers.storage.repositories
 
 import com.redefantasy.core.shared.servers.data.Server
+import com.redefantasy.core.shared.servers.storage.dto.FetchServerByNameDTO
 import com.redefantasy.core.shared.storage.repositories.IRepository
 
 /**
@@ -9,5 +10,9 @@ import com.redefantasy.core.shared.storage.repositories.IRepository
 interface IServersRepository : IRepository {
 
     fun fetchAll(): Map<String, Server>
+
+    fun fetchByName(
+        fetchServerByNameDTO: FetchServerByNameDTO
+    ): Server?
 
 }
