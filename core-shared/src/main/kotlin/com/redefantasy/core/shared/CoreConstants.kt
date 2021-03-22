@@ -11,6 +11,8 @@ import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
+import com.redefantasy.core.shared.misc.jackson.ApplicationDeserializer
+import com.redefantasy.core.shared.misc.jackson.ApplicationSerializer
 import com.redefantasy.core.shared.misc.jackson.ServerDeserializer
 import com.redefantasy.core.shared.misc.jackson.ServerSerializer
 import com.redefantasy.core.shared.servers.data.Server
@@ -64,10 +66,18 @@ object CoreConstants {
 
         val module = KotlinModule()
 
+        // Server serializer
         module.addSerializer(ServerSerializer())
         module.addDeserializer(
             Server::class.java,
             ServerDeserializer()
+        )
+
+        // Application serializer
+        module.addSerializer(ApplicationSerializer())
+        module.addDeserializer(
+            Application::class.java,
+            ApplicationDeserializer()
         )
 
         JACKSON.registerModule(module)

@@ -1,14 +1,14 @@
 package com.redefantasy.core.shared.misc.jackson
 
 import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
+import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.servers.data.Server
 
 /**
@@ -24,9 +24,6 @@ internal class ServerSerializer : StdScalarSerializer<Server>(
         serializerProvider: SerializerProvider
     ) {
         jsonGenerator.writeStringField("name", server.getName())
-        jsonGenerator.writeStringField("display_name", server.displayName)
-
-        println("Serializar => $server")
     }
 
     override fun serializeWithType(
@@ -51,19 +48,58 @@ internal class ServerSerializer : StdScalarSerializer<Server>(
 
 }
 
-internal class ServerDeserializer : StdDeserializer<Server>(
+internal class ServerDeserializer : FromStringDeserializer<Server>(
     Server::class.java
 ) {
 
-    override fun deserialize(
-        jsonParser: JsonParser,
+    override fun _deserialize(
+        serverName: String,
         deserializationContext: DeserializationContext
-    ): Server? {
-        val node = jsonParser.readValueAsTree<JsonNode>()
+    ) = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
 
-        println("Deserializar: $node")
+}
 
-        TODO("não implementado")
+internal class ApplicationSerializer : StdScalarSerializer<Application>(
+    Application::class.java
+) {
+
+    override fun serialize(
+        server: Application,
+        jsonGenerator: JsonGenerator,
+        serializerProvider: SerializerProvider
+    ) {
+        jsonGenerator.writeStringField("name", server.name)
     }
+
+    override fun serializeWithType(
+        value: Application,
+        jsonGenerator: JsonGenerator,
+        serializerProvider: SerializerProvider,
+        typeSerializer: TypeSerializer
+    ) {
+        val typeIdDef = typeSerializer.writeTypePrefix(
+            jsonGenerator,
+            typeSerializer.typeId(
+                value,
+                Server::class.java,
+                JsonToken.VALUE_EMBEDDED_OBJECT
+            )
+        )
+
+        this.serialize(value, jsonGenerator, serializerProvider)
+
+        typeSerializer.writeTypeSuffix(jsonGenerator, typeIdDef)
+    }
+
+}
+
+internal class ApplicationDeserializer : FromStringDeserializer<Application>(
+    Application::class.java
+) {
+
+    override fun _deserialize(
+        applicationName: String,
+        deserializationContext: DeserializationContext
+    ) = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(applicationName)
 
 }
