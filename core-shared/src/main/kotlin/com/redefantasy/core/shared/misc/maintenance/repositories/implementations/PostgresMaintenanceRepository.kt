@@ -4,7 +4,7 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.misc.maintenance.repositories.IMaintenanceRepository
 import com.redefantasy.core.shared.misc.maintenance.storage.table.MaintenanceTable
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
@@ -17,7 +17,9 @@ class PostgresMaintenanceRepository : IMaintenanceRepository {
         application: Application
     ): Boolean {
         return transaction {
-            val result = MaintenanceTable.selectAll()
+            val result = MaintenanceTable.select {
+                MaintenanceTable.applicationName eq application.name
+            }
 
             println(result.empty())
 
