@@ -27,7 +27,7 @@ internal class ServerSerializer : StdScalarSerializer<Server>(
     }
 
     override fun serializeWithType(
-        value: Server,
+        server: Server,
         jsonGenerator: JsonGenerator,
         serializerProvider: SerializerProvider,
         typeSerializer: TypeSerializer
@@ -35,13 +35,13 @@ internal class ServerSerializer : StdScalarSerializer<Server>(
         val typeIdDef = typeSerializer.writeTypePrefix(
             jsonGenerator,
             typeSerializer.typeId(
-                value,
+                server,
                 Server::class.java,
-                JsonToken.VALUE_EMBEDDED_OBJECT
+                JsonToken.VALUE_STRING
             )
         )
 
-        this.serialize(value, jsonGenerator, serializerProvider)
+        this.serialize(server, jsonGenerator, serializerProvider)
 
         typeSerializer.writeTypeSuffix(jsonGenerator, typeIdDef)
     }
@@ -82,7 +82,7 @@ internal class ApplicationSerializer : StdScalarSerializer<Application>(
             typeSerializer.typeId(
                 application,
                 Application::class.java,
-                JsonToken.VALUE_EMBEDDED_OBJECT
+                JsonToken.VALUE_STRING
             )
         )
 
