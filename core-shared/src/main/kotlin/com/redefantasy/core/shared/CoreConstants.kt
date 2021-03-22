@@ -11,10 +11,10 @@ import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
-import com.redefantasy.core.shared.misc.jackson.EntityIDDeserializer
-import com.redefantasy.core.shared.misc.jackson.EntityIDSerializer
+import com.redefantasy.core.shared.misc.jackson.ServerDeserializer
+import com.redefantasy.core.shared.misc.jackson.ServerSerializer
+import com.redefantasy.core.shared.servers.data.Server
 import okhttp3.OkHttpClient
-import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTimeZone
 import java.util.*
 
@@ -64,8 +64,11 @@ object CoreConstants {
 
         val module = KotlinModule()
 
-        module.addSerializer(EntityIDSerializer())
-        module.addDeserializer(EntityID::class.java, EntityIDDeserializer())
+        module.addSerializer(ServerSerializer())
+        module.addDeserializer(
+            Server::class.java,
+            ServerDeserializer()
+        )
 
         JACKSON.registerModule(module)
     }

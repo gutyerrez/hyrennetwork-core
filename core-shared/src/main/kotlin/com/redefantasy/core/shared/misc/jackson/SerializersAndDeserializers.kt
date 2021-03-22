@@ -14,7 +14,7 @@ import com.redefantasy.core.shared.servers.data.Server
 /**
  * @author Gutyerrez
  */
-internal class EntityIDSerializer : StdScalarSerializer<Server>(
+internal class ServerSerializer : StdScalarSerializer<Server>(
     Server::class.java
 ) {
 
@@ -51,7 +51,7 @@ internal class EntityIDSerializer : StdScalarSerializer<Server>(
 
 }
 
-internal class EntityIDDeserializer : StdDeserializer<Server>(
+internal class ServerDeserializer : StdDeserializer<Server>(
     Server::class.java
 ) {
 
