@@ -130,8 +130,6 @@ object CoreProvider {
             )
         ) ?: throw InvalidApplicationException("Invalid application $address")
 
-        println("aplicação $application")
-
         this.prepare(application)
 
         return application

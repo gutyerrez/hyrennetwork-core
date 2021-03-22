@@ -68,6 +68,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
         /**
          * Start server task
          */
+
         if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
             println("daleeee")
 
