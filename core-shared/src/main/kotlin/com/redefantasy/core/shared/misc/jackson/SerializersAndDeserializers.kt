@@ -9,31 +9,28 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
-import java.io.IOException
-import java.util.*
+import com.redefantasy.core.shared.servers.data.Server
 
 /**
  * @author Gutyerrez
  */
-internal class EntityIDSerializer : StdScalarSerializer<EntityID<*>>(
-    EntityID::class.java
+internal class EntityIDSerializer : StdScalarSerializer<Server>(
+    Server::class.java
 ) {
 
     override fun serialize(
-        value: EntityID<*>,
+        server: Server,
         jsonGenerator: JsonGenerator,
         serializerProvider: SerializerProvider
     ) {
-        jsonGenerator.writeObjectField("table_name", value.table::class.java)
-        jsonGenerator.writeObjectField("value", value.value)
+        jsonGenerator.writeStringField("name", server.getName())
+        jsonGenerator.writeStringField("display_name", server.displayName)
 
-        println("Serializar ${value.table} --> ${value.value}")
+        println("Serializar => $server")
     }
 
     override fun serializeWithType(
-        value: EntityID<*>,
+        value: Server,
         jsonGenerator: JsonGenerator,
         serializerProvider: SerializerProvider,
         typeSerializer: TypeSerializer
@@ -42,7 +39,7 @@ internal class EntityIDSerializer : StdScalarSerializer<EntityID<*>>(
             jsonGenerator,
             typeSerializer.typeId(
                 value,
-                EntityID::class.java,
+                Server::class.java,
                 JsonToken.VALUE_EMBEDDED_OBJECT
             )
         )
@@ -54,56 +51,19 @@ internal class EntityIDSerializer : StdScalarSerializer<EntityID<*>>(
 
 }
 
-internal class EntityIDDeserializer : StdDeserializer<EntityID<*>>(
-    EntityID::class.java
+internal class EntityIDDeserializer : StdDeserializer<Server>(
+    Server::class.java
 ) {
 
     override fun deserialize(
         jsonParser: JsonParser,
         deserializationContext: DeserializationContext
-    ): EntityID<*>? {
+    ): Server? {
         val node = jsonParser.readValueAsTree<JsonNode>()
 
-        val tableClassName = node.get("table_name")
+        println("Deserializar: $node")
 
-        if (tableClassName === null) throw IOException("Invalid table name")
-
-        val table = Class.forName(tableClassName.textValue())
-        val value = node.get("value")
-
-        if (table !is IdTable<*>) throw IOException("Invalid table")
-
-        return when {
-            value.isObject -> {
-                try {
-                    val uuid = UUID.fromString(value.asText())
-
-                    EntityID(
-                        uuid,
-                        table as IdTable<UUID>
-                    )
-                } catch (ignored: Exception) { return null }
-            }
-            value.isTextual -> {
-                EntityID(
-                    value.textValue(),
-                    table as IdTable<String>
-                )
-            }
-            value.isInt -> {
-                EntityID(
-                    value.intValue(),
-                    table as IdTable<Int>
-                )
-            }
-            value.isLong -> {
-                EntityID(
-                    value.longValue(),
-                    table as IdTable<Long>
-                )
-            }
-            else -> throw IOException("Cannot find a codec")
-        }
+        TODO("não implementado")
     }
 
 }
