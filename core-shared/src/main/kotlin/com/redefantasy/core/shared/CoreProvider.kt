@@ -4,7 +4,6 @@ import com.google.common.collect.Lists
 import com.redefantasy.core.shared.applications.cache.local.ApplicationsLocalCache
 import com.redefantasy.core.shared.applications.cache.redis.ApplicationsStatusRedisCache
 import com.redefantasy.core.shared.applications.data.Application
-import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationByAddressAndPortDTO
 import com.redefantasy.core.shared.applications.storage.repositories.IApplicationsRepository
 import com.redefantasy.core.shared.applications.storage.repositories.implementations.PostgresApplicationsRepository
 import com.redefantasy.core.shared.environment.Env
@@ -115,17 +114,19 @@ object CoreProvider {
 
         this.preparePrimaryProviders()
 
-        val address = IOUtils.toString(
-            URL("http://checkip.amazonaws.com"),
-            Charsets.UTF_8
-        ).trim()
+        val address = InetSocketAddress(
+            IOUtils.toString(
+                URL("http://checkip.amazonaws.com"),
+                Charsets.UTF_8
+            ).trim(),
+            port
+        )
 
-        val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByAddressAndPort(
-            FetchApplicationByAddressAndPortDTO(
-                address,
-                port
-            )
-        ) ?: throw InvalidApplicationException("Invalid application $address:$port")
+        val application = Cache.Local.APPLICATIONS.provide().fetchByAddress(
+            address
+        ) ?: throw InvalidApplicationException("Invalid application $address")
+
+        println("aplicação $application")
 
         this.prepare(application)
 
