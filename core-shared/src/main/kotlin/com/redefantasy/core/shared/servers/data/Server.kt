@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.servers.data
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.servers.ServerType
 import org.apache.commons.lang3.StringUtils
@@ -9,14 +8,13 @@ import org.jetbrains.exposed.dao.id.EntityID
 /**
  * @author SrGutyerrez
  **/
-@JsonIgnoreProperties(value = ["name"])
 data class Server(
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     val name: EntityID<String>,
     val displayName: String,
     val serverType: ServerType
 ) {
 
-    @JsonProperty(namespace = "name")
     fun getName() = this.name.value
 
     fun getFancyDisplayName() = StringUtils.replaceEach(
