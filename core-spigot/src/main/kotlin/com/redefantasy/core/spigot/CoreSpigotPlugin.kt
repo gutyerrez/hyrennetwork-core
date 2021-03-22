@@ -69,6 +69,8 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Start server task
          */
         if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
+            println("daleeee")
+
             AsyncScheduler.scheduleAsyncRepeatingTask(
                 object : ApplicationStatusTask(
                     ApplicationStatus(
@@ -82,6 +84,8 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                     override fun buildApplicationStatus(
                         applicationStatus: ApplicationStatus
                     ) {
+                        println("ue")
+
                         val runtime = Runtime.getRuntime()
 
                         applicationStatus.heapSize = runtime.totalMemory()
