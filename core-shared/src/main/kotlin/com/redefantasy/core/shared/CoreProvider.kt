@@ -113,7 +113,7 @@ object CoreProvider {
         if (primaryPrepared)
             throw ApplicationAlreadyPreparedException("the application has already prepared")
 
-        preparePrimaryProviders()
+        this.preparePrimaryProviders()
 
         val address = IOUtils.toString(
             URL("http://checkip.amazonaws.com"),
@@ -127,7 +127,7 @@ object CoreProvider {
             )
         ) ?: throw InvalidApplicationException("Invalid application $address:$port")
 
-        prepare(application)
+        this.prepare(application)
 
         return application
     }
@@ -140,9 +140,9 @@ object CoreProvider {
 
         prepared = true
 
-        preparePrimaryProviders()
+        this.preparePrimaryProviders()
 
-        prepareProviders()
+        this.prepareProviders()
 
         Repositories.Postgres.GROUPS_REPOSITORY.provide().fetchAll()
     }
