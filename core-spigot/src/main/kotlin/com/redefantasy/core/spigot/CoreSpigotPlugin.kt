@@ -71,32 +71,40 @@ class CoreSpigotPlugin : CustomPlugin(true) {
         if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide().fetchByName("FACTIONS_OMEGA")) {
             println("daleeee")
 
-            AsyncScheduler.scheduleAsyncRepeatingTask(
-                object : ApplicationStatusTask(
-                    ApplicationStatus(
-                        CoreProvider.application.name,
-                        CoreProvider.application.applicationType,
-                        CoreProvider.application.server,
-                        CoreProvider.application.address,
-                        this.onlineSince
-                    )
-                ) {
-                    override fun buildApplicationStatus(
-                        applicationStatus: ApplicationStatus
+            try {
+                AsyncScheduler.scheduleAsyncRepeatingTask(
+                    object : ApplicationStatusTask(
+                        ApplicationStatus(
+                            CoreProvider.application.name,
+                            CoreProvider.application.applicationType,
+                            CoreProvider.application.server,
+                            CoreProvider.application.address,
+                            this.onlineSince
+                        )
                     ) {
-                        println("ue")
+                        override fun buildApplicationStatus(
+                            applicationStatus: ApplicationStatus
+                        ) {
+                            try {
+                                println("ue")
 
-                        val runtime = Runtime.getRuntime()
+                                val runtime = Runtime.getRuntime()
 
-                        applicationStatus.heapSize = runtime.totalMemory()
-                        applicationStatus.heapMaxSize = runtime.maxMemory()
-                        applicationStatus.heapFreeSize = runtime.freeMemory()
-                    }
-                },
-                0,
-                1,
-                TimeUnit.SECONDS
-            )
+                                applicationStatus.heapSize = runtime.totalMemory()
+                                applicationStatus.heapMaxSize = runtime.maxMemory()
+                                applicationStatus.heapFreeSize = runtime.freeMemory()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    },
+                    0,
+                    1,
+                    TimeUnit.SECONDS
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
