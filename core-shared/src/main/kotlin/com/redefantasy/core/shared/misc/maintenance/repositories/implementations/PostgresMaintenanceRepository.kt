@@ -19,7 +19,11 @@ class PostgresMaintenanceRepository : IMaintenanceRepository {
         return transaction {
             val result = MaintenanceTable.selectAll()
 
+            println(result.empty())
+
             if (result.empty()) return@transaction false
+
+            println("aqui")
 
             return@transaction result.first()[MaintenanceTable.currentState]
         }
