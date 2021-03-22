@@ -1,5 +1,6 @@
 package com.redefantasy.core.bungee.listeners.connection
 
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.event.PreLoginEvent
@@ -19,8 +20,18 @@ class PreLoginListener : Listener {
         val name = connection.name
         val uuid = connection.uniqueId
 
-        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(uuid) ?: CoreProvider.Cache.Local.USERS.provide()
-            .fetchByName(name)
+        val user = CoreProvider.Cache.Local.USERS.provide().fetchById(uuid) ?: CoreProvider.Cache.Local.USERS.provide().fetchByName(name)
+
+        if (user?.getUniqueId() == CoreConstants.CONSOLE_UUID) {
+            event.setCancelReason(
+                *ComponentBuilder("§c§lREDE FANTASY")
+                    .append("\n\n")
+                    .append("§cA conta ${user?.name} não pode jogar.")
+                    .create()
+            )
+            event.isCancelled = true
+            return
+        }
 
         if (user !== null && user.isOnline()) {
             event.setCancelReason(
