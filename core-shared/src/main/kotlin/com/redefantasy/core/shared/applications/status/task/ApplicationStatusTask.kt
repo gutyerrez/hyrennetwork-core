@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
  * @author SrGutyerrez
  **/
 abstract class ApplicationStatusTask(
-        private val applicationStatus: ApplicationStatus
+    private val applicationStatus: ApplicationStatus
 ) : Runnable {
 
     private var lastPoint = 0L
@@ -16,27 +16,23 @@ abstract class ApplicationStatusTask(
     abstract fun buildApplicationStatus(applicationStatus: ApplicationStatus)
 
     override fun run() {
-        try {
-            this.buildApplicationStatus(this.applicationStatus)
+        this.buildApplicationStatus(this.applicationStatus)
 
-            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
-            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
-                ApplicationStatus::class
+        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
+        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
+            ApplicationStatus::class
+        )
+
+        val now = System.currentTimeMillis()
+
+        if (now - lastPoint >= TimeUnit.SECONDS.toMillis(10)) {
+            lastPoint = now
+
+            CoreProvider.Databases.Influx.INFLUX_MAIN.provide().write(
+                this.applicationStatus.buildPoint()
+                    .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                    .build()
             )
-
-            val now = System.currentTimeMillis()
-
-            if (now - lastPoint >= TimeUnit.SECONDS.toMillis(10)) {
-                lastPoint = now
-
-                CoreProvider.Databases.Influx.INFLUX_MAIN.provide().write(
-                    this.applicationStatus.buildPoint()
-                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                        .build()
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

@@ -37,8 +37,6 @@ class ApplicationsStatusRedisCache : RedisCache {
                 applicationStatus
             )
 
-            println(json)
-
             pipeline.set(key, json)
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
