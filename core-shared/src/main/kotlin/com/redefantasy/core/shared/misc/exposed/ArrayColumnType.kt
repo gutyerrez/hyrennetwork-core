@@ -4,7 +4,9 @@ import com.redefantasy.core.shared.CoreConstants
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.jdbc.JdbcConnectionImpl
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.postgresql.jdbc.PgConnection
 import org.postgresql.util.PGobject
+import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
 
 /**
@@ -21,10 +23,7 @@ class ArrayColumnType(
 
     private val type = TextColumnType()
 
-    override fun sqlType(): String = buildString {
-        append(type.sqlType())
-        append(" ARRAY")
-    }
+    override fun sqlType() = "JSON_ARRAY"
 
     override fun valueToDB(
         value: Any?
@@ -32,6 +31,7 @@ class ArrayColumnType(
         if (value is Array<*>) {
             val columnType = type.sqlType().split("(")[0]
             val jdbcConnection = (TransactionManager.current().connection as JdbcConnectionImpl).connection
+
             return jdbcConnection.createStruct(
                 columnType,
                 value
@@ -54,7 +54,7 @@ class ArrayColumnType(
             return value
         }
 
-        error("Array does not support for this database")
+        throw SQLFeatureNotSupportedException("Array does not support for this database")
     }
 
     override fun notNullValueToDB(
@@ -64,17 +64,22 @@ class ArrayColumnType(
             if (value.isEmpty()) return "'[]'"
 
             val columnType = type.sqlType().split("(")[0]
+            val jdbcConnectionImpl = TransactionManager.current().connection as JdbcConnectionImpl
+            val jdbcConnection = jdbcConnectionImpl.connection as PgConnection
 
-            println(columnType)
+            val result = jdbcConnection.createArrayOf(
+                columnType,
+                value
+            )
 
-            val jdbcConnection = (TransactionManager.current().connection as JdbcConnectionImpl).connection
+            println(result)
 
-            return jdbcConnection.createStruct(
-                columnType, value
-            ) ?: error("Can't create non null array for $value")
-        } else {
-            return super.notNullValueToDB(value)
-        }
+            return result
+//            return jdbcConnection.prepareStatement("")
+////            columnType, value
+////            jdbcConnection.createStatement() ?: error("Can't create non null array for $value")
+//            return ""
+        } else throw SQLFeatureNotSupportedException("Can't create non null array for $value")
     }
 
 }
@@ -117,4 +122,4 @@ infix fun <T, S> ExpressionWithColumnType<T>.any(t: S): Op<Boolean> {
     return AnyOp(this, QueryParameter(t, columnType))
 }
 
-infix fun <T, S> ExpressionWithColumnType<T>.contains(arry: Array<in S>): Op<Boolean> = ContainsOp(this, QueryParameter(arry, columnType))
+infix fun <T, S> ExpressionWithColumnType<T>.contains(array: Array<in S>): Op<Boolean> = ContainsOp(this, QueryParameter(array, columnType))
