@@ -2,7 +2,6 @@ package com.redefantasy.core.shared
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -68,9 +67,6 @@ object CoreConstants {
             JACKSON.serializationConfig.defaultVisibilityChecker
                 .with(JsonAutoDetect.Visibility.NONE)
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-        )
-        JACKSON.setDefaultPrettyPrinter(
-            DefaultPrettyPrinter()
         )
 
         val module = SimpleModule()

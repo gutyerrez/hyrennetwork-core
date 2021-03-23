@@ -49,24 +49,6 @@ class ArrayColumnType(
         })
     }
 
-//    override fun valueToDB(
-//        value: Any?
-//    ): Any? {
-//        return if (value is Array<*>) {
-//            CoreConstants.JACKSON.writeValueAsString(value)
-//        } else null
-//    }
-//
-//    override fun notNullValueToDB(
-//        value: Any
-//    ): Any {
-//        if (value is Array<*>) {
-//            if (value.isEmpty()) return "'[]'"
-//
-//            return CoreConstants.JACKSON.writeValueAsString(value)
-//        } else throw SQLFeatureNotSupportedException("Can't create non null array for $value")
-//    }
-
 }
 
 class AnyOp(
