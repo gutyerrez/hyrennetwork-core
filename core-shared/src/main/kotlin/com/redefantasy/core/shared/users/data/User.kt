@@ -305,7 +305,7 @@ open class User(
 
         original.copyFrom(PreferenceRegistry.fetchAll())
 
-        println(CoreConstants.GSON.toJson(original))
+        println(CoreConstants.JACKSON.writeValueAsString(original))
 
         return original
     }
