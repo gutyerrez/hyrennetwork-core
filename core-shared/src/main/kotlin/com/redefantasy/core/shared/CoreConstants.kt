@@ -2,6 +2,7 @@ package com.redefantasy.core.shared
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -58,6 +59,7 @@ object CoreConstants {
 
     init {
         JACKSON.enable(SerializationFeature.INDENT_OUTPUT)
+        JACKSON.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
         JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
         JACKSON.registerModule(GuavaModule())
@@ -68,6 +70,7 @@ object CoreConstants {
                 .with(JsonAutoDetect.Visibility.NONE)
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
         )
+        JACKSON.setDefaultPrettyPrinter(DefaultPrettyPrinter())
 
         val module = SimpleModule()
 
