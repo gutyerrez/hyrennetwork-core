@@ -10,8 +10,7 @@ import kotlin.reflect.KClass
 /**
  * @author Gutyerrez
  */
-fun <T> Table.array(name: String, kClass: KClass<*>): Column<Array<T>> =
-    registerColumn(name, ArrayColumnType(kClass))
+fun <T> Table.array(name: String, kClass: KClass<*>): Column<Array<T>> = registerColumn(name, ArrayColumnType(kClass))
 
 class ArrayColumnType(private val kClass: KClass<*>) : ColumnType() {
     private val type = TextColumnType()
