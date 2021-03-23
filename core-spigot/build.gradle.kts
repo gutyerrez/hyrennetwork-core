@@ -11,6 +11,13 @@ dependencies {
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.29.1")
     compileOnly("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
+    // jackson
+    compileOnly("com.fasterxml.jackson.core:jackson-core:2.12.2")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.12.2")
+    compileOnly("com.fasterxml.jackson.core:jackson-annotations:2.12.2")
+    compileOnly("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.2")
+    compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
+
     // eventbus
     compileOnly("org.greenrobot:eventbus:3.2.0")
 

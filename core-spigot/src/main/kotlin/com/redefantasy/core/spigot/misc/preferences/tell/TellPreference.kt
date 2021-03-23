@@ -2,6 +2,7 @@ package com.redefantasy.core.spigot.misc.preferences.tell
 
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.kotlin.copyFrom
 import com.redefantasy.core.shared.misc.preferences.PreferenceRegistry
 import com.redefantasy.core.shared.misc.preferences.PreferenceState
 import com.redefantasy.core.shared.misc.preferences.data.Preference
@@ -40,27 +41,19 @@ data class TellPreference(
     fun on(
         event: InventoryClickEvent
     ) {
-        println("Chamou")
-
         val player = event.whoClicked as Player
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(player.uniqueId)!!
 
-        var preferences = user.getPreferences()
+        val preferences = user.getPreferences()
 
-        if (preferences.size != PreferenceRegistry.fetchAll().size) {
-            preferences = preferences.plus(PreferenceRegistry.fetchAll())
-
-            println(preferences)
-        }
+        if (preferences.size != PreferenceRegistry.fetchAll().size)
+            preferences.copyFrom(PreferenceRegistry.fetchAll())
 
         val preference = preferences.find { it == this }!!
 
         if (CoreConstants.COOLDOWNS.inCooldown(user, this.name)) return
 
-        println("Passou aqui")
-
-        val currentPreferenceState = preference.preferenceState
-        val switchPreferenceState = when (currentPreferenceState) {
+        val switchPreferenceState = when (preference.preferenceState) {
             PreferenceState.ENABLED -> PreferenceState.DISABLED
             PreferenceState.DISABLED -> PreferenceState.ENABLED
         }
@@ -74,9 +67,9 @@ data class TellPreference(
             )
         )
 
-        println("dale")
-
         CoreConstants.COOLDOWNS.start(user, this.name, TimeUnit.SECONDS.toMillis(3))
     }
+
+    override fun toString(): String = CoreConstants.JACKSON.writeValueAsString(this)
 
 }
