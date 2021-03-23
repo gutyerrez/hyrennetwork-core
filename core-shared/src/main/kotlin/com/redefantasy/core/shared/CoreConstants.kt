@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
@@ -30,7 +31,11 @@ object CoreConstants {
     val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
     val JACKSON = ObjectMapper()
-    val GSON = Gson()
+
+    val GSON = GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+
     val OK_HTTP = OkHttpClient()
     val RANDOM = Random()
     val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
@@ -52,6 +57,7 @@ object CoreConstants {
     )
 
     init {
+        JACKSON.enable(SerializationFeature.INDENT_OUTPUT)
         JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
         JACKSON.registerModule(GuavaModule())
