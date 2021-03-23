@@ -1,10 +1,7 @@
 package com.redefantasy.core.shared.misc.exposed
 
 import com.redefantasy.core.shared.CoreConstants
-import com.zaxxer.hikari.pool.HikariProxyConnection
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.statements.jdbc.JdbcConnectionImpl
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
@@ -29,16 +26,8 @@ class ArrayColumnType(
         value: Any?
     ): Any? {
         if (value is Array<*>) {
-            val columnType = type.sqlType().split("(")[0]
-            val jdbcConnection = (TransactionManager.current().connection as JdbcConnectionImpl).connection
-
-            return jdbcConnection.createStruct(
-                columnType,
-                value
-            )
-        } else {
-            return super.valueToDB(value)
-        }
+            return CoreConstants.JACKSON.writeValueAsString(value)
+        } else return null
     }
 
     override fun valueFromDB(
@@ -63,22 +52,7 @@ class ArrayColumnType(
         if (value is Array<*>) {
             if (value.isEmpty()) return "'[]'"
 
-            val columnType = type.sqlType().split("(")[0]
-            val jdbcConnectionImpl = TransactionManager.current().connection as JdbcConnectionImpl
-            val hikariProxyConnection = jdbcConnectionImpl.connection as HikariProxyConnection
-
-            val result = hikariProxyConnection.createArrayOf(
-                columnType,
-                value
-            )
-
-            println(result)
-
-            return result
-//            return jdbcConnection.prepareStatement("")
-////            columnType, value
-////            jdbcConnection.createStatement() ?: error("Can't create non null array for $value")
-//            return ""
+            return CoreConstants.JACKSON.writeValueAsString(value)
         } else throw SQLFeatureNotSupportedException("Can't create non null array for $value")
     }
 
