@@ -1,10 +1,10 @@
 package com.redefantasy.core.shared.misc.exposed
 
 import com.redefantasy.core.shared.CoreConstants
+import com.zaxxer.hikari.pool.HikariProxyConnection
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.jdbc.JdbcConnectionImpl
 import org.jetbrains.exposed.sql.transactions.TransactionManager
-import org.postgresql.jdbc.PgConnection
 import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
@@ -65,9 +65,9 @@ class ArrayColumnType(
 
             val columnType = type.sqlType().split("(")[0]
             val jdbcConnectionImpl = TransactionManager.current().connection as JdbcConnectionImpl
-            val jdbcConnection = jdbcConnectionImpl.connection as PgConnection
+            val hikariProxyConnection = jdbcConnectionImpl.connection as HikariProxyConnection
 
-            val result = jdbcConnection.createArrayOf(
+            val result = hikariProxyConnection.createArrayOf(
                 columnType,
                 value
             )
