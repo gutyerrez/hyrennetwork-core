@@ -19,14 +19,6 @@ class ArrayColumnType(
 ) : ColumnType() {
     override fun sqlType() = "JSONB"
 
-    override fun valueToDB(
-        value: Any?
-    ): Any? {
-        if (value is Array<*>) {
-            return CoreConstants.JACKSON.writeValueAsString(value)
-        } else return null
-    }
-
     override fun valueFromDB(
         value: Any
     ): Any {
@@ -34,13 +26,21 @@ class ArrayColumnType(
             if (value.value === null) error("Cannot read null array")
 
             return CoreConstants.JACKSON.readValue(value.value, kClass.java)
-        }
-
-        if (value is Array<*>) {
+        } else if (value is String) {
+            return CoreConstants.JACKSON.readValue(value, kClass.java)
+        } else if (value is Array<*>) {
             return value
         }
 
         throw SQLFeatureNotSupportedException("Array does not support for this database")
+    }
+
+    override fun valueToDB(
+        value: Any?
+    ): Any? {
+        return if (value is Array<*>) {
+            CoreConstants.JACKSON.writeValueAsString(value)
+        } else null
     }
 
     override fun notNullValueToDB(
