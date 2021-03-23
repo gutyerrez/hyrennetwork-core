@@ -305,6 +305,8 @@ open class User(
 
         original.copyFrom(PreferenceRegistry.fetchAll())
 
+        println(original)
+
         return original
     }
 

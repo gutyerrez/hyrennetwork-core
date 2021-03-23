@@ -44,7 +44,9 @@ class ArrayColumnType(
         super.setParameter(stmt, index, value.let {
             PGobject().apply {
                 this.type = sqlType()
-                this.value = if (value === null) null else CoreConstants.JACKSON.writeValueAsString(value)
+                this.value = if (value === null) null else {
+                    CoreConstants.JACKSON.writerWithDefaultPrettyPrinter().writeValueAsString(value)
+                }
             }
         })
     }
