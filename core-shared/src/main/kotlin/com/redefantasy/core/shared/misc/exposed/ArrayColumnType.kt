@@ -2,6 +2,7 @@ package com.redefantasy.core.shared.misc.exposed
 
 import com.redefantasy.core.shared.CoreConstants
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
@@ -35,23 +36,36 @@ class ArrayColumnType(
         throw SQLFeatureNotSupportedException("Array does not support for this database")
     }
 
-    override fun valueToDB(
+    override fun setParameter(
+        stmt: PreparedStatementApi,
+        index: Int,
         value: Any?
-    ): Any? {
-        return if (value is Array<*>) {
-            CoreConstants.JACKSON.writeValueAsString(value)
-        } else null
+    ) {
+        super.setParameter(stmt, index, value.let {
+            PGobject().apply {
+                this.type = sqlType()
+                this.value = if (value === null) null else CoreConstants.JACKSON.writeValueAsString(value)
+            }
+        })
     }
 
-    override fun notNullValueToDB(
-        value: Any
-    ): Any {
-        if (value is Array<*>) {
-            if (value.isEmpty()) return "'[]'"
-
-            return CoreConstants.JACKSON.writeValueAsString(value)
-        } else throw SQLFeatureNotSupportedException("Can't create non null array for $value")
-    }
+//    override fun valueToDB(
+//        value: Any?
+//    ): Any? {
+//        return if (value is Array<*>) {
+//            CoreConstants.JACKSON.writeValueAsString(value)
+//        } else null
+//    }
+//
+//    override fun notNullValueToDB(
+//        value: Any
+//    ): Any {
+//        if (value is Array<*>) {
+//            if (value.isEmpty()) return "'[]'"
+//
+//            return CoreConstants.JACKSON.writeValueAsString(value)
+//        } else throw SQLFeatureNotSupportedException("Can't create non null array for $value")
+//    }
 
 }
 

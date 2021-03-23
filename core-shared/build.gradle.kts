@@ -3,6 +3,9 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
+    // kotlinx
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
     // google
     implementation("com.google.guava:guava:29.0-jre")
     implementation("com.google.code.gson:gson:2.8.6")
