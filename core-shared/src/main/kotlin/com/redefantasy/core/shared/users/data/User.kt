@@ -305,8 +305,6 @@ open class User(
 
         original.copyFrom(PreferenceRegistry.fetchAll())
 
-        println(CoreConstants.JACKSON.writeValueAsString(original))
-
         return original
     }
 
