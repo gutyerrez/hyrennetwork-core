@@ -17,10 +17,7 @@ fun <T> Table.array(
 class ArrayColumnType(
     private val kClass: KClass<*>
 ) : ColumnType() {
-
-    private val type = TextColumnType()
-
-    override fun sqlType() = "JSON_ARRAY"
+    override fun sqlType() = "JSONB"
 
     override fun valueToDB(
         value: Any?
