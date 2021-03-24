@@ -181,10 +181,14 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
 
+            val serialized = CoreConstants.JACKSON.writeValueAsString(
+                list
+            )
+
+            println(">> $serialized")
+
             this.writeString(
-                CoreConstants.JACKSON.writeValueAsString(
-                    list
-                )
+                serialized
             )
         }
     }
