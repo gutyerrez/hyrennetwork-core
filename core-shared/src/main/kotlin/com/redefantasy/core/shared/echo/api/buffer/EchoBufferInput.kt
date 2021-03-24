@@ -182,8 +182,10 @@ class EchoBufferInput(
 
         if (!valid) return null
 
+        val serialized = this.readString()
+
         return CoreConstants.JACKSON.readValue(
-            this.readString(),
+            serialized,
             object : TypeReference<Array<T>>() {
                 //
             }
