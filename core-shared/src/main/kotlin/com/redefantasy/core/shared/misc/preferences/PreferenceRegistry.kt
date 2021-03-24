@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.misc.preferences
 
-import com.redefantasy.core.shared.misc.preferences.data.Preference
 import org.greenrobot.eventbus.EventBus
 
 /**

@@ -1,6 +1,6 @@
 package com.redefantasy.core.shared.users.preferences.storage.dto
 
-import com.redefantasy.core.shared.misc.preferences.data.Preference
+import com.redefantasy.core.shared.misc.preferences.Preference
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 

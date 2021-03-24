@@ -3,7 +3,7 @@ package com.redefantasy.core.shared.users.preferences.cache.local
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
-import com.redefantasy.core.shared.misc.preferences.data.Preference
+import com.redefantasy.core.shared.misc.preferences.Preference
 import com.redefantasy.core.shared.users.preferences.storage.dto.FetchUserPreferencesByUserIdDTO
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
@@ -25,5 +25,10 @@ class UsersPreferencesLocalCache : LocalCache {
         }
 
     fun fetchByUserId(userId: EntityID<UUID>) = this.CACHE.get(userId)
+
+    fun put(
+        userId: EntityID<UUID>,
+        preferences: Array<Preference>
+    ) = this.CACHE.put(userId, preferences)
 
 }

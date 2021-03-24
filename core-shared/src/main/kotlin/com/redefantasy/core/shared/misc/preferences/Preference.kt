@@ -1,9 +1,8 @@
-package com.redefantasy.core.shared.misc.preferences.data
+package com.redefantasy.core.shared.misc.preferences
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.CoreConstants
-import com.redefantasy.core.shared.misc.preferences.PreferenceState
+import com.redefantasy.core.shared.misc.minecraft.material.Material
 
 /**
  * @author SrGutyerrez
@@ -13,8 +12,7 @@ open class Preference(
     @JsonProperty open var preferenceState: PreferenceState = PreferenceState.ENABLED
 ) {
 
-    @JsonIgnore
-    open fun <T> getIcon(): T {
+    open fun getIcon(): PreferenceIcon {
         TODO("auto-generated method")
     }
 
@@ -22,3 +20,8 @@ open class Preference(
 
 }
 
+open class PreferenceIcon(
+    val material: Material,
+    val displayName: String,
+    val lore: Array<String> = emptyArray()
+)

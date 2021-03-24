@@ -10,7 +10,6 @@ import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
-import java.io.Serializable
 import java.net.Inet6Address
 import java.net.InetSocketAddress
 import java.util.*
@@ -161,7 +160,7 @@ class EchoBufferOutput {
         }
     }
 
-    inline fun <reified T : Serializable> writeList(list: List<T>?) {
+    inline fun <reified T> writeList(list: List<T>?) {
         if (list === null) {
             this.writeBoolean(false)
         } else {
@@ -175,7 +174,7 @@ class EchoBufferOutput {
         }
     }
 
-    inline fun <reified T : Serializable> writeArray(list: Array<T>?) {
+    inline fun <reified T> writeArray(list: Array<T>?) {
         if (list === null) {
             this.writeBoolean(false)
         } else {

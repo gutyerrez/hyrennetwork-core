@@ -6,8 +6,8 @@ import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.echo.packets.DisconnectUserPacket
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.misc.kotlin.copyFrom
+import com.redefantasy.core.shared.misc.preferences.Preference
 import com.redefantasy.core.shared.misc.preferences.PreferenceRegistry
-import com.redefantasy.core.shared.misc.preferences.data.Preference
 import com.redefantasy.core.shared.misc.punish.PunishType
 import com.redefantasy.core.shared.misc.report.category.data.ReportCategory
 import com.redefantasy.core.shared.misc.utils.ChatColor
