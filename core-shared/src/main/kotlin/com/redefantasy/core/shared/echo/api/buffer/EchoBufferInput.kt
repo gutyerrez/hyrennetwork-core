@@ -187,9 +187,7 @@ class EchoBufferInput(
 
         return CoreConstants.JACKSON.readValue(
             serialized,
-            object : TypeReference<Array<T>>() {
-                //
-            }
+            Array<T>::class.java
         )
     }
 
