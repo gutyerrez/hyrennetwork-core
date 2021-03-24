@@ -7,13 +7,15 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.preferences.Preference
 import com.redefantasy.core.shared.servers.data.Server
 
 /**
  * @author Gutyerrez
  */
-open class ServerSerializer : StdScalarSerializer<Server>(
+open class ServersSerializer : StdScalarSerializer<Server>(
     Server::class.java
 ) {
 
@@ -47,7 +49,7 @@ open class ServerSerializer : StdScalarSerializer<Server>(
 
 }
 
-open class ServerDeserializer : FromStringDeserializer<Server>(
+open class ServersDeserializer : FromStringDeserializer<Server>(
     Server::class.java
 ) {
 
@@ -55,5 +57,19 @@ open class ServerDeserializer : FromStringDeserializer<Server>(
         serverName: String,
         deserializationContext: DeserializationContext
     ) = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(serverName)
+
+}
+
+open class PreferencesArrayDeserializer : FromStringDeserializer<Array<Preference>>(
+    Array<Preference>::class.java
+) {
+
+    override fun _deserialize(
+        value: String,
+        deserializationCotnext: DeserializationContext
+    ): Array<Preference> = CoreConstants.JACKSON.readValue(
+        value,
+        Array<Preference>::class.java
+    )
 
 }

@@ -12,8 +12,8 @@ import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.misc.cooldowns.CooldownManager
-import com.redefantasy.core.shared.misc.jackson.ServerDeserializer
-import com.redefantasy.core.shared.misc.jackson.ServerSerializer
+import com.redefantasy.core.shared.misc.jackson.*
+import com.redefantasy.core.shared.misc.preferences.Preference
 import com.redefantasy.core.shared.servers.data.Server
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
@@ -69,14 +69,20 @@ object CoreConstants {
 
         val module = SimpleModule()
 
-        // Server serializer
+        // Server
         module.addSerializer(
             Server::class.java,
-            ServerSerializer()
+            ServersSerializer()
         )
         module.addDeserializer(
             Server::class.java,
-            ServerDeserializer()
+            ServersDeserializer()
+        )
+
+        // Preferences
+        module.addDeserializer(
+            Array<Preference>::class.java,
+            PreferencesArrayDeserializer()
         )
 
         JACKSON.registerModule(module)
