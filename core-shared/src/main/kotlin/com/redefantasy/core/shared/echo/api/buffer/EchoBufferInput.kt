@@ -14,7 +14,6 @@ import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
-import java.io.Serializable
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -165,7 +164,7 @@ class EchoBufferInput(
 
     fun readBaseComponent() = ComponentSerializer.parse(this.readString())
 
-    inline fun <reified T: Serializable> readList(): List<T>? {
+    inline fun <reified T> readList(): List<T>? {
         val valid = this.readBoolean()
 
         if (!valid) return null
@@ -178,7 +177,7 @@ class EchoBufferInput(
         )
     }
 
-    inline fun <reified T: Serializable> readArray(): Array<T>? {
+    inline fun <reified T> readArray(): Array<T>? {
         val valid = this.readBoolean()
 
         if (!valid) return null
