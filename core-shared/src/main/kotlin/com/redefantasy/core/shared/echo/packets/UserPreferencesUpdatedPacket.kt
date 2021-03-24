@@ -23,7 +23,12 @@ class UserPreferencesUpdatedPacket(
 
     override fun read(buffer: EchoBufferInput) {
         this.userId = buffer.readEntityID(UsersTable)
-        this.preferences = buffer.readArray()
+
+        val a = buffer.readArray<Any>()
+
+        println(a)
+
+//        this.preferences = a
     }
 
 }
