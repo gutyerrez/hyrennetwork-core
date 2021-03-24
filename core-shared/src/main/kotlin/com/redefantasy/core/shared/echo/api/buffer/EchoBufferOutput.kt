@@ -175,14 +175,14 @@ class EchoBufferOutput {
         }
     }
 
-    inline fun <reified T: Serializable> writeArray(list: Array<T>?) {
-        if (list === null) {
+    inline fun <reified T: Serializable> writeArray(array: Array<T>?) {
+        if (array === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
 
             val serialized = CoreConstants.JACKSON.writeValueAsString(
-                list
+                array
             )
 
             println(">> $serialized")

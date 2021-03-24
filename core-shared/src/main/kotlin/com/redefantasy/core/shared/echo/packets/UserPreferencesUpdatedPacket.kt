@@ -24,7 +24,7 @@ class UserPreferencesUpdatedPacket(
     override fun read(buffer: EchoBufferInput) {
         this.userId = buffer.readEntityID(UsersTable)
 
-        val a = buffer.readArray<Any>()
+        val a = buffer.readArray<Preference>()
 
         println(a)
 
