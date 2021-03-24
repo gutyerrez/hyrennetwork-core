@@ -184,9 +184,9 @@ class EchoBufferInput(
 
         return CoreConstants.JACKSON.readValue(
             this.readString(),
-            CoreConstants.JACKSON.typeFactory.constructArrayType(
-                Array<T>::class.java
-            )
+            object : TypeReference<Array<T>>() {
+                //
+            }
         )
     }
 
