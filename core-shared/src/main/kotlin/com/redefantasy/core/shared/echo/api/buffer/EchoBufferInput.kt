@@ -182,10 +182,14 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.GSON.fromJson(
+        val `object` = CoreConstants.GSON.fromJson(
             this.readString(),
             Array<T>::class.java
         )
+
+        println(`object`)
+
+        return `object`
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
