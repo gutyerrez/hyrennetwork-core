@@ -81,7 +81,7 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
 
-            val clazz = entityId.table::class.java.toGenericString()
+            val clazz = entityId.table::class.java.name
 
             this.writeString(clazz)
             this.writeString(
