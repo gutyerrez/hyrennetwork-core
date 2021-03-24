@@ -185,6 +185,8 @@ class EchoBufferInput(
 
         val serialized = this.readString()
 
+        println("<)> $serialized")
+
         return CoreConstants.JACKSON.readValue(
             serialized,
             Array<T>::class.java
