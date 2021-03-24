@@ -6,7 +6,7 @@ import java.io.Serializable
 /**
  * @author SrGutyerrez
  **/
-interface Preference {
+interface Preference : Serializable {
 
     val name: String
     var preferenceState: PreferenceState
