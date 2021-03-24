@@ -28,7 +28,7 @@ class UserPreferencesUpdatedPacket(
 
         println(a)
 
-//        this.preferences = a
+        this.preferences = emptyArray()
     }
 
 }

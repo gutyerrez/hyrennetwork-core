@@ -171,9 +171,9 @@ class EchoBufferInput(
 
         return CoreConstants.JACKSON.readValue(
             this.readString(),
-            object : TypeReference<List<T>>() {
-                //
-            }
+            CoreConstants.JACKSON.typeFactory.constructArrayType(
+                List::class.java
+            )
         )
     }
 
@@ -182,13 +182,11 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        val serialized = this.readString()
-
-        println("<)> $serialized")
-
         return CoreConstants.JACKSON.readValue(
-            serialized,
-            Array<T>::class.java
+            this.readString(),
+            CoreConstants.JACKSON.typeFactory.constructArrayType(
+                Array::class.java
+            )
         )
     }
 
