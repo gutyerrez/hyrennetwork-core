@@ -182,11 +182,9 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.JACKSON.readValue(
+        return CoreConstants.GSON.fromJson(
             this.readString(),
-            object : TypeReference<Array<T>>() {
-                //
-            }
+            Array<T>::class.java
         )
     }
 
