@@ -98,7 +98,7 @@ class EchoBufferInput(
         if (valid) {
             val tableClassName = this.readString()
 
-            val clazz = Class.forName(tableClassName) as IdTable<T>
+            val clazz = Class.forName(tableClassName) as Class<out IdTable<T>>
 
             println(">> $clazz")
 
@@ -109,7 +109,7 @@ class EchoBufferInput(
                         //
                     }
                 ),
-                if (table === null) clazz else table
+                if (table === null) clazz.getDeclaredConstructor().newInstance() else table
             )
         }
 
