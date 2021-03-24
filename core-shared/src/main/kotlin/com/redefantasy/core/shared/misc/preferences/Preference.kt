@@ -1,23 +1,17 @@
 package com.redefantasy.core.shared.misc.preferences
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.misc.minecraft.material.Material
 import java.io.Serializable
 
 /**
  * @author SrGutyerrez
  **/
-open class Preference(
-    @JsonProperty open val name: String,
-    @JsonProperty open var preferenceState: PreferenceState = PreferenceState.ENABLED
-) : Serializable {
+interface Preference {
 
-    open fun getIcon(): PreferenceIcon {
-        TODO("auto-generated method")
-    }
+    val name: String
+    var preferenceState: PreferenceState
 
-    override fun toString(): String = CoreConstants.GSON.toJson(this)
+    fun getIcon(): PreferenceIcon
 
 }
 
