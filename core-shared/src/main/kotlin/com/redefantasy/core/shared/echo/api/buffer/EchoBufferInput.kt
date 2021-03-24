@@ -90,10 +90,16 @@ class EchoBufferInput(
         return null
     }
 
-    inline fun <reified T: Comparable<T>> readEntityID(table: IdTable<T>): EntityID<T>? {
+    inline fun <reified T: Comparable<T>> readEntityID(
+        table: IdTable<T>? = null
+    ): EntityID<T>? {
         val valid = this.readBoolean()
 
         if (valid) {
+            val tableClassName = this.readString()
+
+            val clazz = Class.forName(tableClassName) as IdTable<T>
+
             return EntityID(
                 CoreConstants.JACKSON.readValue(
                     this.readString(),
@@ -101,7 +107,7 @@ class EchoBufferInput(
                         //
                     }
                 ),
-                table
+                if (table === null) clazz else table
             )
         }
 

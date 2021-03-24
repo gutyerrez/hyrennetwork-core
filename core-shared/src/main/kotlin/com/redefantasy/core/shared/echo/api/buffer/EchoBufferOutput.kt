@@ -80,6 +80,10 @@ class EchoBufferOutput {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
+
+            val clazz = entityId.table::class.java.toGenericString()
+
+            this.writeString(clazz)
             this.writeString(
                 CoreConstants.JACKSON.writeValueAsString(
                     entityId.value
