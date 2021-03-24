@@ -100,6 +100,8 @@ class EchoBufferInput(
 
             val clazz = Class.forName(tableClassName) as IdTable<T>
 
+            println(">> $clazz")
+
             return EntityID(
                 CoreConstants.JACKSON.readValue(
                     this.readString(),
