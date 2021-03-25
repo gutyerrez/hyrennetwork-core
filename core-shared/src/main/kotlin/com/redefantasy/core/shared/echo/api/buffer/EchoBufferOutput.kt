@@ -166,7 +166,6 @@ class EchoBufferOutput {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
-
             this.writeString(
                 CoreConstants.JACKSON.writeValueAsString(
                     list
@@ -180,15 +179,10 @@ class EchoBufferOutput {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
-
-            val serialized = CoreConstants.JACKSON.writeValueAsString(
-                array
-            )
-
-            println("Serialized Array: $serialized")
-
             this.writeString(
-                serialized
+                CoreConstants.JACKSON.writeValueAsString(
+                    array
+                )
             )
         }
     }
