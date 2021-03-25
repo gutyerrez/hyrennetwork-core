@@ -185,7 +185,7 @@ class EchoBufferInput(
 
         return CoreConstants.GSON.fromJson(
             this.readString(),
-            Array<T>::class.java
+            object : TypeToken<Array<T>>() { /* no body */ }.type
         )
 //        val output = CoreConstants.GSON.fromJson(
 //            this.readString(),
