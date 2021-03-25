@@ -10,6 +10,7 @@ import java.io.Serializable
 data class Preference(
     @JsonProperty
     val name: String,
+    @param:JsonProperty("preference_state")
     @field:JsonProperty("preference_state")
     var preferenceState: PreferenceState = PreferenceState.ENABLED
 ) : Serializable {
