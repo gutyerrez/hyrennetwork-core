@@ -196,7 +196,7 @@ class EchoBufferInput(
         )
 
         val array = java.lang.reflect.Array.newInstance(
-            T::class.java.componentType,
+            T::class.java,
             output.size
         ) as Array<T>
 
