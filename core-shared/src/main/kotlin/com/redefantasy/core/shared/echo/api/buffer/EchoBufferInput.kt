@@ -195,6 +195,10 @@ class EchoBufferInput(
             }
         )
 
+        output.forEach {
+            println("E : $it")
+        }
+
         println("Output: ${output.contentToString()}")
 
         return output
