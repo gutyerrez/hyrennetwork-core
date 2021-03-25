@@ -190,18 +190,28 @@ class EchoBufferInput(
 
         val output = CoreConstants.JACKSON.readValue(
             serialized,
-            object : TypeReference<Array<T>>() {
-                //
-            }
+            Array<String>::class.java
         )
 
-        output.forEach {
+        val array = java.lang.reflect.Array.newInstance(
+            T::class.java.componentType,
+            output.size
+        ) as Array<T>
+
+        output.forEachIndexed { index, it ->
             println("E : $it")
+
+            array[index] = CoreConstants.JACKSON.readValue(
+                it,
+                T::class.java
+            )
         }
+
+        println(array)
 
         println("Output: ${output.contentToString()}")
 
-        return output
+        return array
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
