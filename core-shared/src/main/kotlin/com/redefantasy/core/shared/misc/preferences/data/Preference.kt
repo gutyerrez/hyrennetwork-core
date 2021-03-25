@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.misc.preferences
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.misc.minecraft.material.Material
 import java.io.Serializable
@@ -7,14 +8,26 @@ import java.io.Serializable
 /**
  * @author SrGutyerrez
  **/
-abstract class Preference(
+data class Preference(
     @JsonProperty
-    open val name: String,
-    @JsonProperty("preference_state")
-    var preferenceState: PreferenceState = PreferenceState.ENABLED
+    val name: String,
+
 ) : Serializable {
 
-    abstract fun getIcon(): PreferenceIcon
+    @JsonProperty("preference_state")
+    var preferenceState: PreferenceState = PreferenceState.ENABLED
+
+    fun getStateColor() = preferenceState.getColor()
+
+    @JsonIgnore
+    val icon = when (this.name) {
+        "user-private-messages-preference" -> PreferenceIcon(
+            Material.EMPTY_MAP,
+            "${this.getStateColor()}Mensagens privadas",
+            arrayOf("§7Receber mensagens privadas.")
+        )
+        else -> null
+    }
 
 }
 

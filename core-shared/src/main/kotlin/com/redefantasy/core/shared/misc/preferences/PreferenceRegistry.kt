@@ -7,6 +7,12 @@ object PreferenceRegistry {
 
     private val PREFERENCES = mutableMapOf<String, Preference>()
 
+    init {
+        this.register(
+            Preference("user-private-messages-preference")
+        )
+    }
+
     fun register(vararg preferences: Preference) {
         preferences.forEach {
             this.PREFERENCES[it.name] = it
