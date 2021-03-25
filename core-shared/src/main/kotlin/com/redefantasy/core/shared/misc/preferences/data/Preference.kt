@@ -14,7 +14,6 @@ data class Preference(
     var preferenceState: PreferenceState = PreferenceState.ENABLED
 ) : Serializable {
 
-
     fun getStateColor() = preferenceState.getColor()
 
     override fun equals(other: Any?): Boolean {
