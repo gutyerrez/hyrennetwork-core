@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.misc.preferences.data
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 import com.redefantasy.core.shared.misc.preferences.PreferenceState
 import java.io.Serializable
 
@@ -10,8 +11,8 @@ import java.io.Serializable
 data class Preference(
     @JsonProperty
     val name: String,
-    @param:JsonProperty("preference_state")
-    @field:JsonProperty("preference_state")
+    @JsonProperty("preference_state")
+    @SerializedName("preference_state")
     var preferenceState: PreferenceState = PreferenceState.ENABLED
 ) : Serializable {
 
