@@ -200,8 +200,10 @@ class EchoBufferInput(
         ) as Array<T>
 
         output.forEachIndexed { index, it ->
+            println(it)
+
             array[index] = CoreConstants.JACKSON.readValue(
-                it.toString(),
+                it.asString,
                 T::class.java
             )
         }
