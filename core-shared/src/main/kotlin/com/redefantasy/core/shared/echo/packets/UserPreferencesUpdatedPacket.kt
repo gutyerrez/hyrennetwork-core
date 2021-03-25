@@ -18,12 +18,12 @@ class UserPreferencesUpdatedPacket(
 
     override fun write(buffer: EchoBufferOutput) {
         buffer.writeEntityID(userId)
-        buffer.writeList(preferences?.toList())
+        buffer.writeArray(preferences)
     }
 
     override fun read(buffer: EchoBufferInput) {
         this.userId = buffer.readEntityID(UsersTable)
-        this.preferences = buffer.readList<Preference>()?.toTypedArray()
+        this.preferences = buffer.readArray()
     }
 
 }

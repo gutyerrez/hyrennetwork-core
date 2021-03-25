@@ -184,12 +184,20 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.JACKSON.readValue(
-            this.readString(),
+        val serialized = this.readString()
+
+        println("Serialized: $serialized")
+
+        val output = CoreConstants.JACKSON.readValue(
+            serialized,
             object : TypeReference<Array<T>>() {
                 //
             }
         )
+
+        println("Output: ${output.contentToString()}")
+
+        return output
     }
 
     fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
