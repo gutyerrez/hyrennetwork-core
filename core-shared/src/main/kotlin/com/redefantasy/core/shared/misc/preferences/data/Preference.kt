@@ -8,11 +8,12 @@ import java.io.Serializable
  * @author SrGutyerrez
  **/
 data class Preference(
-    @JsonProperty val name: String
-) : Serializable {
-
+    @JsonProperty
+    val name: String,
     @JsonProperty("preference_state")
     var preferenceState: PreferenceState = PreferenceState.ENABLED
+) : Serializable {
+
 
     fun getStateColor() = preferenceState.getColor()
 
