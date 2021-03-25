@@ -190,7 +190,9 @@ class EchoBufferInput(
 
         val output = CoreConstants.JACKSON.readValue(
             serialized,
-            Array<T>::class.java
+            object : TypeReference<Array<T>>() {
+                //
+            }
         )
 
         val array = java.lang.reflect.Array.newInstance(
