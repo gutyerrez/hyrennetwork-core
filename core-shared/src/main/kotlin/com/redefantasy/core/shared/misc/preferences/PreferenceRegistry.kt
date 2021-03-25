@@ -1,5 +1,7 @@
 package com.redefantasy.core.shared.misc.preferences
 
+import com.redefantasy.core.shared.misc.preferences.data.Preference
+
 /**
  * @author Gutyerrez
  */

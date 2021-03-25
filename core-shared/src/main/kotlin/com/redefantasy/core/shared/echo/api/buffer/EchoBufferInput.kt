@@ -201,7 +201,7 @@ class EchoBufferInput(
         output.forEachIndexed { index, it ->
             println("E : $it")
 
-            println(CoreConstants.JACKSON.writeValueAsString(it))
+//            println(CoreConstants.JACKSON.writeValueAsString(it))
 //            array[index] = it
         }
 

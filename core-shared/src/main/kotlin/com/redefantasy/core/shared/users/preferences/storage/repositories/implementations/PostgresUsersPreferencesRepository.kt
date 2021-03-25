@@ -1,7 +1,7 @@
 package com.redefantasy.core.shared.users.preferences.storage.repositories.implementations
 
-import com.redefantasy.core.shared.misc.preferences.Preference
 import com.redefantasy.core.shared.misc.preferences.PreferenceRegistry
+import com.redefantasy.core.shared.misc.preferences.data.Preference
 import com.redefantasy.core.shared.users.preferences.storage.dto.CreateUserPreferencesDTO
 import com.redefantasy.core.shared.users.preferences.storage.dto.FetchUserPreferencesByUserIdDTO
 import com.redefantasy.core.shared.users.preferences.storage.dto.UpdateUserPreferencesDTO

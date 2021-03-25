@@ -3,7 +3,7 @@ package com.redefantasy.core.shared.echo.packets
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferInput
 import com.redefantasy.core.shared.echo.api.buffer.EchoBufferOutput
 import com.redefantasy.core.shared.echo.api.packets.EchoPacket
-import com.redefantasy.core.shared.misc.preferences.Preference
+import com.redefantasy.core.shared.misc.preferences.data.Preference
 import com.redefantasy.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*

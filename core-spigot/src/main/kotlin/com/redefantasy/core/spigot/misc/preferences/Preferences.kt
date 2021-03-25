@@ -1,6 +1,6 @@
 package com.redefantasy.core.spigot.misc.preferences
 
-import com.redefantasy.core.shared.misc.preferences.PreferenceIcon
+import com.redefantasy.core.shared.misc.preferences.data.PreferenceIcon
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 
 /**

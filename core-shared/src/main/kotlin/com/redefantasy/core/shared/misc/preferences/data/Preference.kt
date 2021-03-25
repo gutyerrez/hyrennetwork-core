@@ -1,8 +1,9 @@
-package com.redefantasy.core.shared.misc.preferences
+package com.redefantasy.core.shared.misc.preferences.data
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.misc.minecraft.material.Material
+import com.redefantasy.core.shared.misc.preferences.PreferenceState
 import java.io.Serializable
 
 /**
