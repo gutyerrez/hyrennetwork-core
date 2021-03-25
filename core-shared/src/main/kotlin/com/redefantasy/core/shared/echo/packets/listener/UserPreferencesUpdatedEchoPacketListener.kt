@@ -17,8 +17,6 @@ class UserPreferencesUpdatedEchoPacketListener : EchoListener {
         val userId = packet.userId!!
         val preferences = packet.preferences!!
 
-        println(preferences.contentToString())
-
         CoreProvider.Cache.Local.USERS_PREFERENCES.provide().put(
             userId,
             preferences
