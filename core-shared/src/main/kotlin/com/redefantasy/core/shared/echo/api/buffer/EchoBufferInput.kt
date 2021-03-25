@@ -186,11 +186,9 @@ class EchoBufferInput(
 
         val serialized = this.readString()
 
-        println("Serialized: $serialized")
-
         val output = CoreConstants.JACKSON.readValue(
             serialized,
-            object : TypeReference<Array<T>>() {
+            object : TypeReference<Array<String>>() {
                 //
             }
         )
@@ -201,15 +199,11 @@ class EchoBufferInput(
         ) as Array<T>
 
         output.forEachIndexed { index, it ->
-            println("E : $it")
-
-//            println(CoreConstants.JACKSON.writeValueAsString(it))
-//            array[index] = it
+            array[index] = CoreConstants.JACKSON.readValue(
+                it,
+                T::class.java
+            )
         }
-
-        println(array)
-
-        println("Output: ${output.contentToString()}")
 
         return array
     }
