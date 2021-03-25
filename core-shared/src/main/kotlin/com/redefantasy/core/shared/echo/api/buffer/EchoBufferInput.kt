@@ -193,7 +193,7 @@ class EchoBufferInput(
         ) as Array<T>
 
         output.forEachIndexed { index, it ->
-            println(it.asString)
+            println(it)
 
             array[index] = CoreConstants.GSON.fromJson(
                 it,
