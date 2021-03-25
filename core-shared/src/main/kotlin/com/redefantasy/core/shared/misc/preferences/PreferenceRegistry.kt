@@ -3,13 +3,15 @@ package com.redefantasy.core.shared.misc.preferences
 /**
  * @author Gutyerrez
  */
+val TELL_PREFERENCE = Preference("user-private-messages-preference")
+
 object PreferenceRegistry {
 
     private val PREFERENCES = mutableMapOf<String, Preference>()
 
     init {
         this.register(
-            Preference("user-private-messages-preference")
+            TELL_PREFERENCE
         )
     }
 
