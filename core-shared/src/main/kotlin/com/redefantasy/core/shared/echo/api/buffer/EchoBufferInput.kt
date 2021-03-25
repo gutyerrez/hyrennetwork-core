@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
+import com.google.gson.JsonArray
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
@@ -172,9 +171,9 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.GSON.fromJson(
+        return CoreConstants.JACKSON.readValue(
             this.readString(),
-            object : TypeToken<List<T>>() { /* no body */ }.type
+            object : TypeReference<List<T>>() { /* no body */ }
         )
     }
 
@@ -183,30 +182,29 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.GSON.fromJson(
+        val output = CoreConstants.JACKSON.readValue(
             this.readString(),
-            object : TypeToken<Array<T>>() { /* no body */ }.type
+            JsonArray::class.java
         )
-//        val output = CoreConstants.GSON.fromJson(
-//            this.readString(),
-//            JsonArray::class.java
-//        )
-//
-//        val array = java.lang.reflect.Array.newInstance(
-//            T::class.java,
-//            output.size()
-//        ) as Array<T>
-//
-//        output.forEachIndexed { index, it ->
-//            array[index] = CoreConstants.GSON.fromJson(
-//                it,
-//                T::class.java
-//            )
-//        }
-//
-//        return array
+
+        val array = java.lang.reflect.Array.newInstance(
+            T::class.java,
+            output.size()
+        ) as Array<T>
+
+        output.forEachIndexed { index, it ->
+            println(it)
+            println("AS : ${it.asString}")
+
+            array[index] = CoreConstants.JACKSON.readValue(
+                it.asString,
+                T::class.java
+            )
+        }
+
+        return array
     }
 
-    fun readJsonObject() = JsonParser.parseString(this.readString()).asJsonObject
+    fun readJsonNode() = CoreConstants.JACKSON.readTree(this.readString())
 
 }
