@@ -182,7 +182,7 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        val output = CoreConstants.JACKSON.readValue(
+        val output = CoreConstants.GSON.fromJson(
             this.readString(),
             JsonArray::class.java
         )
@@ -193,10 +193,7 @@ class EchoBufferInput(
         ) as Array<T>
 
         output.forEachIndexed { index, it ->
-            println(it)
-            println("AS : ${it.asString}")
-
-            array[index] = CoreConstants.JACKSON.readValue(
+            array[index] = CoreConstants.GSON.fromJson(
                 it.asString,
                 T::class.java
             )
