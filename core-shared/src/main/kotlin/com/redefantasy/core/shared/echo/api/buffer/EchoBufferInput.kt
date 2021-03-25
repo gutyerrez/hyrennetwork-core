@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
-import com.google.gson.JsonObject
+import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
@@ -187,16 +187,14 @@ class EchoBufferInput(
 
         val serialized = this.readString()
 
-        val output = CoreConstants.JACKSON.readValue(
+        val output = CoreConstants.GSON.fromJson(
             serialized,
-            object : TypeReference<Array<JsonObject>>() {
-                //
-            }
+            JsonArray::class.java
         )
 
         val array = java.lang.reflect.Array.newInstance(
             T::class.java,
-            output.size
+            output.size()
         ) as Array<T>
 
         output.forEachIndexed { index, it ->
