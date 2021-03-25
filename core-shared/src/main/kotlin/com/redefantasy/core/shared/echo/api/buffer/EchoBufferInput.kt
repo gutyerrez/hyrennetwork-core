@@ -190,7 +190,7 @@ class EchoBufferInput(
 
         val output = CoreConstants.JACKSON.readValue(
             serialized,
-            Array<String>::class.java
+            Array<T>::class.java
         )
 
         val array = java.lang.reflect.Array.newInstance(
@@ -202,7 +202,7 @@ class EchoBufferInput(
             println("E : $it")
 
             array[index] = CoreConstants.JACKSON.readValue(
-                it,
+                it.toString(),
                 T::class.java
             )
         }
