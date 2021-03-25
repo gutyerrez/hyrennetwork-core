@@ -199,6 +199,8 @@ class EchoBufferInput(
                 it,
                 T::class.java
             )
+
+            println(array[index])
         }
 
         return array
