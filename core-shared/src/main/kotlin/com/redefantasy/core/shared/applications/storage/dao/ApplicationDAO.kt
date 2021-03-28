@@ -26,23 +26,27 @@ class ApplicationDAO(
     val serverName by ApplicationsTable.serverName
     val restrictJoinGroupName by ApplicationsTable.restrictJoinGroupName
 
-    fun asApplication() = Application(
-        this.name.value,
-        this.displayName,
-        this.slots,
-        InetSocketAddress(
-            this.address,
-            this.port,
-        ),
-        this.applicationType,
-        CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
-            FetchServerByNameDTO(
-                this.serverName?.value
-            )
-        ) ?: CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-            this.serverName?.value
-        ),
-        this.restrictJoinGroupName
-    )
+    fun asApplication(): Application {
+        println(serverName?.value)
+
+        return Application(
+            name.value,
+            displayName,
+            slots,
+            InetSocketAddress(
+                address,
+                port,
+            ),
+            applicationType,
+            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
+                FetchServerByNameDTO(
+                    serverName?.value
+                )
+            ) ?: CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+                serverName?.value
+            ),
+            restrictJoinGroupName
+        )
+    }
 
 }
