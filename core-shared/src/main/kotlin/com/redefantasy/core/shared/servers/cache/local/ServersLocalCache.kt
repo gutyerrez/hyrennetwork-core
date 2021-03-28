@@ -4,27 +4,36 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.servers.data.Server
+import com.redefantasy.core.shared.servers.storage.dto.FetchServerByNameDTO
+import java.util.concurrent.TimeUnit
 
 /**
  * @author SrGutyerrez
  **/
 class ServersLocalCache : LocalCache {
 
-    private val CACHE = Caffeine.newBuilder()
-            .build<String, Server>()
+    private val CACHE_BY_NAME = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<String, Server> {
+            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
+                FetchServerByNameDTO(
+                    it
+                )
+            )
+        }
 
-    fun fetchAll() = this.CACHE.asMap().values
+    private val CACHE_BY_ALL = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<Any, Collection<Server>> {
+            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values
+        }
+
+    fun fetchAll() = this.CACHE_BY_ALL.asMap().values
 
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
 
-        return this.CACHE.getIfPresent(name)
-    }
-
-    override fun populate() {
-        this.CACHE.putAll(
-                CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll()
-        )
+        return this.CACHE_BY_NAME.getIfPresent(name)
     }
 
 }
