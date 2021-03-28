@@ -33,7 +33,7 @@ class ApplicationsLocalCache : LocalCache {
     ): List<Application> = this.CACHE_BY_NAME.asMap()
         .values
         .stream()
-        .filter { it.applicationType === applicationType }
+        .filter { it.applicationType == applicationType }
         .collect(Collectors.toList())
 
     fun fetchByServerAndApplicationType(
@@ -43,7 +43,7 @@ class ApplicationsLocalCache : LocalCache {
         return this.CACHE_BY_NAME.asMap()
             .values
             .stream()
-            .filter { it.server === server && it.applicationType === applicationType }
+            .filter { it.server == server && it.applicationType == applicationType }
             .findFirst()
             .orElse(null)
     }
