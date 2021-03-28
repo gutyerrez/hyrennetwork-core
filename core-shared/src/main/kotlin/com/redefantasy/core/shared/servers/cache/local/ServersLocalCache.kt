@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.servers.cache.local
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.google.common.base.Strings
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.servers.data.Server
@@ -28,7 +29,9 @@ class ServersLocalCache : LocalCache {
             CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values.toTypedArray()
         }
 
-    fun fetchAll() = this.CACHE_BY_ALL.asMap().values
+    fun fetchAll() = this.CACHE_BY_ALL.get(
+        Strings.nullToEmpty(null)
+    ) ?: emptyArray()
 
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
