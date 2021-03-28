@@ -35,12 +35,12 @@ class ApplicationDAO(
             this.port,
         ),
         this.applicationType,
-        CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-            this.serverName?.value
-        ) ?: CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
+        CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
             FetchServerByNameDTO(
                 this.serverName?.value
             )
+        ) ?: CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+            this.serverName?.value
         ),
         this.restrictJoinGroupName
     )
