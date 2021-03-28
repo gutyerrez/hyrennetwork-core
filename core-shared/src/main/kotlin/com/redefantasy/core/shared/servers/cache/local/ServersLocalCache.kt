@@ -24,11 +24,11 @@ class ServersLocalCache : LocalCache {
 
     private val CACHE_BY_ALL = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
-        .build<Any, Collection<Server>> {
-            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values
+        .build<Any, Array<Server>> {
+            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values.toTypedArray()
         }
 
-    fun fetchAll() = this.CACHE_BY_ALL
+    fun fetchAll() = this.CACHE_BY_ALL.asMap().values
 
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
