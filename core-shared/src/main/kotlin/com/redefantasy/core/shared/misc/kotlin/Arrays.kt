@@ -5,7 +5,7 @@ package com.redefantasy.core.shared.misc.kotlin
  */
 inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
     val _tempArray = java.lang.reflect.Array.newInstance(
-        copyFromArray.javaClass.componentType,
+        copyFromArray::class.java.componentType,
         copyFromArray.size
     ) as Array<T>
 
@@ -21,3 +21,10 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         this[index] = it
     }
 }
+
+public inline fun <reified T> sizedArray(
+    size: Int
+): Array<T> = java.lang.reflect.Array.newInstance(
+    T::class.java.componentType,
+    size
+) as Array<T>

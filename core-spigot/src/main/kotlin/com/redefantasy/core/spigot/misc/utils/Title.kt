@@ -1,10 +1,10 @@
 package com.redefantasy.core.spigot.misc.utils
 
 import com.redefantasy.core.shared.misc.utils.ChatColor
+import com.redefantasy.core.spigot.misc.player.sendPacket
 import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.server.v1_8_R3.Packet
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 /**
@@ -30,13 +30,6 @@ class Title(
             )
 
             player.sendPacket(packet)
-        }
-
-        private fun Player.sendPacket(packet: Packet<*>) {
-            val handle = (this as CraftPlayer).handle
-            val playerConnection = handle.playerConnection
-
-            playerConnection.sendPacket(packet)
         }
 
     }
