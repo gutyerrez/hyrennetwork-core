@@ -28,7 +28,7 @@ class ServersLocalCache : LocalCache {
             CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values
         }
 
-    fun fetchAll() = this.CACHE_BY_ALL.asMap().values
+    fun fetchAll() = this.CACHE_BY_ALL
 
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
