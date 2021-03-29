@@ -21,7 +21,7 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         this.fill(
             it,
             index,
-            index + 1
+            index
         )
     }
 }
