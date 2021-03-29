@@ -5,15 +5,14 @@ import com.redefantasy.core.shared.misc.preferences.data.Preference
 /**
  * @author Gutyerrez
  */
-val TELL_PREFERENCE = Preference("user-private-messages-preference")
-
 object PreferenceRegistry {
 
     private val PREFERENCES = mutableMapOf<String, Preference>()
 
     init {
         this.register(
-            TELL_PREFERENCE
+            TELL_PREFERENCE,
+            PLAYER_VISIBILITY
         )
     }
 
@@ -28,3 +27,11 @@ object PreferenceRegistry {
     fun fetchByName(name: String) = this.PREFERENCES[name]
 
 }
+
+val TELL_PREFERENCE = Preference("user-private-messages-preference")
+
+val PLAYER_VISIBILITY = Preference("player-visibility-preference")
+
+val FLY_IN_LOBBY = Preference("fly-in-lobby-preference")
+
+val LOBBY_COMMAND_PROTECTION = Preference("lobby-command-protection-preference")
