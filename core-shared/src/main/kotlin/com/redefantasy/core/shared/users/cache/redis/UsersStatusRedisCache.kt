@@ -63,27 +63,23 @@ class UsersStatusRedisCache : RedisCache {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val users = mutableListOf<UUID>()
 
-            try {
-                val scanParams = ScanParams()
+            val scanParams = ScanParams()
 
-                scanParams.match("users:*")
+            scanParams.match("users:*")
 
-                var cursor = "0"
+            var cursor = "0"
 
-                do {
-                    val scan = it.scan(cursor, scanParams)
+            do {
+                val scan = it.scan(cursor, scanParams)
 
-                    scan.result.forEach { key ->
-                        val uuid = UUID.fromString(key.split("users:")[1])
+                scan.result.forEach { key ->
+                    val uuid = UUID.fromString(key.split("users:")[1])
 
-                        users.add(uuid)
-                    }
+                    users.add(uuid)
+                }
 
-                    cursor = scan.cursor
-                } while (cursor != "0")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+                cursor = scan.cursor
+            } while (cursor != "0")
 
             return@use users
         }
@@ -230,23 +226,21 @@ class UsersStatusRedisCache : RedisCache {
             map["bukkit_application"] = application?.name ?: "desconhecida"
             map["connected_address"] = CoreProvider.application.address.address.hostAddress
             map["connected_version"] = version.toString()
-            map["direct_message"] = this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()?.toString() ?: "undefined"
+            map["direct_message"] =
+                this.fetchDirectMessage(user)?.getUniqueId()?.toString() ?: user.directMessage?.getUniqueId()
+                    ?.toString() ?: "undefined"
             map["last_sent_message"] = this.fetchLastSentMessage(user) ?: user.lastSentMessage ?: "undefined"
             map["joined_at"] = this.fetchJoinedAt(user)?.toString() ?: DateTime.now(
                 CoreConstants.DATE_TIME_ZONE
             ).toString()
 
             CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-                try {
-                    val pipeline = it.pipelined()
-                    val key = this.getKey(user.getUniqueId())
+                val pipeline = it.pipelined()
+                val key = this.getKey(user.getUniqueId())
 
-                    pipeline.hmset(key, map)
-                    pipeline.expire(key, 10)
-                    pipeline.sync()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                pipeline.hmset(key, map)
+                pipeline.expire(key, 10)
+                pipeline.sync()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -255,17 +249,27 @@ class UsersStatusRedisCache : RedisCache {
 
     fun delete(application: Application) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val scanParams = ScanParams().match("users:*")
+            val scanParams = ScanParams()
 
-            val scan = it.scan(ScanParams.SCAN_POINTER_START, scanParams)
+            scanParams.match("users:*")
 
-            scan.result.forEach { key ->
-                val proxyApplicationName = it.hget(key, "proxy_application")
+            var cursor = "0"
 
-                val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(proxyApplicationName)
+            do {
+                val scan = it.scan(cursor, scanParams)
 
-                if (proxyApplication === application) it.del(key)
-            }
+                scan.result.forEach { key ->
+                    val proxyApplication = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(
+                        it.hget(key, "proxy_application")
+                    )
+
+                    if (proxyApplication != null && application == proxyApplication) {
+                        it.del(key)
+                    }
+                }
+
+                cursor = scan.cursor
+            } while (cursor != "0")
         }
     }
 

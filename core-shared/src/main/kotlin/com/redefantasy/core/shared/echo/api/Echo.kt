@@ -160,6 +160,21 @@ open class Echo(
         )
     }
 
+    fun <T : EchoPacket> publishToApplicationType(
+        packet: T,
+        applicationType: ApplicationType
+    ) {
+        this._publish(
+            packet,
+            this.createHeader(null),
+            String.format(
+                this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
+                null,
+                applicationType.name
+            )
+        )
+    }
+
     fun <T : EchoPacket> publishToApplicationTypeAndServer(
         packet: T,
         server: Server,

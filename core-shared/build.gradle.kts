@@ -28,7 +28,7 @@ dependencies {
     // postgres
     implementation("org.postgresql:postgresql:42.2.16")
 
-    // jedis
+    // redis
     implementation("redis.clients:jedis:3.3.0")
 
     // influx db

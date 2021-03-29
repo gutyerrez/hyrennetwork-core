@@ -48,6 +48,14 @@ class ApplicationsLocalCache : LocalCache {
             .orElse(null)
     }
 
+    fun fetchByServer(
+        server: Server
+    ): List<Application> = this.CACHE_BY_NAME.asMap()
+        .values
+        .stream()
+        .filter { it.server == server }
+        .collect(Collectors.toUnmodifiableList())
+
     override fun populate() {
         CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
             this.CACHE_BY_NAME.put(name, application)
