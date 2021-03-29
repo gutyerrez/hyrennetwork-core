@@ -229,6 +229,8 @@ open class Echo(
         println("Packet: $packet | channel: $channel")
 
         this.redisDatabaseProvider.provide().resource.use {
+            println("Publicar")
+
             it.publish(channel.toByteArray(), buffer.toByteArray())
         }
     }
