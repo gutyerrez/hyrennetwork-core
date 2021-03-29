@@ -250,7 +250,7 @@ open class Echo(
         channels.add(
             String.format(
                 this.APPLICATION_TYPE_CHANNEL_NAME,
-                source.name
+                source.applicationType.name
             )
         )
 
