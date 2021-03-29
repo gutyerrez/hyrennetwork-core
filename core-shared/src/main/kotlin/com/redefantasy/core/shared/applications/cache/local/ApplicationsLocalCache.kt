@@ -54,7 +54,7 @@ class ApplicationsLocalCache : LocalCache {
         .values
         .stream()
         .filter { it.server == server }
-        .collect(Collectors.toUnmodifiableList())
+        .collect(Collectors.toList())
 
     override fun populate() {
         CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
