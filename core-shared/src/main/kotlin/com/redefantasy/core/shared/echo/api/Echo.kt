@@ -226,11 +226,7 @@ open class Echo(
 
         this.subscribers.forEach { it.callPacket(channel, packet) }
 
-        println("Packet: $packet | channel: $channel")
-
         this.redisDatabaseProvider.provide().resource.use {
-            println("Publicar")
-
             it.publish(channel.toByteArray(), buffer.toByteArray())
         }
     }

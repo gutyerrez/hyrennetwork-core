@@ -16,21 +16,19 @@ import java.util.function.BiConsumer
  * @author SrGutyerrez
  **/
 open class EchoSubscriber(
-        private val dispatcher: BiConsumer<EchoPacket, Runnable>,
-        private val echo: Echo,
+    private val dispatcher: BiConsumer<EchoPacket, Runnable>,
+    private val echo: Echo,
 ) : BinaryJedisPubSub() {
 
     private val EVENT_BUS = EventBus.builder()
-            .logNoSubscriberMessages(false)
-            .logSubscriberExceptions(true)
-            .throwSubscriberException(false)
-            .build()
+        .logNoSubscriberMessages(false)
+        .logSubscriberExceptions(true)
+        .throwSubscriberException(false)
+        .build()
 
     fun callPacket(channel: String, packet: EchoPacket) {
         val clazz = packet::class.java
         val packetHeader = packet.packetHeader!!
-
-        println(packet)
 
         if (packet is Response) {
             val responseUUID = packetHeader.responseUUID
@@ -49,19 +47,19 @@ open class EchoSubscriber(
 
                         if (response != null) {
                             echo._publishToApplication(
-                                    response,
-                                    responseUUID,
-                                    packetHeader.senderServerName,
-                                    packetHeader.senderApplicationName
+                                response,
+                                responseUUID,
+                                packetHeader.senderServerName,
+                                packetHeader.senderApplicationName
                             )
                         } else {
                             val responseType = respondable::class.java.getMethod("getResponse").returnType
 
                             this.echo._publishToApplication(
-                                    responseType.getDeclaredConstructor().newInstance() as Response,
-                                    responseUUID,
-                                    packetHeader.senderServerName,
-                                    packetHeader.senderApplicationName
+                                responseType.getDeclaredConstructor().newInstance() as Response,
+                                responseUUID,
+                                packetHeader.senderServerName,
+                                packetHeader.senderApplicationName
                             )
                         }
                     }
@@ -79,14 +77,8 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
-        println("opa")
-
         if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName !== CoreProvider.application.name) {
-            println("yey!")
-
             if (!this.isListening(clazz, packetHeader)) return
-
-            println("Opa!")
 
             val packet = clazz.getDeclaredConstructor().newInstance()
 
