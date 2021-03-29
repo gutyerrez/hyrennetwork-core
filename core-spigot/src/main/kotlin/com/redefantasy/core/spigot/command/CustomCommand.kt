@@ -16,12 +16,14 @@ abstract class CustomCommand(
     name: String
 ) : Command(name), Commandable<CommandSender>, TabCompleter {
 
-    override fun getSenderName(commandSender: CommandSender): String = commandSender.name
+    override fun getSenderName(
+        commandSender: CommandSender
+    ): String = commandSender.name
     
     override fun getDescription0(): String = this.getDescription()
 
     override fun getUsage() = TextComponent.toLegacyText(
-        super.getUsage0()
+        *super.getUsage0()
     )
 
     override fun getAliases0(): Array<String> = this.aliases.map { it.toString() }.toTypedArray()
