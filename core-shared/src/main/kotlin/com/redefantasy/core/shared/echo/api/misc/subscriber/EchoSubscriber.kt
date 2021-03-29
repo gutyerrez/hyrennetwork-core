@@ -30,6 +30,8 @@ open class EchoSubscriber(
         val clazz = packet::class.java
         val packetHeader = packet.packetHeader!!
 
+        println(packet)
+
         if (packet is Response) {
             val responseUUID = packetHeader.responseUUID
 
