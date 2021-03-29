@@ -20,6 +20,8 @@ class ConnectUserToApplicationEchoPacketListener : EchoListener {
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
+        println("Chamei !")
+
         if (user === null) return
 
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(user.getUniqueId())

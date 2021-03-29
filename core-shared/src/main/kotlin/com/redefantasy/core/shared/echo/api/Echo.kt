@@ -168,8 +168,7 @@ open class Echo(
             packet,
             this.createHeader(null),
             String.format(
-                this.SERVER_APPLICATION_TYPE_CHANNEL_NAME,
-                null,
+                this.APPLICATION_TYPE_CHANNEL_NAME,
                 applicationType.name
             )
         )
