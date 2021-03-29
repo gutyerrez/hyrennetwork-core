@@ -15,12 +15,12 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         val find = this.find { from -> from == it }
 
         if (find !== null) {
-            println("Dale aq")
+            println("Dale aq $index")
             _tempArray[index] = find
 
             println("Epa")
         } else {
-            println("Vai dale aq")
+            println("Vai dale aq $index")
 
             _tempArray[index] = it
 
