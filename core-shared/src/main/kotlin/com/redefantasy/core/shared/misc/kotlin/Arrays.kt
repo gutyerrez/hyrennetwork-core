@@ -17,7 +17,13 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         } else _tempArray[index] = it
     }
 
-    this.plus(_tempArray)
+    _tempArray.forEachIndexed { index, it ->
+        this.fill(
+            it,
+            index - 1,
+            index
+        )
+    }
 }
 
 inline fun <reified T> sizedArray(
