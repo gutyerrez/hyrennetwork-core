@@ -2,7 +2,6 @@ package com.redefantasy.core.spigot.command
 
 import com.redefantasy.core.shared.commands.Commandable
 import com.redefantasy.core.shared.users.data.User
-import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
@@ -20,21 +19,9 @@ abstract class CustomCommand(
     
     override fun getDescription0(): String = this.getDescription()
 
-    override fun getUsage(): Array<BaseComponent> {
-        return super.getUsage0()
-    }
+    override fun <T> getUsage() = super.getUsage0() as T
 
-    override fun getAliases0(): Array<String> {
-        val aliases = arrayOf<String>()
-
-        println(this.aliases)
-
-        val _aliases = this.aliases.map { it.toString() }.toTypedArray()
-
-        println(_aliases)
-
-        return _aliases
-    }
+    override fun getAliases0(): Array<String> = this.aliases.map { it.toString() }.toTypedArray()
 
     override fun isPlayer(
         commandSender: CommandSender
