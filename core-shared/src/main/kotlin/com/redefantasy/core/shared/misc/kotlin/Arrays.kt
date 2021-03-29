@@ -9,31 +9,18 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         copyFromArray.size
     ) as Array<T>
 
-    println(_tempArray.size)
-
     copyFromArray.forEachIndexed { index, it ->
         val find = this.find { from -> from == it }
 
         if (find !== null) {
-            println("Dale aq $index")
             _tempArray[index] = find
-
-            println("Epa")
-        } else {
-            println("Vai dale aq $index")
-
-            _tempArray[index] = it
-
-            println("deu lhe")
-        }
+        } else _tempArray[index] = it
     }
 
-    _tempArray.forEachIndexed { index, it ->
-        this[index] = it
-    }
+    this.plus(_tempArray)
 }
 
-public inline fun <reified T> sizedArray(
+inline fun <reified T> sizedArray(
     size: Int
 ): Array<T> = java.lang.reflect.Array.newInstance(
     T::class.java.componentType,
