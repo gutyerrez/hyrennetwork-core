@@ -79,8 +79,14 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
+        println("opa")
+
         if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName !== CoreProvider.application.name) {
+            println("yey!")
+
             if (!this.isListening(clazz, packetHeader)) return
+
+            println("Opa!")
 
             val packet = clazz.getDeclaredConstructor().newInstance()
 
