@@ -303,11 +303,11 @@ open class User(
             this.id
         ) ?: return PreferenceRegistry.fetchAll()
 
-        println("Antes: $original")
+        println("Antes: ${original.joinToString()}")
 
         original.copyFrom(PreferenceRegistry.fetchAll())
 
-        println("Depois: $original")
+        println("Depois: ${original.joinToString()}")
 
         return original
     }
