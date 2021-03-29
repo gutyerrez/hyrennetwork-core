@@ -9,12 +9,23 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         copyFromArray.size
     ) as Array<T>
 
+    println(_tempArray.size)
+
     copyFromArray.forEachIndexed { index, it ->
         val find = this.find { from -> from == it }
 
         if (find !== null) {
+            println("Dale aq")
             _tempArray[index] = find
-        } else _tempArray[index] = it
+
+            println("Epa")
+        } else {
+            println("Vai dale aq")
+
+            _tempArray[index] = it
+
+            println("deu lhe")
+        }
     }
 
     _tempArray.forEachIndexed { index, it ->
