@@ -24,9 +24,13 @@ class ConnectUserToApplicationEchoPacketListener : EchoListener {
 
         if (user === null) return
 
+        println("dale aq")
+
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(user.getUniqueId())
 
         if (proxiedPlayer === null) return
+
+        println("vamos")
 
         proxiedPlayer.connect { application.address }
     }
