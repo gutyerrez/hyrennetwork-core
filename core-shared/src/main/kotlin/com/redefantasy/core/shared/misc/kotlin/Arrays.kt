@@ -20,8 +20,8 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
     _tempArray.forEachIndexed { index, it ->
         this.fill(
             it,
-            index - 1,
-            index
+            index,
+            index + 1
         )
     }
 }
