@@ -303,7 +303,11 @@ open class User(
             this.id
         ) ?: return PreferenceRegistry.fetchAll()
 
+        println("Antes: $original")
+
         original.copyFrom(PreferenceRegistry.fetchAll())
+
+        println("Depois: $original")
 
         return original
     }
