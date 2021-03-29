@@ -299,13 +299,13 @@ open class User(
     }
 
     fun getPreferences(): Array<Preference> {
-        val original = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
+        var original = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
             this.id
         ) ?: return PreferenceRegistry.fetchAll()
 
         println("Antes: ${original.joinToString()}")
 
-        original.copyFrom(PreferenceRegistry.fetchAll())
+        original = original.copyFrom(PreferenceRegistry.fetchAll())
 
         println("Depois: ${original.joinToString()}")
 

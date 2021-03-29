@@ -3,7 +3,14 @@ package com.redefantasy.core.shared.misc.kotlin
 /**
  * @author Gutyerrez
  */
-inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
+inline fun <reified T> sizedArray(
+    size: Int
+): Array<T> = java.lang.reflect.Array.newInstance(
+    T::class.java.componentType,
+    size
+) as Array<T>
+
+inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>): Array<T> {
     val _tempArray = java.lang.reflect.Array.newInstance(
         copyFromArray::class.java.componentType,
         copyFromArray.size
@@ -17,18 +24,5 @@ inline fun <reified T> Array<T>.copyFrom(copyFromArray: Array<T>) {
         } else _tempArray[index] = it
     }
 
-    _tempArray.forEachIndexed { index, it ->
-        this.fill(
-            it,
-            index,
-            index
-        )
-    }
+    return _tempArray
 }
-
-inline fun <reified T> sizedArray(
-    size: Int
-): Array<T> = java.lang.reflect.Array.newInstance(
-    T::class.java.componentType,
-    size
-) as Array<T>
