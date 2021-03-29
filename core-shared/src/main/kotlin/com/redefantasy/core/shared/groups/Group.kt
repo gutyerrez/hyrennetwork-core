@@ -22,10 +22,10 @@ enum class Group(
     HELPER,
     BUILDER,
     YOUTUBER,
-    SOVEREIGN,
-    EMPEROR,
-    LEGENDARY,
-    HERO,
+    MVP_PLUS,
+    MVP,
+    VIP_PLUS,
+    VIP,
     DEFAULT;
 
     fun getColoredPrefix() = "${ChatColor.fromHEX(color ?: "")}$prefix"
