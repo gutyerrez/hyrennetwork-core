@@ -4,6 +4,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.status.ApplicationStatus
 import com.redefantasy.core.shared.applications.status.task.ApplicationStatusTask
 import com.redefantasy.core.shared.scheduler.AsyncScheduler
+import com.redefantasy.core.shared.servers.ServerType
 import com.redefantasy.core.shared.wrapper.CoreWrapper
 import com.redefantasy.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
@@ -69,9 +70,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Start server task
          */
 
-        if (CoreProvider.application.server == CoreProvider.Cache.Local.SERVERS.provide()
-                .fetchByName("FACTIONS_OMEGA")
-        ) {
+        if (CoreProvider.application.server?.serverType === ServerType.FACTIONS) {
             AsyncScheduler.scheduleAsyncRepeatingTask(
                 object : ApplicationStatusTask(
                     ApplicationStatus(
