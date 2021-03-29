@@ -2,6 +2,7 @@ package com.redefantasy.core.spigot.command
 
 import com.redefantasy.core.shared.commands.Commandable
 import com.redefantasy.core.shared.users.data.User
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
@@ -19,7 +20,9 @@ abstract class CustomCommand(
     
     override fun getDescription0(): String = this.getDescription()
 
-    override fun <T> getUsage() = super.getUsage0() as T
+    override fun getUsage() = TextComponent.toLegacyText(
+        super.getUsage0()
+    )
 
     override fun getAliases0(): Array<String> = this.aliases.map { it.toString() }.toTypedArray()
 
