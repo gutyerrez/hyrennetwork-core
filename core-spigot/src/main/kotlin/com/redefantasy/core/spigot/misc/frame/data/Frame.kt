@@ -228,6 +228,8 @@ data class Frame(val url: URL) {
 
                     if (!location.chunk.isLoaded) location.chunk.load()
 
+                    location.block.type = Material.ITEM_FRAME
+
                     println("Spawnar")
 
                     val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
