@@ -18,8 +18,6 @@ class PostgresServersRepository : IServersRepository {
 
             ServerDAO.all().forEach { servers[it.name] = it.asServer() }
 
-            println("Transaction: ${servers.size}")
-
             return@transaction servers
         }
     }
