@@ -230,20 +230,20 @@ data class Frame(val url: URL) {
 
                     println("Spawnar")
 
-                    val itemFrame = world.spawn(location, ItemFrame::class.java)
+                    val itemFrame = world.spawnEntity(location, EntityType.PIG)
 
                     println(itemFrame)
 
-                    itemFrame.setFacingDirection(blockFace)
-                    itemFrame.item = ItemBuilder(Material.MAP)
-                        .durability(mapView.id.toInt())
-                        .lore(
-                            arrayOf(
-                                UUID.randomUUID().toString()
-                            )
-                        ).build()
-
-                    mapFrames.add(itemFrame)
+//                    itemFrame.setFacingDirection(blockFace)
+//                    itemFrame.item = ItemBuilder(Material.MAP)
+//                        .durability(mapView.id.toInt())
+//                        .lore(
+//                            arrayOf(
+//                                UUID.randomUUID().toString()
+//                            )
+//                        ).build()
+//
+//                    mapFrames.add(itemFrame)
                 },
                 20L
             )
