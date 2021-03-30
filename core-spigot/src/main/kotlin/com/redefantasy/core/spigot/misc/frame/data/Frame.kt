@@ -48,11 +48,13 @@ data class Frame(val url: URL) {
         val bufferedImage = ImageUtils.getImage(url)
         val extension = url.file.substring(url.file.length - 3)
         val frameImageFormat = FrameImageFormat.fromExtension(extension)
+
         if (frameImageFormat === null) throw java.lang.IllegalArgumentException(
             "Invalid file extension. Supported extensions: ${
                 Arrays.stream(FrameImageFormat.values()).map { it.extension }.collect(Collectors.joining(", "))
             }."
         )
+
         this.init(bufferedImage, frameImageFormat)
     }
 
@@ -66,8 +68,8 @@ data class Frame(val url: URL) {
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
 
-        println(xPanes)
-        println(yPanes)
+        println(xPanes * 128)
+        println(yPanes * 128)
 
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
@@ -85,6 +87,8 @@ data class Frame(val url: URL) {
 
     fun loadFrame() {
         for (x in 0..lengthX) {
+            println("X: $x")
+
             for (y in 0..lengthY) {
                 this.initFrame(
                     x,
