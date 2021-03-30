@@ -7,10 +7,10 @@ import java.text.DecimalFormat
  * @author SrGutyerrez
  **/
 enum class TimeCode(
-        val milliseconds: Long,
-        val single: String,
-        val plural: String,
-        val aliases: Array<String>
+    val milliseconds: Long,
+    val single: String,
+    val plural: String,
+    val aliases: Array<String>
 ) {
 
     YEAR(12 * 30 * 24 * 60 * 60 * 1000L, "ano", "anos", arrayOf("a")),
@@ -78,19 +78,24 @@ enum class TimeCode(
 
                     if (amount > 0) {
                         val name = if (amount == 1) it.single else it.plural
-                        val text = if (builder.isEmpty()) {
-                            "$amount $name"
-                        } else ", $amount $name"
 
-                        builder.append(text)
+                        builder.append(
+                            if (builder.isEmpty()) {
+                                "$amount $name"
+                            } else ", $amount $name"
+                        )
 
                         current++
-                    } else {
+                    } else if (amount <= 0) {
                         val decimalFormat = DecimalFormat("#.#")
 
                         val halfSeconds = time / 1000.0
 
-                        builder.append(decimalFormat.format(halfSeconds)).append(it.single)
+                        builder.append(
+                            if (builder.isEmpty()) {
+                                "${decimalFormat.format(halfSeconds)} ${it.single}"
+                            } else ", ${decimalFormat.format(halfSeconds)} ${it.single}"
+                        )
 
                         current++
                     }
