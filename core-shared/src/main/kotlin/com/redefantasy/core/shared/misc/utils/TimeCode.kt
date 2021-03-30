@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.misc.utils
 
 import org.apache.commons.lang3.ArrayUtils
+import java.text.DecimalFormat
 
 /**
  * @author SrGutyerrez
@@ -63,8 +64,8 @@ enum class TimeCode(
             }
         }
 
-        fun toText(time: Long, length: Int, zeroDefaultMessage: String = "Permanente"): String {
-            if (time <= 0L) return zeroDefaultMessage
+        fun toText(time: Long, length: Int, zeroDefaultMessage: String? = "Permanente"): String {
+            if (time <= 0L && zeroDefaultMessage !== null) return zeroDefaultMessage
 
             var remainingTime = time
             val builder = StringBuilder()
@@ -82,6 +83,14 @@ enum class TimeCode(
                         } else ", $amount $name"
 
                         builder.append(text)
+
+                        current++
+                    } else {
+                        val decimalFormat = DecimalFormat("#.#")
+
+                        val halfSeconds = time / 1000.0
+
+                        builder.append(decimalFormat.format(halfSeconds)).append(it.single)
 
                         current++
                     }
