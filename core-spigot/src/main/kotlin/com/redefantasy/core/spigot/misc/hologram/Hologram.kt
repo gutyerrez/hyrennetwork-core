@@ -28,15 +28,6 @@ class Hologram(
         return this
     }
 
-    fun line(
-        position: Int,
-        text: String
-    ): Hologram {
-        this.lines[position] = HologramLine(text)
-
-        return this
-    }
-
     fun update(
         position: Int,
         text: String
