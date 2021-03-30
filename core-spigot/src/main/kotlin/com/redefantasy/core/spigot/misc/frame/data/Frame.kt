@@ -60,6 +60,9 @@ data class Frame(val url: URL) {
         bufferedImage: BufferedImage,
         frameImageFormat: FrameImageFormat
     ) {
+        println("Width: ${bufferedImage.width}")
+        println("Height: ${bufferedImage.height}")
+
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
 
