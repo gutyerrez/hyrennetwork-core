@@ -15,6 +15,8 @@ object FrameUtils {
         width: Int,
         height: Int
     ): BufferedImage {
+        println("Resize: $width/$height")
+
         val image = image.getScaledInstance(
             width,
             height,
