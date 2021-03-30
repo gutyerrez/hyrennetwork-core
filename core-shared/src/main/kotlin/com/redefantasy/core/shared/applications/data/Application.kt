@@ -22,12 +22,12 @@ data class Application(
     fun getFancyDisplayName() = StringUtils.replaceEach(
         this.displayName,
         arrayOf(
-            "Rankup",
-            "Lobby"
+            "Login",
+            "Saguão"
         ),
         arrayOf(
-            "R.",
-            "L."
+            "L.",
+            "S."
         )
     )
 
