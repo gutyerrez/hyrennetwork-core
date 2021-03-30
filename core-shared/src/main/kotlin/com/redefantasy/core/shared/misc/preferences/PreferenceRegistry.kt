@@ -32,6 +32,6 @@ val TELL_PREFERENCE = Preference("user-private-messages-preference")
 
 val PLAYER_VISIBILITY = Preference("player-visibility-preference")
 
-val FLY_IN_LOBBY = Preference("fly-in-lobby-preference")
+val FLY_IN_LOBBY = Preference("fly-in-lobby-preference", PreferenceState.DISABLED)
 
 val LOBBY_COMMAND_PROTECTION = Preference("lobby-command-protection-preference")
