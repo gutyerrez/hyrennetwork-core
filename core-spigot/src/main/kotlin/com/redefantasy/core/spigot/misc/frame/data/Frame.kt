@@ -87,7 +87,7 @@ data class Frame(val url: URL) {
 
     fun loadFrame() {
         for (x in 0..lengthX) {
-            println("X: $x")
+            println(">> X: $x")
 
             for (y in 0..lengthY) {
                 this.initFrame(
