@@ -47,6 +47,7 @@ class ItemBuilder(
             '&',
             name
         )
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -67,12 +68,14 @@ class ItemBuilder(
         }
 
         this.itemMeta.lore = lines
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
 
     fun durability(durability: Int): ItemBuilder {
         this.itemStack.durability = durability.toShort()
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -82,6 +85,7 @@ class ItemBuilder(
             this.itemStack.type,
             data.toByte()
         )
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -90,6 +94,7 @@ class ItemBuilder(
         if (this.itemStack.type === Material.BANNER) {
             (this.itemMeta as BannerMeta).patterns = patterns.toList()
         }
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -110,18 +115,21 @@ class ItemBuilder(
 
     fun clearFlags(flags: Array<ItemFlag>): ItemBuilder {
         this.itemMeta.removeItemFlags(*flags)
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
 
     fun flags(flags: Array<ItemFlag>): ItemBuilder {
         this.itemMeta.addItemFlags(*flags)
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
 
     fun persistent(boolean: Boolean): ItemBuilder {
         this.itemMeta.spigot().isPersistent = boolean
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -169,6 +177,7 @@ class ItemBuilder(
         if (this.itemMeta is PotionMeta) {
             (this.itemMeta as PotionMeta).addCustomEffect(potionEffect, overwrite)
         }
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -185,6 +194,7 @@ class ItemBuilder(
         )) {
             (this.itemMeta as LeatherArmorMeta).color = color
         }
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -193,6 +203,7 @@ class ItemBuilder(
         if (this.itemStack.type === Material.BANNER) {
             (this.itemMeta as BannerMeta).baseColor = baseColor
         }
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -213,6 +224,7 @@ class ItemBuilder(
         if (this.itemStack.type === Material.BANNER) {
             (this.itemMeta as BannerMeta).baseColor = null
         }
+        this.itemStack.itemMeta = itemMeta
 
         return this
     }
@@ -234,8 +246,6 @@ class ItemBuilder(
     }
 
     fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
-        this.itemStack.itemMeta = this.itemMeta
-
         val nmsCopy = CraftItemStack.asNMSCopy(this.itemStack)
 
         val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
@@ -245,6 +255,7 @@ class ItemBuilder(
         nmsCopy.tag = compound
 
         this.itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
+        this.itemStack.itemMeta = itemMeta
 
         return compound
     }
@@ -327,10 +338,6 @@ class ItemBuilder(
         TODO("Não implementado")
     }
 
-    fun build(): ItemStack {
-        this.itemStack.itemMeta = this.itemMeta
-
-        return this.itemStack
-    }
+    fun build() = this.itemStack
 
 }
