@@ -137,7 +137,7 @@ class UsersStatusRedisCache : RedisCache {
                         bukkitApplication
                     )
 
-                    if (application != null && application.server !== null && application.server === server) {
+                    if (application != null && application.server !== null && application.server == server) {
                         val uuid = UUID.fromString(key.split("users:")[1])
 
                         users.add(uuid)
