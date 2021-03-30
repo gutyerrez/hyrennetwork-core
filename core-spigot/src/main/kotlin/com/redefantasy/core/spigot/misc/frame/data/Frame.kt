@@ -86,10 +86,10 @@ data class Frame(val url: URL) {
     }
 
     fun loadFrame() {
-        for (x in 0..lengthX) {
+        for (x in 0 until lengthX) {
             println(">> X: $x")
 
-            for (y in 0..lengthY) {
+            for (y in 0 until lengthY) {
                 this.initFrame(
                     x,
                     y,
@@ -129,8 +129,8 @@ data class Frame(val url: URL) {
     fun getItems(): LinkedHashSet<ItemStack> {
         val items = linkedSetOf<ItemStack>()
 
-        for (y in 0..lengthY) {
-            for (x in 0..lengthX) {
+        for (y in 0 until lengthY) {
+            for (x in 0 until lengthX) {
                 for (frameRelativeLocation in mapCollection.keys) {
                     if (frameRelativeLocation.x != x || frameRelativeLocation.y != y) continue
 
