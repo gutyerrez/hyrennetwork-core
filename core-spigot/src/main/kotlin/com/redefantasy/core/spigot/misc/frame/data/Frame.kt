@@ -15,7 +15,6 @@ import org.bukkit.block.BlockFace
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
-import org.bukkit.event.hanging.HangingPlaceEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.map.MapView
 import java.awt.image.BufferedImage
@@ -233,16 +232,15 @@ data class Frame(val url: URL) {
 
                     location.block.type = Material.GOLD_BLOCK
 
-                    val event = HangingPlaceEvent(
-                        world.spawn(location, ItemFrame::class.java),
-                        null,
-                        location.block,
-                        blockFace
+                    val entity = world.spawn(
+                        Location(
+                            world,
+                            0.5,
+                            78.0,
+                            -0.5
+                        ),
+                        ItemFrame::class.java
                     )
-
-                    Bukkit.getPluginManager().callEvent(event)
-
-                    val entity = event.entity
 
                     println("Entity: ${entity.name}")
 
