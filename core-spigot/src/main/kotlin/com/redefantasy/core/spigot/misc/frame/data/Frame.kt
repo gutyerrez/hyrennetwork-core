@@ -99,8 +99,8 @@ data class Frame(val url: URL) {
         y: Int,
         mapView: MapView
     ) {
-        println("X: $x")
-        println("Y: $y")
+        println("X: ${x * 128}")
+        println("Y: ${y * 128}")
 
         val bufferedImage = this.bufferedImage.getSubimage(x * 128, y * 128, 128, 128)
 
