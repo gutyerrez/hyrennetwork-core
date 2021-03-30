@@ -123,10 +123,9 @@ object CoreProvider {
             port
         )
 
-        val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByAddressAndPort(
+        val application = Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
             FetchApplicationByInetSocketAddressDTO(
-                address.address.hostAddress,
-                address.port
+                address
             )
         ) ?: throw InvalidApplicationException("Invalid application $address")
 
