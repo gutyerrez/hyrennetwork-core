@@ -207,7 +207,7 @@ data class Frame(val url: URL) {
         this.blockFace = blockFace
 
         mapsView.forEach { location, mapView ->
-            mapView.world = this.location?.world
+            mapView.world = this.location!!.world
 
             val clonedLocation = location.clone()
 
@@ -222,6 +222,8 @@ data class Frame(val url: URL) {
             Bukkit.getScheduler().runTaskLater(
                 CoreSpigotPlugin.instance,
                 {
+                    println(location)
+
                     if (!location.chunk.isLoaded) location.chunk.load()
 
                     val itemFrame = world.spawn(location, ItemFrame::class.java)
