@@ -76,9 +76,6 @@ enum class TimeCode(
                 if (current != length) {
                     val amount = (remainingTime / it.milliseconds).toInt()
 
-                    println(remainingTime)
-                    println(amount)
-
                     if (amount > 0) {
                         val name = if (amount == 1) it.single else it.plural
 
