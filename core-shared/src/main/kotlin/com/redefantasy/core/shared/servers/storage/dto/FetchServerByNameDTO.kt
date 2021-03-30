@@ -1,8 +1,10 @@
 package com.redefantasy.core.shared.servers.storage.dto
 
+import org.jetbrains.exposed.dao.id.EntityID
+
 /**
  * @author Gutyerrez
  */
 class FetchServerByNameDTO(
-    val name: String?
+    val name: EntityID<String>
 )

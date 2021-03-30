@@ -20,7 +20,7 @@ class ServersLocalCache : LocalCache {
         .build<EntityID<String>, Server> {
             CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
                 FetchServerByNameDTO(
-                    it.value
+                    it
                 )
             )
         }
