@@ -21,8 +21,8 @@ class ApplicationsStatusRedisCache : RedisCache {
     private val TTL_SECONDS = 5
 
     private val CACHE = Caffeine.newBuilder()
-            .expireAfterWrite(2, TimeUnit.SECONDS)
-            .build<String, ApplicationStatus>()
+        .expireAfterWrite(2, TimeUnit.SECONDS)
+        .build<String, ApplicationStatus>()
 
     private fun getKey(name: String) = "applications:$name"
 
@@ -126,8 +126,8 @@ class ApplicationsStatusRedisCache : RedisCache {
                     val value = it.get(key)
 
                     applicationsStatuses[key] = CoreConstants.JACKSON.readValue(
-                            value,
-                            applicationStatusClass.java
+                        value,
+                        applicationStatusClass.java
                     )
                 }
 
@@ -170,8 +170,8 @@ class ApplicationsStatusRedisCache : RedisCache {
                 val value = response.get()
 
                 applications[applicationName] = CoreConstants.JACKSON.readValue(
-                        value,
-                        statusClass.java
+                    value,
+                    statusClass.java
                 )
             }
 
