@@ -101,7 +101,7 @@ class ItemBuilder(
 
         if (this.itemStack.enchantments.isEmpty()) {
             if (glowing) {
-                createNBT { it.set("ench", NBTTagList()) }
+                this.createNBT { it.set("ench", NBTTagList()) }
             } else removeNBT("ench")
         }
 
@@ -234,6 +234,8 @@ class ItemBuilder(
     }
 
     fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
+        this.itemStack.itemMeta = this.itemMeta
+
         val nmsCopy = CraftItemStack.asNMSCopy(this.itemStack)
 
         val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
