@@ -62,14 +62,8 @@ data class Frame(val url: URL) {
         bufferedImage: BufferedImage,
         frameImageFormat: FrameImageFormat
     ) {
-        println("Width: ${bufferedImage.width}")
-        println("Height: ${bufferedImage.height}")
-
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
-
-        println(xPanes * 128)
-        println(yPanes * 128)
 
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
@@ -87,8 +81,6 @@ data class Frame(val url: URL) {
 
     fun loadFrame() {
         for (x in 0 until lengthX) {
-            println(">> X: $x")
-
             for (y in 0 until lengthY) {
                 this.initFrame(
                     x,
@@ -106,9 +98,6 @@ data class Frame(val url: URL) {
         y: Int,
         mapView: MapView
     ) {
-        println("X: ${x * 128}")
-        println("Y: ${y * 128}")
-
         val bufferedImage = this.bufferedImage.getSubimage(x * 128, y * 128, 128, 128)
 
         mapView.renderers.forEach { mapView.removeRenderer(it) }
@@ -235,7 +224,7 @@ data class Frame(val url: URL) {
                 {
                     if (!location.chunk.isLoaded) location.chunk.load()
 
-                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME) as ItemFrame
+                    val itemFrame = world.spawn(location, ItemFrame::class.java)
 
                     itemFrame.setFacingDirection(blockFace)
                     itemFrame.item = ItemBuilder(Material.MAP)
