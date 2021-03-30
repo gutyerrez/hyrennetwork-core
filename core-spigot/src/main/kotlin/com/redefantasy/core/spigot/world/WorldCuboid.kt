@@ -147,7 +147,7 @@ class WorldCuboid {
         }
     }
 
-    fun getWalls(callback: Consumer<Block?>) {
+    fun getWalls(callback: Consumer<Block>) {
         val world = this.getBukkitWorld()
 
         for (x in minX..maxX) {
@@ -199,7 +199,7 @@ class WorldCuboid {
         }
     }
 
-    fun getFloor(callBack: Consumer<Block?>) {
+    fun getFloor(callBack: Consumer<Block>) {
         this.getBlocks { block: Block ->
             if (block.location.blockY == minY) {
                 callBack.accept(block)
@@ -207,7 +207,7 @@ class WorldCuboid {
         }
     }
 
-    fun getBorder(callBack: Consumer<Block?>) {
+    fun getBorder(callBack: Consumer<Block>) {
         this.getBlocks { block: Block ->
             if (block.location.blockY == maxY) {
                 callBack.accept(block)
