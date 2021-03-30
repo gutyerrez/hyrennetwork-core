@@ -230,7 +230,7 @@ data class Frame(val url: URL) {
 
                     println("Spawnar")
 
-                    val itemFrame = world.spawnEntity(location, EntityType.PIG)
+                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
 
                     println(itemFrame)
 
