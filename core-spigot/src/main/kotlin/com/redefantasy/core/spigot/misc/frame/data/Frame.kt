@@ -224,10 +224,15 @@ data class Frame(val url: URL) {
                 {
                     println(world)
                     println(location)
+                    println(location.chunk)
 
                     if (!location.chunk.isLoaded) location.chunk.load()
 
+                    println("Spawnar")
+
                     val itemFrame = world.spawn(location, ItemFrame::class.java)
+
+                    println(itemFrame)
 
                     itemFrame.setFacingDirection(blockFace)
                     itemFrame.item = ItemBuilder(Material.MAP)
