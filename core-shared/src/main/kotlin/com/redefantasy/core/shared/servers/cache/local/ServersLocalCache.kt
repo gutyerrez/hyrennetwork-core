@@ -38,6 +38,8 @@ class ServersLocalCache : LocalCache {
     fun fetchByName(name: EntityID<String>?): Server? {
         if (name === null) return null
 
+        println(this.CACHE_BY_NAME.asMap().size)
+
         return this.CACHE_BY_NAME.getIfPresent(name)
     }
 
