@@ -20,14 +20,6 @@ class Hologram(
         )
     }
 
-    fun line(text: String): Hologram {
-        this.lines.add(
-            HologramLine(text)
-        )
-
-        return this
-    }
-
     fun update(
         position: Int,
         text: String

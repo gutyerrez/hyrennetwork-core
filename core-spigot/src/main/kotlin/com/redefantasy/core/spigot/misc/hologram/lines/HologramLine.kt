@@ -22,8 +22,12 @@ class HologramLine(
     }
 
     fun update() {
-        this.armorStand?.isCustomNameVisible = this.text.isNotEmpty()
-        this.armorStand?.customName = this.text
+        println("Atualizar para ${this.text}")
+
+        if (this.armorStand?.customName != this.text) {
+            this.armorStand?.isCustomNameVisible = this.text.isNotEmpty()
+            this.armorStand?.customName = this.text
+        }
     }
 
     fun isSpawned() = this.armorStand !== null && !this.armorStand!!.isDead
