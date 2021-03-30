@@ -17,7 +17,7 @@ class CooldownManager {
     fun start(user: User, any: Any, duration: Long) {
         val cooldown = this.CACHE.getIfPresent(user.id) ?: Cooldown()
 
-        cooldown.start(any, duration)
+        cooldown.start(any, System.currentTimeMillis() + duration)
 
         this.CACHE.put(user.id, cooldown)
     }
