@@ -6,6 +6,8 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.servers.data.Server
 import com.redefantasy.core.shared.servers.storage.dto.FetchServerByNameDTO
+import com.redefantasy.core.shared.servers.storage.table.ServersTable
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,10 +17,10 @@ class ServersLocalCache : LocalCache {
 
     private val CACHE_BY_NAME = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
-        .build<String, Server> {
+        .build<EntityID<String>, Server> {
             CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
                 FetchServerByNameDTO(
-                    it
+                    it.value
                 )
             )
         }
@@ -33,10 +35,21 @@ class ServersLocalCache : LocalCache {
         Strings.nullToEmpty(null)
     ) ?: emptyArray()
 
-    fun fetchByName(name: String?): Server? {
+    fun fetchByName(name: EntityID<String>?): Server? {
         if (name === null) return null
 
         return this.CACHE_BY_NAME.getIfPresent(name)
+    }
+
+    fun fetchByName(name: String?): Server? {
+        if (name === null) return null
+
+        return this.CACHE_BY_NAME.getIfPresent(
+            EntityID(
+                name,
+                ServersTable
+            )
+        )
     }
 
 }

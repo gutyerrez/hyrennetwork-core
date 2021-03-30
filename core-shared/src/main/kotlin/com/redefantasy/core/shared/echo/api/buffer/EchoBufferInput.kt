@@ -10,6 +10,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.groups.Group
+import com.redefantasy.core.shared.servers.storage.table.ServersTable
 import com.redefantasy.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
@@ -160,7 +161,7 @@ class EchoBufferInput(
         return null
     }
 
-    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(this.readString())
+    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(this.readEntityID(ServersTable))
 
     fun readSerializedLocation() = SerializedLocation.of(this.readString())
 

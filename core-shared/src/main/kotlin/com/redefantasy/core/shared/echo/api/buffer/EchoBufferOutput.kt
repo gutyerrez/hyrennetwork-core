@@ -129,7 +129,7 @@ class EchoBufferOutput {
     }
 
     fun writeServer(server: Server?) {
-        this.writeString(server?.getName())
+        this.writeEntityID(server?.name)
     }
 
     fun writeSerializedLocation(serializedLocation: SerializedLocation) {
