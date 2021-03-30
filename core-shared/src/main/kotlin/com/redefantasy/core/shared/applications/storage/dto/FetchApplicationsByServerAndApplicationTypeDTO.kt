@@ -6,7 +6,7 @@ import com.redefantasy.core.shared.servers.data.Server
 /**
  * @author SrGutyerrez
  **/
-class FetchApplicationsByTypeAndServerDTO(
-        val applicationType: ApplicationType,
-        val server: Server
+class FetchApplicationsByServerAndApplicationTypeDTO(
+    val server: Server,
+    val applicationType: ApplicationType
 )

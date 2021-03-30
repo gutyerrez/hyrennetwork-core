@@ -4,67 +4,115 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.applications.ApplicationType
 import com.redefantasy.core.shared.applications.data.Application
+import com.redefantasy.core.shared.applications.storage.dto.*
 import com.redefantasy.core.shared.cache.local.LocalCache
 import com.redefantasy.core.shared.servers.data.Server
 import java.net.InetSocketAddress
-import java.util.stream.Collectors
+import java.util.concurrent.TimeUnit
 
 /**
  * @author SrGutyerrez
  **/
 class ApplicationsLocalCache : LocalCache {
 
-    private val CACHE_BY_NAME = Caffeine
-        .newBuilder()
-        .build<String, Application>()
+    private val CACHE_BY_NAME = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<String, Application> {
+            CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByName(
+                FetchApplicationByNameDTO(
+                    it
+                )
+            )
+        }
 
-    private val CACHE_BY_ADDRESS = Caffeine
-        .newBuilder()
-        .build<InetSocketAddress, Application>()
+    private val CACHE_BY_ADDRESS = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<InetSocketAddress, Application> {
+            CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
+                FetchApplicationByInetSocketAddressDTO(
+                    it
+                )
+            )
+        }
 
-    fun fetchByName(name: String) = this.CACHE_BY_NAME.getIfPresent(name)
+    private val CACHE_BY_SERVER = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<Server, List<Application>> {
+            CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByServer(
+                FetchApplicationsByServerDTO(
+                    it
+                )
+            )
+        }
+
+    private val CACHE_BY_TYPE = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<ApplicationType, List<Application>> {
+            CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByType(
+                FetchApplicationsByTypeDTO(
+                    it
+                )
+            )
+        }
+
+    private val CACHE_BY_SERVER_AND_APPLICATION = Caffeine.newBuilder()
+        .expireAfterWrite(15, TimeUnit.SECONDS)
+        .build<ApplicationByServerAndApplicationTypeLookup, Application> {
+            CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchByServerAndApplicationType(
+                FetchApplicationsByServerAndApplicationTypeDTO(
+                    it.server,
+                    it.applicationType
+                )
+            )
+        }
+
+    fun fetchByName(name: String) = this.CACHE_BY_NAME.get(name)
 
     fun fetchByAddress(
         address: InetSocketAddress
-    ) = this.CACHE_BY_ADDRESS.getIfPresent(address)
+    ) = this.CACHE_BY_ADDRESS.get(address)
 
     fun fetchByApplicationType(
         applicationType: ApplicationType
-    ): List<Application> = this.CACHE_BY_NAME.asMap()
-        .values
-        .stream()
-        .filter { it.applicationType == applicationType }
-        .collect(Collectors.toList())
+    ) = this.CACHE_BY_TYPE.get(applicationType) ?: emptyList()
 
     fun fetchByServerAndApplicationType(
         server: Server,
         applicationType: ApplicationType
-    ): Application? {
-        return this.CACHE_BY_NAME.asMap()
-            .values
-            .stream()
-            .filter { it.server == server && it.applicationType == applicationType }
-            .findFirst()
-            .orElse(null)
-    }
+    ) = this.CACHE_BY_SERVER_AND_APPLICATION.get(
+        ApplicationByServerAndApplicationTypeLookup(
+            server,
+            applicationType
+        )
+    )
 
     fun fetchByServer(
         server: Server
-    ): List<Application> = this.CACHE_BY_NAME.asMap()
-        .values
-        .stream()
-        .filter { it.server == server }
-        .collect(Collectors.toList())
+    ) = this.CACHE_BY_SERVER.get(server) ?: emptyList()
 
-    override fun populate() {
-        CoreProvider.Repositories.Postgres.APPLICATIONS_REPOSITORY.provide().fetchAll().forEach { name, application ->
-            this.CACHE_BY_NAME.put(name, application)
+    private class ApplicationByServerAndApplicationTypeLookup(
+        val server: Server,
+        val applicationType: ApplicationType
+    ) {
 
-            this.CACHE_BY_ADDRESS.put(
-                application.address,
-                application
-            )
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+
+            if (javaClass != other?.javaClass) return false
+
+            other as ApplicationByServerAndApplicationTypeLookup
+
+            if (server != other.server) return false
+
+            if (applicationType != other.applicationType) return false
+
+            return true
         }
+
+        override fun hashCode(): Int {
+            return server.hashCode() + applicationType.hashCode()
+        }
+
     }
 
 }

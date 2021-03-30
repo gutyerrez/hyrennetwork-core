@@ -6,5 +6,5 @@ import com.redefantasy.core.shared.applications.ApplicationType
  * @author SrGutyerrez
  **/
 class FetchApplicationsByTypeDTO(
-        val applicationType: ApplicationType
+    val applicationType: ApplicationType
 )

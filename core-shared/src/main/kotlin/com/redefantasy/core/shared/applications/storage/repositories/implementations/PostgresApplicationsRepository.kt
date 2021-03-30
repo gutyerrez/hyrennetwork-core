@@ -2,10 +2,7 @@ package com.redefantasy.core.shared.applications.storage.repositories.implementa
 
 import com.redefantasy.core.shared.applications.data.Application
 import com.redefantasy.core.shared.applications.storage.dao.ApplicationDAO
-import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationByAddressAndPortDTO
-import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationByNameDTO
-import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationsByTypeAndServerDTO
-import com.redefantasy.core.shared.applications.storage.dto.FetchApplicationsByTypeDTO
+import com.redefantasy.core.shared.applications.storage.dto.*
 import com.redefantasy.core.shared.applications.storage.repositories.IApplicationsRepository
 import com.redefantasy.core.shared.applications.storage.table.ApplicationsTable
 import org.jetbrains.exposed.sql.and
@@ -28,37 +25,45 @@ class PostgresApplicationsRepository : IApplicationsRepository {
         }
     }
 
-    override fun fetchByType(fetchApplicationsByTypeDTO: FetchApplicationsByTypeDTO): Map<String, Application> {
+    override fun fetchByServer(
+        fetchApplicationsByServerDTO: FetchApplicationsByServerDTO
+    ): List<Application> {
         return transaction {
-            val applications = mutableMapOf<String, Application>()
+            return@transaction ApplicationDAO.find {
+                ApplicationsTable.serverName eq fetchApplicationsByServerDTO.server.name
+            }.map { it.asApplication() }
+        }
+    }
 
-            ApplicationDAO.find {
+    override fun fetchByType(
+        fetchApplicationsByTypeDTO: FetchApplicationsByTypeDTO
+    ): List<Application> {
+        return transaction {
+            return@transaction ApplicationDAO.find {
                 ApplicationsTable.applicationType eq fetchApplicationsByTypeDTO.applicationType
-            }.forEach {
-                applications[it.name.value] = it.asApplication()
-            }
-
-            return@transaction applications
+            }.map { it.asApplication() }
         }
     }
 
-    override fun fetchByTypeAndServer(fetchApplicationsByTypeAndServerDTO: FetchApplicationsByTypeAndServerDTO): Map<String, Application> {
+    override fun fetchByServerAndApplicationType(
+        fetchApplicationsByServerAndApplicationTypeDTO: FetchApplicationsByServerAndApplicationTypeDTO
+    ): Application? {
         return transaction {
-            val applications = mutableMapOf<String, Application>()
-
-            ApplicationDAO.find {
-                ApplicationsTable.applicationType eq fetchApplicationsByTypeAndServerDTO.applicationType and (
-                        ApplicationsTable.serverName eq fetchApplicationsByTypeAndServerDTO.server.name
+            val result = ApplicationDAO.find {
+                ApplicationsTable.applicationType eq fetchApplicationsByServerAndApplicationTypeDTO.applicationType and (
+                        ApplicationsTable.serverName eq fetchApplicationsByServerAndApplicationTypeDTO.server.name
                 )
-            }.forEach {
-                applications[it.name.value] = it.asApplication()
             }
 
-            return@transaction applications
+            if (result.empty()) return@transaction null
+
+            return@transaction result.first().asApplication()
         }
     }
 
-    override fun fetchByName(fetchApplicationByNameDTO: FetchApplicationByNameDTO): Application? {
+    override fun fetchByName(
+        fetchApplicationByNameDTO: FetchApplicationByNameDTO
+    ): Application? {
         return transaction {
             var application: Application? = null
 
@@ -72,13 +77,15 @@ class PostgresApplicationsRepository : IApplicationsRepository {
         }
     }
 
-    override fun fetchByAddressAndPort(fetchApplicationByAddressAndPortDTO: FetchApplicationByAddressAndPortDTO): Application? {
+    override fun fetchByInetSocketAddress(
+        fetchApplicationByInetSocketAddressDTO: FetchApplicationByInetSocketAddressDTO
+    ): Application? {
         return transaction {
             var application: Application? = null
 
             val result = ApplicationDAO.find {
-                ApplicationsTable.address eq fetchApplicationByAddressAndPortDTO.address and (
-                        ApplicationsTable.port eq fetchApplicationByAddressAndPortDTO.port
+                ApplicationsTable.address eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.address.hostAddress and (
+                        ApplicationsTable.port eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.port
                 )
             }
 
