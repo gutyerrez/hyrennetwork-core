@@ -1,6 +1,8 @@
 package com.redefantasy.core.shared.misc.utils
 
 import org.apache.commons.lang3.ArrayUtils
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
@@ -74,10 +76,10 @@ enum class TimeCode(
 
             values().forEach {
                 if (current != length) {
-                    val amount = (remainingTime / it.milliseconds).toInt()
+                    val amount = (remainingTime / it.milliseconds)
 
-                    if (amount > 0) {
-                        val name = if (amount == 1) it.single else it.plural
+                    if (amount.toInt() > 0) {
+                        val name = if (amount.toInt() == 1) it.single else it.plural
 
                         builder.append(
                             if (builder.isEmpty()) {
@@ -89,12 +91,20 @@ enum class TimeCode(
                     } else if (amount <= 0) {
                         val decimalFormat = DecimalFormat("#.#")
 
-                        val halfSeconds = time / 1000.0
+                        val halfSeconds = amount / 1000.0
 
                         builder.append(
                             if (builder.isEmpty()) {
-                                "${decimalFormat.format(halfSeconds)} ${it.single}"
-                            } else ", ${decimalFormat.format(halfSeconds)} ${it.single}"
+                                "${decimalFormat.format(
+                                    BigDecimal(halfSeconds)
+                                        .setScale(2, RoundingMode.HALF_UP)
+                                        .toDouble()
+                                )} ${it.single}"
+                            } else ", ${decimalFormat.format(
+                                BigDecimal(halfSeconds)
+                                    .setScale(2, RoundingMode.HALF_UP)
+                                    .toDouble()
+                            )} ${it.single}"
                         )
 
                         current++
