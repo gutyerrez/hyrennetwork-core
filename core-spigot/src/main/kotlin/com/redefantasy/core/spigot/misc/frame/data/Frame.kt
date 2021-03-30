@@ -222,6 +222,7 @@ data class Frame(val url: URL) {
             Bukkit.getScheduler().runTaskLater(
                 CoreSpigotPlugin.instance,
                 {
+                    println(world)
                     println(location)
 
                     if (!location.chunk.isLoaded) location.chunk.load()
