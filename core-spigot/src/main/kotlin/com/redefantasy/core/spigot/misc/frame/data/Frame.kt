@@ -228,14 +228,14 @@ data class Frame(val url: URL) {
 
                     if (!location.chunk.isLoaded) location.chunk.load()
 
-                    location.block.type = Material.ITEM_FRAME
-
                     println("Spawnar")
 
-                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
+                    location.block.type = Material.GOLD_BLOCK
 
-                    println(itemFrame)
-
+//                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
+//
+//                    println(itemFrame)
+//
 //                    itemFrame.setFacingDirection(blockFace)
 //                    itemFrame.item = ItemBuilder(Material.MAP)
 //                        .durability(mapView.id.toInt())
