@@ -76,9 +76,11 @@ enum class TimeCode(
 
             values().forEach {
                 if (current != length) {
-                    val amount = (remainingTime / it.milliseconds)
+                    val amount = (remainingTime / it.milliseconds).toInt()
 
-                    if (amount.toInt() > 0) {
+                    println(amount)
+
+                    if (amount > 0) {
                         val name = if (amount.toInt() == 1) it.single else it.plural
 
                         builder.append(
@@ -88,10 +90,10 @@ enum class TimeCode(
                         )
 
                         current++
-                    } else if (amount.toInt() <= 0) {
+                    } else if (amount <= 0) {
                         val decimalFormat = DecimalFormat("#.#")
 
-                        val halfSeconds = amount / 1000.0
+                        val halfSeconds = remainingTime / 1000.0
 
                         builder.append(
                             if (builder.isEmpty()) {
