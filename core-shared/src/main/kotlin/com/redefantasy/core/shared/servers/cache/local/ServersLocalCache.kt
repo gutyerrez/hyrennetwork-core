@@ -40,13 +40,13 @@ class ServersLocalCache : LocalCache {
 
         println(this.CACHE_BY_NAME.asMap().size)
 
-        return this.CACHE_BY_NAME.getIfPresent(name)
+        return this.CACHE_BY_NAME.get(name)
     }
 
     fun fetchByName(name: String?): Server? {
         if (name === null) return null
 
-        return this.CACHE_BY_NAME.getIfPresent(
+        return this.CACHE_BY_NAME.get(
             EntityID(
                 name,
                 ServersTable
