@@ -29,9 +29,7 @@ enum class TimeCode(
             var unit: TimeCode? = null
 
             values().forEach {
-                if (ArrayUtils.contains(it.aliases, alias)) unit = it
-
-                if (it.single === alias || it.plural === alias) unit = it
+                if (ArrayUtils.contains(it.aliases, alias) || it.single === alias || it.plural === alias) unit = it
             }
 
             return unit
@@ -78,10 +76,11 @@ enum class TimeCode(
                 if (current != length) {
                     val amount = (remainingTime / it.milliseconds).toInt()
 
+                    println(remainingTime)
                     println(amount)
 
                     if (amount > 0) {
-                        val name = if (amount.toInt() == 1) it.single else it.plural
+                        val name = if (amount == 1) it.single else it.plural
 
                         builder.append(
                             if (builder.isEmpty()) {
@@ -90,23 +89,20 @@ enum class TimeCode(
                         )
 
                         current++
-                    } else if (amount <= 0) {
+                    } else if (remainingTime <= 1000L) {
                         val decimalFormat = DecimalFormat("#.#")
 
                         val halfSeconds = remainingTime / 1000.0
+                        val formatted = decimalFormat.format(
+                            BigDecimal(halfSeconds)
+                                .setScale(2, RoundingMode.HALF_UP)
+                                .toDouble()
+                        )
 
                         builder.append(
                             if (builder.isEmpty()) {
-                                "${decimalFormat.format(
-                                    BigDecimal(halfSeconds)
-                                        .setScale(2, RoundingMode.HALF_UP)
-                                        .toDouble()
-                                )} ${it.single}"
-                            } else ", ${decimalFormat.format(
-                                BigDecimal(halfSeconds)
-                                    .setScale(2, RoundingMode.HALF_UP)
-                                    .toDouble()
-                            )} ${it.single}"
+                                "$formatted ${it.single}"
+                            } else ", $formatted} ${it.single}"
                         )
 
                         current++
