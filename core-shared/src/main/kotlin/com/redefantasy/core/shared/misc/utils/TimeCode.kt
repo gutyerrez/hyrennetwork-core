@@ -88,7 +88,7 @@ enum class TimeCode(
                         )
 
                         current++
-                    } else if (amount <= 0) {
+                    } else if (amount.toInt() <= 0) {
                         val decimalFormat = DecimalFormat("#.#")
 
                         val halfSeconds = amount / 1000.0
