@@ -37,7 +37,7 @@ class ApplicationDAO(
         applicationType,
         CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
             FetchServerByNameDTO(
-                serverName?.value
+                serverName
             )
         ) ?: CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
             serverName?.value

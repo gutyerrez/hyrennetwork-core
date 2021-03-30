@@ -28,6 +28,8 @@ class PostgresServersRepository : IServersRepository {
         fetchServerByNameDTO: FetchServerByNameDTO
     ): Server? {
         return transaction {
+            if (fetchServerByNameDTO.name === null) return@transaction null
+
             return@transaction ServerDAO.findById(
                 fetchServerByNameDTO.name
             )?.asServer()

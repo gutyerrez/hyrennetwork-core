@@ -6,5 +6,5 @@ import org.jetbrains.exposed.dao.id.EntityID
  * @author Gutyerrez
  */
 class FetchServerByNameDTO(
-    val name: EntityID<String>
+    val name: EntityID<String>?
 )
