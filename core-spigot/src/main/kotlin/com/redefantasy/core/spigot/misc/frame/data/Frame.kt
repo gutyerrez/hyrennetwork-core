@@ -18,6 +18,7 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.map.MapView
+import org.bukkit.metadata.FixedMetadataValue
 import java.awt.image.BufferedImage
 import java.net.URL
 import java.util.*
@@ -43,7 +44,7 @@ data class Frame(val url: URL) {
 
     private lateinit var mapFrames: MutableList<ItemFrame>
 
-    private var interactConsumer: Consumer<Player>? = null
+    var interactConsumer: Consumer<Player>? = null
 
     init {
         val bufferedImage = ImageUtils.getImage(url)
@@ -144,14 +145,6 @@ data class Frame(val url: URL) {
         return items
     }
 
-    fun addInteractListener(consumer: Consumer<Player>) {
-        this.interactConsumer = consumer
-
-        if (this.isPlaced()) {
-            FrameManager.INTERACTABLE_FRAMES[this.id] = this
-        }
-    }
-
     fun isPlaced() = this.location !== null && this.blockFace !== null
 
     fun place(
@@ -202,10 +195,6 @@ data class Frame(val url: URL) {
                 else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
             }
 
-//            if (location.block.type != Material.AIR && location.block.type != Material.ITEM_FRAME) {
-//                throw IllegalArgumentException("The location is not empty. Location: $location")
-//            }
-
             mapsView[location] = mapView
         }
 
@@ -238,6 +227,13 @@ data class Frame(val url: URL) {
                         blockFace
                     )
 
+                    itemFrame.setMetadata(
+                        "ITEM_FRAME_ID",
+                        FixedMetadataValue(
+                            CoreSpigotPlugin.instance,
+                            this.id.toString()
+                        )
+                    )
                     itemFrame.setFacingDirection(blockFace, true)
 
                     itemFrame.item = ItemBuilder(Material.MAP)
