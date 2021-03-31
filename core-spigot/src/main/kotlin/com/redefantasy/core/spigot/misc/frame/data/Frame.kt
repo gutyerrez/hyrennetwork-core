@@ -234,6 +234,9 @@ data class Frame(val url: URL) {
                             this.id.toString()
                         )
                     )
+
+                    println(itemFrame.hasMetadata("ITEM_FRAME_ID"))
+
                     itemFrame.setFacingDirection(blockFace, true)
 
                     itemFrame.item = ItemBuilder(Material.MAP)
