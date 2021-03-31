@@ -172,7 +172,7 @@ data class Frame(val url: URL) {
                 BlockFace.SOUTH -> Location(
                     world,
                     x + frameRelativeLocation.x,
-                    y + frameRelativeLocation.y,
+                    y - frameRelativeLocation.y,
                     z + 1
                 )
                 BlockFace.NORTH -> Location(
