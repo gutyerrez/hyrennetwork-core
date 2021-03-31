@@ -222,20 +222,12 @@ data class Frame(val url: URL) {
             Bukkit.getScheduler().runTaskLater(
                 CoreSpigotPlugin.instance,
                 {
-                    println(world)
-                    println(location)
-                    println(location.chunk)
-
                     if (!location.chunk.isLoaded) location.chunk.load()
-
-                    println("Spawnar")
 
                     val entity = world.spawn(
                         location,
                         ItemFrame::class.java
                     )
-
-                    println("Entity: ${entity.name}")
 
 //                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
 //
