@@ -230,8 +230,6 @@ data class Frame(val url: URL) {
 
                     println("Spawnar")
 
-                    location.block.type = Material.GOLD_BLOCK
-
                     val entity = world.spawn(
                         Location(
                             world,
