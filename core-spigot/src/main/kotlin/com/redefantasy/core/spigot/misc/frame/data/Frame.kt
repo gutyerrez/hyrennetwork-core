@@ -252,7 +252,7 @@ data class Frame(val url: URL) {
 //
 //                    mapFrames.add(itemFrame)
                 },
-                20L
+                20L * 15
             )
         }
 
