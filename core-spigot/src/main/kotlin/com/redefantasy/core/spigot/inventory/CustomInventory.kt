@@ -87,6 +87,10 @@ open class CustomInventory(
     ) {
         this.setItem(slot, itemStack)
 
+        val oldListener = this.LISTENERS[slot]
+
+        if (oldListener !== null) this.LISTENERS.remove(slot)
+
         if (itemStack !== null && callback !== null) {
             if (callback is ICustomInventory.ClickListener) {
                 this.LISTENERS[slot] = callback
