@@ -68,8 +68,8 @@ data class Frame(val url: URL) {
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
             bufferedImage,
-            xPanes * 95,
-            yPanes * 95
+            xPanes * 98,
+            yPanes * 98
         )
         this.lengthX = xPanes
         this.lengthY = yPanes
@@ -98,7 +98,7 @@ data class Frame(val url: URL) {
         y: Int,
         mapView: MapView
     ) {
-        val bufferedImage = this.bufferedImage.getSubimage(x * 95, y * 95, 95, 95)
+        val bufferedImage = this.bufferedImage.getSubimage(x * 98, y * 98, 98, 98)
 
         mapView.renderers.forEach { mapView.removeRenderer(it) }
 
