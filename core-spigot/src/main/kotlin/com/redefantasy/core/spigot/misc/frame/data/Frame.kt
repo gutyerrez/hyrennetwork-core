@@ -170,7 +170,11 @@ data class Frame(val url: URL) {
 
         println("Place")
 
-        mapCollection.forEach { (frameRelativeLocation, mapView) ->
+        mapCollection.entries.forEachIndexed { index, entry ->
+
+            val frameRelativeLocation = entry.key
+            val mapView = entry.value
+
             mapView.world = world
 
             println(
@@ -179,39 +183,31 @@ data class Frame(val url: URL) {
                         " Z: $z -> $blockFace"
             )
 
-//            val location = when (blockFace) {
-//                BlockFace.SOUTH -> Location(
-//                    world,
-//                    x + frameRelativeLocation.x,
-//                    y - frameRelativeLocation.y,
-//                    z + 1
-//                )
-//                BlockFace.NORTH -> Location(
-//                    world,
-//                    x - frameRelativeLocation.x,
-//                    y - frameRelativeLocation.y,
-//                    z - 1
-//                )
-//                BlockFace.WEST -> Location(
-//                    world,
-//                    x - 1,
-//                    y - frameRelativeLocation.y,
-//                    z + frameRelativeLocation.x
-//                )
-//                BlockFace.EAST -> Location(
-//                    world,
-//                    x + 1,
-//                    y - frameRelativeLocation.y,
-//                    z - frameRelativeLocation.x
-//                )
-//                else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
-//            }
-
             val location = when (blockFace) {
-                BlockFace.SOUTH -> Location(world, x + frameRelativeLocation.x, y - frameRelativeLocation.y, z + 1)
-                BlockFace.NORTH -> Location(world, x - frameRelativeLocation.x, y - frameRelativeLocation.y, z - 1)
-                BlockFace.WEST -> Location(world, x - 1, y - frameRelativeLocation.y, z + frameRelativeLocation.x)
-                BlockFace.EAST -> Location(world, x + 1, y - frameRelativeLocation.y, z - frameRelativeLocation.x)
+                BlockFace.SOUTH -> Location(
+                    world,
+                    x + frameRelativeLocation.x,
+                    y - frameRelativeLocation.y,
+                    z + if (index + 1 >= mapCollection.size) 0 else 1
+                )
+                BlockFace.NORTH -> Location(
+                    world,
+                    x - frameRelativeLocation.x,
+                    y - frameRelativeLocation.y,
+                    z - 1
+                )
+                BlockFace.WEST -> Location(
+                    world,
+                    x - 1,
+                    y - frameRelativeLocation.y,
+                    z + frameRelativeLocation.x
+                )
+                BlockFace.EAST -> Location(
+                    world,
+                    x + 1,
+                    y - frameRelativeLocation.y,
+                    z - frameRelativeLocation.x
+                )
                 else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
             }
 
