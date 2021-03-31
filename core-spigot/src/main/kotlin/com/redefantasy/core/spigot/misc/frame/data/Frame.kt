@@ -168,28 +168,18 @@ data class Frame(val url: URL) {
 
         val mapsView = mutableMapOf<Location, MapView>()
 
-        println("Place")
-
         mapCollection.entries.forEachIndexed { index, entry ->
             val frameRelativeLocation = entry.key
             val mapView = entry.value
 
             mapView.world = world
 
-            println(
-                "X: ${frameRelativeLocation.x}," +
-                        " Y: ${frameRelativeLocation.y}," +
-                        " Z: $z -> $blockFace"
-            )
-
             val location = when (blockFace) {
                 BlockFace.SOUTH -> Location(
                     world,
                     x + frameRelativeLocation.x,
                     y - frameRelativeLocation.y,
-                    if (z + 1 >= index + 1) {
-                        z
-                    } else z + 1
+                    z + 1
                 )
                 BlockFace.NORTH -> Location(
                     world,
@@ -247,6 +237,8 @@ data class Frame(val url: URL) {
                         ItemFrame::class.java,
                         blockFace
                     )
+
+                    itemFrame.setFacingDirection(blockFace, true)
 
                     itemFrame.item = ItemBuilder(Material.MAP)
                         .durability(mapView.id.toInt())
