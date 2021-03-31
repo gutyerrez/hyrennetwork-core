@@ -162,8 +162,8 @@ data class Frame(val url: URL) {
 
         val world = location.world
 
-        val x = location.x;
-        val y = location.y;
+        val x = location.x
+        val y = location.y
         val z = location.z
 
         val mapsView = mutableMapOf<Location, MapView>()
@@ -171,7 +171,6 @@ data class Frame(val url: URL) {
         println("Place")
 
         mapCollection.entries.forEachIndexed { index, entry ->
-
             val frameRelativeLocation = entry.key
             val mapView = entry.value
 
