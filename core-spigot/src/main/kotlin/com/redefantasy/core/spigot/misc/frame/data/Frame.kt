@@ -231,12 +231,7 @@ data class Frame(val url: URL) {
                     println("Spawnar")
 
                     val entity = world.spawn(
-                        Location(
-                            world,
-                            0.5,
-                            78.0,
-                            -0.5
-                        ),
+                        location,
                         ItemFrame::class.java
                     )
 
