@@ -16,6 +16,7 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.map.MapView
 import java.awt.image.BufferedImage
@@ -232,6 +233,8 @@ data class Frame(val url: URL) {
                         ItemFrame::class.java,
                         blockFace
                     ).bukkitEntity as ItemFrame
+
+                    world.addEntity(itemFrame, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
                     itemFrame.item = ItemBuilder(Material.MAP)
                         .durability(mapView.id.toInt())
