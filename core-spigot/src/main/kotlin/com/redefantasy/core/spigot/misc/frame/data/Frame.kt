@@ -68,8 +68,8 @@ data class Frame(val url: URL) {
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
             bufferedImage,
-            xPanes * 100,
-            yPanes * 100
+            xPanes * 128,
+            yPanes * 128
         )
         this.lengthX = xPanes
         this.lengthY = yPanes
@@ -98,7 +98,7 @@ data class Frame(val url: URL) {
         y: Int,
         mapView: MapView
     ) {
-        val bufferedImage = this.bufferedImage.getSubimage(x * 100, y * 100, 100, 100)
+        val bufferedImage = this.bufferedImage.getSubimage(x * 128, y * 128, 128, 128)
 
         mapView.renderers.forEach { mapView.removeRenderer(it) }
 
@@ -224,25 +224,21 @@ data class Frame(val url: URL) {
                 {
                     if (!location.chunk.isLoaded) location.chunk.load()
 
-                    val entity = world.spawn(
+                    val itemFrame = world.spawn(
                         location,
                         ItemFrame::class.java
                     )
 
-//                    val itemFrame = world.spawnEntity(location, EntityType.ITEM_FRAME)
-//
-//                    println(itemFrame)
-//
-//                    itemFrame.setFacingDirection(blockFace)
-//                    itemFrame.item = ItemBuilder(Material.MAP)
-//                        .durability(mapView.id.toInt())
-//                        .lore(
-//                            arrayOf(
-//                                UUID.randomUUID().toString()
-//                            )
-//                        ).build()
-//
-//                    mapFrames.add(itemFrame)
+                    itemFrame.setFacingDirection(blockFace)
+                    itemFrame.item = ItemBuilder(Material.MAP)
+                        .durability(mapView.id.toInt())
+                        .lore(
+                            arrayOf(
+                                UUID.randomUUID().toString()
+                            )
+                        ).build()
+
+                    mapFrames.add(itemFrame)
                 },
                 20L
             )
