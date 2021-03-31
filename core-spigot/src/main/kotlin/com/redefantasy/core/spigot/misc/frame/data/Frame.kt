@@ -12,6 +12,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
@@ -224,7 +225,9 @@ data class Frame(val url: URL) {
                 {
                     if (!location.chunk.isLoaded) location.chunk.load()
 
-                    val itemFrame = world.spawn(
+                    val craftWorld = world as CraftWorld
+
+                    val itemFrame = craftWorld.spawn(
                         location,
                         ItemFrame::class.java,
                         blockFace
