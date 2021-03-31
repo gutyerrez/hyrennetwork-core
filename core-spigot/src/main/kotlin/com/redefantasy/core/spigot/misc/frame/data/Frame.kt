@@ -66,9 +66,6 @@ data class Frame(val url: URL) {
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
 
-        println(xPanes)
-        println(yPanes)
-
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
             bufferedImage,
@@ -168,6 +165,8 @@ data class Frame(val url: URL) {
         val x = location.x; val y = location.y; val z = location.z
 
         val mapsView = mutableMapOf<Location, MapView>()
+
+        println("Place")
 
         mapCollection.forEach { (frameRelativeLocation, mapView) ->
             mapView.world = world
