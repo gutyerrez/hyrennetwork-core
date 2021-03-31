@@ -232,9 +232,11 @@ data class Frame(val url: URL) {
                         location,
                         ItemFrame::class.java,
                         blockFace
-                    ).bukkitEntity as ItemFrame
+                    )
 
-                    world.addEntity(itemFrame, CreatureSpawnEvent.SpawnReason.CUSTOM)
+                    craftWorld.handle.addEntity(itemFrame, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+                    itemFrame as ItemFrame
 
                     itemFrame.item = ItemBuilder(Material.MAP)
                         .durability(mapView.id.toInt())
