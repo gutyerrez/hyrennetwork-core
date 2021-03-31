@@ -196,9 +196,9 @@ data class Frame(val url: URL) {
                 else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
             }
 
-            if (location.block.type != Material.AIR && location.block.type != Material.ITEM_FRAME) {
-                throw IllegalArgumentException("The location is not empty. Location: $location")
-            }
+//            if (location.block.type != Material.AIR && location.block.type != Material.ITEM_FRAME) {
+//                throw IllegalArgumentException("The location is not empty. Location: $location")
+//            }
 
             mapsView[location] = mapView
         }
