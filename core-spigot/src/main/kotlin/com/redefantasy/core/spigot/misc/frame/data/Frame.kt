@@ -169,36 +169,38 @@ data class Frame(val url: URL) {
 
         val mapsView = mutableMapOf<Location, MapView>()
 
-        mapCollection.forEach { frameRelativeLocation, mapView ->
+        mapCollection.forEach { (frameRelativeLocation, mapView) ->
             mapView.world = world
 
-//            val location = when (blockFace) {
-//                BlockFace.SOUTH -> Location(
-//                    world,
-//                    x + frameRelativeLocation.x,
-//                    y - frameRelativeLocation.y,
-//                    z + 1
-//                )
-//                BlockFace.NORTH -> Location(
-//                    world,
-//                    x - frameRelativeLocation.x,
-//                    y - frameRelativeLocation.y,
-//                    z - 1
-//                )
-//                BlockFace.WEST -> Location(
-//                    world,
-//                    x - 1,
-//                    y - frameRelativeLocation.y,
-//                    z + frameRelativeLocation.x
-//                )
-//                BlockFace.EAST -> Location(
-//                    world,
-//                    x + 1,
-//                    y - frameRelativeLocation.y,
-//                    z - frameRelativeLocation.x
-//                )
-//                else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
-//            }
+            println("X: $x, Y: $y, Z: $z -> $blockFace")
+
+            val location = when (blockFace) {
+                BlockFace.SOUTH -> Location(
+                    world,
+                    x + frameRelativeLocation.x,
+                    y - frameRelativeLocation.y,
+                    z + 1
+                )
+                BlockFace.NORTH -> Location(
+                    world,
+                    x - frameRelativeLocation.x,
+                    y - frameRelativeLocation.y,
+                    z - 1
+                )
+                BlockFace.WEST -> Location(
+                    world,
+                    x - 1,
+                    y - frameRelativeLocation.y,
+                    z + frameRelativeLocation.x
+                )
+                BlockFace.EAST -> Location(
+                    world,
+                    x + 1,
+                    y - frameRelativeLocation.y,
+                    z - frameRelativeLocation.x
+                )
+                else -> throw IllegalArgumentException("BlockFace argument error. Use NORTH, SOUTH, EAST or WEST.")
+            }
 
 //            if (location.block.type != Material.AIR && location.block.type != Material.ITEM_FRAME) {
 //                throw IllegalArgumentException("The location is not empty. Location: $location")
