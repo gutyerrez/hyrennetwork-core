@@ -8,7 +8,7 @@ import com.redefantasy.core.shared.servers.ServerType
 import com.redefantasy.core.shared.wrapper.CoreWrapper
 import com.redefantasy.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
-import com.redefantasy.core.spigot.listeners.GeneralListener
+import com.redefantasy.core.spigot.listeners.GenericListener
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
 import org.bukkit.Bukkit
@@ -49,7 +49,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
         val pluginManager = Bukkit.getServer().pluginManager
 
-        pluginManager.registerEvents(GeneralListener(), this)
+        pluginManager.registerEvents(GenericListener(), this)
         pluginManager.registerEvents(object : Listener {
             @EventHandler
             fun on(

@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 /**
  * @author Gutyerrez
  */
-class GeneralListener : Listener {
+class GenericListener : Listener {
 
     @EventHandler
     fun on(
