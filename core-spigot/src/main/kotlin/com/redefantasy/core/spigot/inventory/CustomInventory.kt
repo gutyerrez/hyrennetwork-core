@@ -67,7 +67,9 @@ open class CustomInventory(
     ) {
         super.setItem(slot, itemStack)
 
-        if (itemStack === null) {
+        val oldListener = this.LISTENERS[slot]
+
+        if (itemStack === null || oldListener !== null) {
             this.LISTENERS.remove(slot)
         }
     }
