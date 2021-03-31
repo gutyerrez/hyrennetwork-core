@@ -231,7 +231,7 @@ data class Frame(val url: URL) {
                         location,
                         ItemFrame::class.java,
                         blockFace
-                    ) as ItemFrame
+                    ).bukkitEntity as ItemFrame
 
                     itemFrame.item = ItemBuilder(Material.MAP)
                         .durability(mapView.id.toInt())
