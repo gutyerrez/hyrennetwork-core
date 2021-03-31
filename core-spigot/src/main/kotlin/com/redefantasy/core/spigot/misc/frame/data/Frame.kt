@@ -12,11 +12,9 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.map.MapView
 import java.awt.image.BufferedImage
@@ -226,17 +224,11 @@ data class Frame(val url: URL) {
                 {
                     if (!location.chunk.isLoaded) location.chunk.load()
 
-                    val craftWorld = world as CraftWorld
-
-                    val itemFrame = craftWorld.createEntity(
+                    val itemFrame = world.spawn(
                         location,
                         ItemFrame::class.java,
                         blockFace
                     )
-
-                    craftWorld.handle.addEntity(itemFrame, CreatureSpawnEvent.SpawnReason.CUSTOM)
-
-                    itemFrame as ItemFrame
 
                     itemFrame.item = ItemBuilder(Material.MAP)
                         .durability(mapView.id.toInt())
