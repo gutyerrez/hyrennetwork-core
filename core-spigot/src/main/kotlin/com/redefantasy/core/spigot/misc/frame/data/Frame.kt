@@ -66,11 +66,14 @@ data class Frame(val url: URL) {
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
 
+        println(xPanes)
+        println(yPanes)
+
         this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
             bufferedImage,
-            xPanes * 100,
-            yPanes * 100
+            xPanes * 128,
+            yPanes * 128
         )
         this.lengthX = xPanes
         this.lengthY = yPanes
