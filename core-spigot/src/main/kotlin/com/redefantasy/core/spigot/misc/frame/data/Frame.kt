@@ -187,7 +187,9 @@ data class Frame(val url: URL) {
                     world,
                     x + frameRelativeLocation.x,
                     y - frameRelativeLocation.y,
-                    z + if (index + 1 >= mapCollection.size) -1 else 1
+                    if (z + 1 >= index + 1) {
+                        z
+                    } else z + 1
                 )
                 BlockFace.NORTH -> Location(
                     world,
