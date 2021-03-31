@@ -49,11 +49,11 @@ object FrameUtils {
     fun getPanes(size: Int): Int {
         var size = size
 
-        while (size % 64 != 0) {
+        while (size % 90 != 0) {
             size++
         }
 
-        return size / 64
+        return size / 90
     }
 
 }
