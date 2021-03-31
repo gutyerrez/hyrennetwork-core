@@ -7,7 +7,6 @@ import com.redefantasy.core.spigot.misc.frame.format.FrameImageFormat
 import com.redefantasy.core.spigot.misc.frame.render.FrameRenderer
 import com.redefantasy.core.spigot.misc.frame.utils.FrameUtils
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
-import org.apache.commons.lang3.RandomStringUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -18,7 +17,6 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.map.MapView
-import org.bukkit.metadata.FixedMetadataValue
 import java.awt.image.BufferedImage
 import java.net.URL
 import java.util.*
@@ -30,7 +28,6 @@ import java.util.stream.Collectors
  */
 data class Frame(val url: URL) {
 
-    private lateinit var id: UUID
     private lateinit var bufferedImage: BufferedImage
 
     private var lengthX: Int = 0
@@ -67,7 +64,6 @@ data class Frame(val url: URL) {
         val xPanes = FrameUtils.getPanes(bufferedImage.width)
         val yPanes = FrameUtils.getPanes(bufferedImage.height)
 
-        this.id = UUID.nameUUIDFromBytes(("Frame:${RandomStringUtils.random(16)}").toByteArray(Charsets.UTF_8))
         this.bufferedImage = FrameUtils.resize(
             bufferedImage,
             xPanes * 128,
@@ -227,16 +223,6 @@ data class Frame(val url: URL) {
                         blockFace
                     )
 
-                    itemFrame.setMetadata(
-                        "ITEM_FRAME_ID",
-                        FixedMetadataValue(
-                            CoreSpigotPlugin.instance,
-                            this.id.toString()
-                        )
-                    )
-
-                    println(itemFrame.hasMetadata("ITEM_FRAME_ID"))
-
                     itemFrame.setFacingDirection(blockFace, true)
 
                     itemFrame.item = ItemBuilder(Material.MAP)
@@ -248,14 +234,16 @@ data class Frame(val url: URL) {
                         ).build()
 
                     mapFrames.add(itemFrame)
+
+                    if (this.interactConsumer !== null) FrameManager.INTERACTABLE_FRAMES[
+                            itemFrame.uniqueId
+                    ] = this
                 },
                 20L
             )
         }
 
-        if (this.interactConsumer !== null) FrameManager.INTERACTABLE_FRAMES[this.id] = this
     }
-
 
     data class FrameRelativeLocation(
         val x: Int,
