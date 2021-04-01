@@ -112,17 +112,11 @@ class ProtocolHandler {
         fun on(
             event: PlayerLoginEvent
         ) {
-            println("event")
-
             if (closed) return
 
             val player = event.player
 
-            println("entrando $player")
-
             if (player === null) return
-
-            println("player não é null")
 
             try {
                 val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
@@ -139,11 +133,7 @@ class ProtocolHandler {
                     return networkManager.channel
                 }.invoke()
 
-                println("Invoquei o canal")
-
                 if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
-                    println("Injetando")
-
                     this@ProtocolHandler.injectChannelInternal(channel)?.player = player
                 }
             } catch (e: Exception) {
@@ -269,21 +259,15 @@ class ProtocolHandler {
 
             this.handleLoginStart(channel, message)
 
-            println("ler")
-
-            try {
-                if (this::player.isInitialized) {
-                    onPacketIn(
-                        player,
-                        channel,
-                        message
-                    )
-                }
-
-                if (message !== null) super.channelRead(ctx, message)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (this::player.isInitialized) {
+                onPacketIn(
+                    player,
+                    channel,
+                    message
+                )
             }
+
+            if (message !== null) super.channelRead(ctx, message)
         }
 
         override fun write(
@@ -291,21 +275,15 @@ class ProtocolHandler {
             message: Any?,
             promisse: ChannelPromise?
         ) {
-            println("escrever")
-
-            try {
-                if (this::player.isInitialized) {
-                    onPacketOut(
-                        player,
-                        ctx.channel(),
-                        message
-                    )
-                }
-
-                if (message !== null) super.write(ctx, message, promisse)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (this::player.isInitialized) {
+                onPacketOut(
+                    player,
+                    ctx.channel(),
+                    message
+                )
             }
+
+            if (message !== null) super.write(ctx, message, promisse)
         }
 
         private fun handleLoginStart(
@@ -329,11 +307,13 @@ abstract class PacketListener(
 
     open fun onReceive(
         event: PacketEvent
-    ) { /* empty */ }
+    ) { /* empty */
+    }
 
     open fun onSent(
         event: PacketEvent
-    ) { /* empty */ }
+    ) { /* empty */
+    }
 
 }
 
