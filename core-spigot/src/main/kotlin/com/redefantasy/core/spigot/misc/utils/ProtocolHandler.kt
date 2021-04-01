@@ -2,10 +2,10 @@ package com.redefantasy.core.spigot.misc.utils
 
 import com.redefantasy.core.spigot.CoreSpigotPlugin
 import io.netty.channel.*
-import net.minecraft.server.v1_8_R3.MinecraftServer
 import net.minecraft.server.v1_8_R3.NetworkManager
 import net.minecraft.server.v1_8_R3.PacketLoginInStart
 import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -163,7 +163,8 @@ class ProtocolHandler {
     )
 
     private fun registerChannelHandler() {
-        val minecraftServer = Bukkit.getServer() as MinecraftServer
+        val craftServer = Bukkit.getServer() as CraftServer
+        val minecraftServer = craftServer.server
         val serverConnection = minecraftServer.serverConnection
 
         var looking = true
