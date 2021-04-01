@@ -112,6 +112,8 @@ class ProtocolHandler {
         fun on(
             event: PlayerLoginEvent
         ) {
+            println("event")
+
             if (closed) return
 
             val player = event.player
