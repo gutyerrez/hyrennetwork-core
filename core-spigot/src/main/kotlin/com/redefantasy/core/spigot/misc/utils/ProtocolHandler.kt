@@ -116,24 +116,36 @@ class ProtocolHandler {
 
             val player = event.player
 
+            println("entrando")
+
             if (player === null) return
 
-            val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
-                val craftPlayer = player as CraftPlayer
-                val handle = craftPlayer.handle
-                val playerConnection = handle.playerConnection
+            println("player null")
 
-                if (playerConnection === null) return null
+            try {
+                val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
+                    val craftPlayer = player as CraftPlayer
+                    val handle = craftPlayer.handle
+                    val playerConnection = handle.playerConnection
 
-                val networkManager = playerConnection.networkManager
+                    if (playerConnection === null) return null
 
-                CHANNEL_LOOKUP[player.name] = networkManager.channel
+                    val networkManager = playerConnection.networkManager
 
-                return networkManager.channel
-            }.invoke()
+                    CHANNEL_LOOKUP[player.name] = networkManager.channel
 
-            if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
-                this@ProtocolHandler.injectChannelInternal(channel)
+                    return networkManager.channel
+                }.invoke()
+
+                println("Invoquei o canal")
+
+                if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
+                    println("Injetando")
+
+                    this@ProtocolHandler.injectChannelInternal(channel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
@@ -251,6 +263,8 @@ class ProtocolHandler {
 
             this.handleLoginStart(channel, message)
 
+            println("ler")
+
             onPacketIn(
                 player,
                 channel,
@@ -265,6 +279,8 @@ class ProtocolHandler {
             message: Any?,
             promisse: ChannelPromise?
         ) {
+            println("escrever")
+
             onPacketOut(
                 player,
                 ctx.channel(),
