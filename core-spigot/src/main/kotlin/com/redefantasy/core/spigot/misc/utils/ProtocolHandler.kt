@@ -35,7 +35,7 @@ class ProtocolHandler {
     companion object {
 
         private val CHANNEL_LOOKUP = mutableMapOf<String, Channel>()
-        private val LISTENERS = Collections.synchronizedCollection<PacketListener>(mutableListOf())
+        private val PACKET_LISTENERS = Collections.synchronizedCollection<PacketListener>(mutableListOf())
 
         internal fun onPacketOut(
             player: Player,
@@ -44,7 +44,7 @@ class ProtocolHandler {
         ): Any? {
             val event = PacketEvent(player, channel, packet)
 
-            LISTENERS.sortedBy { it.priority }.forEach { it.onSent(event) }
+            PACKET_LISTENERS.sortedBy { it.priority }.forEach { it.onSent(event) }
 
             return if (event.cancelled) {
                 null
@@ -58,7 +58,7 @@ class ProtocolHandler {
         ): Any? {
             val event = PacketEvent(player, channel, packet)
 
-            LISTENERS.sortedBy { it.priority }.forEach { it.onReceive(event) }
+            PACKET_LISTENERS.sortedBy { it.priority }.forEach { it.onReceive(event) }
 
             return if (event.cancelled) {
                 null
@@ -189,7 +189,9 @@ class ProtocolHandler {
     }
 
     fun registerListener(packetListener: PacketListener) {
-        LISTENERS.add(packetListener)
+        println("Registrar: $packetListener")
+
+        PACKET_LISTENERS.add(packetListener)
     }
 
     private fun unregisterChannelHandler() {
