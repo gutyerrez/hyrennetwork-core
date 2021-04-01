@@ -210,7 +210,7 @@ class ProtocolHandler {
         }
     }
 
-    internal fun injectChannelInternal(channel: Channel): PacketInterceptor? {
+    internal fun injectChannelInternal(channel: Channel): PacketInterceptor {
         val packetInterceptor = channel.pipeline().get(HANDLER_NAME)
 
         return if (packetInterceptor === null) {
@@ -225,7 +225,7 @@ class ProtocolHandler {
             UNINJECTED_CHANNELS.remove(channel)
 
             return packetInterceptor
-        } else null
+        } else packetInterceptor as PacketInterceptor
     }
 
     fun close() {
