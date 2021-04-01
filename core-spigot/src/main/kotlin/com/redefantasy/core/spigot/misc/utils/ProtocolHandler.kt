@@ -237,27 +237,6 @@ class ProtocolHandler {
         }
     }
 
-    open class PacketListener(
-        val priority: Int
-    ) {
-
-        fun onReceive(
-            event: PacketEvent
-        ) { /* empty */ }
-
-        fun onSent(
-            event: PacketEvent
-        ) { /* empty */ }
-
-    }
-
-    class PacketEvent(
-        val player: Player,
-        val channel: Channel,
-        val packet: Any?,
-        var cancelled: Boolean = false
-    )
-
     internal class PacketInterceptor : ChannelDuplexHandler() {
 
         @Volatile
@@ -308,3 +287,24 @@ class ProtocolHandler {
     }
 
 }
+
+abstract class PacketListener(
+    val priority: Int = 0
+) {
+
+    open fun onReceive(
+        event: PacketEvent
+    ) { /* empty */ }
+
+    open fun onSent(
+        event: PacketEvent
+    ) { /* empty */ }
+
+}
+
+class PacketEvent(
+    val player: Player,
+    val channel: Channel,
+    val packet: Any?,
+    var cancelled: Boolean = false
+)
