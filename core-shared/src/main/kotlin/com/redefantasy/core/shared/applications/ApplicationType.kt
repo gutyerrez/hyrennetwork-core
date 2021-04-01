@@ -28,7 +28,7 @@ enum class ApplicationType {
     SERVER_ARENA,
     SERVER_WAR,
     
-    TESTS,
+    SERVER_TESTS,
     
     DUNGEON,
     BUILD,
