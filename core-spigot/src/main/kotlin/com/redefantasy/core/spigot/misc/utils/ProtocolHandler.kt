@@ -118,7 +118,7 @@ class ProtocolHandler {
 
             val player = event.player
 
-            println("entrando")
+            println("entrando $player")
 
             if (player === null) return
 
