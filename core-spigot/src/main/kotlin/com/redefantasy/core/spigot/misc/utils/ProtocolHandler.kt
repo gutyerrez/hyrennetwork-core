@@ -265,6 +265,8 @@ class ProtocolHandler {
 
             this.handleLoginStart(channel, message)
 
+            println("1: ${this::player.isInitialized}")
+
             if (this::player.isInitialized) {
                 println("_Inicializado")
 
@@ -283,6 +285,8 @@ class ProtocolHandler {
             message: Any?,
             promisse: ChannelPromise?
         ) {
+            println("2: ${this::player.isInitialized}")
+
             if (this::player.isInitialized) {
                 println("Inicializado")
 
