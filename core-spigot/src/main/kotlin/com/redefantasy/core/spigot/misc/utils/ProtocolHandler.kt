@@ -45,8 +45,6 @@ class ProtocolHandler {
             val event = PacketEvent(player, channel, packet)
 
             PACKET_LISTENERS.sortedBy { it.priority }.forEach {
-                println("Enviou")
-
                 it.onSent(event)
             }
 
@@ -63,8 +61,6 @@ class ProtocolHandler {
             val event = PacketEvent(player, channel, packet)
 
             PACKET_LISTENERS.sortedBy { it.priority }.forEach {
-                println("Recebeu")
-
                 it.onReceive(event)
             }
 
@@ -192,11 +188,7 @@ class ProtocolHandler {
         } while (looking)
     }
 
-    fun registerListener(packetListener: PacketListener) {
-        println("Registrar: $packetListener")
-
-        PACKET_LISTENERS.add(packetListener)
-    }
+    fun registerListener(packetListener: PacketListener) = PACKET_LISTENERS.add(packetListener)
 
     private fun unregisterChannelHandler() {
         SERVER_CHANNELS.forEach {
@@ -265,11 +257,7 @@ class ProtocolHandler {
 
             this.handleLoginStart(channel, message)
 
-            println("1: ${this::player.isInitialized}")
-
             if (this::player.isInitialized) {
-                println("_Inicializado")
-
                 onPacketIn(
                     player,
                     channel,
@@ -285,11 +273,7 @@ class ProtocolHandler {
             message: Any?,
             promisse: ChannelPromise?
         ) {
-            println("2: ${this::player.isInitialized}")
-
             if (this::player.isInitialized) {
-                println("Inicializado")
-
                 onPacketOut(
                     player,
                     ctx.channel(),
