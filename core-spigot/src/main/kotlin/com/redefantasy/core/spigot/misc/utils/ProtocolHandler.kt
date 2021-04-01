@@ -265,13 +265,17 @@ class ProtocolHandler {
 
             println("ler")
 
-            onPacketIn(
-                player,
-                channel,
-                message
-            )
+            try {
+                onPacketIn(
+                    player,
+                    channel,
+                    message
+                )
 
-            if (message !== null) super.channelRead(ctx, message)
+                if (message !== null) super.channelRead(ctx, message)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         override fun write(
@@ -281,13 +285,17 @@ class ProtocolHandler {
         ) {
             println("escrever")
 
-            onPacketOut(
-                player,
-                ctx.channel(),
-                message
-            )
+            try {
+                onPacketOut(
+                    player,
+                    ctx.channel(),
+                    message
+                )
 
-            if (message !== null) super.write(ctx, message, promisse)
+                if (message !== null) super.write(ctx, message, promisse)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         private fun handleLoginStart(
