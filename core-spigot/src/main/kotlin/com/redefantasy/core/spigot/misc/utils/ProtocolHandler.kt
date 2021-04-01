@@ -44,7 +44,11 @@ class ProtocolHandler {
         ): Any? {
             val event = PacketEvent(player, channel, packet)
 
-            PACKET_LISTENERS.sortedBy { it.priority }.forEach { it.onSent(event) }
+            PACKET_LISTENERS.sortedBy { it.priority }.forEach {
+                println("Enviou")
+
+                it.onSent(event)
+            }
 
             return if (event.cancelled) {
                 null
@@ -58,7 +62,11 @@ class ProtocolHandler {
         ): Any? {
             val event = PacketEvent(player, channel, packet)
 
-            PACKET_LISTENERS.sortedBy { it.priority }.forEach { it.onReceive(event) }
+            PACKET_LISTENERS.sortedBy { it.priority }.forEach {
+                println("Recebeu")
+
+                it.onReceive(event)
+            }
 
             return if (event.cancelled) {
                 null
@@ -118,26 +126,22 @@ class ProtocolHandler {
 
             if (player === null) return
 
-            try {
-                val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
-                    val craftPlayer = player as CraftPlayer
-                    val handle = craftPlayer.handle
-                    val playerConnection = handle.playerConnection
+            val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
+                val craftPlayer = player as CraftPlayer
+                val handle = craftPlayer.handle
+                val playerConnection = handle.playerConnection
 
-                    if (playerConnection === null) return null
+                if (playerConnection === null) return null
 
-                    val networkManager = playerConnection.networkManager
+                val networkManager = playerConnection.networkManager
 
-                    CHANNEL_LOOKUP[player.name] = networkManager.channel
+                CHANNEL_LOOKUP[player.name] = networkManager.channel
 
-                    return networkManager.channel
-                }.invoke()
+                return networkManager.channel
+            }.invoke()
 
-                if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
-                    this@ProtocolHandler.injectChannelInternal(channel)?.player = player
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
+                this@ProtocolHandler.injectChannelInternal(channel)?.player = player
             }
         }
 
@@ -147,7 +151,7 @@ class ProtocolHandler {
         ) {
             val plugin = event.plugin
 
-            if (CoreSpigotPlugin.instance.equals(plugin)) {
+            if (CoreSpigotPlugin.instance == plugin) {
                 this@ProtocolHandler.close()
             }
         }
@@ -262,6 +266,8 @@ class ProtocolHandler {
             this.handleLoginStart(channel, message)
 
             if (this::player.isInitialized) {
+                println("_Inicializado")
+
                 onPacketIn(
                     player,
                     channel,
@@ -278,6 +284,8 @@ class ProtocolHandler {
             promisse: ChannelPromise?
         ) {
             if (this::player.isInitialized) {
+                println("Inicializado")
+
                 onPacketOut(
                     player,
                     ctx.channel(),
