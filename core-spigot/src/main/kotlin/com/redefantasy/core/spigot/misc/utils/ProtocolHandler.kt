@@ -122,7 +122,7 @@ class ProtocolHandler {
 
             if (player === null) return
 
-            println("player null")
+            println("player não é null")
 
             try {
                 val channel = CHANNEL_LOOKUP[player.name] ?: fun(): Channel? {
