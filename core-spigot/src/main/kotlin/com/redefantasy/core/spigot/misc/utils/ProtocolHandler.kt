@@ -142,7 +142,7 @@ class ProtocolHandler {
                 if (channel !== null && !UNINJECTED_CHANNELS.contains(channel)) {
                     println("Injetando")
 
-                    this@ProtocolHandler.injectChannelInternal(channel)
+                    this@ProtocolHandler.injectChannelInternal(channel)?.player = player
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -212,18 +212,22 @@ class ProtocolHandler {
         }
     }
 
-    internal fun injectChannelInternal(channel: Channel) {
+    internal fun injectChannelInternal(channel: Channel): PacketInterceptor? {
         val packetInterceptor = channel.pipeline().get(HANDLER_NAME)
 
-        if (packetInterceptor === null) {
+        return if (packetInterceptor === null) {
+            val packetInterceptor = PacketInterceptor()
+
             channel.pipeline().addBefore(
                 "packet_handler",
                 HANDLER_NAME,
-                PacketInterceptor()
+                packetInterceptor
             )
 
             UNINJECTED_CHANNELS.remove(channel)
-        }
+
+            return packetInterceptor
+        } else null
     }
 
     fun close() {
@@ -266,11 +270,13 @@ class ProtocolHandler {
             println("ler")
 
             try {
-                onPacketIn(
-                    player,
-                    channel,
-                    message
-                )
+                if (this::player.isInitialized) {
+                    onPacketIn(
+                        player,
+                        channel,
+                        message
+                    )
+                }
 
                 if (message !== null) super.channelRead(ctx, message)
             } catch (e: Exception) {
@@ -286,11 +292,13 @@ class ProtocolHandler {
             println("escrever")
 
             try {
-                onPacketOut(
-                    player,
-                    ctx.channel(),
-                    message
-                )
+                if (this::player.isInitialized) {
+                    onPacketOut(
+                        player,
+                        ctx.channel(),
+                        message
+                    )
+                }
 
                 if (message !== null) super.write(ctx, message, promisse)
             } catch (e: Exception) {
