@@ -6,7 +6,7 @@ package com.redefantasy.core.shared.misc.kotlin
 inline fun <reified T> sizedArray(
     size: Int
 ): Array<T> = java.lang.reflect.Array.newInstance(
-    T::class.java.componentType,
+    T::class.java,
     size
 ) as Array<T>
 
