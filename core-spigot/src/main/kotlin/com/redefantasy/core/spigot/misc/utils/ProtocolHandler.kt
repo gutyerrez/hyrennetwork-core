@@ -253,12 +253,14 @@ class ProtocolHandler {
             ctx: ChannelHandlerContext,
             message: Any?
         ) {
+            var message = message
+
             val channel = ctx.channel()
 
             this.handleLoginStart(channel, message)
 
             if (this::player.isInitialized) {
-                onPacketIn(
+                message = onPacketIn(
                     player,
                     channel,
                     message
@@ -273,8 +275,10 @@ class ProtocolHandler {
             message: Any?,
             promisse: ChannelPromise?
         ) {
+            var message = message
+
             if (this::player.isInitialized) {
-                onPacketOut(
+                message = onPacketOut(
                     player,
                     ctx.channel(),
                     message
