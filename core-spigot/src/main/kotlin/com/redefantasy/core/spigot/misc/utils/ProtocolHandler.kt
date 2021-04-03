@@ -48,7 +48,7 @@ class ProtocolHandler {
                 it.onSent(event)
             }
 
-            return if (event.cancelled) {
+            return if (event.isCancelled) {
                 null
             } else event.packet
         }
@@ -64,7 +64,7 @@ class ProtocolHandler {
                 it.onReceive(event)
             }
 
-            return if (event.cancelled) {
+            return if (event.isCancelled) {
                 null
             } else event.packet
         }
@@ -322,6 +322,6 @@ abstract class PacketListener(
 class PacketEvent(
     val player: Player,
     val channel: Channel,
-    val packet: Any?,
-    var cancelled: Boolean = false
+    var packet: Any?,
+    var isCancelled: Boolean = false
 )
