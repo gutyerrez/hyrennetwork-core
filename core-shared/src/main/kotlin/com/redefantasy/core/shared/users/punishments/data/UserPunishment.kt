@@ -59,6 +59,18 @@ data class UserPunishment(
         )
     }
 
+    fun isPending() = this.startTime === null
+
+    fun isRevoked() = this.revokeTime !== null
+
+    fun isFinalized() = this.startTime !== null && this.startTime!!.withMillis(this.duration) >= DateTime.now(
+        CoreConstants.DATE_TIME_ZONE
+    )
+
+    fun isStrictActive() = this.startTime !== null && this.startTime!!.withMillis(this.duration) < DateTime.now(
+            CoreConstants.DATE_TIME_ZONE
+    )
+
     fun canBeRevokedFrom(revoker: User): Boolean {
         val currentDateTime = DateTime.now(
             CoreConstants.DATE_TIME_ZONE
