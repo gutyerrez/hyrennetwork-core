@@ -25,7 +25,13 @@ class ServerConnector : ServerConnector {
 
 		val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
-		return if (user === null) {
+		return if (user?.getPreferences()?.find { it == PREMIUM_ACCOUNT }?.preferenceState == PreferenceState.ENABLED) {
+			println("aq")
+
+			CoreConstants.fetchLobbyApplication()?.address
+		} else {
+			println("dale")
+
 			CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 				.stream()
 				.sorted { application1, application2 ->
@@ -47,9 +53,7 @@ class ServerConnector : ServerConnector {
 
 					return@sorted 0
 				}.findFirst().orElse(null)?.address
-		} else if (user.getPreferences().find { it == PREMIUM_ACCOUNT }?.preferenceState == PreferenceState.ENABLED) {
-			CoreConstants.fetchLobbyApplication()?.address
-		} else null
+		}
 	}
 
 	override fun changedUserApplication(
