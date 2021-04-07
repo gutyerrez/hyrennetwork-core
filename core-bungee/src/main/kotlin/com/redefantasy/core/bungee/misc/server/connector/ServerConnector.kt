@@ -26,12 +26,8 @@ class ServerConnector : ServerConnector {
 		val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
 		return if (user?.getPreferences()?.find { it == PREMIUM_ACCOUNT }?.preferenceState == PreferenceState.ENABLED) {
-			println("aq")
-
 			CoreConstants.fetchLobbyApplication()?.address
 		} else {
-			println("dale")
-
 			CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 				.stream()
 				.sorted { application1, application2 ->
