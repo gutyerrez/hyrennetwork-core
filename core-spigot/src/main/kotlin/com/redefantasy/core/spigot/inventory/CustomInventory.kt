@@ -1,6 +1,7 @@
 package com.redefantasy.core.spigot.inventory
 
 import com.google.common.collect.LinkedListMultimap
+import com.redefantasy.core.spigot.misc.player.openInventory
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import kotlinx.coroutines.Runnable
 import net.minecraft.server.v1_8_R3.ChatComponentText
@@ -54,12 +55,33 @@ open class CustomInventory(
 	private var PAGE = 0
 	private var CURRENT_PAGE = 0
 
+	private var SLOTS = arrayOf(
+		10, 11, 12, 13, 14, 15, 16,
+		19, 20, 21, 22, 23, 24, 25,
+		28, 29, 30, 31, 32, 33, 34
+	)
+
+	private lateinit var backInventory: Inventory
+
 	init {
 		(this.inventory as MinecraftInventory).init(this)
 	}
 
-	constructor(title: String) : this(title, 54) {
+	constructor(
+		title: String,
+		size: Int = 54,
+		slots: Array<Int> = arrayOf(
+			10, 11, 12, 13, 14, 15, 16,
+			19, 20, 21, 22, 23, 24, 25,
+			28, 29, 30, 31, 32, 33, 34
+		)
+	) : this(title, size) {
+		if (slots.last() > size)
+			throw IllegalArgumentException("${slots.last()} is higher than $size")
+
 		PAGINATED = true
+
+		SLOTS = slots
 	}
 
 	override fun getListener(
@@ -252,7 +274,12 @@ open class CustomInventory(
 
 							this@CustomInventory.PAGE--
 
-							player.openInventory(this@CustomInventory)
+							if (this::backInventory.isInitialized) {
+								player.openInventory(
+									this@CustomInventory,
+									this@CustomInventory.backInventory
+								)
+							} else player.openInventory(this@CustomInventory)
 						}
 					)
 				} else this.setItem(18, null)
@@ -268,7 +295,12 @@ open class CustomInventory(
 
 							this@CustomInventory.PAGE++
 
-							player.openInventory(this@CustomInventory)
+							if (this::backInventory.isInitialized) {
+								player.openInventory(
+									this@CustomInventory,
+									this@CustomInventory.backInventory
+								)
+							} else player.openInventory(this@CustomInventory)
 						}
 					)
 				} else this.setItem(26, null)
@@ -319,6 +351,14 @@ open class CustomInventory(
 				it.whoClicked.openInventory(inventory)
 			}
 		)
+	}
+
+	fun with(
+		inventory: Inventory
+	): CustomInventory {
+		this.backInventory = inventory
+
+		return this
 	}
 
 	internal class PaginatedItem(
