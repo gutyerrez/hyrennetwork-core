@@ -46,7 +46,7 @@ object SkinController {
 				MinecraftProfileData::class.java
 			) ?: return@invoker null
 
-			val properties = minecraftProfileData.properties
+			val properties = minecraftProfileData.properties[0]
 
 			Skin(
 				properties.value,
@@ -65,7 +65,7 @@ object SkinController {
 	internal class MinecraftProfileData(
 		id: String,
 		name: String,
-		val properties: MinecraftProfileDataProperties
+		val properties: Array<MinecraftProfileDataProperties>
 	) : MinecraftProfile(
 		id,
 		name
