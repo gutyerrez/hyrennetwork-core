@@ -37,7 +37,7 @@ class UsersSkinsLocalCache : LocalCache {
 	fun fetchByName(name: String): UserSkin? = this.CACHE.asMap().values.stream()
 		.map {
 			it.stream().filter { userSkin -> userSkin.name == name }.findFirst()
-		}.findFirst().orElse(null)?.get()
+		}.findFirst().orElse(null)?.orElse(null)
 
 	fun invalidate(userId: EntityID<UUID>) = this.CACHE.invalidate(userId)
 
