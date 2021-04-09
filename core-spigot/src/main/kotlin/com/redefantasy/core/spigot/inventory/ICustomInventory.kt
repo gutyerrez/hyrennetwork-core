@@ -11,86 +11,93 @@ import java.util.function.Consumer
  */
 interface ICustomInventory {
 
-    fun getSize(): Int
+	val SLOTS: Array<Int>
+		get() = arrayOf(
+			10, 11, 12, 13, 14, 15, 16,
+			19, 20, 21, 22, 23, 24, 25,
+			28, 29, 30, 31, 32, 33, 34
+		)
 
-    fun getListener(slot: Int): ClickListener?
+	fun getSize(): Int
 
-    fun setItem(
-        slot: Int,
-        itemStack: ItemStack?
-    )
+	fun getListener(slot: Int): ClickListener?
 
-    fun setItem(
-        slot: Int,
-        itemStack: ItemStack?,
-        callback: Consumer<InventoryClickEvent>?
-    )
+	fun setItem(
+		slot: Int,
+		itemStack: ItemStack?
+	)
 
-    fun addItem(
-        itemStack: ItemStack,
-        callback: Consumer<InventoryClickEvent>
-    )
+	fun setItem(
+		slot: Int,
+		itemStack: ItemStack?,
+		callback: Consumer<InventoryClickEvent>?
+	)
 
-    fun backItem(
-        callback: Consumer<InventoryClickEvent>
-    )
+	fun addItem(
+		itemStack: ItemStack,
+		callback: Consumer<InventoryClickEvent>
+	)
 
-    fun backItem(
-        slot: Int,
-        callback: Consumer<InventoryClickEvent>
-    )
+	fun backItem(
+		callback: Consumer<InventoryClickEvent>
+	)
 
-    fun backItem(
-        inventory: Inventory
-    )
+	fun backItem(
+		slot: Int,
+		callback: Consumer<InventoryClickEvent>
+	)
 
-    fun backItem(
-        slot: Int,
-        inventory: Inventory
-    )
+	fun backItem(
+		inventory: Inventory
+	)
 
-    fun on(
-        event: InventoryClickEvent
-    ) {
-        if (event.whoClicked is Player) {
-            event.isCancelled = true
+	fun backItem(
+		slot: Int,
+		inventory: Inventory
+	)
 
-            if (event.clickedInventory !== null && event.clickedInventory.type !== InventoryType.PLAYER) {
-                val clickListener = this.getListener(event.slot)
+	fun on(
+		event: InventoryClickEvent
+	) {
+		if (event.whoClicked is Player) {
+			event.isCancelled = true
 
-                if (clickListener !== null) {
-                    if (clickListener is ConsumerClickListener) {
-                        clickListener.accept(event)
-                    } else if (clickListener is RunnableClickListener) {
-                        clickListener.run()
-                    }
-                }
-            }
-        }
-    }
+			if (event.clickedInventory !== null && event.clickedInventory.type !== InventoryType.PLAYER) {
+				val clickListener = this.getListener(event.slot)
 
-    fun on(
-        event: InventoryDragEvent
-    ) {
-        //
-    }
+				if (clickListener !== null) {
+					if (clickListener is ConsumerClickListener) {
+						clickListener.accept(event)
+					} else if (clickListener is RunnableClickListener) {
+						clickListener.run()
+					}
+				}
+			}
+		}
+	}
 
-    fun on(
-        event: InventoryOpenEvent
-    ) {
-        //
-    }
+	fun on(
+		event: InventoryDragEvent
+	) {
+		//
+	}
 
-    fun on(
-        event: InventoryCloseEvent
-    ) {
-        //
-    }
+	fun on(
+		event: InventoryOpenEvent
+	) {
+		//
+	}
 
-    interface ClickListener
+	fun on(
+		event: InventoryCloseEvent
+	) {
+		//
+	}
 
-    interface ConsumerClickListener : ClickListener, Consumer<InventoryClickEvent>
+	interface ClickListener
 
-    interface RunnableClickListener : ClickListener, Runnable
+	interface ConsumerClickListener : ClickListener, Consumer<InventoryClickEvent>
+
+	interface RunnableClickListener : ClickListener, Runnable
 
 }
