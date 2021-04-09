@@ -46,6 +46,59 @@ class SkinsInventory(
 				player.sendMessage("Dale papi !")
 			}
 		}
+		
+		this.setItem(
+			49,
+			ItemBuilder(Material.BOOK_AND_QUILL)
+				.name("§eEscolher uma nova pele")
+				.lore(
+					arrayOf(
+						"§7Você pode escolher uma nova pele",
+						"§7para ser utilizada em sua conta.",
+						"",
+						"§fComando: §7/skin <nome>",
+						"",
+						"§aClique para escolher"
+					)
+				)
+				.build()
+		)
+
+		this.setItem(
+			50,
+			ItemBuilder(Material.BARRIER)
+				.name("§eAtualizar pele")
+				.lore(
+					arrayOf(
+						"§7Isso irá restaurar a sua pele para a pele",
+						"§7utilizada em sua conta do Minecraft. Caso",
+						"§7você não possua uma conta, ficará a",
+						"§7pele padrão do Minecraft.",
+						"",
+						"§fComando: §7/skin atualizar",
+						"",
+						"§aClique para atualizar."
+					)
+				)
+				.build()
+		)
+
+		this.setItem(
+			51,
+			ItemBuilder(Material.BOOK_AND_QUILL)
+				.name("§eAjuda")
+				.lore(
+					arrayOf(
+						"§7As ações disponíveis neste menu também",
+						"§7podem ser realizadas por comando.",
+						"",
+						"§fComando: §7/skin ajuda",
+						"",
+						"§aClique para listar os comandos."
+					)
+				)
+				.build()
+		)
 	}
 
 }

@@ -18,48 +18,48 @@ import java.util.concurrent.TimeUnit
  **/
 class UsersLocalCache : LocalCache {
 
-    private val CACHE_BY_ID = Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build<EntityID<UUID>, User?> {
-                CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchById(
-                        FetchUserByIdDTO(it)
-                )
-            }
+	private val CACHE_BY_ID = Caffeine.newBuilder()
+		.expireAfterWrite(5, TimeUnit.MINUTES)
+		.build<EntityID<UUID>, User?> {
+			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchById(
+				FetchUserByIdDTO(it)
+			)
+		}
 
-    private val CACHE_BY_NAME = Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build<String, User?> {
-                CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByName(
-                        FetchUserByNameDTO(it)
-                )
-            }
+	private val CACHE_BY_NAME = Caffeine.newBuilder()
+		.expireAfterWrite(5, TimeUnit.MINUTES)
+		.build<String, User?> {
+			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByName(
+				FetchUserByNameDTO(it)
+			)
+		}
 
-    private val CACHE_BY_DISCORD_ID = Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .build<Long, User?> {
-                CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByDiscordId(
-                        FetchUserByDiscordIdDTO(it)
-                )
-            }
+	private val CACHE_BY_DISCORD_ID = Caffeine.newBuilder()
+		.expireAfterWrite(5, TimeUnit.MINUTES)
+		.build<Long, User?> {
+			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByDiscordId(
+				FetchUserByDiscordIdDTO(it)
+			)
+		}
 
-    private val CACHE_BY_LAST_ADDRESS = Caffeine.newBuilder()
-        .expireAfterWrite(5, TimeUnit.MINUTES)
-        .build<String, List<User>> {
-            CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByLastAddress(
-                FetchUserByLastAddressDTO(it)
-            )
-        }
+	private val CACHE_BY_LAST_ADDRESS = Caffeine.newBuilder()
+		.expireAfterWrite(5, TimeUnit.MINUTES)
+		.build<String, List<User>> {
+			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByLastAddress(
+				FetchUserByLastAddressDTO(it)
+			)
+		}
 
-    fun fetchById(id: EntityID<UUID>) = this.CACHE_BY_ID.get(id)
+	fun fetchById(id: EntityID<UUID>) = this.CACHE_BY_ID.get(id)
 
-    fun fetchById(id: UUID) = this.CACHE_BY_ID.get(
-            EntityID(id, UsersTable)
-    )
+	fun fetchById(id: UUID) = this.CACHE_BY_ID.get(
+		EntityID(id, UsersTable)
+	)
 
-    fun fetchByName(name: String) = this.CACHE_BY_NAME.get(name)
+	fun fetchByName(name: String) = this.CACHE_BY_NAME.get(name)
 
-    fun fetchByDiscordId(discordId: Long) = this.CACHE_BY_DISCORD_ID.get(discordId)
+	fun fetchByDiscordId(discordId: Long) = this.CACHE_BY_DISCORD_ID.get(discordId)
 
-    fun fetchByAddress(lastAddress: String) = this.CACHE_BY_LAST_ADDRESS.get(lastAddress)
+	fun fetchByAddress(lastAddress: String) = this.CACHE_BY_LAST_ADDRESS.get(lastAddress)
 
 }
