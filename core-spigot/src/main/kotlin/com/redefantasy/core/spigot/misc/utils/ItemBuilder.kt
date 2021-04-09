@@ -288,7 +288,7 @@ class ItemBuilder(
 				Property(
 					"textures",
 					skin.value,
-					skin.signature
+					null
 				)
 			)
 
