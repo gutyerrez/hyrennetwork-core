@@ -19,7 +19,7 @@ class SkinsInventory(
 	init {
 		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.stream()
 			?.sorted { o1, o2 ->
-				o2.updatedAt.compareTo(o1.updatedAt) + o2.enabled.compareTo(o1.enabled)
+				o2.enabled.compareTo(o1.enabled)
 			}?.forEach {
 				this.addItem(
 					ItemBuilder(Material.SKULL_ITEM)
