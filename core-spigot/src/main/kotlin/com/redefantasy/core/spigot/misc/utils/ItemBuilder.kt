@@ -263,7 +263,7 @@ class ItemBuilder(
 				playerProfile.properties["textures"]
 			)
 
-			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
+			val fieldProfile = skullMeta::class.java.getDeclaredField("profile")
 
 			fieldProfile.isAccessible = true
 
@@ -292,7 +292,7 @@ class ItemBuilder(
 				)
 			)
 
-			val fieldProfile = gameProfile::class.java.getDeclaredField("properties")
+			val fieldProfile = skullMeta::class.java.getDeclaredField("properties")
 
 			fieldProfile.isAccessible = true
 
@@ -333,7 +333,7 @@ class ItemBuilder(
 				)
 			)
 
-			val fieldProfile = gameProfile::class.java.getDeclaredField("properties")
+			val fieldProfile = skullMeta::class.java.getDeclaredField("profile")
 
 			fieldProfile.isAccessible = true
 
