@@ -222,15 +222,15 @@ open class CustomInventory(
 					)
 
 					when (paginatedItem.clickListener) {
-						is ICustomInventory.ConsumerClickListener? -> {
+						is ICustomInventory.ConsumerClickListener -> {
 							LISTENERS[
 									SLOTS[index]
-							] = paginatedItem.clickListener as ICustomInventory.ConsumerClickListener
+							] = paginatedItem.clickListener
 						}
-						is ICustomInventory.RunnableClickListener? -> {
+						is ICustomInventory.RunnableClickListener -> {
 							LISTENERS[
 									SLOTS[index]
-							] = paginatedItem.clickListener as ICustomInventory.RunnableClickListener
+							] = paginatedItem.clickListener
 						}
 					}
 				}
