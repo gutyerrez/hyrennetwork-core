@@ -4,6 +4,7 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
+import com.redefantasy.core.spigot.misc.utils.BlockColor
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -48,10 +49,11 @@ class SkinsInventory(
 		}
 		
 		this.setItem(
-			49,
+			48,
 			ItemBuilder(Material.BOOK_AND_QUILL)
-				.name("§eEscolher uma nova pele")
-				.lore(
+				.name(
+					"§eEscolher uma nova pele"
+				).lore(
 					arrayOf(
 						"§7Você pode escolher uma nova pele",
 						"§7para ser utilizada em sua conta.",
@@ -60,15 +62,15 @@ class SkinsInventory(
 						"",
 						"§aClique para escolher"
 					)
-				)
-				.build()
+				).build()
 		)
 
 		this.setItem(
-			50,
+			49,
 			ItemBuilder(Material.BARRIER)
-				.name("§eAtualizar pele")
-				.lore(
+				.name(
+					"§eAtualizar pele"
+				).lore(
 					arrayOf(
 						"§7Isso irá restaurar a sua pele para a pele",
 						"§7utilizada em sua conta do Minecraft. Caso",
@@ -79,15 +81,18 @@ class SkinsInventory(
 						"",
 						"§aClique para atualizar."
 					)
-				)
-				.build()
+				).build()
 		)
 
 		this.setItem(
-			51,
-			ItemBuilder(Material.BOOK_AND_QUILL)
-				.name("§eAjuda")
-				.lore(
+			50,
+			ItemBuilder(Material.SKULL_ITEM)
+				.durability(3)
+				.skullURL(
+					BlockColor.YELLOW
+				).name(
+					"§eAjuda"
+				).lore(
 					arrayOf(
 						"§7As ações disponíveis neste menu também",
 						"§7podem ser realizadas por comando.",
@@ -96,8 +101,7 @@ class SkinsInventory(
 						"",
 						"§aClique para listar os comandos."
 					)
-				)
-				.build()
+				).build()
 		)
 	}
 
