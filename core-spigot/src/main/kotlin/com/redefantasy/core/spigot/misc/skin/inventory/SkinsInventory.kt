@@ -13,7 +13,7 @@ class SkinsInventory : CustomInventory("Suas peles") {
 		for (i in 0..50) {
 			this.addItem(
 				ItemBuilder(Material.WOOL)
-					.name("Item #$i")
+					.name("Item #${i + 1}")
 					.build()
 			)
 		}

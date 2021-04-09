@@ -253,7 +253,7 @@ open class CustomInventory(
 							player.openInventory(this@CustomInventory)
 						}
 					)
-				}
+				} else this.setItem(18, null)
 
 				if (PAGE < (totalPages - 1)) {
 					this.setItem(
@@ -269,7 +269,7 @@ open class CustomInventory(
 							player.openInventory(this@CustomInventory)
 						}
 					)
-				}
+				} else this.setItem(26, null)
 			}
 		} else if (this.onOpen !== null) {
 			this.onOpen!!.accept(event)
