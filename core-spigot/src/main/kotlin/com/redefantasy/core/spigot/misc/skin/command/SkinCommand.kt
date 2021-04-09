@@ -11,6 +11,7 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
+import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
 import com.redefantasy.core.spigot.command.CustomCommand
 import com.redefantasy.core.spigot.misc.skin.command.subcommands.SkinRefreshCommand
 import com.redefantasy.core.spigot.misc.skin.inventory.SkinsInventory
@@ -48,9 +49,23 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 					return false
 				}
 
-				val skin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)?.skin ?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
+				var userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name) ?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
 					FetchUserSkinByNameDTO(name)
-				)?.skin ?: SkinController.fetchSkinByName(name)
+				)
+
+				if (userSkin !== null && userSkin.userId == user!!.id) {
+					userSkin = UserSkin(
+						name,
+						user.id,
+						userSkin.skin,
+						userSkin.enabled,
+						DateTime.now(
+							CoreConstants.DATE_TIME_ZONE
+						)
+					)
+				}
+
+				val skin = userSkin?.skin ?: SkinController.fetchSkinByName(name)
 
 				if (skin === null) {
 					commandSender.sendMessage(
@@ -63,19 +78,27 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 					TextComponent("§aAlterando sua skin para a de $name...")
 				)
 
-				CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
-					CreateUserSkinDTO(
-						UserSkin(
-							name,
-							user!!.id,
-							skin,
-							true,
-							DateTime.now(
-								CoreConstants.DATE_TIME_ZONE
+				if (userSkin !== null && userSkin.userId == user!!.id) {
+					CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
+						UpdateUserSkinDTO(
+							userSkin
+						)
+					)
+				} else {
+					CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
+						CreateUserSkinDTO(
+							UserSkin(
+								name,
+								user!!.id,
+								skin,
+								true,
+								DateTime.now(
+									CoreConstants.DATE_TIME_ZONE
+								)
 							)
 						)
 					)
-				)
+				}
 
 				commandSender.sendMessage(
 					TextComponent("§aSua pele foi alterada com sucesso, relogue para que ela atualize.")

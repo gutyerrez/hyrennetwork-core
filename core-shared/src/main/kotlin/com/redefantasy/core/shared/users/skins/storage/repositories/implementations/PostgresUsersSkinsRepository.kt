@@ -6,8 +6,10 @@ import com.redefantasy.core.shared.users.skins.storage.dao.UserSkinDAO
 import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinsByUserIdDTO
+import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
 import com.redefantasy.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
 import com.redefantasy.core.shared.users.skins.storage.table.UsersSkinsTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -64,6 +66,39 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 				this.signature = skin.signature
 				this.enabled = enabled
 				this.updatedAt = updatedAt
+			}
+		}
+	}
+
+	override fun update(
+		updateUserSkinDTO: UpdateUserSkinDTO
+	) {
+		transaction {
+			val (
+				_,
+				userId,
+				skin,
+				enabled,
+				updatedAt
+			) = updateUserSkinDTO.userSkin
+
+			transaction {
+				val result = UserSkinDAO.find {
+					UsersSkinsTable.userId eq userId and (
+						UsersSkinsTable.value eq skin.value
+					) and (
+						UsersSkinsTable.signature eq skin.signature
+					)
+				}
+
+				if (!result.empty()) {
+					val result = result.first()
+
+					result.value = skin.value
+					result.signature = skin.signature
+					result.enabled = enabled
+					result.updatedAt = updatedAt
+				}
 			}
 		}
 	}
