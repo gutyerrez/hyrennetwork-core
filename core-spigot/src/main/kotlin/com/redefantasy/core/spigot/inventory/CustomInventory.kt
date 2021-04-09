@@ -150,7 +150,7 @@ open class CustomInventory(
 		if (PAGINATED) {
 			val paginatedItem = PaginatedItem(itemStack)
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size > SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
@@ -171,7 +171,7 @@ open class CustomInventory(
 				) = callback.accept(event)
 			})
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size > SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
@@ -193,7 +193,7 @@ open class CustomInventory(
 				override fun run() = callback.run()
 			})
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size > SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
