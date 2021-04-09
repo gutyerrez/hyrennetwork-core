@@ -7,7 +7,6 @@ import com.redefantasy.core.shared.misc.utils.ChatColor
 import net.minecraft.server.v1_8_R3.NBTBase
 import net.minecraft.server.v1_8_R3.NBTTagCompound
 import net.minecraft.server.v1_8_R3.NBTTagList
-import org.apache.commons.codec.binary.Base64
 import org.apache.commons.lang3.ArrayUtils
 import org.bukkit.Color
 import org.bukkit.DyeColor
@@ -304,7 +303,7 @@ class ItemBuilder(
 		return this
 	}
 
-	fun skullURL(id: String): ItemBuilder {
+	fun skull(texture: String): ItemBuilder {
 		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
 			val skullMeta = itemMeta as SkullMeta
 
@@ -312,21 +311,11 @@ class ItemBuilder(
 
 			val gameProfile = GameProfile(UUID.randomUUID(), null)
 
-			val encodedData = if (id.startsWith("https://") || id.startsWith("http://")) {
-				Base64.encodeBase64(
-					"{textures:{SKIN:{url:\"$id\"}}}".toByteArray(Charsets.UTF_8)
-				)
-			} else {
-				Base64.encodeBase64(
-					"{textures:{SKIN:{url:\"https://textures.minecraft.net/texture/$id\"}}}".toByteArray(Charsets.UTF_8)
-				)
-			}
-
 			gameProfile.properties.put(
 				"textures",
 				Property(
 					"textures",
-					String(encodedData),
+					texture,
 					null
 				)
 			)

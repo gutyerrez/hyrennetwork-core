@@ -88,7 +88,7 @@ class SkinsInventory(
 			50,
 			ItemBuilder(Material.SKULL_ITEM)
 				.durability(3)
-				.skullURL(
+				.skull(
 					BlockColor.YELLOW
 				).name(
 					"§eAjuda"
