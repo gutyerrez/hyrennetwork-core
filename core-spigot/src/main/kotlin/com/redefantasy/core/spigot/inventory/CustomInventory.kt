@@ -245,7 +245,7 @@ open class CustomInventory(
 					this.setItem(
 						18,
 						ItemBuilder(Material.ARROW)
-							.name("§aPágina ${PAGE - 1}")
+							.name("§aPágina ${PAGE}")
 							.build(),
 						Consumer {
 							val player = it.whoClicked as Player
