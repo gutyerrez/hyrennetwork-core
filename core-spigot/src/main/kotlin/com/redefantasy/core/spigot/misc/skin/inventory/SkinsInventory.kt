@@ -7,7 +7,14 @@ import org.bukkit.Material
 /**
  * @author Gutyerrez
  */
-class SkinsInventory : CustomInventory("Suas peles") {
+class SkinsInventory : CustomInventory(
+	"Suas peles",
+	slots = arrayOf(
+		10, 12, 14, 16,
+		20, 22, 24,
+		31
+	)
+) {
 
 	init {
 		for (i in 0..50) {
