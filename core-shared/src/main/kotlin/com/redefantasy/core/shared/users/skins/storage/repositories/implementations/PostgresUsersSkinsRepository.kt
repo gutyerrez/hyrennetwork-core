@@ -1,6 +1,7 @@
 package com.redefantasy.core.shared.users.skins.storage.repositories.implementations
 
 import com.redefantasy.core.shared.CoreConstants
+import com.redefantasy.core.shared.misc.exposed.ilike
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dao.UserSkinDAO
 import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
@@ -31,7 +32,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 	): UserSkin? {
 		return transaction {
 			val result = UserSkinDAO.find {
-				UsersSkinsTable.name eq fetchUserSkinByNameDTO.name
+				UsersSkinsTable.name ilike fetchUserSkinByNameDTO.name
 			}
 
 			return@transaction if (result.empty()) null else result.first().toUserSkin()
