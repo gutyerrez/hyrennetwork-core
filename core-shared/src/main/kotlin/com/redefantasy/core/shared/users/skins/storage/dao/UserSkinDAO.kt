@@ -18,7 +18,6 @@ class UserSkinDAO(
 
 	var name by UsersSkinsTable.name
 	var userId by UsersSkinsTable.userId
-	var signature by UsersSkinsTable.signature
 	var value by UsersSkinsTable.value
 	var enabled by UsersSkinsTable.enabled
 	var updatedAt by UsersSkinsTable.updatedAt
@@ -27,8 +26,7 @@ class UserSkinDAO(
 		this.name,
 		this.userId,
 		Skin(
-			this.value,
-			this.signature
+			this.value
 		),
 		this.enabled,
 		this.updatedAt

@@ -49,8 +49,7 @@ object SkinController {
 			val properties = minecraftProfileData.properties[0]
 
 			Skin(
-				properties.value,
-				properties.signature
+				properties.value
 			)
 		}
 
@@ -73,8 +72,7 @@ object SkinController {
 
 	internal data class MinecraftProfileDataProperties(
 		val name: String,
-		val value: String,
-		val signature: String
+		val value: String
 	)
 
 }

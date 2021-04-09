@@ -64,7 +64,6 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 			UserSkinDAO.new {
 				this.name = name
 				this.userId = userId
-				this.signature = skin.signature
 				this.value = skin.value
 				this.enabled = enabled
 				this.updatedAt = updatedAt

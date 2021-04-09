@@ -12,7 +12,6 @@ object UsersSkinsTable : IntIdTable("users_skins") {
     val name = varchar("name", 255).uniqueIndex()
     val userId = reference("user_id", UsersTable)
     val value = text("value")
-    val signature = text("signature")
     var enabled = bool("enabled")
     var updatedAt = datetime("updated_at")
 
