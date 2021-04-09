@@ -292,7 +292,7 @@ class ItemBuilder(
 				)
 			)
 
-			val fieldProfile = skullMeta::class.java.getDeclaredField("properties")
+			val fieldProfile = skullMeta::class.java.getDeclaredField("profile")
 
 			fieldProfile.isAccessible = true
 
