@@ -20,6 +20,7 @@ class SkinsInventory(
 		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.forEach {
 			this.addItem(
 				ItemBuilder(Material.SKULL_ITEM)
+					.durability(3)
 					.name(
 						"§a${it.name}"
 					).lore(
@@ -32,8 +33,8 @@ class SkinsInventory(
 						)
 					)
 					.build(),
-				Consumer {
-					val player = it.whoClicked as Player
+				Consumer { event ->
+					val player = event.whoClicked as Player
 
 					player.closeInventory()
 
