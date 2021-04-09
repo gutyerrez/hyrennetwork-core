@@ -17,37 +17,38 @@ class SkinsInventory(
 ) : CustomInventory("Suas peles") {
 
 	init {
-		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.sortedBy {
-			it.updatedAt
-		}?.forEach {
-			this.addItem(
-				ItemBuilder(Material.SKULL_ITEM)
-					.durability(3)
-					.skull(it.skin)
-					.name(
-						"§a${it.name}"
-					).lore(
-						arrayOf(
-							"§fUsada pela última  vez em: §7${
-								DateFormatter.formatToDefault(
-									it.updatedAt,
-									"às"
-								)
-							}",
-							"",
-							if (it.enabled) "§aSelecionada." else "§eClique para utilizar essa pele."
+		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.stream()
+			?.sorted { o1, o2 ->
+				o2.updatedAt.compareTo(o2.updatedAt) + o2.enabled.compareTo(o1.enabled)
+			}?.forEach {
+				this.addItem(
+					ItemBuilder(Material.SKULL_ITEM)
+						.durability(3)
+						.skull(it.skin)
+						.name(
+							"§a${it.name}"
+						).lore(
+							arrayOf(
+								"§fUsada pela última  vez em: §7${
+									DateFormatter.formatToDefault(
+										it.updatedAt,
+										"às"
+									)
+								}",
+								"",
+								if (it.enabled) "§aSelecionada." else "§eClique para utilizar essa pele."
+							)
 						)
-					)
-					.build()
-			) { event ->
-				val player = event.whoClicked as Player
+						.build()
+				) { event ->
+					val player = event.whoClicked as Player
 
-				player.closeInventory()
+					player.closeInventory()
 
-				player.sendMessage("Dale papi !")
+					player.sendMessage("Dale papi !")
+				}
 			}
-		}
-		
+
 		this.setItem(
 			48,
 			ItemBuilder(Material.BOOK_AND_QUILL)

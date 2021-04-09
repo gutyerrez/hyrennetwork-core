@@ -9,11 +9,18 @@ import java.text.SimpleDateFormat
 object DateFormatter {
 
     fun formatToDefault(dateTime: DateTime?, joiner: String = ""): String {
-        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy${if (joiner.isNotEmpty()) " $joiner " else " "}hh:mm")
+        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm")
 
         if (dateTime === null) return "Data inválida"
 
-        return simpleDateFormat.format(dateTime.millis)
+        val formatted = simpleDateFormat.format(dateTime.millis)
+
+        return if (joiner.isEmpty()) formatted else {
+            formatted.replaceFirst(
+                " ",
+                " $joiner "
+            )
+        }
     }
 
 }
