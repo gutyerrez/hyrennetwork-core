@@ -215,6 +215,8 @@ open class CustomInventory(
 			} else {
 				val totalPages = ceil(PAGES.size().toDouble() / SLOTS.size.toDouble()).toInt()
 
+				SLOTS.forEach { this.clear(it) }
+
 				PAGES[PAGE].forEachIndexed { index, paginatedItem ->
 					this.setItem(
 						SLOTS[index],
