@@ -292,7 +292,7 @@ class ItemBuilder(
 				)
 			)
 
-			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
+			val fieldProfile = gameProfile::class.java.getDeclaredField("properties")
 
 			fieldProfile.isAccessible = true
 
@@ -333,7 +333,7 @@ class ItemBuilder(
 				)
 			)
 
-			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
+			val fieldProfile = gameProfile::class.java.getDeclaredField("properties")
 
 			fieldProfile.isAccessible = true
 
