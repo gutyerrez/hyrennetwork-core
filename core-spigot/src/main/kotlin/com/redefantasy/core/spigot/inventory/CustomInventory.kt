@@ -145,6 +145,22 @@ open class CustomInventory(
 	}
 
 	override fun addItem(
+		itemStack: org.bukkit.inventory.ItemStack
+	) {
+		if (PAGINATED) {
+			val paginatedItem = PaginatedItem(itemStack)
+
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size > SLOTS.size) {
+				CURRENT_PAGE++
+			}
+
+			PAGES.put(CURRENT_PAGE, paginatedItem)
+		} else {
+			super.addItem(itemStack)
+		}
+	}
+
+	override fun addItem(
 		itemStack: org.bukkit.inventory.ItemStack,
 		callback: Consumer<InventoryClickEvent>
 	) {
@@ -255,10 +271,9 @@ open class CustomInventory(
 					)
 				}
 			}
-		}
-
-		if (this.onOpen !== null)
+		} else if (this.onOpen !== null) {
 			this.onOpen!!.accept(event)
+		}
 	}
 
 	override fun on(

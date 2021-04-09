@@ -34,6 +34,10 @@ interface ICustomInventory {
 	)
 
 	fun addItem(
+		itemStack: ItemStack
+	)
+
+	fun addItem(
 		itemStack: ItemStack,
 		callback: Consumer<InventoryClickEvent>
 	)
