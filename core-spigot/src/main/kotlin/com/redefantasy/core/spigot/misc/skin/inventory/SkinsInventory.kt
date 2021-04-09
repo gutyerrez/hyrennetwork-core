@@ -21,6 +21,7 @@ class SkinsInventory(
 			this.addItem(
 				ItemBuilder(Material.SKULL_ITEM)
 					.durability(3)
+					.skull(it.skin)
 					.name(
 						"§a${it.name}"
 					).lore(
