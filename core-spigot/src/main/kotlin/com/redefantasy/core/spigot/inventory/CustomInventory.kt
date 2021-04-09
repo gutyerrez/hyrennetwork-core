@@ -257,7 +257,7 @@ open class CustomInventory(
 
 				if (PAGE < (totalPages - 1)) {
 					this.setItem(
-						18,
+						26,
 						ItemBuilder(Material.ARROW)
 							.name("§aPágina ${PAGE + 1}")
 							.build(),
