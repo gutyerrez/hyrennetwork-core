@@ -56,6 +56,9 @@ import com.redefantasy.core.shared.users.punishments.cache.local.UsersPunishment
 import com.redefantasy.core.shared.users.punishments.storage.repositories.IUsersPunishmentsRepository
 import com.redefantasy.core.shared.users.punishments.storage.repositories.implementations.PostgresUsersPunishmentsRepository
 import com.redefantasy.core.shared.users.reports.cache.redis.UsersReportsRedisCache
+import com.redefantasy.core.shared.users.skins.cache.local.UsersSkinsLocalCache
+import com.redefantasy.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
+import com.redefantasy.core.shared.users.skins.storage.repositories.implementations.PostgresUsersSkinsRepository
 import com.redefantasy.core.shared.users.storage.repositories.IUsersRepository
 import com.redefantasy.core.shared.users.storage.repositories.implementation.PostgresUsersRepository
 import org.apache.commons.io.IOUtils
@@ -82,6 +85,7 @@ object CoreProvider {
         PROVIDERS.add(Repositories.Postgres.USERS_FRIENDS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.IGNORED_USERS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_PREFERENCES_REPOSITORY)
+        PROVIDERS.add(Repositories.Postgres.USERS_SKINS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.MAINTENANCE_REPOSITORY)
 
         // local cache
@@ -96,6 +100,7 @@ object CoreProvider {
         PROVIDERS.add(Cache.Local.USERS_FRIENDS)
         PROVIDERS.add(Cache.Local.USERS_IGNORED)
         PROVIDERS.add(Cache.Local.USERS_PREFERENCES)
+        PROVIDERS.add(Cache.Local.USERS_SKINS)
         PROVIDERS.add(Cache.Local.MAINTENANCE)
 
         // redis cache
@@ -284,6 +289,10 @@ object CoreProvider {
                 PostgresUsersPreferencesRepository::class
             )
 
+            val USERS_SKINS_REPOSITORY = PostgresRepositoryProvider<IUsersSkinsRepository>(
+                PostgresUsersSkinsRepository::class
+            )
+
             val MAINTENANCE_REPOSITORY = PostgresRepositoryProvider<IMaintenanceRepository>(
                 PostgresMaintenanceRepository::class
             )
@@ -338,6 +347,10 @@ object CoreProvider {
 
             val USERS_PREFERENCES = LocalCacheProvider(
                 UsersPreferencesLocalCache()
+            )
+
+            val USERS_SKINS = LocalCacheProvider(
+                UsersSkinsLocalCache()
             )
 
             val MAINTENANCE = LocalCacheProvider(

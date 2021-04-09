@@ -1,15 +1,19 @@
 package com.redefantasy.core.spigot.misc.utils
 
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import com.redefantasy.core.shared.misc.skin.Skin
 import com.redefantasy.core.shared.misc.utils.ChatColor
 import net.minecraft.server.v1_8_R3.NBTBase
 import net.minecraft.server.v1_8_R3.NBTTagCompound
 import net.minecraft.server.v1_8_R3.NBTTagList
+import org.apache.commons.codec.binary.Base64
 import org.apache.commons.lang3.ArrayUtils
 import org.bukkit.Color
 import org.bukkit.DyeColor
 import org.bukkit.Material
 import org.bukkit.block.banner.Pattern
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -18,8 +22,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BannerMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.PotionMeta
+import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.material.MaterialData
 import org.bukkit.potion.PotionEffect
+import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
 
@@ -27,317 +33,411 @@ import java.util.function.Function
  * @author Gutyerrez
  */
 class ItemBuilder(
-    private val itemStack: ItemStack
+	private val itemStack: ItemStack
 ) {
 
-    private var itemMeta = this.itemStack.itemMeta
+	private var itemMeta = itemStack.itemMeta
 
-    constructor(
-        material: Material
-    ) : this(ItemStack(material))
+	constructor(
+		material: Material
+	) : this(ItemStack(material))
 
-    fun amount(amount: Int): ItemBuilder {
-        itemStack.amount = amount
+	fun amount(amount: Int): ItemBuilder {
+		itemStack.amount = amount
 
-        return this
-    }
+		return this
+	}
 
-    fun name(name: String): ItemBuilder {
-        this.itemMeta.displayName = ChatColor.translateAlternateColorCodes(
-            '&',
-            name
-        )
-        this.itemStack.itemMeta = itemMeta
+	fun name(name: String): ItemBuilder {
+		itemMeta.displayName = ChatColor.translateAlternateColorCodes(
+			'&',
+			name
+		)
+		itemStack.itemMeta = itemMeta
 
-        return this
-    }
+		return this
+	}
 
-    fun lore(lore: Array<String>): ItemBuilder {
-        return this.lore(lore, false)
-    }
+	fun lore(lore: Array<String>): ItemBuilder {
+		return lore(lore, false)
+	}
 
-    fun lore(lore: Array<String>, override: Boolean): ItemBuilder {
-        val lines = lore.map { ChatColor.translateAlternateColorCodes('&', it) }.toMutableList()
+	fun lore(lore: Array<String>, override: Boolean): ItemBuilder {
+		val lines = lore.map { ChatColor.translateAlternateColorCodes('&', it) }.toMutableList()
 
-        if (!override) {
-            val oldLines = this.itemMeta.lore
+		if (!override) {
+			val oldLines = itemMeta.lore
 
-            if (oldLines !== null && oldLines.isNotEmpty()) {
-                lines.addAll(0, oldLines)
-            }
-        }
+			if (oldLines !== null && oldLines.isNotEmpty()) {
+				lines.addAll(0, oldLines)
+			}
+		}
 
-        this.itemMeta.lore = lines
-        this.itemStack.itemMeta = itemMeta
+		itemMeta.lore = lines
+		itemStack.itemMeta = itemMeta
 
-        return this
-    }
+		return this
+	}
 
-    fun durability(durability: Int): ItemBuilder {
-        this.itemStack.durability = durability.toShort()
-        this.itemStack.itemMeta = itemMeta
+	fun durability(durability: Int): ItemBuilder {
+		itemStack.durability = durability.toShort()
+		itemStack.itemMeta = itemMeta
 
-        return this
-    }
+		return this
+	}
 
-    fun data(data: Int): ItemBuilder {
-        this.itemStack.data = MaterialData(
-            this.itemStack.type,
-            data.toByte()
-        )
-        this.itemStack.itemMeta = itemMeta
+	fun data(data: Int): ItemBuilder {
+		itemStack.data = MaterialData(
+			itemStack.type,
+			data.toByte()
+		)
+		itemStack.itemMeta = itemMeta
 
-        return this
-    }
+		return this
+	}
 
-    fun patterns(patterns: Array<Pattern>): ItemBuilder {
-        if (this.itemStack.type === Material.BANNER) {
-            (this.itemMeta as BannerMeta).patterns = patterns.toList()
-        }
-        this.itemStack.itemMeta = itemMeta
-
-        return this
-    }
+	fun patterns(patterns: Array<Pattern>): ItemBuilder {
+		if (itemStack.type === Material.BANNER) {
+			(itemMeta as BannerMeta).patterns = patterns.toList()
+		}
+		itemStack.itemMeta = itemMeta
+
+		return this
+	}
 
-    fun glowing(glowing: Boolean): ItemBuilder {
-        if (this.itemStack.type === Material.GOLDEN_APPLE) {
-            this.durability(if (glowing) 1 else 0)
-        }
-
-        if (this.itemStack.enchantments.isEmpty()) {
-            if (glowing) {
-                this.createNBT { it.set("ench", NBTTagList()) }
-            } else removeNBT("ench")
-        }
+	fun glowing(glowing: Boolean): ItemBuilder {
+		if (itemStack.type === Material.GOLDEN_APPLE) {
+			durability(if (glowing) 1 else 0)
+		}
+
+		if (itemStack.enchantments.isEmpty()) {
+			if (glowing) {
+				createNBT { it.set("ench", NBTTagList()) }
+			} else removeNBT("ench")
+		}
 
-        return this
-    }
-
-    fun clearFlags(flags: Array<ItemFlag>): ItemBuilder {
-        this.itemMeta.removeItemFlags(*flags)
-        this.itemStack.itemMeta = itemMeta
-
-        return this
-    }
-
-    fun flags(flags: Array<ItemFlag>): ItemBuilder {
-        this.itemMeta.addItemFlags(*flags)
-        this.itemStack.itemMeta = itemMeta
-
-        return this
-    }
-
-    fun persistent(boolean: Boolean): ItemBuilder {
-        this.itemMeta.spigot().isPersistent = boolean
-        this.itemStack.itemMeta = itemMeta
-
-        return this
-    }
-
-    fun enchant(enchantment: Enchantment, level: Int): ItemBuilder {
-        this.itemStack.addUnsafeEnchantment(
-            enchantment,
-            level
-        )
-
-        return this
-    }
-
-    fun enchant(enchantment: Enchantment): ItemBuilder {
-        this.itemStack.addUnsafeEnchantment(enchantment, 1)
-
-        return this
-    }
-
-    fun enchantments(enchantments: Array<Enchantment>, level: Int): ItemBuilder {
-        enchantments.forEach { this.enchant(it, level) }
-
-        return this
-    }
+		return this
+	}
+
+	fun clearFlags(flags: Array<ItemFlag>): ItemBuilder {
+		itemMeta.removeItemFlags(*flags)
+		itemStack.itemMeta = itemMeta
+
+		return this
+	}
+
+	fun flags(flags: Array<ItemFlag>): ItemBuilder {
+		itemMeta.addItemFlags(*flags)
+		itemStack.itemMeta = itemMeta
+
+		return this
+	}
+
+	fun persistent(boolean: Boolean): ItemBuilder {
+		itemMeta.spigot().isPersistent = boolean
+		itemStack.itemMeta = itemMeta
+
+		return this
+	}
+
+	fun enchant(enchantment: Enchantment, level: Int): ItemBuilder {
+		itemStack.addUnsafeEnchantment(
+			enchantment,
+			level
+		)
+
+		return this
+	}
+
+	fun enchant(enchantment: Enchantment): ItemBuilder {
+		itemStack.addUnsafeEnchantment(enchantment, 1)
+
+		return this
+	}
+
+	fun enchantments(enchantments: Array<Enchantment>, level: Int): ItemBuilder {
+		enchantments.forEach { enchant(it, level) }
+
+		return this
+	}
+
+	fun enchantments(enchantments: Array<Enchantment>): ItemBuilder {
+		enchantments.forEach { enchant(it) }
+
+		return this
+	}
+
+	fun clearEnchantment(enchantment: Enchantment): ItemBuilder {
+		itemStack.removeEnchantment(enchantment)
 
-    fun enchantments(enchantments: Array<Enchantment>): ItemBuilder {
-        enchantments.forEach { this.enchant(it) }
+		return this
+	}
 
-        return this
-    }
+	fun clearEnchantments(enchantments: Array<Enchantment>): ItemBuilder {
+		enchantments.forEach { clearEnchantment(it) }
 
-    fun clearEnchantment(enchantment: Enchantment): ItemBuilder {
-        this.itemStack.removeEnchantment(enchantment)
+		return this
+	}
 
-        return this
-    }
+	fun effect(potionEffect: PotionEffect, overwrite: Boolean): ItemBuilder {
+		if (itemMeta is PotionMeta) {
+			(itemMeta as PotionMeta).addCustomEffect(potionEffect, overwrite)
+		}
+		itemStack.itemMeta = itemMeta
 
-    fun clearEnchantments(enchantments: Array<Enchantment>): ItemBuilder {
-        enchantments.forEach { this.clearEnchantment(it) }
+		return this
+	}
 
-        return this
-    }
+	fun color(color: Color): ItemBuilder {
+		if (ArrayUtils.contains(
+				arrayOf(
+					Material.LEATHER_HELMET,
+					Material.LEATHER_CHESTPLATE,
+					Material.LEATHER_LEGGINGS,
+					Material.LEATHER_BOOTS,
+				),
+				itemStack.type
+			)
+		) {
+			(itemMeta as LeatherArmorMeta).color = color
+		}
+		itemStack.itemMeta = itemMeta
 
-    fun effect(potionEffect: PotionEffect, overwrite: Boolean): ItemBuilder {
-        if (this.itemMeta is PotionMeta) {
-            (this.itemMeta as PotionMeta).addCustomEffect(potionEffect, overwrite)
-        }
-        this.itemStack.itemMeta = itemMeta
+		return this
+	}
 
-        return this
-    }
+	fun color(baseColor: DyeColor): ItemBuilder {
+		if (itemStack.type === Material.BANNER) {
+			(itemMeta as BannerMeta).baseColor = baseColor
+		}
+		itemStack.itemMeta = itemMeta
 
-    fun color(color: Color): ItemBuilder {
-        if (ArrayUtils.contains(
-                arrayOf(
-                    Material.LEATHER_HELMET,
-                    Material.LEATHER_CHESTPLATE,
-                    Material.LEATHER_LEGGINGS,
-                    Material.LEATHER_BOOTS,
-                ),
-                this.itemStack.type
-        )) {
-            (this.itemMeta as LeatherArmorMeta).color = color
-        }
-        this.itemStack.itemMeta = itemMeta
+		return this
+	}
 
-        return this
-    }
+	fun clearColor(): ItemBuilder {
+		if (ArrayUtils.contains(
+				arrayOf(
+					Material.LEATHER_HELMET,
+					Material.LEATHER_CHESTPLATE,
+					Material.LEATHER_LEGGINGS,
+					Material.LEATHER_BOOTS,
+				),
+				itemStack.type
+			)
+		) {
+			(itemMeta as LeatherArmorMeta).color = null
+		}
 
-    fun color(baseColor: DyeColor): ItemBuilder {
-        if (this.itemStack.type === Material.BANNER) {
-            (this.itemMeta as BannerMeta).baseColor = baseColor
-        }
-        this.itemStack.itemMeta = itemMeta
+		if (itemStack.type === Material.BANNER) {
+			(itemMeta as BannerMeta).baseColor = null
+		}
+		itemStack.itemMeta = itemMeta
 
-        return this
-    }
+		return this
+	}
 
-    fun clearColor(): ItemBuilder {
-        if (ArrayUtils.contains(
-                arrayOf(
-                    Material.LEATHER_HELMET,
-                    Material.LEATHER_CHESTPLATE,
-                    Material.LEATHER_LEGGINGS,
-                    Material.LEATHER_BOOTS,
-                ),
-                this.itemStack.type
-        )) {
-            (this.itemMeta as LeatherArmorMeta).color = null
-        }
+	fun skullOwner(owner: String): ItemBuilder {
+		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
+			val skullMeta = itemMeta as SkullMeta
 
-        if (this.itemStack.type === Material.BANNER) {
-            (this.itemMeta as BannerMeta).baseColor = null
-        }
-        this.itemStack.itemMeta = itemMeta
+			skullMeta.owner = owner
 
-        return this
-    }
+			itemStack.itemMeta = skullMeta
+		}
 
-    fun skullOwner(owner: String): ItemBuilder {
-        TODO("Não implementado")
-    }
+		return this
+	}
 
-    fun skull(player: Player): ItemBuilder {
-        TODO("Não implementado")
-    }
+	fun skull(player: Player): ItemBuilder {
+		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
+			val skullMeta = itemMeta as SkullMeta
 
-    fun skull(skin: Skin): ItemBuilder {
-        TODO("Não implementado")
-    }
+			skullMeta.owner = "CustomSkull"
 
-    fun skullURL(id: String): ItemBuilder {
-        TODO("Não implementado")
-    }
+			val playerProfile = (player as CraftPlayer).profile
+			val gameProfile = GameProfile(UUID.randomUUID(), null)
 
-    fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
-        val nmsCopy = CraftItemStack.asNMSCopy(this.itemStack)
+			gameProfile.properties.putAll(
+				"textures",
+				playerProfile.properties["textures"]
+			)
 
-        val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
 
-        consumer.accept(compound)
+			fieldProfile.isAccessible = true
 
-        nmsCopy.tag = compound
+			fieldProfile.set(skullMeta, gameProfile)
 
-        this.itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
-        this.itemStack.itemMeta = itemMeta
+			itemStack.itemMeta = skullMeta
+		}
 
-        return compound
-    }
+		return this
+	}
 
-    fun <T> createNBT(function: Function<NBTTagCompound, T>): T {
-        val nmsCopy = CraftItemStack.asNMSCopy(this.itemStack)
+	fun skull(skin: Skin): ItemBuilder {
+		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
+			val skullMeta = itemMeta as SkullMeta
 
-        val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+			skullMeta.owner = "CustomSkull"
 
-        return function.apply(compound)
-    }
+			val gameProfile = GameProfile(UUID.randomUUID(), null)
 
-    private fun removeNBT(key: String) {
-        val nmsCopy = CraftItemStack.asNMSCopy(this.itemStack)
+			gameProfile.properties.put(
+				"textures",
+				Property(
+					"textures",
+					skin.value,
+					skin.signature
+				)
+			)
 
-        val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
 
-        return compound.remove(key)
-    }
+			fieldProfile.isAccessible = true
 
-    private fun ItemStack.hasNBT(key: String): Boolean {
-        val nmsCopy = CraftItemStack.asNMSCopy(this)
+			fieldProfile.set(skullMeta, gameProfile)
 
-        val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+			itemStack.itemMeta = skullMeta
+		}
 
-        return compound.hasKey(key)
-    }
+		return this
+	}
 
-    fun NBT(key: String, value: NBTBase): ItemBuilder {
-        this.createNBT { it.set(key, value) }
+	fun skullURL(id: String): ItemBuilder {
+		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
+			val skullMeta = itemMeta as SkullMeta
 
-        return this
-    }
+			skullMeta.owner = "CustomSkull"
 
-    fun NBT(key: String, value: Int): ItemBuilder {
-        this.createNBT { it.setInt(key, value) }
+			val gameProfile = GameProfile(UUID.randomUUID(), null)
 
-        return this
-    }
+			lateinit var encodedData: ByteArray
 
-    fun NBT(key: String, value: Boolean): ItemBuilder {
-        this.createNBT { it.setBoolean(key, value) }
+			if (id.startsWith("https://") || id.startsWith("http://")) {
+				encodedData = Base64.encodeBase64(
+					"{textures:{SKIN:{url:\"$id\"}}}".toByteArray(Charsets.UTF_8)
+				)
+			} else {
+				encodedData = Base64.encodeBase64(
+					"{textures:{SKIN:{url:\"https://textures.minecraft.net/texture/$id\"}}}".toByteArray(Charsets.UTF_8)
+				)
+			}
 
-        return this
-    }
+			gameProfile.properties.put(
+				"textures",
+				Property(
+					"textures",
+					String(encodedData),
+					null
+				)
+			)
 
-    fun NBT(key: String, value: Long): ItemBuilder {
-        this.createNBT { it.setLong(key, value) }
+			val fieldProfile = gameProfile::class.java.getDeclaredField("profile")
 
-        return this
-    }
+			fieldProfile.isAccessible = true
 
-    fun NBT(key: String, value: String): ItemBuilder {
-        this.createNBT { it.setString(key, value) }
+			fieldProfile.set(skullMeta, gameProfile)
 
-        return this
-    }
+			itemStack.itemMeta = skullMeta
+		}
 
-    fun NBTTagString(key: String): String? {
-        TODO("Não implementado")
-    }
+		return this
+	}
 
-    fun NBTTagInt(key: String): Int? {
-        TODO("Não implementado")
-    }
+	fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
+		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
 
-    fun NBTTagLong(key: String): Long? {
-        TODO("Não implementado")
-    }
+		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
 
-    fun NBTTagDouble(key: String): Double? {
-        TODO("Não implementado")
-    }
+		consumer.accept(compound)
 
-    fun NBTTagBoolean(key: String): Boolean? {
-        TODO("Não implementado")
-    }
+		nmsCopy.tag = compound
 
-    fun NBTTagList(key: String): NBTTagList? {
-        TODO("Não implementado")
-    }
+		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
+		itemStack.itemMeta = itemMeta
 
-    fun build() = this.itemStack
+		return compound
+	}
+
+	fun <T> createNBT(function: Function<NBTTagCompound, T>): T {
+		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
+
+		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+
+		return function.apply(compound)
+	}
+
+	private fun removeNBT(key: String) {
+		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
+
+		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+
+		return compound.remove(key)
+	}
+
+	private fun ItemStack.hasNBT(key: String): Boolean {
+		val nmsCopy = CraftItemStack.asNMSCopy(this)
+
+		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+
+		return compound.hasKey(key)
+	}
+
+	fun NBT(key: String, value: NBTBase): ItemBuilder {
+		createNBT { it.set(key, value) }
+
+		return this
+	}
+
+	fun NBT(key: String, value: Int): ItemBuilder {
+		createNBT { it.setInt(key, value) }
+
+		return this
+	}
+
+	fun NBT(key: String, value: Boolean): ItemBuilder {
+		createNBT { it.setBoolean(key, value) }
+
+		return this
+	}
+
+	fun NBT(key: String, value: Long): ItemBuilder {
+		createNBT { it.setLong(key, value) }
+
+		return this
+	}
+
+	fun NBT(key: String, value: String): ItemBuilder {
+		createNBT { it.setString(key, value) }
+
+		return this
+	}
+
+	fun NBTTagString(key: String): String? {
+		TODO("Não implementado")
+	}
+
+	fun NBTTagInt(key: String): Int? {
+		TODO("Não implementado")
+	}
+
+	fun NBTTagLong(key: String): Long? {
+		TODO("Não implementado")
+	}
+
+	fun NBTTagDouble(key: String): Double? {
+		TODO("Não implementado")
+	}
+
+	fun NBTTagBoolean(key: String): Boolean? {
+		TODO("Não implementado")
+	}
+
+	fun NBTTagList(key: String): NBTTagList? {
+		TODO("Não implementado")
+	}
+
+	fun build() = itemStack
 
 }

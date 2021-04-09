@@ -1,27 +1,44 @@
 package com.redefantasy.core.spigot.misc.skin.inventory
 
+import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.utils.DateFormatter
+import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import java.util.function.Consumer
 
 /**
  * @author Gutyerrez
  */
-class SkinsInventory : CustomInventory(
-	"Suas peles",
-	slots = arrayOf(
-		10, 12, 14, 16,
-		20, 22, 24,
-		31
-	)
-) {
+class SkinsInventory(
+	user: User
+) : CustomInventory("Suas peles") {
 
 	init {
-		for (i in 0..50) {
+		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.forEach {
 			this.addItem(
-				ItemBuilder(Material.WOOL)
-					.name("Item #${i + 1}")
-					.build()
+				ItemBuilder(Material.SKULL_ITEM)
+					.name(
+						"§a${it.name}"
+					).lore(
+						arrayOf(
+							"§fUsada pela última  vez em: ${DateFormatter.formatToDefault(
+								it.updatedAt
+							)}",
+							"",
+							if (it.enabled) "§aSelecionada." else "Clique para utilizar essa pele."
+						)
+					)
+					.build(),
+				Consumer {
+					val player = it.whoClicked as Player
+
+					player.closeInventory()
+
+					player.sendMessage("Dale papi !")
+				}
 			)
 		}
 	}

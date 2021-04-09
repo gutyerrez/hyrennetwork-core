@@ -1,10 +1,11 @@
 package com.redefantasy.core.shared.users.skins.storage.dto
 
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 
 /**
  * @author SrGutyerrez
  **/
-class FetchUserSkinByUserIdDTO(
-        val userId: UUID
+class FetchUserSkinsByUserIdDTO(
+	val userId: EntityID<UUID>
 )

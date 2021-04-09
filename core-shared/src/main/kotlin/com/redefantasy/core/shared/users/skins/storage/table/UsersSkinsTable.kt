@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.users.skins.storage.table
 
+import com.redefantasy.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.jodatime.datetime
 
@@ -9,8 +10,10 @@ import org.jetbrains.exposed.sql.jodatime.datetime
 object UsersSkinsTable : IntIdTable("users_skins") {
 
     val name = varchar("name", 255).uniqueIndex()
-    val value = varchar("value", 255)
-    val signature = varchar("signature", 255)
-    val updatedAt = datetime("updated_at")
+    val userId = reference("user_id", UsersTable)
+    val value = text("value")
+    val signature = text("signature")
+    var enabled = bool("enabled")
+    var updatedAt = datetime("updated_at")
 
 }
