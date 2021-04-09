@@ -34,7 +34,7 @@ class SkinsInventory(
 								)
 							}",
 							"",
-							if (it.enabled) "§aSelecionada." else "Clique para utilizar essa pele."
+							if (it.enabled) "§aSelecionada." else "§eClique para utilizar essa pele."
 						)
 					)
 					.build()
