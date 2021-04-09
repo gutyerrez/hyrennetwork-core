@@ -31,7 +31,7 @@ object SkinController {
 
 		val skin: () -> Skin? = invoker@{
 			val request = Request.Builder()
-				.url("${SESSION_END_POINT}/session/minecraft/profile/${minecraftProfile.id}")
+				.url("${SESSION_END_POINT}/session/minecraft/profile/${minecraftProfile.id}?unsigned=false")
 				.header("Content-Type", "application/json")
 				.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
 				.get()
@@ -49,7 +49,8 @@ object SkinController {
 			val properties = minecraftProfileData.properties[0]
 
 			Skin(
-				properties.value
+				properties.value,
+				properties.signature
 			)
 		}
 
@@ -72,7 +73,8 @@ object SkinController {
 
 	internal data class MinecraftProfileDataProperties(
 		val name: String,
-		val value: String
+		val value: String,
+		val signature: String
 	)
 
 }

@@ -65,6 +65,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 				this.name = name
 				this.userId = userId
 				this.value = skin.value
+				this.signature = skin.signature
 				this.enabled = enabled
 				this.updatedAt = updatedAt
 			}

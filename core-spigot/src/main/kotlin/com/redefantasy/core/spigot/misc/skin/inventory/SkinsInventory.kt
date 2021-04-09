@@ -7,7 +7,6 @@ import com.redefantasy.core.spigot.inventory.CustomInventory
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import java.util.function.Consumer
 
 /**
  * @author Gutyerrez
@@ -17,7 +16,9 @@ class SkinsInventory(
 ) : CustomInventory("Suas peles") {
 
 	init {
-		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.forEach {
+		CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.sortedBy {
+			it.updatedAt
+		}?.forEach {
 			this.addItem(
 				ItemBuilder(Material.SKULL_ITEM)
 					.durability(3)
@@ -26,22 +27,24 @@ class SkinsInventory(
 						"§a${it.name}"
 					).lore(
 						arrayOf(
-							"§fUsada pela última  vez em: ${DateFormatter.formatToDefault(
-								it.updatedAt
-							)}",
+							"§fUsada pela última  vez em: §7${
+								DateFormatter.formatToDefault(
+									it.updatedAt,
+									"às"
+								)
+							}",
 							"",
 							if (it.enabled) "§aSelecionada." else "Clique para utilizar essa pele."
 						)
 					)
-					.build(),
-				Consumer { event ->
-					val player = event.whoClicked as Player
+					.build()
+			) { event ->
+				val player = event.whoClicked as Player
 
-					player.closeInventory()
+				player.closeInventory()
 
-					player.sendMessage("Dale papi !")
-				}
-			)
+				player.sendMessage("Dale papi !")
+			}
 		}
 	}
 

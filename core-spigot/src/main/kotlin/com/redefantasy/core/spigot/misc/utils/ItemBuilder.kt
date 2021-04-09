@@ -288,7 +288,7 @@ class ItemBuilder(
 				Property(
 					"textures",
 					skin.value,
-					null
+					skin.signature
 				)
 			)
 
@@ -312,14 +312,12 @@ class ItemBuilder(
 
 			val gameProfile = GameProfile(UUID.randomUUID(), null)
 
-			lateinit var encodedData: ByteArray
-
-			if (id.startsWith("https://") || id.startsWith("http://")) {
-				encodedData = Base64.encodeBase64(
+			val encodedData = if (id.startsWith("https://") || id.startsWith("http://")) {
+				Base64.encodeBase64(
 					"{textures:{SKIN:{url:\"$id\"}}}".toByteArray(Charsets.UTF_8)
 				)
 			} else {
-				encodedData = Base64.encodeBase64(
+				Base64.encodeBase64(
 					"{textures:{SKIN:{url:\"https://textures.minecraft.net/texture/$id\"}}}".toByteArray(Charsets.UTF_8)
 				)
 			}
