@@ -1,6 +1,5 @@
 package com.redefantasy.core.shared.users.skins.storage.repositories.implementations
 
-import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.misc.exposed.ilike
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dao.UserSkinDAO
@@ -10,7 +9,6 @@ import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinsByUserI
 import com.redefantasy.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
 import com.redefantasy.core.shared.users.skins.storage.table.UsersSkinsTable
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.joda.time.DateTime
 
 /**
  * @author SrGutyerrez
@@ -56,9 +54,6 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 			}.forEach {
 				if (it.enabled) {
 					it.enabled = false
-					it.updatedAt = DateTime.now(
-						CoreConstants.DATE_TIME_ZONE
-					)
 				}
 			}
 
