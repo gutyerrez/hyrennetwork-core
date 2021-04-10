@@ -61,7 +61,7 @@ abstract class CustomCommand(
 
         method.isAccessible = true
 
-        method.invoke(this, commandSender, args)
+        method.invoke(this::class.java.superclass, commandSender, args)
 
         return true
     }
