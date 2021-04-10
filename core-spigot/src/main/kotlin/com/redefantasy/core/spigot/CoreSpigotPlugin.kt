@@ -10,9 +10,8 @@ import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.misc.skin.command.SkinCommand
 import com.redefantasy.core.spigot.misc.utils.PacketEvent
 import com.redefantasy.core.spigot.misc.utils.PacketListener
+import com.redefantasy.core.spigot.sign.CustomSign
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
-import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -92,14 +91,16 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                     val packet = event.packet
 
                     if (packet is PacketPlayInUpdateSign) {
-                        val texts = packet.b()
+                        if (player.hasMetadata("custom-sign")) {
+                            val customSign = player.getMetadata("custom-sign")[0].value() as CustomSign
+                            val texts = packet.b()
 
-                        texts.forEach {
-                            player.sendMessage(
-                                TextComponent(
-                                    IChatBaseComponent.ChatSerializer.a(it)
-                                )
+                            customSign.UPDATED_LISTENER?.accept(
+                                player,
+                                texts
                             )
+
+                            player.removeMetadata("custom-sign", this@CoreSpigotPlugin)
                         }
                     }
                 }

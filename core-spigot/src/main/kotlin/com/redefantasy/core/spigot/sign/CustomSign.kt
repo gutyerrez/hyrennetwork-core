@@ -5,10 +5,10 @@ import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.server.v1_8_R3.BlockPosition
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
-import net.minecraft.server.v1_8_R3.NBTTagCompound
 import net.minecraft.server.v1_8_R3.TileEntitySign
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import java.util.function.BiConsumer
 
 /**
  * @author Gutyerrez
@@ -17,7 +17,8 @@ class CustomSign(
 	blockPosition: BlockPosition? = null
 ) : TileEntitySign() {
 
-	val nbtTagCompound = NBTTagCompound()
+	var UPDATED_LISTENER: BiConsumer<Player, Array<IChatBaseComponent>>? = null
+
 	val textLines = sizedArray<String>(4)
 
 	constructor(player: Player): this(
@@ -40,53 +41,37 @@ class CustomSign(
 		)
 	}
 
-	fun lines(vararg lines: String): CustomSign {
+	fun lines(vararg lines: String) = apply {
 		if (lines.size > 4)
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
 			this.textLines[index] = it
 		}
-
-		return this
 	}
 
-	fun lines(lines: Array<BaseComponent>): CustomSign {
+	fun lines(lines: Array<BaseComponent>) = apply {
 		if (lines.size > 4)
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
-			this.textLines[index] = it.toPlainText()
+			this.textLines[index] = it.toLegacyText()
 		}
-
-		return this
 	}
 
-	fun lines(vararg lines: TextComponent): CustomSign {
+	fun lines(vararg lines: TextComponent) = apply {
 		if (lines.size > 4)
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
-			this.textLines[index] = it.toPlainText()
+			this.textLines[index] = it.toLegacyText()
 		}
-
-		return this
 	}
 
-	private fun updateNBTTagCompound() {
-		this.lines.forEachIndexed { index, iChatBaseComponent ->
-			nbtTagCompound.setString(
-				"Text${index + 1}",
-				IChatBaseComponent.ChatSerializer.a(
-					iChatBaseComponent
-				)
-			)
-		}
-
-		nbtTagCompound.setInt("x", this.position.x)
-		nbtTagCompound.setInt("y", this.position.y)
-		nbtTagCompound.setInt("z", this.position.z)
-		nbtTagCompound.setString("id", "minecraft:sign")
+	fun onUpdate(
+		consumer: BiConsumer<Player, Array<IChatBaseComponent>>
+	) = apply {
+		this.UPDATED_LISTENER = consumer
 	}
 
 }

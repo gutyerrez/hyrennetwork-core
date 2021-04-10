@@ -72,11 +72,21 @@ class SkinsInventory(
 		) { event ->
 			val player = event.whoClicked as Player
 
-			val sign = CustomSign(player).lines(
-				TextComponent("§aTeste"),
-				TextComponent(""),
-				TextComponent("§cOpa")
-			)
+			val sign = CustomSign(player)
+				.lines(
+					TextComponent("§aHey! Insira o nome"),
+					TextComponent("§ada nova pele abaixo")
+				).onUpdate { player, lines ->
+					player.sendMessage("yeah!")
+
+					lines.forEach {
+						player.sendMessage(
+							TextComponent(
+								it.text
+							)
+						)
+					}
+				}
 
 			player.openSignEditor(sign)
 		}

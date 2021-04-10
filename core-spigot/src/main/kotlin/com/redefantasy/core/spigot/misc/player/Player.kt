@@ -1,5 +1,6 @@
 package com.redefantasy.core.spigot.misc.player
 
+import com.redefantasy.core.spigot.CoreSpigotPlugin
 import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
 import net.minecraft.server.v1_8_R3.Packet
@@ -12,6 +13,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.metadata.FixedMetadataValue
 
 /**
  * @author Gutyerrez
@@ -47,8 +49,8 @@ fun Player.openBook(book: ItemStack) {
 	this.itemInHand = oldItem
 }
 
-fun Player.openSignEditor(sign: CustomSign) {
-	val blockPosition = sign.position
+fun Player.openSignEditor(customSign: CustomSign) {
+	val blockPosition = customSign.position
 	val location = Location(
 		world,
 		blockPosition.x.toDouble(),
@@ -63,10 +65,15 @@ fun Player.openSignEditor(sign: CustomSign) {
 	)
 	this.sendSignChange(
 		location,
-		sign.textLines
+		customSign.textLines
 	)
 
 	this.sendPacket(
-		PacketPlayOutOpenSignEditor(sign.position)
+		PacketPlayOutOpenSignEditor(customSign.position)
 	)
+
+	this.setMetadata("custom-sign", FixedMetadataValue(
+		CoreSpigotPlugin.instance,
+		customSign
+	))
 }
