@@ -67,15 +67,4 @@ fun Player.openSignEditor(sign: CustomSign) {
     this.sendPacket(
         PacketPlayOutOpenSignEditor(sign.position)
     )
-
-    this.sendBlockChange(
-        Location(
-            world,
-            blockPosition.x.toDouble(),
-            blockPosition.y.toDouble(),
-            blockPosition.z.toDouble()
-        ),
-        Material.BEDROCK,
-        0.toByte()
-    )
 }
