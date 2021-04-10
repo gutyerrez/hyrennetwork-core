@@ -8,7 +8,7 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinBySkinValueAndSignatureDTO
+import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByUserIdAndNameDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
 import org.joda.time.DateTime
 
@@ -90,14 +90,14 @@ object SkinService {
 		val skin = SkinController.fetchSkinByName(user.name)
 
 		if (skin !== null) {
-			val userSkin = CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchBySkinValueAndSignature(
-				FetchUserSkinBySkinValueAndSignatureDTO(
-					skin.value,
-					skin.signature
+			val userSkin = CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByUserIdAndName(
+				FetchUserSkinByUserIdAndNameDTO(
+					user.id,
+					user.name
 				)
 			)
 
-			if (userSkin !== null && userSkin.userId == user.id) {
+			if (userSkin !== null) {
 				CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
 					UpdateUserSkinDTO(
 						UserSkin(

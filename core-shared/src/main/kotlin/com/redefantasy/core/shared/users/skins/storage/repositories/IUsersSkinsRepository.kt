@@ -17,8 +17,8 @@ interface IUsersSkinsRepository : IRepository {
         fetchUserSkinByNameDTO: FetchUserSkinByNameDTO
     ): UserSkin?
 
-    fun fetchBySkinValueAndSignature(
-        fetchUserSkinBySkinValueAndSignatureDTO: FetchUserSkinBySkinValueAndSignatureDTO
+    fun fetchByUserIdAndName(
+        fetchUserSkinByUserIdAndNameDTO: FetchUserSkinByUserIdAndNameDTO
     ): UserSkin?
 
     fun create(

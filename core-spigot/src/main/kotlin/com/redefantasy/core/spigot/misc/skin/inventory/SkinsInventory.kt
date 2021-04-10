@@ -138,7 +138,8 @@ class SkinsInventory(
 				.title("Atualizar sua pele")
 				.author("Hyren")
 				.pages(
-					ComponentBuilder()
+					arrayOf(
+						ComponentBuilder()
 						.append("Você está prestes a mudar sua pele para a original, tem certeza que deseja fazer isso?")
 						.append("\n\n")
 						.append("Caso sim, clique ")
@@ -179,6 +180,7 @@ class SkinsInventory(
 						.append("\n\n")
 						.append("Após a mudança só será possível mudar a sua pele novamente em ${SkinService.CHANGE_COOLDOWN} minutos.")
 						.create()
+					)
 				).build()
 
 			player.openBook(book)

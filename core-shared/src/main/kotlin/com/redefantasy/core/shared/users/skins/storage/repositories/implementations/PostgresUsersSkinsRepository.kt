@@ -36,18 +36,10 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 		}
 	}
 
-	override fun fetchBySkinValueAndSignature(
-		fetchUserSkinBySkinValueAndSignatureDTO: FetchUserSkinBySkinValueAndSignatureDTO
+	override fun fetchByUserIdAndName(
+		fetchUserSkinByUserIdAndNameDTO: FetchUserSkinByUserIdAndNameDTO
 	): UserSkin? {
-		return transaction {
-			val result = UserSkinDAO.find {
-				UsersSkinsTable.value eq fetchUserSkinBySkinValueAndSignatureDTO.value and (
-					UsersSkinsTable.signature eq fetchUserSkinBySkinValueAndSignatureDTO.signature
-				)
-			}
-
-			return@transaction if (result.empty()) null else result.first().toUserSkin()
-		}
+		TODO("Not yet implemented")
 	}
 
 	override fun create(

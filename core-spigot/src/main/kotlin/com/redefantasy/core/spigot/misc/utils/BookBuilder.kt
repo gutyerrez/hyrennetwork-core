@@ -63,7 +63,7 @@ class BookBuilder {
 		return this
 	}
 
-	fun pages(vararg pages: Array<BaseComponent>): BookBuilder {
+	fun pages(pages: Array<Array<BaseComponent>>): BookBuilder {
 		pages.forEach {
 			itemMeta.pages.add(
 				IChatBaseComponent.ChatSerializer.a(
