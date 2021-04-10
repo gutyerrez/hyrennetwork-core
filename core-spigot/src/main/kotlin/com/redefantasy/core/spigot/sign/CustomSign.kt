@@ -3,13 +3,34 @@ package com.redefantasy.core.spigot.sign
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
+import net.minecraft.server.v1_8_R3.BlockPosition
 import net.minecraft.server.v1_8_R3.ChatComponentText
 import net.minecraft.server.v1_8_R3.TileEntitySign
+import org.bukkit.Location
+import org.bukkit.entity.Player
 
 /**
  * @author Gutyerrez
  */
-class CustomSign : TileEntitySign() {
+class CustomSign(
+	blockPosition: BlockPosition? = null
+) : TileEntitySign() {
+
+	constructor(player: Player): this(
+		player.location
+	)
+
+	constructor(location: Location): this(
+		BlockPosition(
+			location.blockX,
+			location.blockY,
+			location.blockZ
+		)
+	)
+
+	init {
+		this.position = blockPosition
+	}
 
 	fun lines(vararg lines: String): CustomSign {
 		if (lines.size > 4)

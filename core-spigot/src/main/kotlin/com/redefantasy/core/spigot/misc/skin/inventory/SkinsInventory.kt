@@ -72,7 +72,7 @@ class SkinsInventory(
 		) { event ->
 			val player = event.whoClicked as Player
 
-			val sign = CustomSign().lines(
+			val sign = CustomSign(player).lines(
 				TextComponent("§aTeste"),
 				TextComponent(""),
 				TextComponent("§cOpa")

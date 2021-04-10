@@ -91,7 +91,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                     if (packet is PacketPlayOutUpdateSign) {
                         println("dale")
 
-                        player.health = 0.0
+
                     }
                 }
 
