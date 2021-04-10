@@ -28,18 +28,22 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 		fetchUserSkinByNameDTO: FetchUserSkinByNameDTO
 	): UserSkin? {
 		return transaction {
-			val result = UserSkinDAO.find {
+			UserSkinDAO.find {
 				UsersSkinsTable.name ilike fetchUserSkinByNameDTO.name
-			}
-
-			return@transaction if (result.empty()) null else result.first().toUserSkin()
+			}.firstOrNull()?.toUserSkin()
 		}
 	}
 
 	override fun fetchByUserIdAndName(
 		fetchUserSkinByUserIdAndNameDTO: FetchUserSkinByUserIdAndNameDTO
 	): UserSkin? {
-		TODO("Not yet implemented")
+		return transaction {
+			UserSkinDAO.find {
+				UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
+						UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
+						)
+			}.firstOrNull()?.toUserSkin()
+		}
 	}
 
 	override fun create(
@@ -90,22 +94,18 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 					it.enabled = false
 				}
 
-				val result = UserSkinDAO.find {
+				val userSkinDAO = UserSkinDAO.find {
 					UsersSkinsTable.userId eq userId and (
-						UsersSkinsTable.value eq skin.value
-					) and (
-						UsersSkinsTable.signature eq skin.signature
-					)
-				}
+							UsersSkinsTable.value eq skin.value
+							) and (
+							UsersSkinsTable.signature eq skin.signature
+							)
+				}.firstOrNull()
 
-				if (!result.empty()) {
-					val result = result.first()
-
-					result.value = skin.value
-					result.signature = skin.signature
-					result.enabled = enabled
-					result.updatedAt = updatedAt
-				}
+				userSkinDAO?.value = skin.value
+				userSkinDAO?.signature = skin.signature
+				userSkinDAO?.enabled = enabled
+				userSkinDAO?.updatedAt = updatedAt
 			}
 		}
 	}

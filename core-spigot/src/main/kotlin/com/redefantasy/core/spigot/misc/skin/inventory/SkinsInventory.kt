@@ -140,46 +140,46 @@ class SkinsInventory(
 				.pages(
 					arrayOf(
 						ComponentBuilder()
-						.append("Você está prestes a mudar sua pele para a original, tem certeza que deseja fazer isso?")
-						.append("\n\n")
-						.append("Caso sim, clique ")
-						.append("§a§LAQUI")
-						.event(
-							ClickEvent(
-								ClickEvent.Action.RUN_COMMAND,
-								"/skin atualizar"
-							)
-						)
-						.event(
-							HoverEvent(
-								HoverEvent.Action.SHOW_TEXT,
-								Text(
-									"§7Clique para confirmar a atualização."
+							.append("Você está prestes a mudar sua pele para a original, tem certeza que deseja fazer isso?")
+							.append("\n\n")
+							.append("Caso sim, clique ")
+							.append("§a§LAQUI")
+							.event(
+								HoverEvent(
+									HoverEvent.Action.SHOW_TEXT,
+									Text(
+										"§7Clique para confirmar a atualização."
+									)
 								)
 							)
-						)
-						.append("§r§0.")
-						.append("\n")
-						.append("Caso não, clique ")
-						.append("§c§lAQUI")
-						.event(
-							ClickEvent(
-								ClickEvent.Action.RUN_COMMAND,
-								"/skin cancelar"
-							)
-						)
-						.event(
-							HoverEvent(
-								HoverEvent.Action.SHOW_TEXT,
-								Text(
-									"§7Clique para cancelar a atualização."
+							.event(
+								ClickEvent(
+									ClickEvent.Action.RUN_COMMAND,
+									"/skin atualizar"
 								)
 							)
-						)
-						.append("§r§0.")
-						.append("\n\n")
-						.append("Após a mudança só será possível mudar a sua pele novamente em ${SkinService.CHANGE_COOLDOWN} minutos.")
-						.create()
+							.append("§r§0.")
+							.append("\n")
+							.append("Caso não, clique ")
+							.append("§c§lAQUI")
+							.event(
+								HoverEvent(
+									HoverEvent.Action.SHOW_TEXT,
+									Text(
+										"§7Clique para cancelar a atualização."
+									)
+								)
+							)
+							.event(
+								ClickEvent(
+									ClickEvent.Action.RUN_COMMAND,
+									"/skin cancelar"
+								)
+							)
+							.append("§r§0.")
+							.append("\n\n")
+							.append("Após a mudança só será possível mudar a sua pele novamente em ${SkinService.CHANGE_COOLDOWN} minutos.")
+							.create()
 					)
 				).build()
 
