@@ -60,7 +60,7 @@ fun Player.openSignEditor(sign: CustomSign) {
 
     this.sendPacket(packet)
 
-    val field = sign::class.java.getDeclaredField("position")
+    val field = sign::class.java.superclass.getDeclaredField("position")
 
     field.isAccessible = true
 
