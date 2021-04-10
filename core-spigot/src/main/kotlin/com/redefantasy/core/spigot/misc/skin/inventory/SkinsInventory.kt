@@ -101,19 +101,27 @@ class SkinsInventory(
 		) { event ->
 			val player = event.whoClicked as Player
 
+			player.closeInventory()
+
 			val sign = CustomSign(player)
 				.lines(
 					TextComponent("§0Hey! Insira o nome"),
 					TextComponent("§0da nova pele abaixo")
-				).onUpdate { player, lines ->
+				).onUpdate { _, lines ->
 					val skinName = lines[0].text
 
+					println("asd")
+
 					if (skinName === null || skinName.isEmpty()) return@onUpdate
+
+					println("asdda")
 
 					val response = SkinService.changeSkin(
 						user,
 						skinName
 					)
+
+					println("asdsadasada")
 
 					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
 						player.sendMessage(
@@ -124,6 +132,8 @@ class SkinsInventory(
 						return@onUpdate
 					}
 
+					println("mamaco")
+
 					player.sendMessage(
 						TextComponent(
 							String.format(
@@ -132,6 +142,8 @@ class SkinsInventory(
 							)
 						)
 					)
+
+					println("chupa cu")
 
 					player.sendMessage(
 						TextComponent("§aSua pele foi alterada com sucesso, relogue para que ela atualize.")
