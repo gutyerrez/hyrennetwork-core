@@ -17,7 +17,7 @@ class SkinHelpCommand : CustomCommand("ajuda") {
 		user: User?,
 		args: Array<out String>
 	): Boolean {
-		return this.sendAvailableCommands(commandSender, args)
+		return this.sendAvailableCommands<CommandSender>(commandSender, args)
 	}
 
 }
