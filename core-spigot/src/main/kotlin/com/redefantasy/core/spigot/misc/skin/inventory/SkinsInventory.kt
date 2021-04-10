@@ -9,7 +9,7 @@ import com.redefantasy.core.spigot.misc.player.openSignEditor
 import com.redefantasy.core.spigot.misc.utils.BlockColor
 import com.redefantasy.core.spigot.misc.utils.BookBuilder
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
-import com.redefantasy.core.spigot.misc.utils.SignBuilder
+import com.redefantasy.core.spigot.sign.CustomSign
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -72,13 +72,12 @@ class SkinsInventory(
 		) { event ->
 			val player = event.whoClicked as Player
 
-			val sign = SignBuilder()
+			val sign = CustomSign()
 				.lines(
 					TextComponent("§aTeste"),
 					TextComponent(""),
 					TextComponent("§cOpa")
 				)
-				.build()
 
 			player.openSignEditor(sign)
 		}
