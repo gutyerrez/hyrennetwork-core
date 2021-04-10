@@ -1,5 +1,6 @@
 package com.redefantasy.core.spigot.misc.player
 
+import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
 import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Material
@@ -41,7 +42,14 @@ fun Player.openBook(book: ItemStack) {
     this.itemInHand = oldItem
 }
 
-fun Player.openSignEditor(sign: TileEntitySign) {
+fun Player.openSignEditor(sign: CustomSign) {
+    player.sendPacket(
+        PacketPlayOutTileEntityData(
+            sign.position,
+            9,
+            sign.nbtModifier
+        )
+    )
     player.sendPacket(
         PacketPlayOutOpenSignEditor(sign.position)
     )
