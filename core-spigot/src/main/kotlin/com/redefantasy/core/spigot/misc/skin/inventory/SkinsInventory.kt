@@ -4,8 +4,11 @@ import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
+import com.redefantasy.core.spigot.misc.player.openBook
 import com.redefantasy.core.spigot.misc.utils.BlockColor
+import com.redefantasy.core.spigot.misc.utils.BookBuilder
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -64,7 +67,18 @@ class SkinsInventory(
 						"§aClique para escolher"
 					)
 				).build()
-		)
+		) { event ->
+			val player = event.whoClicked as Player
+
+			val book = BookBuilder()
+				.title("Daleee")
+				.author("Gutyerrez")
+				.pages(
+					TextComponent("§aOpa!")
+				).build()
+
+			player.openBook(book)
+		}
 
 		this.setItem(
 			49,
