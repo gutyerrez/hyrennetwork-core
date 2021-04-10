@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import java.lang.reflect.Method
 
 /**
  * @author Gutyerrez
@@ -53,11 +54,15 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
-        val method = Commandable::class.java.getDeclaredMethod(
-            "sendAvailableCommands0",
-            Any::class.java,
-            Array<out String>::class.java
-        )
+        lateinit var method: Method
+
+        Commandable::class.java.declaredMethods.forEach {
+            println(it.name)
+
+            if (it.name == "sendAvailableCommands0") {
+                method = it
+            }
+        }
 
         method.isAccessible = true
 
