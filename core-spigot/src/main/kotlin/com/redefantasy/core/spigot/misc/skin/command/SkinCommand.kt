@@ -57,7 +57,10 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 
 				player.sendMessage(
 					TextComponent(
-						response.message
+						String.format(
+							response.message,
+							name
+						)
 					)
 				)
 

@@ -126,7 +126,10 @@ class SkinsInventory(
 
 					player.sendMessage(
 						TextComponent(
-							response.message
+							String.format(
+								response.message,
+								name
+							)
 						)
 					)
 
