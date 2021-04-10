@@ -63,6 +63,10 @@ class GenericListener : Listener {
         val sign = event.block as CraftSign
         val tileEntitySign = sign.tileEntity
 
+        println("daleeee")
+
+        println(tileEntitySign::class.java)
+
         if (tileEntitySign is CustomSign) {
             player.sendMessage("Dale :D")
         }
