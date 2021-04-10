@@ -1,9 +1,11 @@
 package com.redefantasy.core.spigot.misc.player
 
+import io.netty.buffer.Unpooled
 import net.minecraft.server.v1_8_R3.Packet
+import net.minecraft.server.v1_8_R3.PacketDataSerializer
+import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -30,10 +32,13 @@ fun Player.openBook(book: ItemStack) {
 
     this.closeInventory()
 
-    val craftPlayer = this as CraftPlayer
-    val handle = craftPlayer.handle
+    val oldItem = this.itemInHand
 
-    handle.openBook(
-        CraftItemStack.asNMSCopy(book)
+    this.itemInHand = book
+
+    player.sendPacket(
+        PacketPlayOutCustomPayload("MC|BOpen", PacketDataSerializer(Unpooled.buffer()))
     )
+
+    this.itemInHand = oldItem
 }
