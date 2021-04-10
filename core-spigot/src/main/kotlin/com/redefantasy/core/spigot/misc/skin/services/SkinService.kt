@@ -141,7 +141,7 @@ object SkinService {
 				)
 			}
 			?.findFirst()
-			?.isEmpty ?: true
+			?.isPresent == false
 	}
 
 	enum class CommonResponse(
