@@ -1,9 +1,12 @@
 package com.redefantasy.core.spigot.sign
 
+import com.redefantasy.core.shared.misc.kotlin.sizedArray
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.chat.ComponentSerializer
-import net.minecraft.server.v1_8_R3.*
+import net.minecraft.server.v1_8_R3.BlockPosition
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.v1_8_R3.NBTTagCompound
+import net.minecraft.server.v1_8_R3.TileEntitySign
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -15,6 +18,7 @@ class CustomSign(
 ) : TileEntitySign() {
 
 	val nbtTagCompound = NBTTagCompound()
+	val textLines = sizedArray<String>(4)
 
 	constructor(player: Player): this(
 		player.location
@@ -41,7 +45,7 @@ class CustomSign(
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
-			this.lines[index] = ChatComponentText(it)
+			this.textLines[index] = it
 		}
 
 		return this
@@ -52,9 +56,7 @@ class CustomSign(
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
-			this.lines[index] = ChatComponentText(
-				ComponentSerializer.toString(it)
-			)
+			this.textLines[index] = it.toPlainText()
 		}
 
 		return this
@@ -65,9 +67,7 @@ class CustomSign(
 			throw IllegalArgumentException("The size of lines ${lines.size} is higher than 4")
 
 		lines.forEachIndexed { index, it ->
-			this.lines[index] = ChatComponentText(
-				ComponentSerializer.toString(it)
-			)
+			this.textLines[index] = it.toPlainText()
 		}
 
 		return this

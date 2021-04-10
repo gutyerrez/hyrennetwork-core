@@ -61,12 +61,7 @@ fun Player.openSignEditor(sign: CustomSign) {
     )
     this.sendSignChange(
         location,
-        arrayOf(
-            "teste0",
-            "teste1",
-            "teste2",
-            "teste3"
-        )
+        sign.textLines
     )
 
     this.sendPacket(
