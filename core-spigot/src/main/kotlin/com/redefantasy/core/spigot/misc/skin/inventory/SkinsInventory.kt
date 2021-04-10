@@ -5,9 +5,11 @@ import com.redefantasy.core.shared.misc.utils.DateFormatter
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
 import com.redefantasy.core.spigot.misc.player.openBook
+import com.redefantasy.core.spigot.misc.player.openSignEditor
 import com.redefantasy.core.spigot.misc.utils.BlockColor
 import com.redefantasy.core.spigot.misc.utils.BookBuilder
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
+import com.redefantasy.core.spigot.misc.utils.SignBuilder
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -70,14 +72,15 @@ class SkinsInventory(
 		) { event ->
 			val player = event.whoClicked as Player
 
-			val book = BookBuilder()
-				.title("Daleee")
-				.author("Gutyerrez")
-				.pages(
-					TextComponent("§aOpa!")
-				).build()
+			val sign = SignBuilder()
+				.lines(
+					TextComponent("§aTeste"),
+					TextComponent(""),
+					TextComponent("§cOpa")
+				)
+				.build()
 
-			player.openBook(book)
+			player.openSignEditor(sign)
 		}
 
 		this.setItem(
@@ -97,7 +100,18 @@ class SkinsInventory(
 						"§aClique para atualizar."
 					)
 				).build()
-		)
+		) { event ->
+			val player = event.whoClicked as Player
+
+			val book = BookBuilder()
+				.title("Daleee")
+				.author("Gutyerrez")
+				.pages(
+					TextComponent("§aOpa!")
+				).build()
+
+			player.openBook(book)
+		}
 
 		this.setItem(
 			50,
