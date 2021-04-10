@@ -63,11 +63,11 @@ data class UserPunishment(
 
     fun isRevoked() = this.revokeTime !== null
 
-    fun isFinalized() = this.startTime !== null && this.startTime!!.withMillis(this.duration) >= DateTime.now(
+    fun isFinalized() = this.startTime !== null && this.startTime!!.plus(this.duration) >= DateTime.now(
         CoreConstants.DATE_TIME_ZONE
     )
 
-    fun isStrictActive() = this.startTime !== null && this.startTime!!.withMillis(this.duration) < DateTime.now(
+    fun isStrictActive() = this.startTime !== null && this.startTime!!.plus(this.duration) < DateTime.now(
             CoreConstants.DATE_TIME_ZONE
     )
 
@@ -79,13 +79,13 @@ data class UserPunishment(
         if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
             return true
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt + TimeUnit.DAYS.toMillis(7) > currentDateTime
+            return this.createdAt.plus(TimeUnit.DAYS.toMillis(7)) > currentDateTime
         } else if (revoker.hasGroup(Group.ADMINISTRATOR)) {
-            return this.createdAt + TimeUnit.DAYS.toMillis(3) > currentDateTime
+            return this.createdAt.plus(TimeUnit.DAYS.toMillis(3)) > currentDateTime
         } else if (revoker.hasGroup(Group.MODERATOR)) {
-            return this.createdAt + TimeUnit.HOURS.toMillis(12) > currentDateTime
+            return this.createdAt.plus(TimeUnit.HOURS.toMillis(12)) > currentDateTime
         } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt + TimeUnit.HOURS.toMillis(2) > currentDateTime
+            return this.createdAt.plus(TimeUnit.HOURS.toMillis(2)) > currentDateTime
         }
 
         return false
