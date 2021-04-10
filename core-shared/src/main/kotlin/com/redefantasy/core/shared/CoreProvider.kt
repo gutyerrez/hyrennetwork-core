@@ -12,7 +12,6 @@ import com.redefantasy.core.shared.exceptions.ApplicationAlreadyPreparedExceptio
 import com.redefantasy.core.shared.exceptions.InvalidApplicationException
 import com.redefantasy.core.shared.groups.storage.repositories.IGroupsRepository
 import com.redefantasy.core.shared.groups.storage.repositories.implementations.PostgresGroupsRepository
-import com.redefantasy.core.shared.misc.maintenance.cache.local.MaintenanceLocalCache
 import com.redefantasy.core.shared.misc.maintenance.repositories.IMaintenanceRepository
 import com.redefantasy.core.shared.misc.maintenance.repositories.implementations.PostgresMaintenanceRepository
 import com.redefantasy.core.shared.misc.punish.category.cache.local.PunishCategoriesLocalCache
@@ -101,7 +100,6 @@ object CoreProvider {
         PROVIDERS.add(Cache.Local.USERS_IGNORED)
         PROVIDERS.add(Cache.Local.USERS_PREFERENCES)
         PROVIDERS.add(Cache.Local.USERS_SKINS)
-        PROVIDERS.add(Cache.Local.MAINTENANCE)
 
         // redis cache
         PROVIDERS.add(Cache.Redis.APPLICATIONS_STATUS)
@@ -351,10 +349,6 @@ object CoreProvider {
 
             val USERS_SKINS = LocalCacheProvider(
                 UsersSkinsLocalCache()
-            )
-
-            val MAINTENANCE = LocalCacheProvider(
-                MaintenanceLocalCache()
             )
 
         }

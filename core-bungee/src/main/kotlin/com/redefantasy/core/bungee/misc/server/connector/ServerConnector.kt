@@ -11,6 +11,7 @@ import com.redefantasy.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.connection.ServerConnector
+import org.apache.commons.lang.ArrayUtils
 import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
 import java.util.*
@@ -50,6 +51,31 @@ class ServerConnector : ServerConnector {
 					return@sorted 0
 				}.findFirst().orElse(null)?.address
 		}
+	}
+
+	override fun handleCurrentServerClose(
+		proxiedPlayer: ProxiedPlayer,
+		inetSocketAddress: InetSocketAddress
+	): Boolean {
+		val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
+			inetSocketAddress
+		) ?: return false
+
+		if (ArrayUtils.contains(
+				arrayOf(
+					ApplicationType.LOGIN,
+					ApplicationType.LOBBY,
+					ApplicationType.PUNISHED_LOBBY
+				),
+				application.applicationType
+			)
+		) return false
+
+		val inetSocketAddress = CoreConstants.fetchLobbyApplication()?.address ?: return false
+
+		proxiedPlayer.connect { inetSocketAddress }
+
+		return true
 	}
 
 	override fun changedUserApplication(
