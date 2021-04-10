@@ -54,7 +54,7 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
-        val parametizedType = Commandable::class.java as ParameterizedType
+        val parametizedType = Commandable::class.java.genericSuperclass as ParameterizedType
 
         val method = Commandable::class.java.getMethod(
             "sendAvailableCommands0",
