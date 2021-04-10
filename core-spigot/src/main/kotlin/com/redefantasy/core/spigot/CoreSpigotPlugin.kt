@@ -89,9 +89,24 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                     val packet = event.packet
 
                     if (packet is PacketPlayOutUpdateSign) {
+                        event.isCancelled = true
+
                         println("dale")
 
+                        Bukkit.getScheduler().runTask(
+                            this@CoreSpigotPlugin
+                        ) {
+                            if (player.isOnline) {
+                                val location = player.location
+                                val block = location.block
 
+                                player.sendBlockChange(
+                                    location,
+                                    block.type,
+                                    block.data
+                                )
+                            }
+                        }
                     }
                 }
 

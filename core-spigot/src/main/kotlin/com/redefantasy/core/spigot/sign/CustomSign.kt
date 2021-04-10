@@ -3,9 +3,7 @@ package com.redefantasy.core.spigot.sign
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
-import net.minecraft.server.v1_8_R3.BlockPosition
-import net.minecraft.server.v1_8_R3.ChatComponentText
-import net.minecraft.server.v1_8_R3.TileEntitySign
+import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -15,6 +13,8 @@ import org.bukkit.entity.Player
 class CustomSign(
 	blockPosition: BlockPosition? = null
 ) : TileEntitySign() {
+
+	val nbtTagCompound = NBTTagCompound()
 
 	constructor(player: Player): this(
 		player.location
@@ -67,6 +67,22 @@ class CustomSign(
 		}
 
 		return this
+	}
+
+	private fun updateNBTTagCompound() {
+		this.lines.forEachIndexed { index, iChatBaseComponent ->
+			nbtTagCompound.setString(
+				"Text${index + 1}",
+				IChatBaseComponent.ChatSerializer.a(
+					iChatBaseComponent
+				)
+			)
+		}
+
+		nbtTagCompound.setInt("x", this.position.x)
+		nbtTagCompound.setInt("y", this.position.y)
+		nbtTagCompound.setInt("z", this.position.z)
+		nbtTagCompound.setString("id", "minecraft:sign")
 	}
 
 }
