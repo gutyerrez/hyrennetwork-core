@@ -53,7 +53,7 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
-        val commandable = this::class.java.superclass.getConstructor().newInstance() ?: return false
+        val commandable = Commandable::class.java.getConstructor().newInstance() ?: return false
 
         val method = commandable::class.java.getDeclaredMethod(
             "sendAvailableCommands",
