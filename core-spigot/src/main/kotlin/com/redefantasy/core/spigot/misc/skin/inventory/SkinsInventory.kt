@@ -6,10 +6,13 @@ import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
 import com.redefantasy.core.spigot.misc.player.openBook
 import com.redefantasy.core.spigot.misc.player.openSignEditor
+import com.redefantasy.core.spigot.misc.skin.services.SkinService
 import com.redefantasy.core.spigot.misc.utils.BlockColor
 import com.redefantasy.core.spigot.misc.utils.BookBuilder
 import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import com.redefantasy.core.spigot.sign.CustomSign
+import net.md_5.bungee.api.chat.ClickEvent
+import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -74,18 +77,36 @@ class SkinsInventory(
 
 			val sign = CustomSign(player)
 				.lines(
-					TextComponent("§aHey! Insira o nome"),
-					TextComponent("§ada nova pele abaixo")
+					TextComponent("Hey! Insira o nome"),
+					TextComponent("da nova pele abaixo")
 				).onUpdate { player, lines ->
-					player.sendMessage("yeah!")
+					val skinName = lines[0].text
 
-					lines.forEach {
+					if (skinName === null || skinName.isEmpty()) return@onUpdate
+
+					val response = SkinService.changeSkin(
+						user,
+						skinName
+					)
+
+					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
 						player.sendMessage(
 							TextComponent(
-								it.text
+								response.message
 							)
 						)
+						return@onUpdate
 					}
+
+					player.sendMessage(
+						TextComponent(
+							response.message
+						)
+					)
+
+					player.sendMessage(
+						TextComponent("§aSua pele foi alterada com sucesso, relogue para que ela atualize.")
+					)
 				}
 
 			player.openSignEditor(sign)
@@ -112,10 +133,32 @@ class SkinsInventory(
 			val player = event.whoClicked as Player
 
 			val book = BookBuilder()
-				.title("Daleee")
-				.author("Gutyerrez")
+				.title("Atualizar sua pele")
+				.author("Hyren")
 				.pages(
-					TextComponent("§aOpa!")
+					ComponentBuilder()
+						.append("Você tem certeza que deseja atualizar sua pele?")
+						.append("\n")
+						.append("Caso sim, clique ")
+						.append("§a§LAQUI")
+						.event(
+							ClickEvent(
+								ClickEvent.Action.RUN_COMMAND,
+								"/skin atualizar"
+							)
+						)
+						.append(".")
+						.append("\n")
+						.append("Caso não, clique ")
+						.append("§c§lAQUI")
+						.event(
+							ClickEvent(
+								ClickEvent.Action.RUN_COMMAND,
+								"/skin cancelar"
+							)
+						)
+						.append(".")
+						.create()
 				).build()
 
 			player.openBook(book)

@@ -3,10 +3,7 @@ package com.redefantasy.core.shared.users.skins.storage.repositories.implementat
 import com.redefantasy.core.shared.misc.exposed.ilike
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dao.UserSkinDAO
-import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinsByUserIdDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
+import com.redefantasy.core.shared.users.skins.storage.dto.*
 import com.redefantasy.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
 import com.redefantasy.core.shared.users.skins.storage.table.UsersSkinsTable
 import org.jetbrains.exposed.sql.and
@@ -39,6 +36,20 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 		}
 	}
 
+	override fun fetchBySkinValueAndSignature(
+		fetchUserSkinBySkinValueAndSignatureDTO: FetchUserSkinBySkinValueAndSignatureDTO
+	): UserSkin? {
+		return transaction {
+			val result = UserSkinDAO.find {
+				UsersSkinsTable.value eq fetchUserSkinBySkinValueAndSignatureDTO.value and (
+					UsersSkinsTable.signature eq fetchUserSkinBySkinValueAndSignatureDTO.signature
+				)
+			}
+
+			return@transaction if (result.empty()) null else result.first().toUserSkin()
+		}
+	}
+
 	override fun create(
 		createUserSkinDTO: CreateUserSkinDTO
 	) {
@@ -54,9 +65,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 			UserSkinDAO.find {
 				UsersSkinsTable.userId eq userId
 			}.forEach {
-				if (it.enabled) {
-					it.enabled = false
-				}
+				it.enabled = false
 			}
 
 			UserSkinDAO.new {
@@ -83,6 +92,12 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 			) = updateUserSkinDTO.userSkin
 
 			transaction {
+				UserSkinDAO.find {
+					UsersSkinsTable.userId eq userId
+				}.forEach {
+					it.enabled = false
+				}
+
 				val result = UserSkinDAO.find {
 					UsersSkinsTable.userId eq userId and (
 						UsersSkinsTable.value eq skin.value

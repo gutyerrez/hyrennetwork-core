@@ -2,10 +2,7 @@ package com.redefantasy.core.shared.users.skins.storage.repositories
 
 import com.redefantasy.core.shared.storage.repositories.IRepository
 import com.redefantasy.core.shared.users.skins.data.UserSkin
-import com.redefantasy.core.shared.users.skins.storage.dto.CreateUserSkinDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinsByUserIdDTO
-import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
+import com.redefantasy.core.shared.users.skins.storage.dto.*
 
 /**
  * @author SrGutyerrez
@@ -18,6 +15,10 @@ interface IUsersSkinsRepository : IRepository {
 
     fun fetchByName(
         fetchUserSkinByNameDTO: FetchUserSkinByNameDTO
+    ): UserSkin?
+
+    fun fetchBySkinValueAndSignature(
+        fetchUserSkinBySkinValueAndSignatureDTO: FetchUserSkinBySkinValueAndSignatureDTO
     ): UserSkin?
 
     fun create(
