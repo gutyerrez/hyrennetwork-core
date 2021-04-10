@@ -2,7 +2,10 @@ package com.redefantasy.core.spigot.misc.player
 
 import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_8_R3.*
+import net.minecraft.server.v1_8_R3.Packet
+import net.minecraft.server.v1_8_R3.PacketDataSerializer
+import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload
+import net.minecraft.server.v1_8_R3.PacketPlayOutOpenSignEditor
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -35,7 +38,7 @@ fun Player.openBook(book: ItemStack) {
 
     this.itemInHand = book
 
-    player.sendPacket(
+    this.sendPacket(
         PacketPlayOutCustomPayload("MC|BOpen", PacketDataSerializer(Unpooled.buffer()))
     )
 
@@ -43,20 +46,9 @@ fun Player.openBook(book: ItemStack) {
 }
 
 fun Player.openSignEditor(sign: CustomSign) {
-    val blockPosition = BlockPosition(
-        this.location.x,
-        this.location.y + 256,
-        this.location.z
-    )
+    this.sendPacket(sign.updatePacket)
 
-    player.sendPacket(
-        PacketPlayOutTileEntityData(
-            blockPosition,
-            9,
-            sign.nbtModifier
-        )
-    )
-    player.sendPacket(
-        PacketPlayOutOpenSignEditor(blockPosition)
+    this.sendPacket(
+        PacketPlayOutOpenSignEditor(sign.position)
     )
 }

@@ -87,7 +87,9 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 override fun onReceive(
                     event: PacketEvent
                 ) {
-                    if (event.packet is PacketPlayInUpdateSign) {
+                    val packet = event.packet
+
+                    if (packet is PacketPlayInUpdateSign) {
                         println("dale")
                     }
                 }
@@ -95,12 +97,14 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 override fun onSent(
                     event: PacketEvent
                 ) {
-                    if (event.packet is PacketPlayOutOpenSignEditor) {
+                    val packet = event.packet
+
+                    if (packet is PacketPlayOutOpenSignEditor) {
                         println("teste")
                     }
 
-                    if (event.packet is PacketPlayOutTileEntityData) {
-                        println("dale !")
+                    if (packet is PacketPlayOutTileEntityData) {
+                        println("asd")
                     }
                 }
 
