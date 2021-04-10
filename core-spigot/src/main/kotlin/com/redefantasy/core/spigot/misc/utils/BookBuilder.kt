@@ -3,9 +3,11 @@ package com.redefantasy.core.spigot.misc.utils
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
+import net.minecraft.server.v1_8_R3.ChatComponentText
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftMetaBook
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.BookMeta
 
 /**
  * @author Gutyerrez
@@ -13,7 +15,7 @@ import org.bukkit.inventory.meta.BookMeta
 class BookBuilder {
 
 	private val itemStack = ItemStack(Material.WRITTEN_BOOK)
-	private val itemMeta = itemStack.itemMeta as BookMeta
+	private val itemMeta = itemStack.itemMeta as CraftMetaBook
 
 	fun title(title: String): BookBuilder {
 		itemMeta.displayName = title
@@ -29,22 +31,32 @@ class BookBuilder {
 
 	@Deprecated("String pages are deprecated")
 	fun pages(vararg pages: String): BookBuilder {
-		itemMeta.setPages(*pages)
+		pages.forEach {
+			itemMeta.pages.add(
+				ChatComponentText(it)
+			)
+		}
 
 		return this
 	}
 
 	@Deprecated("String list pages are deprecated")
 	fun pages(pages: List<String>): BookBuilder {
-		itemMeta.pages = pages
+		pages.forEach {
+			itemMeta.pages.add(
+				ChatComponentText(it)
+			)
+		}
 
 		return this
 	}
 
 	fun pages(pages: Array<BaseComponent>): BookBuilder {
 		pages.forEach {
-			itemMeta.pages = listOf(
-				ComponentSerializer.toString(it)
+			itemMeta.pages.add(
+				IChatBaseComponent.ChatSerializer.a(
+					ComponentSerializer.toString(it)
+				)
 			)
 		}
 
@@ -54,7 +66,9 @@ class BookBuilder {
 	fun pages(vararg pages: TextComponent): BookBuilder {
 		pages.forEach {
 			itemMeta.pages = listOf(
-				ComponentSerializer.toString(it)
+				IChatBaseComponent.ChatSerializer.a(
+					ComponentSerializer.toString(it)
+				)
 			)
 		}
 
