@@ -162,7 +162,7 @@ interface Commandable<T> {
 		}
 	}
 
-	private fun sendAvailableCommands0(
+	fun sendAvailableCommands0(
 		commandSender: T,
 		args: Array<out String>
 	) {
