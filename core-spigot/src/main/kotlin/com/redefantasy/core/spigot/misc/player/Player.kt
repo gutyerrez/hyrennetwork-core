@@ -54,7 +54,7 @@ fun Player.openSignEditor(sign: CustomSign) {
             blockPosition.y.toDouble(),
             blockPosition.z.toDouble()
         ),
-        Material.SIGN,
+        Material.SIGN_POST,
         0
     )
 
