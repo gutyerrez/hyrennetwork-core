@@ -4,6 +4,7 @@ import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
 import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -44,10 +45,10 @@ fun Player.openBook(book: ItemStack) {
 
 fun Player.openSignEditor(sign: CustomSign) {
     this.sendPacket(
-        PacketPlayOutTileEntityData(
+        PacketPlayOutUpdateSign(
+            (this.world as CraftWorld).handle,
             sign.position,
-            9,
-            sign.nbtTagCompound
+            sign.lines
         )
     )
 
