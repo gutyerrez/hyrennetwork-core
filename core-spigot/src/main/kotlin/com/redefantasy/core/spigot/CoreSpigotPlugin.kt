@@ -105,7 +105,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                                     player.sendBlockChange(
                                         location,
                                         block.type,
-                                        block.data
+                                        0
                                     )
                                 }
                             },

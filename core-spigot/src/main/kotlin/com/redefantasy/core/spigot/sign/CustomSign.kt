@@ -23,7 +23,7 @@ class CustomSign(
 	constructor(location: Location): this(
 		BlockPosition(
 			location.blockX,
-			location.blockY,
+			256 - location.blockY,
 			location.blockZ
 		)
 	)
