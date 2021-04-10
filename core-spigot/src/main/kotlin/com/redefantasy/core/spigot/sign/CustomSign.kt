@@ -65,6 +65,11 @@ class CustomSign : TileEntitySign() {
 				IChatBaseComponent.ChatSerializer.a(iChatBaseComponent)
 			)
 		}
+
+		nbtModifier.setInt("x", this.position.x)
+		nbtModifier.setInt("y", this.position.y)
+		nbtModifier.setInt("z", this.position.z)
+		nbtModifier.setString("id", "minecraft:sign")
 	}
 
 }

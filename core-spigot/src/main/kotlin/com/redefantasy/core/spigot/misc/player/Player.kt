@@ -49,7 +49,7 @@ fun Player.openSignEditor(sign: CustomSign) {
     player.sendPacket(
         PacketPlayOutTileEntityData(
             sign.position,
-            9,
+            0,
             sign.nbtModifier
         )
     )
