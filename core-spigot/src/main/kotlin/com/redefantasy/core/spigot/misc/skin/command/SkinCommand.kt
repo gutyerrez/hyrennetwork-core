@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.commands.restriction.entities.implementations
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.command.CustomCommand
+import com.redefantasy.core.spigot.misc.skin.command.subcommands.SkinHelpCommand
 import com.redefantasy.core.spigot.misc.skin.command.subcommands.SkinRefreshCommand
 import com.redefantasy.core.spigot.misc.skin.inventory.SkinsInventory
 import com.redefantasy.core.spigot.misc.skin.services.SkinService
@@ -20,7 +21,8 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 	override fun getCommandRestriction() = CommandRestriction.GAME
 
 	override fun getSubCommands() = listOf(
-		SkinRefreshCommand()
+		SkinRefreshCommand(),
+		SkinHelpCommand()
 	)
 
 	override fun onCommand(

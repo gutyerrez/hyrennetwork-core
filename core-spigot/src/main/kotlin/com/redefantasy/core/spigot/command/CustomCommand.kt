@@ -49,6 +49,23 @@ abstract class CustomCommand(
         args: Array<out String>
     ): Boolean? = null
 
+    fun sendAvailableCommands(
+        commandSender: CommandSender,
+        args: Array<out String>
+    ): Boolean {
+        val method = this::class.java.superclass.getDeclaredMethod(
+            "sendAvailableCommands",
+            CommandSender::class.java,
+            Array<out String>::class.java
+        )
+
+        method.isAccessible = true
+
+        method.invoke(this, commandSender, args)
+
+        return true
+    }
+
     override fun onTabComplete(
         commandSender: CommandSender,
         _command: Command,
