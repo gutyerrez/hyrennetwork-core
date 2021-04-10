@@ -140,9 +140,9 @@ object SkinService {
 	private fun User.canChangeSkin(): Boolean {
 		return CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(id)?.stream()
 			?.anyMatch {
-				it.updatedAt + TimeUnit.MINUTES.toMillis(
+				it.updatedAt.plus(TimeUnit.MINUTES.toMillis(
 					this@SkinService.CHANGE_COOLDOWN.toLong()
-				) > DateTime.now(
+				)) > DateTime.now(
 					CoreConstants.DATE_TIME_ZONE
 				)
 			} ?: true

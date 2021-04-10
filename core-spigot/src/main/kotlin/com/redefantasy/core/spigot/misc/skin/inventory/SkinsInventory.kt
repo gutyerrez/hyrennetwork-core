@@ -53,6 +53,8 @@ class SkinsInventory(
 				) { event ->
 					val player = event.whoClicked as Player
 
+					if (it.enabled) return@addItem
+
 					player.closeInventory()
 
 					val response = SkinService.changeSkin(
