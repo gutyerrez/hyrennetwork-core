@@ -53,8 +53,8 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
-        val method = this::class.java.superclass.getDeclaredMethod(
-            "sendAvailableCommands",
+        val method = Commandable::class.java.getDeclaredMethod(
+            "sendAvailableCommands0",
             CommandSender::class.java,
             Array<out String>::class.java
         )
@@ -62,7 +62,7 @@ abstract class CustomCommand(
         method.isAccessible = true
 
         method.invoke(
-            this::class.java.superclass.superclass,
+            this,
             commandSender,
             args
         )

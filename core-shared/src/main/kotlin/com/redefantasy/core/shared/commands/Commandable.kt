@@ -136,7 +136,7 @@ interface Commandable<T> {
 						)
 					}
 					this::onCommand.javaMethod?.returnType?.equals(null) == true -> {
-						return this.sendAvailableCommands(commandSender, args)
+						return this.sendAvailableCommands0(commandSender, args)
 					}
 					else -> {
 						this.onCommand(commandSender, user, args)
@@ -144,7 +144,7 @@ interface Commandable<T> {
 					}
 				}
 			} else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
-				return this.sendAvailableCommands(commandSender, args)
+				return this.sendAvailableCommands0(commandSender, args)
 			} else if (args.isEmpty() && this.getArguments() !== null || this.getArguments() !== null && args.size < this.getArguments()!!.size) {
 				return CoreWrapper.WRAPPER.sendMessage(
 					commandSender.getName(),
@@ -155,14 +155,14 @@ interface Commandable<T> {
 			val result = this.onCommand(commandSender, user, args)
 
 			if (result === null && args.isEmpty() && this.getSubCommands() !== null) {
-				return this.sendAvailableCommands(commandSender, args)
+				return this.sendAvailableCommands0(commandSender, args)
 			}
 		} catch (ex: Exception) {
 			ex.printStackTrace()
 		}
 	}
 
-	private fun sendAvailableCommands(
+	private fun sendAvailableCommands0(
 		commandSender: T,
 		args: Array<out String>
 	) {
