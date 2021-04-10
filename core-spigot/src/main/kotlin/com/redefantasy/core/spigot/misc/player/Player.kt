@@ -44,13 +44,13 @@ fun Player.openBook(book: ItemStack) {
 
 fun Player.openSignEditor(sign: CustomSign) {
     player.sendPacket(
+        PacketPlayOutOpenSignEditor(sign.position)
+    )
+    player.sendPacket(
         PacketPlayOutTileEntityData(
             sign.position,
             9,
             sign.nbtModifier
         )
-    )
-    player.sendPacket(
-        PacketPlayOutOpenSignEditor(sign.position)
     )
 }
