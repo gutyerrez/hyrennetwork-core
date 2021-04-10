@@ -43,14 +43,20 @@ fun Player.openBook(book: ItemStack) {
 }
 
 fun Player.openSignEditor(sign: CustomSign) {
+    val blockPosition = BlockPosition(
+        this.location.x,
+        this.location.y + 256,
+        this.location.z
+    )
+
     player.sendPacket(
         PacketPlayOutTileEntityData(
-            sign.position,
-            0,
+            blockPosition,
+            9,
             sign.nbtModifier
         )
     )
     player.sendPacket(
-        PacketPlayOutOpenSignEditor(sign.position)
+        PacketPlayOutOpenSignEditor(blockPosition)
     )
 }
