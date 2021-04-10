@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.BookMeta
  */
 class BookBuilder {
 
-	private val itemStack = ItemStack(Material.BOOK)
+	private val itemStack = ItemStack(Material.WRITTEN_BOOK)
 	private val itemMeta = itemStack.itemMeta as BookMeta
 
 	fun title(title: String): BookBuilder {
