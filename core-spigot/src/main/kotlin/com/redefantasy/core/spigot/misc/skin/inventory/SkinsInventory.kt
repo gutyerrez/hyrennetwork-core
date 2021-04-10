@@ -77,8 +77,8 @@ class SkinsInventory(
 
 			val sign = CustomSign(player)
 				.lines(
-					TextComponent("Hey! Insira o nome"),
-					TextComponent("da nova pele abaixo")
+					TextComponent("§0Hey! Insira o nome"),
+					TextComponent("§0da nova pele abaixo")
 				).onUpdate { player, lines ->
 					val skinName = lines[0].text
 
@@ -138,7 +138,7 @@ class SkinsInventory(
 				.pages(
 					ComponentBuilder()
 						.append("Você tem certeza que deseja atualizar sua pele?")
-						.append("\n")
+						.append("\n\n")
 						.append("Caso sim, clique ")
 						.append("§a§LAQUI")
 						.event(
@@ -158,6 +158,11 @@ class SkinsInventory(
 							)
 						)
 						.append(".")
+						.append("\n\n")
+						.append("Leia a próxima página para mais instruções.")
+						.create(),
+					ComponentBuilder()
+						.append("Após a mudança só será possível mudar a sua pele novamente em ${SkinService.CHANGE_COOLDOWN} minutos.")
 						.create()
 				).build()
 

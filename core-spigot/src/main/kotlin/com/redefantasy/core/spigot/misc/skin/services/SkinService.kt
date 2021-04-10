@@ -17,6 +17,8 @@ import org.joda.time.DateTime
  */
 object SkinService {
 
+	const val CHANGE_COOLDOWN = 15
+
 	fun changeSkin(
 		user: User,
 		name: String
