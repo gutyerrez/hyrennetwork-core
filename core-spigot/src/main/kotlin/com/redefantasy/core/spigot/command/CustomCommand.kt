@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import java.lang.reflect.Parameter
 
 /**
  * @author Gutyerrez
@@ -53,14 +54,11 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
-        Commandable::class.java.declaredMethods.forEach {
-            if (it.name == "sendAvailableCommands0") {
-                it.parameters.forEach { parameter ->
-                    println(parameter::class.java)
-                }
-            }
-        }
-
+        val method = Commandable::class.java.getDeclaredMethod(
+            "sendAvailableCommands0",
+            Parameter::class.java,
+            Parameter::class.java
+        )
         return true
     }
 
