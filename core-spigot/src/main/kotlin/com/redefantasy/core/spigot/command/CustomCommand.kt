@@ -56,7 +56,7 @@ abstract class CustomCommand(
     ): Boolean {
         lateinit var method: Method
 
-        Commandable::class.java.declaredMethods.forEach {
+        Commandable::class.java.methods.forEach {
             println(it.name)
 
             if (it.name == "sendAvailableCommands0") {
