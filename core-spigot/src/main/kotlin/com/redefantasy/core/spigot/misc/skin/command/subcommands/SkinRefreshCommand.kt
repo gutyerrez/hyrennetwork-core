@@ -14,6 +14,8 @@ class SkinRefreshCommand : CustomCommand("atualizar") {
 
 	override fun getParent() = SkinCommand()
 
+	override fun getDescription() = "Atualizar sua pele com a da Mojang."
+
 	override fun onCommand(
 		commandSender: CommandSender,
 		user: User?,

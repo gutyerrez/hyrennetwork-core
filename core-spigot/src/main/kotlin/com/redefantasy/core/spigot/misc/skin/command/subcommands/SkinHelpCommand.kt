@@ -12,6 +12,8 @@ class SkinHelpCommand : CustomCommand("ajuda") {
 
 	override fun getParent() = SkinCommand()
 
+	override fun getDescription() = "Exibir esta mensagem."
+
 	override fun onCommand(
 		commandSender: CommandSender,
 		user: User?,

@@ -2,12 +2,10 @@ package com.redefantasy.core.spigot
 
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.wrapper.CoreWrapper
-import com.redefantasy.core.spigot.command.registry.CommandRegistry
 import com.redefantasy.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import com.redefantasy.core.spigot.listeners.GenericListener
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
-import com.redefantasy.core.spigot.misc.skin.command.SkinCommand
 import com.redefantasy.core.spigot.misc.utils.PacketEvent
 import com.redefantasy.core.spigot.misc.utils.PacketListener
 import com.redefantasy.core.spigot.sign.CustomSign
@@ -70,12 +68,6 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 event.quitMessage = null
             }
         }, this)
-
-        /**
-         * Commands
-         */
-
-        CommandRegistry.registerCommand(SkinCommand())
 
         /**
          * Protocol
