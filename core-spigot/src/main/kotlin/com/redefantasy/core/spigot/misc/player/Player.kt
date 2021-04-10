@@ -2,10 +2,12 @@ package com.redefantasy.core.spigot.misc.player
 
 import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_8_R3.*
+import net.minecraft.server.v1_8_R3.Packet
+import net.minecraft.server.v1_8_R3.PacketDataSerializer
+import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload
+import net.minecraft.server.v1_8_R3.PacketPlayOutOpenSignEditor
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -59,16 +61,11 @@ fun Player.openSignEditor(sign: CustomSign) {
     )
     this.sendSignChange(
         location,
-        sign.lines.map {
-            IChatBaseComponent.ChatSerializer.a(it)
-        }.toTypedArray()
-    )
-
-    this.sendPacket(
-        PacketPlayOutUpdateSign(
-            (this.world as CraftWorld).handle,
-            sign.position,
-            sign.lines
+        arrayOf(
+            "teste0",
+            "teste1",
+            "teste2",
+            "teste3"
         )
     )
 

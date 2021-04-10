@@ -8,10 +8,7 @@ import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import com.redefantasy.core.spigot.listeners.GenericListener
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.misc.skin.command.SkinCommand
-import com.redefantasy.core.spigot.misc.utils.PacketEvent
-import com.redefantasy.core.spigot.misc.utils.PacketListener
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
-import net.minecraft.server.v1_8_R3.PacketPlayOutUpdateSign
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -75,47 +72,6 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          */
 
         CommandRegistry.registerCommand(SkinCommand())
-
-        /**
-         * Packets
-         */
-        CoreSpigotConstants.PROTOCOL_HANDLER.registerListener(
-            object : PacketListener() {
-
-                override fun onSent(
-                    event: PacketEvent
-                ) {
-                    val player = event.player
-                    val packet = event.packet
-
-                    if (packet is PacketPlayOutUpdateSign) {
-                        event.isCancelled = true
-
-                        println("dale")
-
-                        Bukkit.getScheduler().runTaskLater(
-                            this@CoreSpigotPlugin,
-                            {
-                                if (player.isOnline) {
-                                    println("Tá online!")
-
-                                    val location = player.location
-                                    val block = location.block
-
-                                    player.sendBlockChange(
-                                        location,
-                                        block.type,
-                                        0
-                                    )
-                                }
-                            },
-                            2L
-                        )
-                    }
-                }
-
-            }
-        )
     }
 
 }

@@ -260,7 +260,7 @@ class ProtocolHandler {
             this.handleLoginStart(channel, message)
 
             if (this::player.isInitialized) {
-                message = onPacketIn(
+                message = onPacketOut(
                     player,
                     channel,
                     message
@@ -278,7 +278,7 @@ class ProtocolHandler {
             var message = message
 
             if (this::player.isInitialized) {
-                message = onPacketOut(
+                message = onPacketIn(
                     player,
                     ctx.channel(),
                     message
