@@ -54,9 +54,11 @@ abstract class CustomCommand(
         args: Array<out String>
     ): Boolean {
         Commandable::class.java.declaredMethods.forEach {
-            println(
-                "${it.name}(${it.parameters.contentToString()})"
-            )
+            if (it.name == "sendAvailableCommands0") {
+                it.parameters.forEach { parameter ->
+                    println(parameter::class.java)
+                }
+            }
         }
 
         return true
