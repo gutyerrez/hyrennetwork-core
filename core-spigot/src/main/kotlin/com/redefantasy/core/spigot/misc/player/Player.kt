@@ -17,54 +17,56 @@ import org.bukkit.inventory.ItemStack
  * @author Gutyerrez
  */
 fun Player.sendPacket(packet: Packet<*>) {
-    val craftPlayer = this as CraftPlayer
-    val handle = craftPlayer.handle
-    val playerConnection = handle.playerConnection
+	val craftPlayer = this as CraftPlayer
+	val handle = craftPlayer.handle
+	val playerConnection = handle.playerConnection
 
-    playerConnection.sendPacket(packet)
+	playerConnection.sendPacket(packet)
 }
 
 fun Player.openInventory(
-    inventory: Inventory,
-    backInventory: Inventory
-) { /* */ }
+	inventory: Inventory,
+	backInventory: Inventory
+) { /* */
+}
 
 fun Player.openBook(book: ItemStack) {
-    if (book.type != Material.WRITTEN_BOOK)
-        throw IllegalArgumentException("The item stack provided is not a book!")
+	if (book.type != Material.WRITTEN_BOOK)
+		throw IllegalArgumentException("The item stack provided is not a book!")
 
-    this.closeInventory()
+	this.closeInventory()
 
-    val oldItem = this.itemInHand
+	val oldItem = this.itemInHand
 
-    this.itemInHand = book
+	this.itemInHand = book
 
-    this.sendPacket(
-        PacketPlayOutCustomPayload("MC|BOpen", PacketDataSerializer(Unpooled.buffer()))
-    )
+	this.sendPacket(
+		PacketPlayOutCustomPayload("MC|BOpen", PacketDataSerializer(Unpooled.buffer()))
+	)
 
-    this.itemInHand = oldItem
+	this.itemInHand = oldItem
 }
 
 fun Player.openSignEditor(sign: CustomSign) {
-    val blockPosition = sign.position
+	val blockPosition = sign.position
+	val location = Location(
+		world,
+		blockPosition.x.toDouble(),
+		blockPosition.y.toDouble(),
+		blockPosition.z.toDouble()
+	)
 
-    this.sendBlockChange(
-        Location(
-            world,
-            blockPosition.x.toDouble(),
-            blockPosition.y.toDouble(),
-            blockPosition.z.toDouble()
-        ),
-        Material.SIGN_POST,
-        0.toByte()
-    )
-    this.sendSignChange(
-        location,
-        sign.textLines
-    )
+	this.sendBlockChange(
+		location,
+		Material.SIGN_POST,
+		0.toByte()
+	)
+	this.sendSignChange(
+		location,
+		sign.textLines
+	)
 
-    this.sendPacket(
-        PacketPlayOutOpenSignEditor(sign.position)
-    )
+	this.sendPacket(
+		PacketPlayOutOpenSignEditor(sign.position)
+	)
 }
