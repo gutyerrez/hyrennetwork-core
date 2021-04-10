@@ -25,7 +25,7 @@ fun Player.openInventory(
 ) { /* */ }
 
 fun Player.openBook(book: ItemStack) {
-    if (book.type != Material.BOOK)
+    if (book.type != Material.BOOK_AND_QUILL)
         throw IllegalArgumentException("The item stack provided is not a book!")
 
     this.closeInventory()
