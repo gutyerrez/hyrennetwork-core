@@ -43,7 +43,7 @@ class BookBuilder {
 
 	fun pages(pages: Array<BaseComponent>): BookBuilder {
 		pages.forEach {
-			itemMeta.pages.add(
+			itemMeta.pages = listOf(
 				ComponentSerializer.toString(it)
 			)
 		}
@@ -53,7 +53,7 @@ class BookBuilder {
 
 	fun pages(vararg pages: TextComponent): BookBuilder {
 		pages.forEach {
-			itemMeta.pages.add(
+			itemMeta.pages = listOf(
 				ComponentSerializer.toString(it)
 			)
 		}
