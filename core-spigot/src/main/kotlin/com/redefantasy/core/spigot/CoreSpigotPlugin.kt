@@ -11,7 +11,7 @@ import com.redefantasy.core.spigot.misc.skin.command.SkinCommand
 import com.redefantasy.core.spigot.misc.utils.PacketEvent
 import com.redefantasy.core.spigot.misc.utils.PacketListener
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
-import net.minecraft.server.v1_8_R3.PacketPlayOutUpdateSign
+import net.minecraft.server.v1_8_R3.PacketPlayOutTileEntityData
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -88,7 +88,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                     val player = event.player
                     val packet = event.packet
 
-                    if (packet is PacketPlayOutUpdateSign) {
+                    if (packet is PacketPlayOutTileEntityData) {
                         event.isCancelled = true
 
                         println("dale")
