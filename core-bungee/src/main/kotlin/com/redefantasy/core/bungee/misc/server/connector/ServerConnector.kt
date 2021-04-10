@@ -57,13 +57,9 @@ class ServerConnector : ServerConnector {
 		proxiedPlayer: ProxiedPlayer,
 		inetSocketAddress: InetSocketAddress
 	): Boolean {
-		println("...")
-
 		val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
 			inetSocketAddress
 		) ?: return false
-
-		println("asd")
 
 		if (ArrayUtils.contains(
 				arrayOf(
@@ -75,13 +71,9 @@ class ServerConnector : ServerConnector {
 			)
 		) return false
 
-		println("asdd")
-
 		val inetSocketAddress = CoreConstants.fetchLobbyApplication()?.address ?: return false
 
 		proxiedPlayer.connect { inetSocketAddress }
-
-		println("bbb")
 
 		return true
 	}
