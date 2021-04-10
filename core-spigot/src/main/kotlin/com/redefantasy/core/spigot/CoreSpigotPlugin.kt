@@ -13,7 +13,7 @@ import com.redefantasy.core.spigot.misc.utils.PacketListener
 import com.redefantasy.core.spigot.wrapper.SpigotWrapper
 import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign
 import net.minecraft.server.v1_8_R3.PacketPlayOutOpenSignEditor
-import net.minecraft.server.v1_8_R3.PacketPlayOutUpdateSign
+import net.minecraft.server.v1_8_R3.PacketPlayOutTileEntityData
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -99,8 +99,8 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                         println("teste")
                     }
 
-                    if (event.packet is PacketPlayOutUpdateSign) {
-                        println("updated")
+                    if (event.packet is PacketPlayOutTileEntityData) {
+                        println("dale !")
                     }
                 }
 
