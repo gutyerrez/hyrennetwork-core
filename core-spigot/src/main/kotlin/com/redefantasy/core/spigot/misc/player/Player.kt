@@ -60,9 +60,15 @@ fun Player.openSignEditor(sign: CustomSign) {
 
     this.sendPacket(packet)
 
+    val field = sign::class.java.getDeclaredField("position")
+
+    field.isAccessible = true
+
+    field.set(sign, blockPosition)
+
     this.sendPacket(sign.updatePacket)
 
     this.sendPacket(
-        PacketPlayOutOpenSignEditor(sign.position)
+        PacketPlayOutOpenSignEditor(blockPosition)
     )
 }
