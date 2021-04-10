@@ -163,11 +163,10 @@ interface Commandable<T> {
 	}
 
 	fun sendAvailableCommands(
-		commandSender: T,
-		args: Array<out String>
+		commandSender: T
 	) = sendAvailableCommands0(
 		commandSender,
-		args
+		emptyArray()
 	) == Unit
 
 	private fun sendAvailableCommands0(
@@ -224,6 +223,67 @@ interface Commandable<T> {
 						ClickEvent(
 							ClickEvent.Action.SUGGEST_COMMAND,
 							"/${this.getNameExact()} "
+						)
+					)
+			}
+
+			componentBuilder.append("\n")
+
+			CoreWrapper.WRAPPER.sendMessage(
+				commandSender.getName(),
+				componentBuilder.create()
+			)
+
+			return
+		} else if (args.isEmpty() && this.getParent() !== null) {
+			val parent = this.getParent()!!
+
+			val componentBuilder = ComponentBuilder("\n")
+				.append("§2Comandos disponíveis:")
+				.append("\n\n")
+
+			if (parent.getSubCommands() !== null) {
+				parent.getSubCommands()!!.forEachIndexed { index, commandable ->
+					if (commandable::onCommand.javaMethod?.returnType?.equals(null) != false) {
+						componentBuilder.append(parent.getNameExact(), commandable, index, parent.getSubCommands()!!.size)
+					} else {
+						if (commandable.getSubCommands() !== null) {
+							commandable.getSubCommands()!!.forEachIndexed { _index, _commandable ->
+								componentBuilder.append(
+									"${parent.getNameExact()} ${commandable.getName()}",
+									_commandable,
+									_index,
+									commandable.getSubCommands()!!.size
+								)
+							}
+						} else {
+							componentBuilder.append(
+								parent.getNameExact(),
+								commandable,
+								index,
+								parent.getSubCommands()!!.size
+							)
+						}
+					}
+				}
+			} else if (parent.getArguments() !== null) {
+				val arguments = parent.getArguments()!!.stream().map {
+					"<${it.name}>"
+				}.distinct().collect(Collectors.joining(" "))
+
+				componentBuilder.append("§a/${parent.getNameExact()} $arguments §8- §7${parent.getDescription0() ?: ""}")
+					.event(
+						ClickEvent(
+							ClickEvent.Action.SUGGEST_COMMAND,
+							"/${parent.getNameExact()} "
+						)
+					)
+			} else {
+				componentBuilder.append("§a/${parent.getNameExact()} §8- §7${parent.getDescription0() ?: ""}")
+					.event(
+						ClickEvent(
+							ClickEvent.Action.SUGGEST_COMMAND,
+							"/${parent.getNameExact()} "
 						)
 					)
 			}
