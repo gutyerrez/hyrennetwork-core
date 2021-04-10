@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import java.lang.reflect.ParameterizedType
 
 /**
  * @author Gutyerrez
@@ -53,9 +54,11 @@ abstract class CustomCommand(
         commandSender: CommandSender,
         args: Array<out String>
     ): Boolean {
+        val parametizedType = Commandable::class.java as ParameterizedType
+
         val method = Commandable::class.java.getMethod(
             "sendAvailableCommands0",
-            Commandable::class.java.genericInterfaces[0]::class.java,
+            parametizedType.actualTypeArguments[0]::class.java,
             Array<out String>::class.java
         )
 
