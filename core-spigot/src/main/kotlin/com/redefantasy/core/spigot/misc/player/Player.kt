@@ -2,12 +2,11 @@ package com.redefantasy.core.spigot.misc.player
 
 import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_8_R3.Packet
-import net.minecraft.server.v1_8_R3.PacketDataSerializer
-import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload
-import net.minecraft.server.v1_8_R3.PacketPlayOutOpenSignEditor
+import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -46,6 +45,21 @@ fun Player.openBook(book: ItemStack) {
 }
 
 fun Player.openSignEditor(sign: CustomSign) {
+    val blockPosition = BlockPosition(
+        this.location.blockX,
+        this.location.blockY + 256,
+        this.location.blockZ
+    )
+
+    val packet = PacketPlayOutBlockChange(
+        (player.world as CraftWorld).handle,
+        blockPosition
+    )
+
+    packet.block = CraftMagicNumbers.getBlock(Material.SIGN).blockData
+
+    this.sendPacket(packet)
+
     this.sendPacket(sign.updatePacket)
 
     this.sendPacket(
