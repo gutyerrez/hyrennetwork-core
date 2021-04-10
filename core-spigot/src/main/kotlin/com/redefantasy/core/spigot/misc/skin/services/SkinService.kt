@@ -106,15 +106,7 @@ object SkinService {
 			if (userSkin !== null) {
 				CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
 					UpdateUserSkinDTO(
-						UserSkin(
-							user.name,
-							user.id,
-							skin,
-							true,
-							DateTime.now(
-								CoreConstants.DATE_TIME_ZONE
-							)
-						)
+						userSkin
 					)
 				)
 			} else {

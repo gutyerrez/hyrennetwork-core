@@ -1,5 +1,6 @@
 package com.redefantasy.core.shared.users.skins.storage.repositories.implementations
 
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.misc.exposed.ilike
 import com.redefantasy.core.shared.users.skins.data.UserSkin
 import com.redefantasy.core.shared.users.skins.storage.dao.UserSkinDAO
@@ -8,6 +9,7 @@ import com.redefantasy.core.shared.users.skins.storage.repositories.IUsersSkinsR
 import com.redefantasy.core.shared.users.skins.storage.table.UsersSkinsTable
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 
 /**
  * @author SrGutyerrez
@@ -40,7 +42,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 		return transaction {
 			UserSkinDAO.find {
 				UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
-						UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
+					UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
 				)
 			}.firstOrNull()?.toUserSkin()
 		}
@@ -96,14 +98,18 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 
 				val userSkinDAO = UserSkinDAO.find {
 					UsersSkinsTable.userId eq userId and (
-							UsersSkinsTable.name eq name
+						UsersSkinsTable.name eq name
 					)
 				}.firstOrNull()
 
+				println(userSkinDAO === null)
+
 				userSkinDAO?.value = skin.value
 				userSkinDAO?.signature = skin.signature
-				userSkinDAO?.enabled = enabled
-				userSkinDAO?.updatedAt = updatedAt
+				userSkinDAO?.enabled = true
+				userSkinDAO?.updatedAt = DateTime.now(
+					CoreConstants.DATE_TIME_ZONE
+				)
 			}
 		}
 	}
