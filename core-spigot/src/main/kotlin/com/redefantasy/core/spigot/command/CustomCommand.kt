@@ -55,7 +55,7 @@ abstract class CustomCommand(
     ): Boolean {
         val method = Commandable::class.java.getDeclaredMethod(
             "sendAvailableCommands0",
-            CommandSender::class.java,
+            Any::class.java,
             Array<out String>::class.java
         )
 
