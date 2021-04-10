@@ -63,7 +63,7 @@ class CustomSign : TileEntitySign() {
 			nbtModifier.setString(
 				"Text" + (index + 1),
 				IChatBaseComponent.ChatSerializer.a(iChatBaseComponent)
-			);
+			)
 		}
 	}
 
