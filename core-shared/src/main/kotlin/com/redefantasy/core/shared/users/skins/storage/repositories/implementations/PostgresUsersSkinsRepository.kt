@@ -41,7 +41,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 			UserSkinDAO.find {
 				UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
 						UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
-						)
+				)
 			}.firstOrNull()?.toUserSkin()
 		}
 	}
@@ -64,6 +64,8 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 				it.enabled = false
 			}
 
+			println("Criar")
+
 			UserSkinDAO.new {
 				this.name = name
 				this.userId = userId
@@ -80,7 +82,7 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 	) {
 		transaction {
 			val (
-				_,
+				name,
 				userId,
 				skin,
 				enabled,
@@ -94,12 +96,12 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 					it.enabled = false
 				}
 
+				println("atualizar")
+
 				val userSkinDAO = UserSkinDAO.find {
 					UsersSkinsTable.userId eq userId and (
-							UsersSkinsTable.value eq skin.value
-							) and (
-							UsersSkinsTable.signature eq skin.signature
-							)
+							UsersSkinsTable.name eq name
+					)
 				}.firstOrNull()
 
 				userSkinDAO?.value = skin.value
