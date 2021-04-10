@@ -47,7 +47,7 @@ fun Player.openBook(book: ItemStack) {
 fun Player.openSignEditor(sign: CustomSign) {
     val blockPosition = BlockPosition(
         this.location.blockX,
-        this.location.blockY + 256,
+        1,
         this.location.blockZ
     )
 
