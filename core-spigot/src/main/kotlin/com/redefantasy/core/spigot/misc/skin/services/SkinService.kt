@@ -11,6 +11,7 @@ import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByNameDT
 import com.redefantasy.core.shared.users.skins.storage.dto.FetchUserSkinByUserIdAndNameDTO
 import com.redefantasy.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
 import org.joda.time.DateTime
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
@@ -23,11 +24,14 @@ object SkinService {
 		user: User,
 		name: String
 	): CommonResponse {
+		if (!user.canChangeSkin()) return CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN
+
 		if (!Patterns.NICK.matches(name)) return CommonResponse.INVALID_NICKNAME
 
-		var userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name) ?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
-			FetchUserSkinByNameDTO(name)
-		)
+		var userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)
+			?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
+				FetchUserSkinByNameDTO(name)
+			)
 
 		if (userSkin !== null && userSkin.userId == user.id) {
 			userSkin = UserSkin(
@@ -87,6 +91,8 @@ object SkinService {
 	fun refresh(
 		user: User
 	): CommonResponse {
+		if (!user.canChangeSkin()) return CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN
+
 		val skin = SkinController.fetchSkinByName(user.name)
 
 		if (skin !== null) {
@@ -131,12 +137,26 @@ object SkinService {
 		return CommonResponse.DOWNLOADING_FROM_MOJANG
 	}
 
+	private fun User.canChangeSkin(): Boolean {
+		return CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(id)?.stream()
+			?.anyMatch {
+				it.updatedAt + TimeUnit.MINUTES.toMillis(
+					this@SkinService.CHANGE_COOLDOWN.toLong()
+				) > DateTime.now(
+					CoreConstants.DATE_TIME_ZONE
+				)
+			} ?: true
+	}
+
 	enum class CommonResponse(
 		val message: String = ""
 	) {
 
 		UNKNOWN,
 
+		WAIT_FOR_CHANGE_SKIN_AGAIN(
+			"§cAguarde para atualizar sua pele novamente."
+		),
 		INVALID_NICKNAME(
 			"§cO nome inserido é inválido."
 		),
@@ -144,7 +164,7 @@ object SkinService {
 			"§cNão foi possível localizar a pele."
 		),
 		CHANGING_SKIN_TO(
-			"§aAlterando sua skin para a de %s..."
+			"§aAlterando sua pele para a de %s..."
 		),
 		DOWNLOADING_FROM_MOJANG(
 			"§aBaixando sua pele utilizada em sua conta da Mojang..."

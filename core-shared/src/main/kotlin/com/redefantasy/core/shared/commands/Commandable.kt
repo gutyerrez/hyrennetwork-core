@@ -162,7 +162,15 @@ interface Commandable<T> {
 		}
 	}
 
-	fun sendAvailableCommands0(
+	fun sendAvailableCommands(
+		commandSender: T,
+		args: Array<out String>
+	) = sendAvailableCommands0(
+		commandSender,
+		args
+	) == Unit
+
+	private fun sendAvailableCommands0(
 		commandSender: T,
 		args: Array<out String>
 	) {

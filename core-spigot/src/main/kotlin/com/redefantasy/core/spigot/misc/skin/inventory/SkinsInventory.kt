@@ -55,7 +55,29 @@ class SkinsInventory(
 
 					player.closeInventory()
 
-					player.sendMessage("Dale papi !")
+					val response = SkinService.changeSkin(
+						user,
+						it.name
+					)
+
+					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
+						player.sendMessage(
+							TextComponent(
+								response.message
+							)
+						)
+						return@addItem
+					}
+
+					player.sendMessage(
+						TextComponent(
+							response.message
+						)
+					)
+
+					player.sendMessage(
+						TextComponent("§aSua pele foi alterada com sucesso, relogue para que ela atualize.")
+					)
 				}
 			}
 

@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
-import java.lang.reflect.Parameter
 
 /**
  * @author Gutyerrez
@@ -49,18 +48,6 @@ abstract class CustomCommand(
         user: User?,
         args: Array<out String>
     ): Boolean? = null
-
-    fun sendAvailableCommands(
-        commandSender: CommandSender,
-        args: Array<out String>
-    ): Boolean {
-        val method = Commandable::class.java.getDeclaredMethod(
-            "sendAvailableCommands0",
-            Parameter::class.java,
-            Parameter::class.java
-        )
-        return true
-    }
 
     override fun onTabComplete(
         commandSender: CommandSender,
