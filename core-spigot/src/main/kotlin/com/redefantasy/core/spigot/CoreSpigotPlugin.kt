@@ -93,20 +93,24 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
                         println("dale")
 
-                        Bukkit.getScheduler().runTask(
-                            this@CoreSpigotPlugin
-                        ) {
-                            if (player.isOnline) {
-                                val location = player.location
-                                val block = location.block
+                        Bukkit.getScheduler().runTaskLater(
+                            this@CoreSpigotPlugin,
+                            {
+                                if (player.isOnline) {
+                                    println("Tá online!")
 
-                                player.sendBlockChange(
-                                    location,
-                                    block.type,
-                                    block.data
-                                )
-                            }
-                        }
+                                    val location = player.location
+                                    val block = location.block
+
+                                    player.sendBlockChange(
+                                        location,
+                                        block.type,
+                                        block.data
+                                    )
+                                }
+                            },
+                            2L
+                        )
                     }
                 }
 
