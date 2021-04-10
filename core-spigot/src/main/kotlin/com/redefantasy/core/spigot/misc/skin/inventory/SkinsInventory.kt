@@ -13,9 +13,7 @@ import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import com.redefantasy.core.spigot.sign.CustomSign
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.api.chat.hover.content.Text
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -73,7 +71,10 @@ class SkinsInventory(
 
 					player.sendMessage(
 						TextComponent(
-							response.message
+							String.format(
+								response.message,
+								name
+							)
 						)
 					)
 
@@ -175,14 +176,6 @@ class SkinsInventory(
 							.append("Caso sim, clique ")
 							.append("§a§LAQUI")
 							.event(
-								HoverEvent(
-									HoverEvent.Action.SHOW_TEXT,
-									Text(
-										"§7Clique para confirmar a atualização."
-									)
-								)
-							)
-							.event(
 								ClickEvent(
 									ClickEvent.Action.RUN_COMMAND,
 									"/skin atualizar"
@@ -192,14 +185,6 @@ class SkinsInventory(
 							.append("\n")
 							.append("Caso não, clique ")
 							.append("§c§lAQUI")
-							.event(
-								HoverEvent(
-									HoverEvent.Action.SHOW_TEXT,
-									Text(
-										"§7Clique para cancelar a atualização."
-									)
-								)
-							)
 							.event(
 								ClickEvent(
 									ClickEvent.Action.RUN_COMMAND,
