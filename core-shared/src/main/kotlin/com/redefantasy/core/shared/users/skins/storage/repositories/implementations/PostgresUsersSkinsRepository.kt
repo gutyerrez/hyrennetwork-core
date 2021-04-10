@@ -64,8 +64,6 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 				it.enabled = false
 			}
 
-			println("Criar")
-
 			UserSkinDAO.new {
 				this.name = name
 				this.userId = userId
@@ -95,8 +93,6 @@ class PostgresUsersSkinsRepository : IUsersSkinsRepository {
 				}.forEach {
 					it.enabled = false
 				}
-
-				println("atualizar")
 
 				val userSkinDAO = UserSkinDAO.find {
 					UsersSkinsTable.userId eq userId and (
