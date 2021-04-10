@@ -55,7 +55,13 @@ fun Player.openSignEditor(sign: CustomSign) {
             blockPosition.z.toDouble()
         ),
         Material.SIGN_POST,
-        0
+        0.toByte()
+    )
+    this.sendSignChange(
+        location,
+        sign.lines.map {
+            IChatBaseComponent.ChatSerializer.a(it)
+        }.toTypedArray()
     )
 
     this.sendPacket(

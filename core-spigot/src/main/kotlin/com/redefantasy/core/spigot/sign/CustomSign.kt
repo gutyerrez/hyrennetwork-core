@@ -23,13 +23,17 @@ class CustomSign(
 	constructor(location: Location): this(
 		BlockPosition(
 			location.blockX,
-			256 - location.blockY,
+			0,
 			location.blockZ
 		)
 	)
 
 	init {
-		this.position = blockPosition
+		this.position = BlockPosition(
+			blockPosition?.x ?: 0,
+			0,
+			blockPosition?.z ?: 0
+		)
 	}
 
 	fun lines(vararg lines: String): CustomSign {
