@@ -87,20 +87,20 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 override fun onReceive(
                     event: PacketEvent
                 ) {
-                    if (event.packet is PacketPlayOutOpenSignEditor) {
-                        println("teste")
-                    }
-
-                    if (event.packet is PacketPlayOutUpdateSign) {
-                        println("updated")
+                    if (event.packet is PacketPlayInUpdateSign) {
+                        println("dale")
                     }
                 }
 
                 override fun onSent(
                     event: PacketEvent
                 ) {
-                    if (event.packet is PacketPlayInUpdateSign) {
-                        println("dale")
+                    if (event.packet is PacketPlayOutOpenSignEditor) {
+                        println("teste")
+                    }
+
+                    if (event.packet is PacketPlayOutUpdateSign) {
+                        println("updated")
                     }
                 }
 
