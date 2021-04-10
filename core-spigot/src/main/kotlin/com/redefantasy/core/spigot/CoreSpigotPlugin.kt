@@ -82,7 +82,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
         CoreSpigotConstants.PROTOCOL_HANDLER.registerListener(
             object : PacketListener() {
 
-                override fun onReceive(
+                override fun onSent(
                     event: PacketEvent
                 ) {
                     val player = event.player
