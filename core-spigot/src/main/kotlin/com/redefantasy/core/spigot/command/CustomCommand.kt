@@ -62,7 +62,7 @@ abstract class CustomCommand(
         method.isAccessible = true
 
         method.invoke(
-            this,
+            this::class.java.superclass.superclass,
             commandSender,
             args
         )
