@@ -13,7 +13,9 @@ import com.redefantasy.core.spigot.misc.utils.ItemBuilder
 import com.redefantasy.core.spigot.sign.CustomSign
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.api.chat.hover.content.Text
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -137,7 +139,7 @@ class SkinsInventory(
 				.author("Hyren")
 				.pages(
 					ComponentBuilder()
-						.append("Você tem certeza que deseja atualizar sua pele?")
+						.append("Você está prestes a mudar sua pele para a original, tem certeza que deseja fazer isso?")
 						.append("\n\n")
 						.append("Caso sim, clique ")
 						.append("§a§LAQUI")
@@ -147,7 +149,15 @@ class SkinsInventory(
 								"/skin atualizar"
 							)
 						)
-						.append(".")
+						.event(
+							HoverEvent(
+								HoverEvent.Action.SHOW_TEXT,
+								Text(
+									"§7Clique para confirmar a atualização."
+								)
+							)
+						)
+						.append("§r§0.")
 						.append("\n")
 						.append("Caso não, clique ")
 						.append("§c§lAQUI")
@@ -157,11 +167,16 @@ class SkinsInventory(
 								"/skin cancelar"
 							)
 						)
-						.append(".")
+						.event(
+							HoverEvent(
+								HoverEvent.Action.SHOW_TEXT,
+								Text(
+									"§7Clique para cancelar a atualização."
+								)
+							)
+						)
+						.append("§r§0.")
 						.append("\n\n")
-						.append("Leia a próxima página para mais instruções.")
-						.create(),
-					ComponentBuilder()
 						.append("Após a mudança só será possível mudar a sua pele novamente em ${SkinService.CHANGE_COOLDOWN} minutos.")
 						.create()
 				).build()
@@ -187,7 +202,13 @@ class SkinsInventory(
 						"§aClique para listar os comandos."
 					)
 				).build()
-		)
+		) { event ->
+			val player = event.whoClicked as Player
+
+			player.closeInventory()
+
+			player.performCommand("/skin ajuda")
+		}
 	}
 
 }
