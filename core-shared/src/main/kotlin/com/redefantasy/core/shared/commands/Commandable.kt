@@ -119,7 +119,15 @@ interface Commandable<T> {
 		}
 
 		try {
-			if (args.isNotEmpty() && this.getSubCommands() !== null) {
+			if (args.isEmpty() && this.getArguments() !== null || this.getArguments() !== null && args.size < this.getArguments()!!.size) {
+				return CoreWrapper.WRAPPER.sendMessage(
+					commandSender.getName(),
+					this.getUsage0()
+				)
+			} else if (args.isNotEmpty() && this.getArguments() !== null) {
+				this.onCommand(commandSender, user, args)
+				return
+			} else if (args.isNotEmpty() && this.getSubCommands() !== null) {
 				val subCommand = this.getSubCommands()!!
 					.stream()
 					.filter {
@@ -145,11 +153,6 @@ interface Commandable<T> {
 				}
 			} else if (this::onCommand.javaMethod?.returnType?.equals(null) == true) {
 				return this.sendAvailableCommands0(commandSender, args)
-			} else if (args.isEmpty() && this.getArguments() !== null || this.getArguments() !== null && args.size < this.getArguments()!!.size) {
-				return CoreWrapper.WRAPPER.sendMessage(
-					commandSender.getName(),
-					this.getUsage0()
-				)
 			}
 
 			val result = this.onCommand(commandSender, user, args)

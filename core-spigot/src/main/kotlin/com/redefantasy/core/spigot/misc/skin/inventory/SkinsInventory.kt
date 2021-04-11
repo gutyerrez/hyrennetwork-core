@@ -224,7 +224,7 @@ class SkinsInventory(
 
 			player.closeInventory()
 
-			player.performCommand("/skin ajuda")
+			player.performCommand("skin ajuda")
 		}
 	}
 
