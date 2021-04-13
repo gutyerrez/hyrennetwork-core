@@ -81,18 +81,14 @@ class JsonBuilder {
 		key: String,
 		value: DateTime?
 	) = apply {
-		JSON_NODE.put(
-			key, value?.toString()
-		)
+		JSON_NODE.put(key, value?.toString())
 	}
 
 	fun append(
 		key: String,
 		value: UUID?
 	) = apply {
-		JSON_NODE.put(key, CoreConstants.JACKSON.writeValueAsString(
-			value
-		))
+		JSON_NODE.put(key, value?.toString())
 	}
 
 	inline fun <reified T : Comparable<T>> append(
@@ -110,11 +106,7 @@ class JsonBuilder {
 		key: String,
 		value: EntityID<T>?
 	) = apply {
-		JSON_NODE.put(
-			key, CoreConstants.JACKSON.writeValueAsString(
-				value?.value
-			)
-		)
+		JSON_NODE.put(key, value?.value?.toString())
 	}
 
 	inline fun <reified T> append(
