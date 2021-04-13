@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.guava.GuavaModule
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.GsonBuilder
 import com.redefantasy.core.shared.applications.ApplicationType
@@ -60,6 +61,7 @@ object CoreConstants {
         JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
         JACKSON.registerModule(GuavaModule())
         JACKSON.registerModule(KotlinModule())
+        JACKSON.registerModule(JodaModule())
         JACKSON.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         JACKSON.setVisibility(
             JACKSON.serializationConfig.defaultVisibilityChecker
