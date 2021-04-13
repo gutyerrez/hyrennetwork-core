@@ -82,9 +82,7 @@ class JsonBuilder {
 		value: DateTime?
 	) = apply {
 		JSON_NODE.put(
-			key, CoreConstants.JACKSON.writeValueAsString(
-				value
-			)
+			key, value?.toString()
 		)
 	}
 
@@ -92,7 +90,7 @@ class JsonBuilder {
 		key: String,
 		value: UUID?
 	) = apply {
-		JSON_NODE.put(key, value.toString())
+		JSON_NODE.put(key, value?.toString())
 	}
 
 	inline fun <reified T : Comparable<T>> append(
