@@ -35,11 +35,12 @@ dependencies {
     implementation("org.influxdb:influxdb-java:2.20")
 
     // jackson
-    implementation("com.fasterxml.jackson.core:jackson-core:2.12.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.12.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.12.3")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.12.3")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.12.3")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.12.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
 
     // eventbus
     implementation("org.greenrobot:eventbus:3.2.0")
