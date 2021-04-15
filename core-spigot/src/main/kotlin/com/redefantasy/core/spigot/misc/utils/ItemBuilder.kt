@@ -369,8 +369,9 @@ class ItemBuilder(
 		println(nmsCopy.hasTag())
 		println(nmsCopy.tag)
 
-		this.itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
-		this.itemStack.itemMeta = this.itemMeta
+		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
+
+		itemStack.setItemMeta(itemMeta)
 
 		return compound
 	}
