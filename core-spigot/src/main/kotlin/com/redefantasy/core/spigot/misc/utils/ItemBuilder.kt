@@ -131,9 +131,9 @@ class ItemBuilder(
 
 		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
 
-		println(nmsCopy.tag.isEmpty)
-		println(nmsCopy.tag.hasKey("ench"))
-		println(nmsCopy.tag["ench"])
+		println(nmsCopy.tag?.isEmpty)
+		println(nmsCopy.tag?.hasKey("ench"))
+		println(nmsCopy.tag?.get("ench"))
 		return this
 	}
 
@@ -370,6 +370,9 @@ class ItemBuilder(
 		println(nmsCopy.tag)
 
 		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
+
+		this.itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
+
 		return compound
 	}
 
@@ -457,6 +460,10 @@ class ItemBuilder(
 		TODO("Não implementado")
 	}
 
-	fun build() = itemStack
+	fun build(): ItemStack {
+		this.itemStack.itemMeta = itemMeta
+
+		return this.itemStack
+	}
 
 }
