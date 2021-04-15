@@ -169,7 +169,7 @@ class ProtocolHandler {
     private fun registerChannelHandler() {
         val craftServer = Bukkit.getServer() as CraftServer
         val minecraftServer = craftServer.server
-        val serverConnection = minecraftServer.serverConnection
+        val serverConnection = minecraftServer.serverConnection ?: return
 
         var looking = true
 
