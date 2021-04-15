@@ -104,16 +104,24 @@ class ItemBuilder(
 		return this
 	}
 
-	fun glowing(glowing: Boolean): ItemBuilder {
+	fun glowing(glowing: Boolean = true): ItemBuilder {
 		if (itemStack.type === Material.GOLDEN_APPLE) {
 			durability(if (glowing) 1 else 0)
 		}
 
 		if (itemStack.enchantments.isEmpty()) {
+			println(1)
+
 			if (glowing) {
+				println(2)
+
 				createNBT { it.set("ench", NBTTagList()) }
-			} else removeNBT("ench")
-		}
+			} else {
+				println(3)
+
+				removeNBT("ench")
+			}
+		} else println(4)
 
 		return this
 	}
@@ -351,7 +359,13 @@ class ItemBuilder(
 
 		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
 
-		return function.apply(compound)
+		val t = function.apply(compound)
+
+		nmsCopy.tag = compound
+
+		itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
+
+		return t
 	}
 
 	private fun removeNBT(key: String) {
