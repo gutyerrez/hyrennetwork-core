@@ -24,7 +24,7 @@ object SkinController {
 			.execute()
 			.body ?: return null
 
-		if (response.string().isEmpty()) return null
+		if (!response.source().isOpen || response.string().isEmpty()) return null
 
 		val minecraftProfile = CoreConstants.JACKSON.readValue(
 			response.bytes(),
@@ -43,7 +43,7 @@ object SkinController {
 				.execute()
 				.body ?: return@invoker null
 
-			if (response.string().isEmpty()) return@invoker null
+			if (!response.source().isOpen || response.string().isEmpty()) return@invoker null
 
 			val minecraftProfileData = CoreConstants.JACKSON.readValue(
 				response.bytes(),
