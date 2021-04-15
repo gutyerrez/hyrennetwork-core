@@ -73,7 +73,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Protocol
          */
 
-        CoreSpigotConstants.PROTOCOL_HANDLER.registerListener(
+        CoreSpigotConstants.PROTOCOL_HANDLER?.registerListener(
             object : PacketListener() {
 
                 override fun onReceive(
