@@ -128,6 +128,12 @@ class ItemBuilder(
 		} else println(4)
 
 		itemStack.itemMeta = itemMeta
+
+		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
+
+		println(nmsCopy.tag.isEmpty)
+		println(nmsCopy.tag.hasKey("ench"))
+		println(nmsCopy.tag["ench"])
 		return this
 	}
 
