@@ -341,15 +341,21 @@ class ItemBuilder(
 	}
 
 	fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
+		println(5)
+
 		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
 
 		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
+
+		println(6)
 
 		consumer.accept(compound)
 
 		nmsCopy.tag = compound
 
 		itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
+
+		println(7)
 
 		return compound
 	}
