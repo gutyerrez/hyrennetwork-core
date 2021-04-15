@@ -127,6 +127,7 @@ class ItemBuilder(
 			}
 		} else println(4)
 
+		itemStack.itemMeta = itemMeta
 		return this
 	}
 
@@ -353,14 +354,19 @@ class ItemBuilder(
 
 		println(6)
 
+		println(consumer)
+
 		consumer.accept(compound)
 
 		nmsCopy.tag = compound
 
-		itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
+		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
 
 		println(7)
 
+		itemStack.itemMeta = itemMeta
+
+		println(9)
 		return compound
 	}
 
