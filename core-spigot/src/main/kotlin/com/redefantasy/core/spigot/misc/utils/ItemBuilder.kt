@@ -41,27 +41,24 @@ class ItemBuilder(
 		material: Material
 	) : this(ItemStack(material))
 
-	fun amount(amount: Int): ItemBuilder {
+	fun amount(amount: Int) = apply {
 		itemStack.amount = amount
-
-		return this
 	}
 
-	fun name(name: String): ItemBuilder {
+	fun name(name: String) = apply {
 		itemMeta.displayName = ChatColor.translateAlternateColorCodes(
 			'&',
 			name
 		)
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun lore(lore: Array<String>): ItemBuilder {
+	fun lore(lore: Array<String>) = apply {
 		return lore(lore, false)
 	}
 
-	fun lore(lore: Array<String>, override: Boolean): ItemBuilder {
+	fun lore(lore: Array<String>, override: Boolean) = apply {
 		val lines = lore.map { ChatColor.translateAlternateColorCodes('&', it) }.toMutableList()
 
 		if (!override) {
@@ -74,139 +71,96 @@ class ItemBuilder(
 
 		itemMeta.lore = lines
 		itemStack.itemMeta = itemMeta
-
-		return this
 	}
 
-	fun durability(durability: Int): ItemBuilder {
+	fun durability(durability: Int) = apply {
 		itemStack.durability = durability.toShort()
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun data(data: Int): ItemBuilder {
+	fun data(data: Int) = apply {
 		itemStack.data = MaterialData(
 			itemStack.type,
 			data.toByte()
 		)
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun patterns(patterns: Array<Pattern>): ItemBuilder {
+	fun patterns(patterns: Array<Pattern>) = apply {
 		if (itemStack.type === Material.BANNER) {
 			(itemMeta as BannerMeta).patterns = patterns.toList()
 		}
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun glowing(glowing: Boolean = true): ItemBuilder {
+	fun glowing(glowing: Boolean = true) = apply {
 		if (itemStack.type === Material.GOLDEN_APPLE) {
 			durability(if (glowing) 1 else 0)
 		}
 
-		if (itemStack.enchantments.isEmpty()) {
-			println(1)
-
-			if (glowing) {
-				println(2)
-
-				createNBT {
-					println(8)
-
-					it.set("ench", NBTTagList())
-				}
-			} else {
-				println(3)
-
-				removeNBT("ench")
+		if (itemStack.enchantments.isEmpty() && glowing) {
+			createNBT {
+				it.set("ench", NBTTagList())
 			}
-		} else println(4)
-
-		itemStack.itemMeta = itemMeta
-
-		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
-
-		println(nmsCopy.tag?.isEmpty)
-		println(nmsCopy.tag?.hasKey("ench"))
-		println(nmsCopy.tag?.get("ench"))
-		return this
+		} else if (!glowing) removeNBT("ench")
 	}
 
-	fun clearFlags(flags: Array<ItemFlag>): ItemBuilder {
+	fun clearFlags(flags: Array<ItemFlag>) = apply {
 		itemMeta.removeItemFlags(*flags)
 		itemStack.itemMeta = itemMeta
-
-		return this
 	}
 
-	fun flags(flags: Array<ItemFlag>): ItemBuilder {
+	fun flags(flags: Array<ItemFlag>) = apply {
 		itemMeta.addItemFlags(*flags)
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun persistent(boolean: Boolean): ItemBuilder {
+	fun persistent(boolean: Boolean) = apply {
 		itemMeta.spigot().isPersistent = boolean
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun enchant(enchantment: Enchantment, level: Int): ItemBuilder {
+	fun enchant(enchantment: Enchantment, level: Int) = apply {
 		itemStack.addUnsafeEnchantment(
 			enchantment,
 			level
 		)
-
-		return this
 	}
 
-	fun enchant(enchantment: Enchantment): ItemBuilder {
+	fun enchant(enchantment: Enchantment) = apply {
 		itemStack.addUnsafeEnchantment(enchantment, 1)
-
-		return this
 	}
 
-	fun enchantments(enchantments: Array<Enchantment>, level: Int): ItemBuilder {
+	fun enchantments(enchantments: Array<Enchantment>, level: Int) = apply {
 		enchantments.forEach { enchant(it, level) }
-
-		return this
 	}
 
-	fun enchantments(enchantments: Array<Enchantment>): ItemBuilder {
+	fun enchantments(enchantments: Array<Enchantment>) = apply {
 		enchantments.forEach { enchant(it) }
-
-		return this
 	}
 
-	fun clearEnchantment(enchantment: Enchantment): ItemBuilder {
+	fun clearEnchantment(enchantment: Enchantment) = apply {
 		itemStack.removeEnchantment(enchantment)
-
-		return this
 	}
 
-	fun clearEnchantments(enchantments: Array<Enchantment>): ItemBuilder {
+	fun clearEnchantments(enchantments: Array<Enchantment>) = apply {
 		enchantments.forEach { clearEnchantment(it) }
-
-		return this
 	}
 
-	fun effect(potionEffect: PotionEffect, overwrite: Boolean): ItemBuilder {
+	fun effect(potionEffect: PotionEffect, overwrite: Boolean) = apply {
 		if (itemMeta is PotionMeta) {
 			(itemMeta as PotionMeta).addCustomEffect(potionEffect, overwrite)
 		}
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun color(color: Color): ItemBuilder {
+	fun color(color: Color) = apply {
 		if (ArrayUtils.contains(
 				arrayOf(
 					Material.LEATHER_HELMET,
@@ -219,21 +173,19 @@ class ItemBuilder(
 		) {
 			(itemMeta as LeatherArmorMeta).color = color
 		}
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun color(baseColor: DyeColor): ItemBuilder {
+	fun color(baseColor: DyeColor) = apply {
 		if (itemStack.type === Material.BANNER) {
 			(itemMeta as BannerMeta).baseColor = baseColor
 		}
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun clearColor(): ItemBuilder {
+	fun clearColor() = apply {
 		if (ArrayUtils.contains(
 				arrayOf(
 					Material.LEATHER_HELMET,
@@ -250,12 +202,11 @@ class ItemBuilder(
 		if (itemStack.type === Material.BANNER) {
 			(itemMeta as BannerMeta).baseColor = null
 		}
-		itemStack.itemMeta = itemMeta
 
-		return this
+		itemStack.itemMeta = itemMeta
 	}
 
-	fun skullOwner(owner: String): ItemBuilder {
+	fun skullOwner(owner: String) = apply {
 		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
 			val skullMeta = itemMeta as SkullMeta
 
@@ -263,11 +214,9 @@ class ItemBuilder(
 
 			itemStack.itemMeta = skullMeta
 		}
-
-		return this
 	}
 
-	fun skull(player: Player): ItemBuilder {
+	fun skull(player: Player) = apply {
 		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
 			val skullMeta = itemMeta as SkullMeta
 
@@ -289,11 +238,9 @@ class ItemBuilder(
 
 			itemStack.itemMeta = skullMeta
 		}
-
-		return this
 	}
 
-	fun skull(skin: Skin): ItemBuilder {
+	fun skull(skin: Skin) = apply {
 		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
 			val skullMeta = itemMeta as SkullMeta
 
@@ -318,11 +265,9 @@ class ItemBuilder(
 
 			itemStack.itemMeta = skullMeta
 		}
-
-		return this
 	}
 
-	fun skull(texture: String): ItemBuilder {
+	fun skull(texture: String) = apply {
 		if (itemStack.type == Material.SKULL_ITEM && itemStack.durability == 3.toShort()) {
 			val skullMeta = itemMeta as SkullMeta
 
@@ -347,31 +292,18 @@ class ItemBuilder(
 
 			itemStack.itemMeta = skullMeta
 		}
-
-		return this
 	}
 
 	fun createNBT(consumer: Consumer<NBTTagCompound>): NBTTagCompound {
-		println(5)
-
 		val nmsCopy = CraftItemStack.asNMSCopy(itemStack)
 
 		val compound = if (nmsCopy.hasTag()) nmsCopy.tag else NBTTagCompound()
-
-		println(6)
-
-		println(consumer)
 
 		consumer.accept(compound)
 
 		nmsCopy.tag = compound
 
-		println(nmsCopy.hasTag())
-		println(nmsCopy.tag)
-
-		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
-
-		itemStack.setItemMeta(itemMeta)
+		itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
 
 		return compound
 	}
@@ -406,34 +338,26 @@ class ItemBuilder(
 		return compound.hasKey(key)
 	}
 
-	fun NBT(key: String, value: NBTBase): ItemBuilder {
+	fun NBT(key: String, value: NBTBase) = apply {
 		createNBT { it.set(key, value) }
-
-		return this
 	}
 
-	fun NBT(key: String, value: Int): ItemBuilder {
+	fun NBT(key: String, value: Int) = apply {
 		createNBT { it.setInt(key, value) }
-
-		return this
 	}
 
-	fun NBT(key: String, value: Boolean): ItemBuilder {
+	fun NBT(key: String, value: Boolean) = apply {
 		createNBT { it.setBoolean(key, value) }
-
-		return this
 	}
 
-	fun NBT(key: String, value: Long): ItemBuilder {
+	fun NBT(key: String, value: Long) = apply {
 		createNBT { it.setLong(key, value) }
 
 		return this
 	}
 
-	fun NBT(key: String, value: String): ItemBuilder {
+	fun NBT(key: String, value: String) = apply {
 		createNBT { it.setString(key, value) }
-
-		return this
 	}
 
 	fun NBTTagString(key: String): String? {
