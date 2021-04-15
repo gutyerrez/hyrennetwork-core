@@ -32,7 +32,7 @@ import java.util.function.Function
  * @author Gutyerrez
  */
 class ItemBuilder(
-	private val itemStack: ItemStack
+	private var itemStack: ItemStack
 ) {
 
 	private var itemMeta = itemStack.itemMeta
@@ -341,8 +341,7 @@ class ItemBuilder(
 
 		nmsCopy.tag = compound
 
-		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
-		itemStack.itemMeta = itemMeta
+		itemStack = CraftItemStack.asBukkitCopy(nmsCopy)
 
 		return compound
 	}
