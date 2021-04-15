@@ -115,7 +115,11 @@ class ItemBuilder(
 			if (glowing) {
 				println(2)
 
-				createNBT { it.set("ench", NBTTagList()) }
+				createNBT {
+					println(8)
+
+					it.set("ench", NBTTagList())
+				}
 			} else {
 				println(3)
 
