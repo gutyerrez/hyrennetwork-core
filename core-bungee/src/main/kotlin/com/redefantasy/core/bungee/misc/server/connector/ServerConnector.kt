@@ -11,7 +11,6 @@ import com.redefantasy.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.connection.ServerConnector
-import org.apache.commons.lang.ArrayUtils
 import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
 import java.util.*
@@ -65,14 +64,11 @@ class ServerConnector : ServerConnector {
 
 		println("dale aq")
 
-		if (ArrayUtils.contains(
-				arrayOf(
-					ApplicationType.LOGIN,
-					ApplicationType.LOBBY,
-					ApplicationType.PUNISHED_LOBBY
-				),
-				application.applicationType
-			)
+		if (arrayOf(
+				ApplicationType.LOGIN,
+				ApplicationType.LOBBY,
+				ApplicationType.PUNISHED_LOBBY
+			).contains(application.applicationType)
 		) return false
 
 		println("aqui tb")
