@@ -26,12 +26,12 @@ object SkinController {
 
 		response.close()
 
-		if (response.bytes().isEmpty()) return null
-
 		val minecraftProfile = CoreConstants.JACKSON.readValue(
 			response.bytes(),
 			MinecraftProfile::class.java
-		) ?: return null
+		)
+
+		response.close()
 
 		val skin: () -> Skin? = invoker@{
 			val request = Request.Builder()
@@ -45,14 +45,12 @@ object SkinController {
 				.execute()
 				.body ?: return@invoker null
 
-			response.close()
-
-			if (response.bytes().isEmpty()) return@invoker null
-
 			val minecraftProfileData = CoreConstants.JACKSON.readValue(
 				response.bytes(),
 				MinecraftProfileData::class.java
-			) ?: return@invoker null
+			)
+
+			response.close()
 
 			val properties = minecraftProfileData.properties[0]
 
