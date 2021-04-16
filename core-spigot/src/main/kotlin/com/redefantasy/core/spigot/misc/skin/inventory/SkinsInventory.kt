@@ -109,8 +109,8 @@ class SkinsInventory(
 					TextComponent("§0Hey! Insira o"),
 					TextComponent("§0nome da nova "),
 					TextComponent("§0pele abaixo")
-				).onUpdate { _, lines ->
-					val skinName = lines[0].text
+				).onUpdate { player, lines ->
+					val skinName = lines[3].text
 
 					if (skinName === null || skinName.isEmpty()) return@onUpdate
 

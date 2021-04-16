@@ -79,19 +79,13 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 override fun onReceive(
                     event: PacketEvent
                 ) {
-                    println("asd")
-
                     val player = event.player
                     val packet = event.packet
 
                     if (packet is PacketPlayInUpdateSign) {
-                        println("c")
-
                         if (player.hasMetadata("custom-sign")) {
                             val customSign = player.getMetadata("custom-sign")[0].value() as CustomSign
                             val texts = packet.b()
-
-                            println("b")
 
                             customSign.UPDATED_LISTENER?.accept(
                                 player,
