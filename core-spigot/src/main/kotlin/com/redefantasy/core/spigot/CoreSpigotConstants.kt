@@ -11,7 +11,7 @@ object CoreSpigotConstants {
 
     val BUKKIT_LOCATION_PARSER = BukkitLocationParser()
 
-    val PROTOCOL_HANDLER = if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+    val PROTOCOL_HANDLER = if (Bukkit.getPluginManager().isPluginEnabled("Protocollib")) {
         null
     } else ProtocolHandler()
 
