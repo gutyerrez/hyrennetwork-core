@@ -64,6 +64,8 @@ class ServerConnector : ServerConnector {
 
 		println("dale aq")
 
+		println(application.applicationType)
+
 		if (arrayOf(
 				ApplicationType.LOGIN,
 				ApplicationType.LOBBY,
