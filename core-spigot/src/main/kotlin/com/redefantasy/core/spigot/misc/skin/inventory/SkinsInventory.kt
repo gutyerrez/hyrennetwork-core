@@ -132,7 +132,7 @@ class SkinsInventory(
 						TextComponent(
 							String.format(
 								response.message,
-								name
+								skinName
 							)
 						)
 					)
