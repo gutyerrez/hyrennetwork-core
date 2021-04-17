@@ -335,6 +335,9 @@ interface Commandable<T> {
 					)
 				)
 
+			println("Index: ${index + 1}")
+			println("Max: $max")
+
 			if (index + 1 < max) {
 				println(1)
 
