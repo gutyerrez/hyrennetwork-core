@@ -305,7 +305,7 @@ interface Commandable<T> {
 	}
 
 	private fun getNameExact() = if (this.getParent() !== null) {
-		var joiner = mutableListOf<String>()
+		val joiner = mutableListOf<String>()
 
 		var parent: Commandable<T>? = null
 		var i = 0
@@ -335,14 +335,7 @@ interface Commandable<T> {
 					)
 				)
 
-			println("Index: ${index + 1}")
-			println("Max: $max")
-
-			if (index + 1 <= max) {
-				println(1)
-
-				this.append("\n")
-			} else println(2)
+			if (index + 1 <= max) this.append("\n")
 		} else {
 			this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription0() ?: ""}")
 				.event(

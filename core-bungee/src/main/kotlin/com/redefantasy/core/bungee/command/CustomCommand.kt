@@ -14,7 +14,9 @@ abstract class CustomCommand(
     name: String
 ) : Command(name), Commandable<CommandSender>, TabExecutor {
 
-    open fun getDescription() = this.getDescription0()
+    open fun getDescription(): String? = null
+
+    override fun getDescription0() = getDescription()
 
     open fun getUsage() = this.getUsage0()
 
