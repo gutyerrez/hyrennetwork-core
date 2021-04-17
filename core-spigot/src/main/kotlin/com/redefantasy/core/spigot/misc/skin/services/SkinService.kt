@@ -139,7 +139,7 @@ object SkinService {
 	) {
 
 		WAIT_FOR_CHANGE_SKIN_AGAIN(
-			"§cAguarde para atualizar sua pele novamente."
+			"§cAguarde %s para atualizar sua pele novamente."
 		),
 		INVALID_NICKNAME(
 			"§cO nome inserido é inválido."
