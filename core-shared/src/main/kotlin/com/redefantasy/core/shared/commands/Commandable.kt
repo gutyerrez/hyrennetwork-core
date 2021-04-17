@@ -335,7 +335,11 @@ interface Commandable<T> {
 					)
 				)
 
-			if (index + 1 < max) this.append("\n")
+			if (index + 1 < max) {
+				println(1)
+
+				this.append("\n")
+			} else println(2)
 		} else {
 			this.append("§a/$commandName ${commandable.getName()} §8- §7${commandable.getDescription0() ?: ""}")
 				.event(
@@ -345,7 +349,11 @@ interface Commandable<T> {
 					)
 				)
 
-			if (index + 1 < max) this.append("\n")
+			if (index + 1 < max) {
+				println(3)
+
+				this.append("\n")
+			} else println(4)
 		}
 	}
 
@@ -363,7 +371,7 @@ interface Commandable<T> {
 						val subCommand: String? = this.getSubCommands()!!.stream()
 							.filter { it.getName().toLowerCase().startsWith(token.trim().toLowerCase()) }
 							.findFirst()
-							.map { "${it.getName()} " }
+							.map { it.getName() }
 							.orElse(null)
 
 						if (subCommand === null) return emptyList()
@@ -380,12 +388,9 @@ interface Commandable<T> {
 						val argument: String? = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsers()
 							.stream()
 							.filter {
-								val _user =
-									CoreProvider.Cache.Local.USERS.provide().fetchById(it) ?: return@filter false
-
-								_user.name.toLowerCase().startsWith(token.trim())
+								CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name?.toLowerCase()?.startsWith(token.trim()) ?: false
 							}
-							.map { "${CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name} " }
+							.map { CoreProvider.Cache.Local.USERS.provide().fetchById(it)?.name }
 							.findFirst()
 							.orElse(null)
 
