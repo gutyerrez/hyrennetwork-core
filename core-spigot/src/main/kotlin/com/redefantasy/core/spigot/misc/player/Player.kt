@@ -1,8 +1,13 @@
 package com.redefantasy.core.spigot.misc.player
 
+import com.redefantasy.core.shared.CoreConstants
+import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.utils.TimeCode
 import com.redefantasy.core.spigot.CoreSpigotPlugin
+import com.redefantasy.core.spigot.misc.skin.services.SkinService
 import com.redefantasy.core.spigot.sign.CustomSign
 import io.netty.buffer.Unpooled
+import net.md_5.bungee.api.chat.TextComponent
 import net.minecraft.server.v1_8_R3.Packet
 import net.minecraft.server.v1_8_R3.PacketDataSerializer
 import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload
@@ -14,6 +19,8 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
+import org.joda.time.DateTime
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
@@ -76,4 +83,45 @@ fun Player.openSignEditor(customSign: CustomSign) {
 		CoreSpigotPlugin.instance,
 		customSign
 	))
+}
+
+fun Player.sendNonSuccessResponse(
+	response: SkinService.CommonResponse
+) {
+	val user = CoreProvider.Cache.Local.USERS.provide().fetchById(uniqueId) ?: return
+
+	sendMessage(
+		TextComponent(
+			when (response) {
+				SkinService.CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN -> {
+					response.message.format(
+						CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.stream()
+							?.filter {
+								it.updatedAt + TimeUnit.MINUTES.toMillis(
+									SkinService.CHANGE_COOLDOWN.toLong()
+								) > DateTime.now(
+									CoreConstants.DATE_TIME_ZONE
+								)
+							}
+							?.findFirst()
+							?.orElse(null)
+							?.updatedAt
+							?.millis?.let {
+								TimeCode.toText(
+									it + TimeUnit.MINUTES.toMillis(
+										SkinService.CHANGE_COOLDOWN.toLong()
+									) - DateTime.now(
+										CoreConstants.DATE_TIME_ZONE
+									).millis,
+									2
+								)
+							}
+					)
+				}
+				else -> response.message
+			}
+		)
+	)
+
+	return
 }

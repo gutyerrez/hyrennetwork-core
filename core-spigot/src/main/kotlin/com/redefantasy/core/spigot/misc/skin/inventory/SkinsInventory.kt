@@ -1,13 +1,12 @@
 package com.redefantasy.core.spigot.misc.skin.inventory
 
-import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.misc.utils.DateFormatter
-import com.redefantasy.core.shared.misc.utils.TimeCode
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.inventory.CustomInventory
 import com.redefantasy.core.spigot.misc.player.openBook
 import com.redefantasy.core.spigot.misc.player.openSignEditor
+import com.redefantasy.core.spigot.misc.player.sendNonSuccessResponse
 import com.redefantasy.core.spigot.misc.skin.services.SkinService
 import com.redefantasy.core.spigot.misc.utils.BlockColor
 import com.redefantasy.core.spigot.misc.utils.BookBuilder
@@ -18,8 +17,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.joda.time.DateTime
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
@@ -64,14 +61,8 @@ class SkinsInventory(
 						it.name
 					)
 
-					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
-						player.sendMessage(
-							TextComponent(
-								response.message
-							)
-						)
-						return@addItem
-					}
+					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO)
+						return@addItem player.sendNonSuccessResponse(response)
 
 					player.sendMessage(
 						TextComponent(
@@ -123,43 +114,8 @@ class SkinsInventory(
 						skinName
 					)
 
-					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
-						player.sendMessage(
-							TextComponent(
-								when (response) {
-									SkinService.CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN -> {
-										println("aeaea")
-
-										response.message.format(
-											CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.stream()
-												?.filter {
-													it.updatedAt + TimeUnit.MINUTES.toMillis(
-														SkinService.CHANGE_COOLDOWN.toLong()
-													) > DateTime.now(
-														CoreConstants.DATE_TIME_ZONE
-													)
-												}
-												?.findFirst()
-												?.orElse(null)
-												?.updatedAt
-												?.millis?.let {
-													TimeCode.toText(
-														it + TimeUnit.MINUTES.toMillis(
-																SkinService.CHANGE_COOLDOWN.toLong()
-														) - DateTime.now(
-															CoreConstants.DATE_TIME_ZONE
-														).millis,
-														1
-													)
-												}
-										)
-									}
-									else -> response.message
-								}
-							)
-						)
-						return@onUpdate
-					}
+					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO)
+						return@onUpdate player.sendNonSuccessResponse(response)
 
 					player.sendMessage(
 						TextComponent(

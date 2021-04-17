@@ -5,6 +5,7 @@ import com.redefantasy.core.shared.commands.restriction.entities.implementations
 import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.command.CustomCommand
+import com.redefantasy.core.spigot.misc.player.sendNonSuccessResponse
 import com.redefantasy.core.spigot.misc.skin.command.subcommands.SkinHelpCommand
 import com.redefantasy.core.spigot.misc.skin.command.subcommands.SkinRefreshCommand
 import com.redefantasy.core.spigot.misc.skin.inventory.SkinsInventory
@@ -47,11 +48,7 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 				)
 
 				if (response != SkinService.CommonResponse.CHANGING_SKIN_TO) {
-					player.sendMessage(
-						TextComponent(
-							response.message
-						)
-					)
+					player.sendNonSuccessResponse(response)
 					return false
 				}
 
