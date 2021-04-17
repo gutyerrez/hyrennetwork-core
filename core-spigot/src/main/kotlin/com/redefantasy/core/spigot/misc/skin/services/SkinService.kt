@@ -38,16 +38,12 @@ object SkinService {
 		if (skin === null) return CommonResponse.SKIN_NOT_FOUND
 
 		if (userSkin !== null && userSkin.userId == user.id) {
-			println("Atualizar")
-
 			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
 				UpdateUserSkinDTO(
 					userSkin
 				)
 			)
 		} else if (userSkin !== null && userSkin.userId != user.id) {
-			println("Criar")
-
 			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
@@ -62,8 +58,6 @@ object SkinService {
 				)
 			)
 		} else {
-			println("Criar 2")
-
 			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
