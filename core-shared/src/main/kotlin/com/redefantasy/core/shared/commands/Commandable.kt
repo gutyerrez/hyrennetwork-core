@@ -338,7 +338,7 @@ interface Commandable<T> {
 			println("Index: ${index + 1}")
 			println("Max: $max")
 
-			if (index + 1 < max) {
+			if (index + 1 <= max) {
 				println(1)
 
 				this.append("\n")
@@ -352,11 +352,7 @@ interface Commandable<T> {
 					)
 				)
 
-			if (index + 1 < max) {
-				println(3)
-
-				this.append("\n")
-			} else println(4)
+			if (index + 1 <= max) this.append("\n")
 		}
 	}
 
