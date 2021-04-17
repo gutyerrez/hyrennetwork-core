@@ -1,8 +1,6 @@
 package com.redefantasy.core.spigot.misc.skin.command
 
 import com.redefantasy.core.shared.commands.restriction.CommandRestriction
-import com.redefantasy.core.shared.commands.restriction.entities.implementations.GroupCommandRestrictable
-import com.redefantasy.core.shared.groups.Group
 import com.redefantasy.core.shared.users.data.User
 import com.redefantasy.core.spigot.command.CustomCommand
 import com.redefantasy.core.spigot.misc.player.sendNonSuccessResponse
@@ -17,7 +15,7 @@ import org.bukkit.entity.Player
 /**
  * @author Gutyerrez
  */
-class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
+class SkinCommand : CustomCommand("skin") {
 
 	override fun getCommandRestriction() = CommandRestriction.GAME
 
@@ -70,7 +68,5 @@ class SkinCommand : CustomCommand("skin"), GroupCommandRestrictable {
 
 		return true
 	}
-
-	override fun getGroup() = Group.MVP
 
 }
