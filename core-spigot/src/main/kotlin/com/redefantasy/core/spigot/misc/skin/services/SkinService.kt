@@ -28,46 +28,42 @@ object SkinService {
 
 		if (!Patterns.NICK.matches(name)) return CommonResponse.INVALID_NICKNAME
 
-		var userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)
+		val userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)
 			?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
 				FetchUserSkinByNameDTO(name)
 			)
-
-		if (userSkin !== null && userSkin.userId == user.id) {
-			userSkin = UserSkin(
-				name,
-				user.id,
-				userSkin.skin,
-				userSkin.enabled,
-				DateTime.now(
-					CoreConstants.DATE_TIME_ZONE
-				)
-			)
-		}
 
 		val skin = userSkin?.skin ?: SkinController.fetchSkinByName(name)
 
 		if (skin === null) return CommonResponse.SKIN_NOT_FOUND
 
 		if (userSkin !== null && userSkin.userId == user.id) {
+			println("Atualizar")
+
 			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
 				UpdateUserSkinDTO(
 					userSkin
 				)
 			)
 		} else if (userSkin !== null && userSkin.userId != user.id) {
-			CreateUserSkinDTO(
-				UserSkin(
-					name,
-					user.id,
-					skin,
-					true,
-					DateTime.now(
-						CoreConstants.DATE_TIME_ZONE
+			println("Criar")
+
+			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
+				CreateUserSkinDTO(
+					UserSkin(
+						name,
+						user.id,
+						skin,
+						true,
+						DateTime.now(
+							CoreConstants.DATE_TIME_ZONE
+						)
 					)
 				)
 			)
 		} else {
+			println("Criar 2")
+
 			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
@@ -147,8 +143,6 @@ object SkinService {
 	enum class CommonResponse(
 		val message: String = ""
 	) {
-
-		UNKNOWN,
 
 		WAIT_FOR_CHANGE_SKIN_AGAIN(
 			"§cAguarde para atualizar sua pele novamente."
