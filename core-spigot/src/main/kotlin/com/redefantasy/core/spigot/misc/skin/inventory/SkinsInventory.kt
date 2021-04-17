@@ -128,6 +128,8 @@ class SkinsInventory(
 							TextComponent(
 								when (response) {
 									SkinService.CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN -> {
+										println("aeaea")
+
 										response.message.format(
 											CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByUserId(user.id)?.stream()
 												?.filter {
@@ -142,11 +144,11 @@ class SkinsInventory(
 												?.updatedAt
 												?.millis?.let {
 													TimeCode.toText(
-														DateTime.now(
-															CoreConstants.DATE_TIME_ZONE
-														).millis - it + TimeUnit.MINUTES.toMillis(
+														it + TimeUnit.MINUTES.toMillis(
 																SkinService.CHANGE_COOLDOWN.toLong()
-														),
+														) - DateTime.now(
+															CoreConstants.DATE_TIME_ZONE
+														).millis,
 														1
 													)
 												}
