@@ -24,14 +24,10 @@ object SkinController {
 			.execute()
 			.body ?: return null
 
-		response.close()
-
 		val minecraftProfile = CoreConstants.JACKSON.readValue(
 			response.bytes(),
 			MinecraftProfile::class.java
 		)
-
-		response.close()
 
 		val skin: () -> Skin? = invoker@{
 			val request = Request.Builder()
@@ -49,8 +45,6 @@ object SkinController {
 				response.bytes(),
 				MinecraftProfileData::class.java
 			)
-
-			response.close()
 
 			val properties = minecraftProfileData.properties[0]
 
