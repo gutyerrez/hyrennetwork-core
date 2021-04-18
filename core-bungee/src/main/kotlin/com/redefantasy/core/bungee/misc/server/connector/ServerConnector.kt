@@ -52,26 +52,22 @@ class ServerConnector : ServerConnector {
 		}
 	}
 
-	override fun handleCurrentServerClose(
+	override fun updateAndGetNext(
 		proxiedPlayer: ProxiedPlayer,
 		inetSocketAddress: InetSocketAddress
-	): Boolean {
+	): InetSocketAddress? {
 		val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
 			inetSocketAddress
-		) ?: return false
+		) ?: return null
 
 		if (arrayOf(
 				ApplicationType.LOGIN,
 				ApplicationType.LOBBY,
 				ApplicationType.PUNISHED_LOBBY
 			).contains(application.applicationType)
-		) return false
+		) return null
 
-		val inetSocketAddress = CoreConstants.fetchLobbyApplication()?.address ?: return false
-
-		proxiedPlayer.connect { inetSocketAddress }
-
-		return true
+		return CoreConstants.fetchLobbyApplication()?.address
 	}
 
 	override fun changedUserApplication(
