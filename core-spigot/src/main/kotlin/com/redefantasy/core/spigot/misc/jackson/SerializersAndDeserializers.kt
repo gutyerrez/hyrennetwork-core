@@ -6,10 +6,14 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.redefantasy.core.shared.misc.jackson.builder.JsonBuilder
-import net.minecraft.server.v1_8_R3.NBTBase
+import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
 import net.minecraft.server.v1_8_R3.NBTTagCompound
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
+import java.io.ByteArrayOutputStream
+import java.io.DataOutput
+import java.io.DataOutputStream
+import java.math.BigInteger
 
 /**
  * @author Gutyerrez
@@ -34,24 +38,29 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 		if (itemStack === null) {
 			jsonGenerator.writeNull()
 		} else {
+			val byteArrayOutputStream = ByteArrayOutputStream()
+			val dataOutputStream = DataOutputStream(byteArrayOutputStream)
+
 			val craftItemStack = CraftItemStack.asNMSCopy(itemStack)
 
 			val amount = itemStack.amount
 			val durability = itemStack.durability
 			val itemMeta = if (itemStack.hasItemMeta()) itemStack.itemMeta else null
 			val materialData = itemStack.data
-			val tags = craftItemStack.tag
 
-			println(tags === null)
-			println(tags)
+			val nbtTagCompound = NBTTagCompound()
 
-			val mapField = NBTTagCompound::class.java.getDeclaredField("map")
+			craftItemStack.save(nbtTagCompound)
 
-			mapField.isAccessible = true
+			NBTCompressedStreamTools.a(
+				nbtTagCompound,
+				dataOutputStream as DataOutput
+			)
 
-			println(mapField === null)
-
-			val map = mapField.get(tags) as? Map<String, NBTBase>
+			val nbtTags = BigInteger(
+				1,
+				byteArrayOutputStream.toByteArray()
+			).toString(32)
 
 			val serializedItemMeta = itemMeta?.let {
 				when (it::class.java::isAssignableFrom) {
@@ -62,7 +71,7 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 					).append(
 						"enchants", itemMeta.enchants
 					).append(
-						"nbt_tags", map
+						"nbt_tags", nbtTags
 					).build()
 					else -> throw ClassCastException("Item meta has not assignable from none of allowed serializers")
 				}
