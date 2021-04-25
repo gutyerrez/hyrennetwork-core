@@ -90,7 +90,7 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 					).build()
 				).append(
 					"item_meta", serializedItemMeta
-				).build().toPrettyString()
+				).build().toString()
 			)
 		}
 	}
