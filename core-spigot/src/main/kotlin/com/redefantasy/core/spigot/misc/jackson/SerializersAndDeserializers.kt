@@ -34,8 +34,6 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 		if (itemStack === null) {
 			jsonGenerator.writeNull()
 		} else {
-			println("Tem item meta? ${itemStack.hasItemMeta()}")
-
 			val craftItemStack = CraftItemStack.asNMSCopy(itemStack)
 
 			val amount = itemStack.amount
@@ -44,9 +42,14 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 			val materialData = itemStack.data
 			val tags = craftItemStack.tag
 
+			println(tags === null)
+			println(tags)
+
 			val mapField = NBTTagCompound::class.java.getDeclaredField("map")
 
 			mapField.isAccessible = true
+
+			println(mapField === null)
 
 			val map = mapField.get(tags) as? Map<String, NBTBase>
 
