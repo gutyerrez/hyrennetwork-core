@@ -1,5 +1,7 @@
 package com.redefantasy.core.shared.misc.jackson.builder
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.redefantasy.core.shared.CoreConstants
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
@@ -91,6 +93,13 @@ class JsonBuilder {
 		JSON_NODE.put(key, value?.toString())
 	}
 
+	fun append(
+		key: String,
+		value: JsonNode?
+	) = apply {
+		JSON_NODE.replace(key, value)
+	}
+
 	inline fun <reified T : Comparable<T>> append(
 		key: String,
 		value: T?
@@ -114,7 +123,7 @@ class JsonBuilder {
 		value: Array<T>?
 	) = apply {
 		value?.forEach {
-			JSON_NODE.putArray(key).add(
+			JSON_NODE.withArray(key).add(
 				CoreConstants.JACKSON.writeValueAsString(
 					it
 				)
@@ -122,6 +131,35 @@ class JsonBuilder {
 		}
 	}
 
-	fun build() = JSON_NODE
+	inline fun <reified T> append(
+		key: String,
+		value: List<T>?
+	) = apply {
+		value?.forEach {
+			JSON_NODE.withArray(key).add(
+				CoreConstants.JACKSON.writeValueAsString(
+					it
+				)
+			)
+		}
+	}
+
+	inline fun <reified K, reified V> append(
+		key: String,
+		value: Map<K, V>?
+	) = apply {
+		value?.forEach {
+			JSON_NODE.withArray(key).add(
+				CoreConstants.JACKSON.writeValueAsString(
+					Pair(
+						it.key,
+						it.value
+					)
+				)
+			)
+		}
+	}
+
+	fun build(): ObjectNode = JSON_NODE
 
 }
