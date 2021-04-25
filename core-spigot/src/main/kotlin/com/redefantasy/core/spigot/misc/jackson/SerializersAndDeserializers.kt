@@ -48,7 +48,7 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 
 			mapField.isAccessible = true
 
-			val map = mapField.get(tags) as Map<String, NBTBase>
+			val map = mapField.get(tags) as? Map<String, NBTBase>
 
 			val serializedItemMeta = itemMeta?.let {
 				when (it::class.java::isAssignableFrom) {
