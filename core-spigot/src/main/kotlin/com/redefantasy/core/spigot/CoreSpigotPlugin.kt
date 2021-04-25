@@ -1,10 +1,15 @@
 package com.redefantasy.core.spigot
 
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.redefantasy.core.shared.CoreConstants
 import com.redefantasy.core.shared.CoreProvider
+import com.redefantasy.core.shared.misc.jackson.addSerializerAndDeserializer
 import com.redefantasy.core.shared.wrapper.CoreWrapper
 import com.redefantasy.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import com.redefantasy.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import com.redefantasy.core.spigot.listeners.GenericListener
+import com.redefantasy.core.spigot.misc.jackson.ItemStackDeserializer
+import com.redefantasy.core.spigot.misc.jackson.ItemStackSerializer
 import com.redefantasy.core.spigot.misc.plugin.CustomPlugin
 import com.redefantasy.core.spigot.misc.utils.PacketEvent
 import com.redefantasy.core.spigot.misc.utils.PacketListener
@@ -68,6 +73,17 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 event.quitMessage = null
             }
         }, this)
+
+        /**
+         * Serializers and Deserializers
+         */
+
+        CoreConstants.JACKSON.registerModule(SimpleModule().apply {
+            this.addSerializerAndDeserializer(
+                ItemStackSerializer(),
+                ItemStackDeserializer()
+            )
+        })
 
         /**
          * Protocol

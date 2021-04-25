@@ -69,17 +69,13 @@ object CoreConstants {
 				.withFieldVisibility(JsonAutoDetect.Visibility.ANY)
 		)
 
-		val module = SimpleModule()
-
-		// Server
-		module.addSerializerAndDeserializer(
-			ServersSerializer(),
-			ServersDeserializer()
-		)
-
-		JACKSON.registerModule(module)
+		JACKSON.registerModule(SimpleModule().apply {
+			this.addSerializerAndDeserializer(
+				ServersSerializer(),
+				ServersDeserializer()
+			)
+		})
 	}
-
 
 	fun fetchLobbyApplication(): Application? = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
 		ApplicationType.LOBBY
