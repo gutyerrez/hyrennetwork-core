@@ -5,15 +5,8 @@ import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.redefantasy.core.shared.misc.jackson.builder.JsonBuilder
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
-import net.minecraft.server.v1_8_R3.NBTTagCompound
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
+import com.redefantasy.core.shared.CoreConstants
 import org.bukkit.inventory.ItemStack
-import java.io.ByteArrayOutputStream
-import java.io.DataOutput
-import java.io.DataOutputStream
-import java.math.BigInteger
 
 /**
  * @author Gutyerrez
@@ -38,60 +31,65 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 		if (itemStack === null) {
 			jsonGenerator.writeNull()
 		} else {
-			val byteArrayOutputStream = ByteArrayOutputStream()
-			val dataOutputStream = DataOutputStream(byteArrayOutputStream)
-
-			val craftItemStack = CraftItemStack.asNMSCopy(itemStack)
-
-			val amount = itemStack.amount
-			val durability = itemStack.durability
-			val itemMeta = if (itemStack.hasItemMeta()) itemStack.itemMeta else null
-			val materialData = itemStack.data
-
-			val nbtTagCompound = NBTTagCompound()
-
-			craftItemStack.save(nbtTagCompound)
-
-			NBTCompressedStreamTools.a(
-				nbtTagCompound,
-				dataOutputStream as DataOutput
-			)
-
-			val nbtTags = BigInteger(
-				1,
-				byteArrayOutputStream.toByteArray()
-			).toString(32)
-
-			val serializedItemMeta = itemMeta?.let {
-				when (it::class.java::isAssignableFrom) {
-					CRAFT_META_ITEM_CLASS -> JsonBuilder().append(
-						"display_name", itemMeta.displayName
-					).append(
-						"lore", itemMeta.lore
-					).append(
-						"enchants", itemMeta.enchants
-					).append(
-						"nbt_tags", nbtTags
-					).build()
-					else -> throw ClassCastException("Item meta has not assignable from none of allowed serializers")
-				}
-			}
-
 			jsonGenerator.writeString(
-				JsonBuilder().append(
-					"amount", amount
-				).append(
-					"durability", durability
-				).append(
-					"material_data", JsonBuilder().append(
-						"type", materialData.itemType.id
-					).append(
-						"data", materialData.data
-					).build()
-				).append(
-					"item_meta", serializedItemMeta
-				).build().toString()
+				CoreConstants.JACKSON.writeValueAsString(
+					itemStack.serialize()
+				)
 			)
+//			val byteArrayOutputStream = ByteArrayOutputStream()
+//			val dataOutputStream = DataOutputStream(byteArrayOutputStream)
+//
+//			val craftItemStack = CraftItemStack.asNMSCopy(itemStack)
+//
+//			val amount = itemStack.amount
+//			val durability = itemStack.durability
+//			val itemMeta = if (itemStack.hasItemMeta()) itemStack.itemMeta else null
+//			val materialData = itemStack.data
+//
+//			val nbtTagCompound = NBTTagCompound()
+//
+//			craftItemStack.save(nbtTagCompound)
+//
+//			NBTCompressedStreamTools.a(
+//				nbtTagCompound,
+//				dataOutputStream as DataOutput
+//			)
+//
+//			val nbtTags = BigInteger(
+//				1,
+//				byteArrayOutputStream.toByteArray()
+//			).toString(32)
+//
+//			val serializedItemMeta = itemMeta?.let {
+//				when (it::class.java::isAssignableFrom) {
+//					CRAFT_META_ITEM_CLASS -> JsonBuilder().append(
+//						"display_name", itemMeta.displayName
+//					).append(
+//						"lore", itemMeta.lore
+//					).append(
+//						"enchants", itemMeta.enchants
+//					).append(
+//						"nbt_tags", nbtTags
+//					).build()
+//					else -> throw ClassCastException("Item meta has not assignable from none of allowed serializers")
+//				}
+//			}
+//
+//			jsonGenerator.writeString(
+//				JsonBuilder().append(
+//					"amount", amount
+//				).append(
+//					"durability", durability
+//				).append(
+//					"material_data", JsonBuilder().append(
+//						"type", materialData.itemType.id
+//					).append(
+//						"data", materialData.data
+//					).build()
+//				).append(
+//					"item_meta", serializedItemMeta
+//				).build().toString()
+//			)
 		}
 	}
 
