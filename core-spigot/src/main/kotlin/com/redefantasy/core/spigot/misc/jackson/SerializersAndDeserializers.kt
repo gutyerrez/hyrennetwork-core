@@ -18,6 +18,10 @@ open class ItemStackSerializer : StdSerializer<ItemStack>(
 	ItemStack::class.java
 ) {
 
+	init {
+		println("DALEEEe")
+	}
+
 	val CRAFT_META_ITEM_CLASS = Class.forName(
 		"org.bukkit.craftbukkit.v1_8_R3.inventory.CraftMetaItem"
 	)
