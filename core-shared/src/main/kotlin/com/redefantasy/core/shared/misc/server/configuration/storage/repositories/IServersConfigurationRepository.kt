@@ -7,9 +7,9 @@ import com.redefantasy.core.shared.storage.repositories.IRepository
 /**
  * @author Gutyerrez
  */
-interface IServersConfigurationRepository<T> : IRepository {
+interface IServersConfigurationRepository : IRepository {
 
-	fun fetchServerConfigurationByServerName(
+	fun <T> fetchServerConfigurationByServerName(
 		fetchServerConfigurationByServerNameDTO: FetchServerConfigurationByServerNameDTO
 	): ServerConfiguration<T>?
 

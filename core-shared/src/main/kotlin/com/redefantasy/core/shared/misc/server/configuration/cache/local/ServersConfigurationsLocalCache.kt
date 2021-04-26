@@ -17,11 +17,11 @@ class ServersConfigurationsLocalCache<T> : LocalCache {
 	private val CACHE = Caffeine.newBuilder()
 		.expireAfterWrite(10, TimeUnit.SECONDS)
 		.build<Server, ServerConfiguration<T>?> {
-			CoreProvider.Repositories.Postgres.SERVERS_CONFIGURATION_REPOSITORY.provide().fetchServerConfigurationByServerName(
+			CoreProvider.Repositories.Postgres.SERVERS_CONFIGURATION_REPOSITORY.provide().fetchServerConfigurationByServerName<T>(
 				FetchServerConfigurationByServerNameDTO(
 					it.name
 				)
-			) as? ServerConfiguration<T>
+			)
 		}
 
 	fun fetchByServer(

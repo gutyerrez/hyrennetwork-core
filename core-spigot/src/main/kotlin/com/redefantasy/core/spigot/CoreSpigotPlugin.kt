@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
 
 /**
  * @author Gutyerrez
@@ -79,7 +80,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          */
 
         CoreConstants.JACKSON.registerModule(SimpleModule().apply {
-            this.addSerializerAndDeserializer(
+            this.addSerializerAndDeserializer<ItemStack?>(
                 ItemStackSerializer(),
                 ItemStackDeserializer()
             )

@@ -63,6 +63,8 @@ open class ItemStackDeserializer : FromStringDeserializer<ItemStack>(
 		serializedItemStack: String?,
 		deserializationContext: DeserializationContext
 	): ItemStack? {
+		println("[JACKSON]: Deserialize")
+
 		return if (serializedItemStack !== null) ItemStack.deserialize(
 			CoreConstants.JACKSON.readValue(
 				serializedItemStack,

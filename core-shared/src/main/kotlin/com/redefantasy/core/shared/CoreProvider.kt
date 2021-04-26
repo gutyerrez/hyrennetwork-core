@@ -252,7 +252,7 @@ object CoreProvider {
                 PostgresServersRepository::class
             )
 
-            val SERVERS_CONFIGURATION_REPOSITORY = PostgresRepositoryProvider<IServersConfigurationRepository<Any>>(
+            val SERVERS_CONFIGURATION_REPOSITORY = PostgresRepositoryProvider<IServersConfigurationRepository>(
                 PostgresServersConfigurationRepository::class
             )
 

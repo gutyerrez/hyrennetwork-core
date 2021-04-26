@@ -10,15 +10,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author Gutyerrez
  */
-class PostgresServersConfigurationRepository : IServersConfigurationRepository<Any> {
+class PostgresServersConfigurationRepository : IServersConfigurationRepository {
 
-	override fun fetchServerConfigurationByServerName(
+	override fun <T> fetchServerConfigurationByServerName(
 		fetchServerConfigurationByServerNameDTO: FetchServerConfigurationByServerNameDTO
-	): ServerConfiguration<Any>? {
+	): ServerConfiguration<T>? {
 		return transaction {
 			return@transaction ServersConfigurationsTable.select {
 				ServersConfigurationsTable.server eq fetchServerConfigurationByServerNameDTO.serverName
-			}.firstOrNull()?.get(ServersConfigurationsTable.configuration)
+			}.firstOrNull()?.get(ServersConfigurationsTable.configuration) as? ServerConfiguration<T>
 		}
 	}
 
