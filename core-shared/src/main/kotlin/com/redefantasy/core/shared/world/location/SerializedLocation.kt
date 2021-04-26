@@ -9,70 +9,72 @@ import com.redefantasy.core.shared.misc.utils.NumberUtils
  * @author SrGutyerrez
  **/
 data class SerializedLocation(
-    val applicationName: String,
-    val worldName: String = "world",
-    val x: Double,
-    val y: Double,
-    val z: Double,
-    val yaw: Float,
-    val pitch: Float
+	val applicationName: String? = null,
+	val worldName: String = "world",
+	val x: Double,
+	val y: Double,
+	val z: Double,
+	val yaw: Float,
+	val pitch: Float
 ) {
 
-    constructor(
-        application: Application,
-        worldName: String,
-        x: Double,
-        y: Double,
-        z: Double,
-        yaw: Float,
-        pitch: Float
-    ) : this(application.name, worldName, x, y, z, yaw, pitch)
+	constructor(
+		application: Application,
+		worldName: String,
+		x: Double,
+		y: Double,
+		z: Double,
+		yaw: Float,
+		pitch: Float
+	) : this(application.name, worldName, x, y, z, yaw, pitch)
 
-    constructor(
-        worldName: String,
-        x: Double,
-        y: Double,
-        z: Double,
-        yaw: Float,
-        pitch: Float
-    ) : this(CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
+	constructor(
+		worldName: String,
+		x: Double,
+		y: Double,
+		z: Double,
+		yaw: Float,
+		pitch: Float
+	) : this(CoreProvider.application.name, worldName, x, y, z, yaw, pitch)
 
-    companion object {
+	companion object {
 
-        @JvmStatic
-        fun of(string: String?): SerializedLocation? {
-            if (string == null) return null
+		@JvmStatic
+		fun of(string: String?): SerializedLocation? {
+			if (string == null) return null
 
-            return CoreConstants.JACKSON.readValue(
-                string,
-                SerializedLocation::class.java
-            )
-        }
+			return CoreConstants.JACKSON.readValue(
+				string,
+				SerializedLocation::class.java
+			)
+		}
 
-    }
+	}
 
-    fun getBlockX() = NumberUtils.floorInt(this.x)
+	fun getBlockX() = NumberUtils.floorInt(this.x)
 
-    fun getBlockY() = NumberUtils.floorInt(this.y)
+	fun getBlockY() = NumberUtils.floorInt(this.y)
 
-    fun getBlockZ() = NumberUtils.floorInt(this.z)
+	fun getBlockZ() = NumberUtils.floorInt(this.z)
 
-    fun getApplication() = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(this.applicationName)
+	fun getApplication(): Application? = this.applicationName?.let {
+		return@let CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByName(it)
+	}
 
-    fun <U : LocationParser<T>, T> parser(parser: U) = parser.apply(this)
+	fun <U : LocationParser<T>, T> parser(parser: U) = parser.apply(this)
 
-    fun clone(): SerializedLocation {
-        return SerializedLocation(
-            this.applicationName,
-            this.worldName,
-            this.x,
-            this.y,
-            this.z,
-            this.yaw,
-            this.pitch
-        )
-    }
+	fun clone(): SerializedLocation {
+		return SerializedLocation(
+			this.applicationName,
+			this.worldName,
+			this.x,
+			this.y,
+			this.z,
+			this.yaw,
+			this.pitch
+		)
+	}
 
-    override fun toString() = CoreConstants.JACKSON.writeValueAsString(this)
+	override fun toString() = CoreConstants.JACKSON.writeValueAsString(this)
 
 }
