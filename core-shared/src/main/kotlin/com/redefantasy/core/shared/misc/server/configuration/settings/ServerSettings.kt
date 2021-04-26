@@ -1,4 +1,4 @@
-package com.redefantasy.core.shared.misc.servers.configuration.settings
+package com.redefantasy.core.shared.misc.server.configuration.settings
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.redefantasy.core.shared.world.location.SerializedLocation

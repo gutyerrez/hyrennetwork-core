@@ -1,7 +1,7 @@
-package com.redefantasy.core.shared.misc.servers.configuration.data
+package com.redefantasy.core.shared.misc.server.configuration.data
 
 import com.redefantasy.core.shared.CoreProvider
-import com.redefantasy.core.shared.misc.servers.configuration.settings.ServerSettings
+import com.redefantasy.core.shared.misc.server.configuration.settings.ServerSettings
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**

@@ -1,4 +1,4 @@
-package com.redefantasy.core.shared.misc.servers.configuration.storage.dto
+package com.redefantasy.core.shared.misc.server.configuration.storage.dto
 
 import org.jetbrains.exposed.dao.id.EntityID
 

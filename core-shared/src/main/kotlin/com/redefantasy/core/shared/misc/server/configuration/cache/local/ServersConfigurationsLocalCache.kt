@@ -1,10 +1,10 @@
-package com.redefantasy.core.shared.misc.servers.configuration.cache.local
+package com.redefantasy.core.shared.misc.server.configuration.cache.local
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.redefantasy.core.shared.CoreProvider
 import com.redefantasy.core.shared.cache.local.LocalCache
-import com.redefantasy.core.shared.misc.servers.configuration.data.ServerConfiguration
-import com.redefantasy.core.shared.misc.servers.configuration.storage.dto.FetchServerConfigurationByServerNameDTO
+import com.redefantasy.core.shared.misc.server.configuration.data.ServerConfiguration
+import com.redefantasy.core.shared.misc.server.configuration.storage.dto.FetchServerConfigurationByServerNameDTO
 import com.redefantasy.core.shared.servers.data.Server
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.concurrent.TimeUnit
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Gutyerrez
  */
-class ServersConfigurationLocalCache<T> : LocalCache {
+class ServersConfigurationsLocalCache<T> : LocalCache {
 
 	private val CACHE = Caffeine.newBuilder()
 		.expireAfterWrite(10, TimeUnit.SECONDS)
