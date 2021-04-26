@@ -1,10 +1,11 @@
 package com.redefantasy.core.spigot.misc.jackson
 
 import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
+import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
 import com.redefantasy.core.shared.CoreConstants
@@ -25,10 +26,8 @@ open class ItemStackSerializer : StdScalarSerializer<ItemStack>(
 		if (itemStack === null) {
 			jsonGenerator.writeNull()
 		} else {
-			jsonGenerator.writeString(
-				CoreConstants.JACKSON.writeValueAsString(
-					itemStack.serialize()
-				)
+			jsonGenerator.writeObject(
+				itemStack.serialize()
 			)
 		}
 	}
@@ -55,16 +54,14 @@ open class ItemStackSerializer : StdScalarSerializer<ItemStack>(
 
 }
 
-open class ItemStackDeserializer : FromStringDeserializer<ItemStack>(
+open class ItemStackDeserializer : StdScalarDeserializer<ItemStack>(
 	ItemStack::class.java
 ) {
 
-	override fun _deserialize(
-		serializedItemStack: String?,
+	override fun deserialize(
+		serializedItemStack: JsonParser?,
 		deserializationContext: DeserializationContext
 	): ItemStack? {
-		println("[JACKSON]: Deserialize")
-
 		return if (serializedItemStack !== null) ItemStack.deserialize(
 			CoreConstants.JACKSON.readValue(
 				serializedItemStack,
@@ -72,5 +69,6 @@ open class ItemStackDeserializer : FromStringDeserializer<ItemStack>(
 			) as MutableMap<String, Any?>
 		) else null
 	}
+
 
 }
