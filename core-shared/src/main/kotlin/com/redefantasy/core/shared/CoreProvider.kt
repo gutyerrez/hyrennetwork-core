@@ -24,8 +24,6 @@ import com.redefantasy.core.shared.misc.report.category.storage.repositories.imp
 import com.redefantasy.core.shared.misc.revoke.category.cache.local.RevokeCategoriesLocalCache
 import com.redefantasy.core.shared.misc.revoke.category.storage.repositories.IRevokeCategoriesRepository
 import com.redefantasy.core.shared.misc.revoke.category.storage.repositories.implementations.PostgresRevokeCategoriesRepository
-import com.redefantasy.core.shared.misc.server.configuration.storage.repositories.IServersConfigurationRepository
-import com.redefantasy.core.shared.misc.server.configuration.storage.repositories.implementations.PostgresServersConfigurationRepository
 import com.redefantasy.core.shared.providers.IProvider
 import com.redefantasy.core.shared.providers.cache.local.LocalCacheProvider
 import com.redefantasy.core.shared.providers.cache.redis.RedisCacheProvider
@@ -89,7 +87,6 @@ object CoreProvider {
         PROVIDERS.add(Repositories.Postgres.USERS_PREFERENCES_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.USERS_SKINS_REPOSITORY)
         PROVIDERS.add(Repositories.Postgres.MAINTENANCE_REPOSITORY)
-        PROVIDERS.add(Repositories.Postgres.SERVERS_CONFIGURATION_REPOSITORY)
 
         // local cache
         PROVIDERS.add(Cache.Local.SERVERS)
@@ -250,10 +247,6 @@ object CoreProvider {
 
             val SERVERS_REPOSITORY = PostgresRepositoryProvider<IServersRepository>(
                 PostgresServersRepository::class
-            )
-
-            val SERVERS_CONFIGURATION_REPOSITORY = PostgresRepositoryProvider<IServersConfigurationRepository>(
-                PostgresServersConfigurationRepository::class
             )
 
             val APPLICATIONS_REPOSITORY = PostgresRepositoryProvider<IApplicationsRepository>(

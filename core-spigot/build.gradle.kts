@@ -21,6 +21,9 @@ dependencies {
     // eventbus
     compileOnly("org.greenrobot:eventbus:3.2.0")
 
+    // caffeine
+    implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")
+
     // core shared
     implementation(project(":core-shared"))
 }
