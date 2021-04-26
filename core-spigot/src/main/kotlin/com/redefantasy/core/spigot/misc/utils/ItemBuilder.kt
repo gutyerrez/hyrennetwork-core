@@ -303,8 +303,6 @@ class ItemBuilder(
 
 		nmsCopy.tag = compound
 
-		println(nmsCopy.tag)
-
 		itemMeta = CraftItemStack.asBukkitCopy(nmsCopy).itemMeta
 
 		itemStack.itemMeta = itemMeta
