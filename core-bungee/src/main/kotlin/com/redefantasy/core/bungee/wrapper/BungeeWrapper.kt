@@ -43,7 +43,7 @@ class BungeeWrapper : Wrapper<CommandSender> {
     }
 
     private fun findCommandSender(senderName: String): CommandSender {
-        if (senderName === "CONSOLE") return ProxyServer.getInstance().console
+        if (senderName == "CONSOLE") return ProxyServer.getInstance().console
 
         return ProxyServer.getInstance().getPlayer(senderName)
     }
