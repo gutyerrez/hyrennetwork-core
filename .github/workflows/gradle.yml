@@ -1,9 +1,7 @@
-name: Core
-
 on: [ 'push' ]
 
 jobs:
-  build:
+  core:
     runs-on: self-hosted
 
     steps:
