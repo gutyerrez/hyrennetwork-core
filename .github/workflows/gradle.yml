@@ -2,7 +2,7 @@ on: [ 'push' ]
 
 jobs:
   core:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -18,61 +18,9 @@ jobs:
     - name: Publish to maven local
       run: ./gradlew publishToMavenLocal
     - name: Deploy to all servers
-      uses: garygrossgarten/github-action-scp@release
+      uses: hyrendev/scp-action@main
       with:
-        local: /home/cloud/output/api.jar
-        remote: /home/cloud/output/api.jar
-        host: 149.56.242.214
-        username: root
-        privateKey: |
-            -----BEGIN RSA PRIVATE KEY-----
-            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
-            -----END RSA PRIVATE KEY-----
+        key: ${{ secrets.DEDICATED_SSH_KEY }}
+        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
+        scp: |
+            /home/cloud/output/core-spigot.jar:~/root/core-spigot.jar
