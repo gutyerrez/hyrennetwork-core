@@ -2,7 +2,7 @@ on: [ 'push' ]
 
 jobs:
   core:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -17,3 +17,10 @@ jobs:
       run: ./gradlew shadowJar
     - name: Publish to maven local
       run: ./gradlew publishToMavenLocal
+    - name: Deploy to all servers
+      uses: hyrendev/scp-action@main
+      with:
+        key: ${{ secrets.DEDICATED_SSH_KEY }}
+        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
+        scp: |
+            /home/cloud/output/core-spigot.jar:~/root/core-spigot.jar
