@@ -13,14 +13,15 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Shadow archive
+    - name: Build project
       run: ./gradlew shadowJar
-    - name: Publish to maven local
-      run: ./gradlew publishToMavenLocal
+    - name: Deploy project
+      run: ./gradlew publish
     - name: Deploy to all servers
-      uses: hyrendev/scp-action@main
+      uses: garygrossgarten/github-action-scp@release
       with:
-        key: ${{ secrets.DEDICATED_SSH_KEY }}
+        local: ${{ github.workspace }}/bootstrap/target/Waterfall.jar
+        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/waterfall.jar
         host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-        scp: |
-            /home/cloud/output/core-spigot.jar:~/root/core-spigot.jar
+        username: ${{ secrets.DEDICATED_USER }}
+        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
