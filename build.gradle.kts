@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException
+import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.4.31"
@@ -8,10 +9,33 @@ plugins {
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
+val credentials = object : PasswordCredentials {
+
+    override fun getUsername() = "Gutyerrez"
+
+    override fun setUsername(userName: String?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPassword() = "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"
+
+    override fun setPassword(password: String?) {
+        TODO("Not yet implemented")
+    }
+
+}
+
 repositories {
     mavenCentral()
 
     jcenter()
+
+    maven {
+        name = "github"
+        url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+
+        credentials
+    }
 }
 
 subprojects {
@@ -54,9 +78,14 @@ subprojects {
     repositories {
         mavenCentral()
 
-        mavenLocal()
-
         jcenter()
+
+        maven {
+            name = "github"
+            url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+
+            credentials
+        }
     }
 
     val sources by tasks.registering(Jar::class) {
