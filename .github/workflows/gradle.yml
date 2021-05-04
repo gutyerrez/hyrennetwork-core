@@ -11,6 +11,14 @@ jobs:
       with:
         java-version: '8'
         distribution: 'adopt'
+    - uses: s4u/maven-settings-action@v2.4.0
+      with:
+        servers: |
+          [{
+            "id": ${{ secrets.MAVEN_ID }},
+            "username": ${{ secrets.MAVEN_USERNAME }},
+            "password": ${{ secrets.MAVEN_PASSWORD }}
+          }]
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Clean project
