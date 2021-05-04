@@ -22,7 +22,7 @@ jobs:
     - name: Delete old versions of this packages
       uses: actions/delete-package-versions@main
       with:
-        owner: hyrendev
+        owner: HyrenDev
         repo: nexus
         package-name: com.redefantasy.core-bungee
         token: ${{ secrets.ACCESS_TOKEN }}
