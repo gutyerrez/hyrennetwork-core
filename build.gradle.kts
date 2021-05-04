@@ -1,3 +1,5 @@
+import java.io.BufferedWriter
+import java.io.FileWriter
 import java.net.URI
 
 plugins {
@@ -16,6 +18,30 @@ allprojects {
 	plugins.apply("maven-publish")
 
 	tasks {
+		val file = File("/home/runner/.m2/settings.xml")
+
+		if (!file.exists()) {
+			file.createNewFile()
+
+			val byteBuffer = BufferedWriter(FileWriter(file))
+
+			byteBuffer.write(
+					"<settings>\n" +
+					"  <servers>\n" +
+					"    <server>\n" +
+					"      <id>github</id>\n" +
+					"      <username>Gutyerrez</username>\n" +
+					"      <password>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</password>\n" +
+					"    </server>\n" +
+					"  </servers>\n" +
+					"</settings>"
+			)
+
+			byteBuffer.close()
+		} else {
+			println(file.readLines(Charsets.UTF_8))
+		}
+
 		compileKotlin {
 			kotlinOptions {
 				jvmTarget = "1.8"
