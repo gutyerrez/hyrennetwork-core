@@ -16,7 +16,7 @@ jobs:
         override: true
         servers: |
           [{
-            "id": "github",
+            "id": "${{ secrets.MAVEN_ID }}",
             "username": "Gutyerrez",
             "password": "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"
           }]
@@ -25,9 +25,19 @@ jobs:
     - name: Clean project
       run: ./gradlew clean
     - name: Build project
-      run: ./gradlew shadowJar -Pmaven-username=Gutyerrez -Pmaven-password=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
+      run: ./gradlew shadowJar
+    - name: Delete old versions of this package
+      uses: actions/delete-package-versions@v1
+      with:
+        owner: hyrendev
+        repo: nexus
+        package-name: |
+          com.redefantasy.core-bungee
+          com.redefantasy.core-shared
+          com.redefantasy.core-spigot
+        token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
-      run: ./gradlew publish -Pmaven-username=Gutyerrez -Pmaven-password=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
+      run: ./gradlew publish
     - name: Deploy to all servers
       uses: garygrossgarten/github-action-scp@release
       with:
