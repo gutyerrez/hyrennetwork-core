@@ -13,6 +13,7 @@ jobs:
         distribution: 'adopt'
     - uses: s4u/maven-settings-action@v2.4.0
       with:
+        overwrite: true
         servers: |
           [{
             "id": ${{ secrets.MAVEN_ID }},
