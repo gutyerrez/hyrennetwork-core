@@ -68,6 +68,12 @@ allprojects {
 			repositories { this.githubRepository() }
 
 			create<MavenPublication>("maven") {
+				pom {
+					artifactId = project.name
+					groupId = groupId
+					version = "4.0.0"
+				}
+
 				from(components["kotlin"])
 				artifact(sources.get())
 			}

@@ -17,16 +17,6 @@ jobs:
       run: ./gradlew clean
     - name: Build project
       run: ./gradlew shadowJar -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
-    - name: Delete old versions of this package
-      uses: actions/delete-package-versions@v1
-      with:
-        owner: hyrendev
-        repo: nexus
-        package-name: |
-          com.redefantasy.core-bungee
-          com.redefantasy.core-shared
-          com.redefantasy.core-spigot
-        token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
       run: ./gradlew publish -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
     - name: Deploy to all servers
