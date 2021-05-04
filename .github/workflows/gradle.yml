@@ -16,9 +16,9 @@ jobs:
     - name: Clean project
       run: ./gradlew clean
     - name: Build project
-      run: ./gradlew shadowJar -PmavenUser=Gutyerrez -PmavenPassword=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
+      run: ./gradlew shadowJar -Pmaven-username=Gutyerrez -Pmaven-password=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
     - name: Deploy project
-      run: ./gradlew publish -PmySecureRepositoryUsername=${{ secrets.MAVEN_USERNAME }}} -PmySecureRepositoryPassword=${{ secrets.MAVEN_PASSWORD }}
+      run: ./gradlew publish -Pmaven-username=Gutyerrez -Pmaven-password=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
     - name: Deploy to all servers
       uses: garygrossgarten/github-action-scp@release
       with:

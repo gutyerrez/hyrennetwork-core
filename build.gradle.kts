@@ -4,8 +4,10 @@ plugins {
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.serialization") version "1.4.31"
 
-	id("maven-publish")
 	id("com.github.johnrengelman.shadow") version "6.1.0"
+
+	`maven-publish`
+	java
 }
 
 allprojects {
@@ -32,6 +34,11 @@ allprojects {
 		return maven {
 			name = "github"
 			url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+
+			credentials(PasswordCredentials::class) {
+				username = project.properties["maven-username"] as? String
+				password = project.properties["maven-password"] as? String
+			}
 		}
 	}
 
