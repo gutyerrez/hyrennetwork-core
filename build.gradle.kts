@@ -36,9 +36,9 @@ allprojects {
 
 		maven("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
 		maven("https://maven.pkg.github.com/hyrendev/nexus/") {
-			credentials(PasswordCredentials::class) {
+			credentials {
 				username = System.getenv("MAVEN_USERNAME")
-				password = System.getenv("MAVEN_USERNAME")
+				password = System.getenv("MAVEN_PASSWORD")
 			}
 		}
 	}
@@ -55,9 +55,9 @@ allprojects {
 		publications {
 			repositories {
 				maven("https://maven.pkg.github.com/hyrendev/nexus/") {
-					credentials(PasswordCredentials::class) {
+					credentials {
 						username = System.getenv("MAVEN_USERNAME")
-						password = System.getenv("MAVEN_USERNAME")
+						password = System.getenv("MAVEN_PASSWORD")
 					}
 				}
 			}
