@@ -13,15 +13,20 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Clean project
+      run: ./gradlew clean
     - name: Build project
-      run: ./gradlew shadowJar
+      run: ./gradlew shadowJar -PmySecureRepositoryUsername=${{ secrets.MAVEN_USERNAME }} -PmySecureRepositoryPassword=${{ secrets.MAVEN_PASSWORD }}
     - name: Deploy project
-      run: ./gradlew publish
+      run: ./gradlew publish -PmySecureRepositoryUsername=${{ secrets.MAVEN_USERNAME }}} -PmySecureRepositoryPassword=${{ secrets.MAVEN_USERNAME }}
     - name: Deploy to all servers
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: ${{ github.workspace }}/bootstrap/target/Waterfall.jar
-        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/waterfall.jar
+        local: |
+          ${{ github.workspace }}/core-bungee/build/libs/core-bungee.jar
+          ${{ github.workspace }}/core-shared/build/libs/core-shared.jar
+          ${{ github.workspace }}/core-spigot/build/libs/core-spigot.jar
+        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
         host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
         username: ${{ secrets.DEDICATED_USER }}
         privateKey: ${{ secrets.DEDICATED_SSH_KEY }}

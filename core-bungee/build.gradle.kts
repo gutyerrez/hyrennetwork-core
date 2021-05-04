@@ -1,6 +1,7 @@
 dependencies {
-    // waterfall proxy
+    // waterfall
     compileOnly("io.github.waterfallmc:waterfall-proxy:1.16-R0.5-SNAPSHOT")
+    compileOnly("net.md-5:brigadier:1.0.16-SNAPSHOT")
 
     // exposed
     compileOnly("org.jetbrains.exposed:exposed-core:0.29.1")

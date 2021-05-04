@@ -1,107 +1,69 @@
-import java.io.FileNotFoundException
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.4.31"
-    kotlin("plugin.serialization") version "1.4.31"
+	kotlin("jvm") version "1.4.31"
+	kotlin("plugin.serialization") version "1.4.31"
 
-    id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+	id("maven-publish")
+	id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
-val credentials = object : PasswordCredentials {
+allprojects {
+	plugins.apply("com.github.johnrengelman.shadow")
+	plugins.apply("org.jetbrains.kotlin.jvm")
+	plugins.apply("maven-publish")
 
-    override fun getUsername() = "Gutyerrez"
+	tasks {
+		compileKotlin {
+			kotlinOptions {
+				jvmTarget = "1.8"
+			}
+		}
 
-    override fun setUsername(userName: String?) {
-        TODO("Not yet implemented")
-    }
+		shadowJar {
+			archiveFileName.set("${project.name}.jar")
+		}
+	}
 
-    override fun getPassword() = "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"
+	group = "com.redefantasy"
+	version = "0.1-ALPHA"
 
-    override fun setPassword(password: String?) {
-        TODO("Not yet implemented")
-    }
+	fun RepositoryHandler.githubRepository(): MavenArtifactRepository {
+		return maven {
+			name = "github"
+			url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+		}
+	}
 
-}
+	repositories {
+		mavenCentral()
 
-repositories {
-    mavenCentral()
+		jcenter()
 
-    jcenter()
+		maven {
+			name = "sonatype-nexus-snapshot"
+			url = URI("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
+		}
 
-    maven {
-        name = "github"
-        url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+		this.githubRepository()
+	}
 
-        credentials
-    }
-}
+	val sources by tasks.registering(Jar::class) {
+		archiveFileName.set(project.name)
+		archiveClassifier.set("sources")
+		archiveVersion.set(null as String?)
 
-subprojects {
-    plugins.apply("com.github.johnrengelman.shadow")
-    plugins.apply("org.jetbrains.kotlin.jvm")
-    plugins.apply("maven-publish")
+		from(sourceSets.main.get().allSource)
+	}
 
-    tasks {
-        compileKotlin {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
+	publishing {
+		publications {
+			repositories { this.githubRepository() }
 
-        shadowJar {
-            val fileName = "${project.name}.jar"
-
-            archiveFileName.set("${project.name}.jar")
-
-            doLast {
-                try {
-                    val file = file("build/libs/$fileName")
-
-                    val toDelete = file("/home/cloud/output/$fileName")
-
-                    if (toDelete.exists()) toDelete.delete()
-
-                    file.copyTo(file("/home/cloud/output/$fileName"))
-                    file.delete()
-                } catch (ex: FileNotFoundException) {
-                    ex.printStackTrace()
-                }
-            }
-        }
-    }
-
-    group = "com.redefantasy"
-    version = "0.1-ALPHA"
-
-    repositories {
-        mavenCentral()
-
-        jcenter()
-
-        maven {
-            name = "github"
-            url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
-
-            credentials
-        }
-    }
-
-    val sources by tasks.registering(Jar::class) {
-        archiveFileName.set(project.name)
-        archiveClassifier.set("sources")
-        archiveVersion.set(null as String?)
-
-        from(sourceSets.main.get().allSource)
-    }
-
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                from(components["kotlin"])
-                artifact(sources.get())
-            }
-        }
-    }
+			create<MavenPublication>("maven") {
+				from(components["kotlin"])
+				artifact(sources.get())
+			}
+		}
+	}
 }
