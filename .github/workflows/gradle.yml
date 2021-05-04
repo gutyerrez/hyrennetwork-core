@@ -16,7 +16,7 @@ jobs:
         override: true
         servers: |
           [{
-            "id": "github",
+            "id": "${{ secrets.MAVEN_ID }}",
             "username": "Gutyerrez",
             "password": "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"
           }]

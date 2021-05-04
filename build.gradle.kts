@@ -1,5 +1,3 @@
-import java.io.BufferedWriter
-import java.io.FileWriter
 import java.net.URI
 
 plugins {
@@ -26,32 +24,6 @@ allprojects {
 
 		shadowJar {
 			archiveFileName.set("${project.name}.jar")
-
-			doFirst {
-				val file = File("/home/runner/.m2/settings.xml")
-
-				if (!file.exists()) {
-					file.createNewFile()
-
-					val byteBuffer = BufferedWriter(FileWriter(file))
-
-					byteBuffer.write(
-						"<settings>\n" +
-								"  <servers>\n" +
-								"    <server>\n" +
-								"      <id>github</id>\n" +
-								"      <username>Gutyerrez</username>\n" +
-								"      <password>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</password>\n" +
-								"    </server>\n" +
-								"  </servers>\n" +
-								"</settings>"
-					)
-
-					byteBuffer.close()
-				} else {
-					println(file.readLines(Charsets.UTF_8))
-				}
-			}
 		}
 	}
 
@@ -62,11 +34,6 @@ allprojects {
 		return maven {
 			name = "github"
 			url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
-
-			credentials(PasswordCredentials::class) {
-				username = project.properties["maven-username"] as? String
-				password = project.properties["maven-password"] as? String
-			}
 		}
 	}
 
