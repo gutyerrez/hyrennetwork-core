@@ -11,21 +11,12 @@ jobs:
       with:
         java-version: '8'
         distribution: 'adopt'
-    - uses: s4u/maven-settings-action@v2.4.0
-      with:
-        override: true
-        servers: |
-          [{
-            "id": "${{ secrets.MAVEN_ID }}",
-            "username": "Gutyerrez",
-            "password": "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"
-          }]
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Clean project
       run: ./gradlew clean
     - name: Build project
-      run: ./gradlew shadowJar
+      run: ./gradlew shadowJar -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
     - name: Delete old versions of this package
       uses: actions/delete-package-versions@v1
       with:
@@ -37,7 +28,7 @@ jobs:
           com.redefantasy.core-spigot
         token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
-      run: ./gradlew publish
+      run: ./gradlew publish -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
     - name: Deploy to all servers
       uses: garygrossgarten/github-action-scp@release
       with:

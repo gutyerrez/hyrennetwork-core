@@ -34,6 +34,11 @@ allprojects {
 		return maven {
 			name = "github"
 			url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
+
+			credentials(PasswordCredentials::class) {
+				username = project.properties["maven-username"] as? String
+				password = project.properties["maven-password"] as? String
+			}
 		}
 	}
 
