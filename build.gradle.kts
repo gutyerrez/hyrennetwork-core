@@ -53,6 +53,15 @@ allprojects {
 
 	publishing {
 		publications {
+			repositories {
+				maven("https://maven.pkg.github.com/hyrendev/nexus/") {
+					credentials {
+						username = System.getenv("MAVEN_USERNAME")
+						password = System.getenv("MAVEN_USERNAME")
+					}
+				}
+			}
+
 			create<MavenPublication>("maven") {
 				from(components["kotlin"])
 				artifact(sources.get())
