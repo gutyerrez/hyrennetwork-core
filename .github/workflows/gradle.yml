@@ -16,9 +16,9 @@ jobs:
         override: true
         servers: |
           [{
-            "id": ${{ secrets.MAVEN_ID }},
-            "username": ${{ secrets.MAVEN_USERNAME }},
-            "password": ${{ secrets.MAVEN_PASSWORD }}
+            "id": "github",
+            "username": "Gutyerrez",
+            "password": "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"
           }]
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
