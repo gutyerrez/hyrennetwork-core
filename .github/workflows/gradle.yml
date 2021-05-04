@@ -19,8 +19,8 @@ jobs:
       run: chmod +x gradlew
     - name: Clean project
       run: ./gradlew clean
-    - name: Delete old versions of this package
-      uses: actions/delete-package-versions@v1
+    - name: Delete old versions of this packages
+      uses: actions/delete-package-versions@main
       with:
         owner: hyrendev
         repo: nexus
