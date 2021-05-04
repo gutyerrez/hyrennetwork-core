@@ -1,5 +1,3 @@
-import java.net.URI
-
 plugins {
 	kotlin("jvm") version "1.4.31"
 	kotlin("plugin.serialization") version "1.4.31"
@@ -30,29 +28,19 @@ allprojects {
 	group = "com.redefantasy"
 	version = "0.1-ALPHA"
 
-	fun RepositoryHandler.githubRepository(): MavenArtifactRepository {
-		return maven {
-			name = "github"
-			url = URI("https://maven.pkg.github.com/hyrendev/nexus/")
-
-			credentials(PasswordCredentials::class) {
-				username = project.properties["maven-username"] as? String
-				password = project.properties["maven-password"] as? String
-			}
-		}
-	}
 
 	repositories {
 		mavenCentral()
 
 		jcenter()
 
-		maven {
-			name = "sonatype-nexus-snapshot"
-			url = URI("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
+		maven("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
+		maven("https://maven.pkg.github.com/hyrendev/nexus/") {
+			credentials {
+				username = System.getenv("MAVEN_USERNAME")
+				password = System.getenv("MAVEN_USERNAME")
+			}
 		}
-
-		this.githubRepository()
 	}
 
 	val sources by tasks.registering(Jar::class) {
@@ -65,15 +53,7 @@ allprojects {
 
 	publishing {
 		publications {
-			repositories { this.githubRepository() }
-
 			create<MavenPublication>("maven") {
-				pom {
-					artifactId = project.name
-					groupId = groupId
-					version = "4.0.0"
-				}
-
 				from(components["kotlin"])
 				artifact(sources.get())
 			}

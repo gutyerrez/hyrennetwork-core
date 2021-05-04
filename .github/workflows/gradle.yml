@@ -13,33 +13,36 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Clean project
-      run: ./gradlew clean
-    - name: Build project
-      run: ./gradlew shadowJar -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
+#    - name: Clean project
+#      run: ./gradlew clean
+#    - name: Build project
+#      run: ./gradlew shadowJar -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
     - name: Deploy project
-      run: ./gradlew publish -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
-    - name: Deploy core-bungee to remote server
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: ${{ github.workspace }}/core-bungee/build/libs/core-bungee.jar
-        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-        username: ${{ secrets.DEDICATED_USER }}
-        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
-    - name: Deploy core-shared to remote server
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: ${{ github.workspace }}/core-shared/build/libs/core-shared.jar
-        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-        username: ${{ secrets.DEDICATED_USER }}
-        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
-    - name: Deploy core-spigot to remote server
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: ${{ github.workspace }}/core-spigot/build/libs/core-spigot.jar
-        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-        username: ${{ secrets.DEDICATED_USER }}
-        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
+      run: ./gradlew publish
+      env:
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#    - name: Deploy core-bungee to remote server
+#      uses: garygrossgarten/github-action-scp@release
+#      with:
+#        local: ${{ github.workspace }}/core-bungee/build/libs/core-bungee.jar
+#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
+#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
+#        username: ${{ secrets.DEDICATED_USER }}
+#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
+#    - name: Deploy core-shared to remote server
+#      uses: garygrossgarten/github-action-scp@release
+#      with:
+#        local: ${{ github.workspace }}/core-shared/build/libs/core-shared.jar
+#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
+#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
+#        username: ${{ secrets.DEDICATED_USER }}
+#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
+#    - name: Deploy core-spigot to remote server
+#      uses: garygrossgarten/github-action-scp@release
+#      with:
+#        local: ${{ github.workspace }}/core-spigot/build/libs/core-spigot.jar
+#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
+#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
+#        username: ${{ secrets.DEDICATED_USER }}
+#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
