@@ -52,6 +52,8 @@ allprojects {
 	}
 
 	publishing {
+		if (project.name == "core") return@publishing
+
 		publications {
 			repositories {
 				maven("https://maven.pkg.github.com/hyrendev/nexus/") {

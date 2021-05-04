@@ -4,6 +4,10 @@ jobs:
   core:
     runs-on: ubuntu-latest
 
+    env:
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 8
@@ -15,34 +19,15 @@ jobs:
       run: chmod +x gradlew
     - name: Clean project
       run: ./gradlew clean
-#    - name: Build project
-#      run: ./gradlew shadowJar -Pmaven-username=${{ secrets.MAVEN_USERNAME }} -Pmaven-password=${{ secrets.MAVEN_PASSWORD }}
+    - name: Delete old versions of this package
+      uses: actions/delete-package-versions@v1
+      with:
+        owner: hyrendev
+        repo: nexus
+        package-name: |
+          com.redefantasy.core-bungee
+          com.redefantasy.core-shared
+          com.redefantasy.core-spigot
+        token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
       run: ./gradlew publish
-      env:
-        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-#    - name: Deploy core-bungee to remote server
-#      uses: garygrossgarten/github-action-scp@release
-#      with:
-#        local: ${{ github.workspace }}/core-bungee/build/libs/core-bungee.jar
-#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-#        username: ${{ secrets.DEDICATED_USER }}
-#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
-#    - name: Deploy core-shared to remote server
-#      uses: garygrossgarten/github-action-scp@release
-#      with:
-#        local: ${{ github.workspace }}/core-shared/build/libs/core-shared.jar
-#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-#        username: ${{ secrets.DEDICATED_USER }}
-#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
-#    - name: Deploy core-spigot to remote server
-#      uses: garygrossgarten/github-action-scp@release
-#      with:
-#        local: ${{ github.workspace }}/core-spigot/build/libs/core-spigot.jar
-#        remote: ${{ secrets.CLOUD_OUTPUT_REPOSITORY }}/core-bungee.jar
-#        host: ${{ secrets.DEDICATED_1_HOST_ADDRESS }}
-#        username: ${{ secrets.DEDICATED_USER }}
-#        privateKey: ${{ secrets.DEDICATED_SSH_KEY }}
