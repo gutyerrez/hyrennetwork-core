@@ -24,10 +24,7 @@ jobs:
       with:
         owner: hyrendev
         repo: nexus
-        package-name: |
-          com.redefantasy.core-bungee
-          com.redefantasy.core-shared
-          com.redefantasy.core-spigot
+        package-name: com.redefantasy.core-bungee
         token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
       run: ./gradlew publish
