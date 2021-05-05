@@ -22,8 +22,8 @@ jobs:
     - name: Delete old versions of this packages
       uses: hyrendev/delete-packages-version-action@0.1-ALPHA
       with:
-        owner: HyrenDev
-        repository: nexus
+        owner: ${{ secrets.OWNER }}
+        repository: ${{ secrets.NEXUS }}
         token: ${{ secrets.ACCESS_TOKEN }}
         packages: |
           [
