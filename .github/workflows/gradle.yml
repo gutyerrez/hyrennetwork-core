@@ -20,11 +20,34 @@ jobs:
     - name: Clean project
       run: ./gradlew clean
     - name: Delete old versions of this packages
-      uses: actions/delete-package-versions@main
+      uses: hyrendev/delete-packages-version-action@0.1-ALPHA
       with:
-        owner: HyrenDev
-        repo: nexus
-        package-name: com.redefantasy.core-bungee
+        owner: ${{ secrets.OWNER }}
+        repo: ${{ secrets.NEXUS }}
+        packages: |
+          [
+            "com.redefantasy.core-bungee",
+            "com.redefantasy.core-shared",
+            "com.redefantasy.core-spigot"
+          ]
         token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
       run: ./gradlew publish
+    - name: Deploy project to remote servers
+      uses: hyrendev/scp-github-action@0.1-ALPHA
+      with:
+        local: |
+          [
+            "${{ github.workspace }}/core-bungee/builds/libs/core-bungee.jar",
+            "${{ github.workspace }}/core-spigot/builds/libs/core-spigot.jar"
+          ]
+        remote: /home/cloud/output/
+        servers: |
+          [
+            {
+              "host": ${{ secrets.DEDICATED_1_HOST_ADDRESS }},
+              "port": ${{ secrets.DEDICATED_PORT }},
+              "user": ${{ secrets.DEDICATED_USER }},
+              "private_key": "${{ secrets.DEDICATED_SSH_KEY }}"
+            }
+          ]

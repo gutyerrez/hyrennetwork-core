@@ -43,6 +43,10 @@ allprojects {
 		}
 	}
 
+	configurations.all {
+		resolutionStrategy.cacheChangingModulesFor(120, "seconds")
+	}
+
 	val sources by tasks.registering(Jar::class) {
 		archiveFileName.set(project.name)
 		archiveClassifier.set("sources")
@@ -52,21 +56,37 @@ allprojects {
 	}
 
 	publishing {
-		if (project.name == "core") return@publishing
-
 		publications {
-			repositories {
-				maven("https://maven.pkg.github.com/hyrendev/nexus/") {
-					credentials {
-						username = System.getenv("MAVEN_USERNAME")
-						password = System.getenv("MAVEN_PASSWORD")
+			create<MavenPublication>("maven") {
+				repositories {
+					maven("https://maven.pkg.github.com/hyrendev/nexus/") {
+						credentials {
+							username = System.getenv("MAVEN_USERNAME")
+							password = System.getenv("MAVEN_PASSWORD")
+						}
 					}
 				}
-			}
 
-			create<MavenPublication>("maven") {
 				from(components["kotlin"])
 				artifact(sources.get())
+
+				pom {
+					name.set(project.name)
+					description.set("Core for all projects in Hyren's server")
+
+					developers {
+						developer {
+							name.set("Gutyerrez")
+							url.set("https://twitter.com/SrGutyerrez")
+							roles.set(
+								listOf(
+									"owner"
+								)
+							)
+							organization.set("HyrenDev")
+						}
+					}
+				}
 			}
 		}
 	}
