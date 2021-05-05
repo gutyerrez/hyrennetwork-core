@@ -23,14 +23,13 @@ jobs:
       uses: hyrendev/delete-packages-version-action@0.1-ALPHA
       with:
         owner: ${{ secrets.OWNER }}
-        repo: ${{ secrets.NEXUS }}
+        repository: ${{ secrets.NEXUS }}
         packages: |
           [
             "com.redefantasy.core-bungee",
             "com.redefantasy.core-shared",
             "com.redefantasy.core-spigot"
           ]
-        token: ${{ secrets.ACCESS_TOKEN }}
     - name: Deploy project
       run: ./gradlew publish
     - name: Deploy project to remote servers
