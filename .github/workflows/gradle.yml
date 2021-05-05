@@ -46,8 +46,8 @@ jobs:
           [
             {
               "host": "${{ secrets.DEDICATED_1_HOST_ADDRESS }}",
-              "port": "${{ secrets.DEDICATED_PORT }},"
-              "user": "${{ secrets.DEDICATED_USER }},"
+              "port": "${{ secrets.DEDICATED_PORT }}",
+              "user": "${{ secrets.DEDICATED_USER }}",
               "private_key": "${{ secrets.DEDICATED_SSH_KEY }}"
             }
           ]
