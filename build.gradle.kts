@@ -55,35 +55,37 @@ allprojects {
 		from(sourceSets.main.get().allSource)
 	}
 
-	publishing {
-		publications {
-			create<MavenPublication>("maven") {
-				repositories {
-					maven("https://maven.pkg.github.com/hyrendev/nexus/") {
-						credentials {
-							username = System.getenv("MAVEN_USERNAME")
-							password = System.getenv("MAVEN_PASSWORD")
+	if (project.name != "core") {
+		publishing {
+			publications {
+				create<MavenPublication>("maven") {
+					repositories {
+						maven("https://maven.pkg.github.com/hyrendev/nexus/") {
+							credentials {
+								username = System.getenv("MAVEN_USERNAME")
+								password = System.getenv("MAVEN_PASSWORD")
+							}
 						}
 					}
-				}
 
-				from(components["kotlin"])
-				artifact(sources.get())
+					from(components["kotlin"])
+					artifact(sources.get())
 
-				pom {
-					name.set(project.name)
-					description.set("Core for all projects in Hyren's server")
+					pom {
+						name.set(project.name)
+						description.set("Core for all projects in Hyren's server")
 
-					developers {
-						developer {
-							name.set("Gutyerrez")
-							url.set("https://twitter.com/SrGutyerrez")
-							roles.set(
-								listOf(
-									"owner"
+						developers {
+							developer {
+								name.set("Gutyerrez")
+								url.set("https://twitter.com/SrGutyerrez")
+								roles.set(
+									listOf(
+										"owner"
+									)
 								)
-							)
-							organization.set("HyrenDev")
+								organization.set("HyrenDev")
+							}
 						}
 					}
 				}
