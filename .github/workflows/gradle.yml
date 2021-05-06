@@ -19,6 +19,8 @@ jobs:
         run: chmod +x gradlew
       - name: Clean project
         run: ./gradlew clean
+      - name: Build project
+        run: ./gradlew shadowJar
       - name: Delete old versions of this packages
         uses: hyrendev/delete-packages-version-action@0.1-ALPHA
         with:
