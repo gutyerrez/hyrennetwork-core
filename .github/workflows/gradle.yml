@@ -1,13 +1,13 @@
 on: [ 'push' ]
 
 jobs:
-  runs-on: ubuntu-latest
-
   env:
     MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
     MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
   clean:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -22,6 +22,8 @@ jobs:
       - name: List folders
         run: ls -ln
   delete-old-versions-of-this-package:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Delete old versions of this packages
         uses: hyrendev/delete-packages-version-action@0.1-ALPHA
