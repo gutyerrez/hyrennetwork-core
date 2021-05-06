@@ -70,24 +70,6 @@ allprojects {
 
 					from(components["kotlin"])
 					artifact(sources.get())
-
-					pom {
-						name.set(project.name)
-						description.set("Core for all projects in Hyren's server")
-
-						developers {
-							developer {
-								name.set("Gutyerrez")
-								url.set("https://twitter.com/SrGutyerrez")
-								roles.set(
-									listOf(
-										"owner"
-									)
-								)
-								organization.set("HyrenDev")
-							}
-						}
-					}
 				}
 			}
 		}
