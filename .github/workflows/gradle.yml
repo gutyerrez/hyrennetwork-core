@@ -19,8 +19,6 @@ jobs:
         run: chmod +x gradlew
       - name: Clean project
         run: ./gradlew clean
-      - name: List folders
-        run: ls -ln
       - name: Delete old versions of this packages
         uses: hyrendev/delete-packages-version-action@0.1-ALPHA
         with:
@@ -40,8 +38,8 @@ jobs:
         with:
           files: |
             [
-              "${{ github.workspace }}/core-bungee/builds/libs/core-bungee.jar",
-              "${{ github.workspace }}/core-spigot/builds/libs/core-spigot.jar"
+              "${{ github.workspace }}/core-bungee/build/libs/core-bungee.jar",
+              "${{ github.workspace }}/core-spigot/build/libs/core-spigot.jar"
             ]
           remote: /home/cloud/output/
           servers: |
