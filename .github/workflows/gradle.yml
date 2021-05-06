@@ -42,6 +42,7 @@ jobs:
       - name: List folders
         run: |
           ls -ln && cd core-bungee/ && ls -ln && cd build && ls -ln
+          cd ${{ github.workspace }}
           ls -ln && cd core-spigot/ && ls -ln && cd build && ls -ln
       - name: Deploy project to remote servers
         uses: hyrendev/scp-action@0.1-ALPHA
