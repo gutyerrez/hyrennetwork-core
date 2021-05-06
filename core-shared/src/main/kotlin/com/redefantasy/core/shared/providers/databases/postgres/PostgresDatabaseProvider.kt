@@ -36,7 +36,7 @@ class PostgresDatabaseProvider(
 
         hikariConfig.connectionTestQuery = "SELECT 1;"
 
-        hikariConfig.maximumPoolSize = 10
+        hikariConfig.maximumPoolSize = 1
         hikariConfig.connectionTimeout = 5000
 
         this.hikariDataSource = HikariDataSource(hikariConfig)
