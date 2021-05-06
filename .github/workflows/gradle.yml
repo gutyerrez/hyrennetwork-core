@@ -34,7 +34,7 @@ jobs:
               "com.redefantasy.core-spigot"
             ]
       - name: Await all deleted packages propagation
-        uses: jakejarvis/wait-action@master
+        uses: kibertoad/wait-action@1.0.1
         with:
           time: 15s
       - name: Deploy project
