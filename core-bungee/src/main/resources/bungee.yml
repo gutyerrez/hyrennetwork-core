@@ -1,4 +1,4 @@
 name: Core
-main: com.redefantasy.core.bungee.CoreBungeePlugin
+main: net.hyren.core.CoreBungeePlugin
 version: 0.1-ALPHA
 author: Gutyerrez

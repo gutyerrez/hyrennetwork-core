@@ -25,9 +25,8 @@ allprojects {
 		}
 	}
 
-	group = "com.redefantasy"
+	group = "net.hyren"
 	version = "0.1-ALPHA"
-
 
 	repositories {
 		mavenCentral()

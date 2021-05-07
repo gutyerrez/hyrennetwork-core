@@ -1,4 +1,4 @@
 name: Core
-main: com.redefantasy.core.spigot.CoreSpigotPlugin
+main: net.hyren.core.CoreSpigotPlugin
 version: 0.1-ALPHA
 author: Gutyerrez

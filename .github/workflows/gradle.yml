@@ -29,9 +29,9 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           packages: |
             [
-              "com.redefantasy.core-bungee",
-              "com.redefantasy.core-shared",
-              "com.redefantasy.core-spigot"
+              "net.hyren.core-bungee",
+              "net.hyren.core-shared",
+              "net.hyren.core-spigot"
             ]
       - name: Await all deleted packages propagation
         uses: kibertoad/wait-action@1.0.1
