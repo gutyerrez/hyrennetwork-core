@@ -1,4 +1,4 @@
 name: Core
-main: net.hyren.core.CoreSpigotPlugin
+main: net.hyren.core.spigot.CoreSpigotPlugin
 version: 0.1-ALPHA
 author: Gutyerrez
