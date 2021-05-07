@@ -176,6 +176,9 @@ object CoreProvider {
 
     fun shutdown() {
         PROVIDERS.forEach { it.shutdown() }
+
+        prepared = false
+        primaryPrepared = false
     }
 
     object Databases {
