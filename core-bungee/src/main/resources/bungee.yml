@@ -1,4 +1,4 @@
 name: Core
-main: net.hyren.core.CoreBungeePlugin
+main: net.hyren.core.bungee.CoreBungeePlugin
 version: 0.1-ALPHA
 author: Gutyerrez
