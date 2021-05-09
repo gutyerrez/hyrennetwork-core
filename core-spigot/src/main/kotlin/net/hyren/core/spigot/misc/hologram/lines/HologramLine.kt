@@ -39,6 +39,8 @@ class HologramLine(
 
         hologramArmorStand.setPosition(location.x, location.y, location.z)
 
+        println("Posição: ${hologramArmorStand.boundingBox}")
+
         world.addEntity(hologramArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
         this.armorStand = hologramArmorStand.bukkitEntity as ArmorStand
