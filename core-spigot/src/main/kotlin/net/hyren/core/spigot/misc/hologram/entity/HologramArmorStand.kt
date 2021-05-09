@@ -3,14 +3,17 @@ package net.hyren.core.spigot.misc.hologram.entity
 import net.minecraft.server.v1_8_R3.DamageSource
 import net.minecraft.server.v1_8_R3.EntityArmorStand
 import net.minecraft.server.v1_8_R3.ItemStack
-import net.minecraft.server.v1_8_R3.World
+import net.minecraft.server.v1_8_R3.WorldServer
 
 /**
  * @author Gutyerrez
  */
 class HologramArmorStand(
-    world: World
-) : EntityArmorStand(world) {
+    worldServer: WorldServer,
+    x: Double,
+    y: Double,
+    z: Double
+) : EntityArmorStand(worldServer, x, y, z) {
 
     init {
         this.isInvisible = true

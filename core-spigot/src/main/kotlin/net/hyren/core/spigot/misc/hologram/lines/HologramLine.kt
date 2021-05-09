@@ -35,9 +35,9 @@ class HologramLine(
 
         val world = (location.world as CraftWorld).handle
 
-        val hologramArmorStand = HologramArmorStand(world)
+        val hologramArmorStand = HologramArmorStand(world, location.x, location.y, location.z)
 
-        hologramArmorStand.setPosition(location.x, location.y, location.z)
+        hologramArmorStand.setLocation(location.x, location.y, location.z, 0.0F, 0.0F)
         hologramArmorStand.setPosition(location.x, location.y, location.z)
 
         println("Posição: ${hologramArmorStand.boundingBox}")
