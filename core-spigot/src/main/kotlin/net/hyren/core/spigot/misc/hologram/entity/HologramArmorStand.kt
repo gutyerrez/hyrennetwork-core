@@ -22,9 +22,8 @@ class HologramArmorStand(
         this.noclip = true
 
         this.setArms(false)
-        this.setGravity(true)
+        this.setGravity(false)
         this.setBasePlate(false)
-        this.n(true)
     }
 
     override fun d(
