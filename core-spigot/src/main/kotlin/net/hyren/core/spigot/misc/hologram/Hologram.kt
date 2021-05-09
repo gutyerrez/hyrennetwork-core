@@ -39,9 +39,11 @@ class Hologram(
         var hologramLocation = location.clone()
 
         this.lines.forEach {
-            it.spawn(hologramLocation)
-
             hologramLocation = hologramLocation.add(0.0, this.hologramPosition.value, 0.0)
+
+            println("Hologram line location: $hologramLocation")
+
+            it.spawn(hologramLocation)
         }
     }
 

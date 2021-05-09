@@ -31,6 +31,8 @@ class HologramLine(
     fun isSpawned() = this.armorStand !== null && !this.armorStand!!.isDead
 
     fun spawn(location: Location) {
+        println("HL: $location")
+
         val world = (location.world as CraftWorld).handle
 
         val hologramArmorStand = HologramArmorStand(world)
