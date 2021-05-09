@@ -31,11 +31,6 @@ class HologramLine(
     fun isSpawned() = this.armorStand !== null && !this.armorStand!!.isDead
 
     fun spawn(location: Location) {
-        val chunk = location.chunk
-
-        // force chunk load
-        chunk.load(true)
-
         val worldServer = (location.world as CraftWorld).handle
 
         val hologramArmorStand = HologramArmorStand(worldServer, location.x, location.y, location.z)

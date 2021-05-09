@@ -39,6 +39,8 @@ class Hologram(
         this.lines.forEach {
             hologramLocation = hologramLocation.add(0.0, this.hologramPosition.value, 0.0)
 
+            hologramLocation.chunk.load(true)
+
             it.spawn(hologramLocation)
         }
     }
