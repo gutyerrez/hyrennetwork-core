@@ -34,24 +34,14 @@ class Hologram(
     fun isSpawned() = this.lines.stream().allMatch { it.isSpawned() }
 
     fun spawn(location: Location) {
-        println("EAE")
-
         if (!location.chunk.isLoaded) {
-            println("Carrega")
-
             location.chunk.load()
         }
 
-        println("DALE")
-
         var hologramLocation = location.clone()
-
-        println("Cria linhas")
 
         this.lines.forEach {
             hologramLocation = hologramLocation.add(0.0, this.hologramPosition.value, 0.0)
-
-            println("Hologram line location: $hologramLocation")
 
             it.spawn(hologramLocation)
         }

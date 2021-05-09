@@ -31,16 +31,11 @@ class HologramLine(
     fun isSpawned() = this.armorStand !== null && !this.armorStand!!.isDead
 
     fun spawn(location: Location) {
-        println("HL: $location")
-
         val world = (location.world as CraftWorld).handle
 
         val hologramArmorStand = HologramArmorStand(world, location.x, location.y, location.z)
 
-        hologramArmorStand.setLocation(location.x, location.y, location.z, 0.0F, 0.0F)
         hologramArmorStand.setPosition(location.x, location.y, location.z)
-
-        println("Posição: ${hologramArmorStand.boundingBox}")
 
         world.addEntity(hologramArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
