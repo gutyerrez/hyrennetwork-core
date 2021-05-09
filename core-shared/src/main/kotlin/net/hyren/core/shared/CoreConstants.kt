@@ -77,6 +77,20 @@ object CoreConstants {
 		})
 	}
 
+	object Info {
+
+		// name
+
+		const val SERVER_NAME = "Rede Fantasy"
+		const val COLORED_SERVER_NAME = "§6§lREDE FANTASY"
+
+		// url
+
+		const val DISCORD_URL = "discord.redefantasy.com"
+		const val SHOP_URL = "loja.redefantasy.com"
+
+	}
+
 	fun fetchLobbyApplication(): Application? = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(
 		ApplicationType.LOBBY
 	).shuffled()
