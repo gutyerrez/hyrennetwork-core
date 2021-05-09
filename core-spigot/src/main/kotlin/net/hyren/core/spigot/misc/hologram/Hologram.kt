@@ -34,10 +34,6 @@ class Hologram(
     fun isSpawned() = this.lines.stream().allMatch { it.isSpawned() }
 
     fun spawn(location: Location) {
-        if (!location.chunk.isLoaded) {
-            location.chunk.load()
-        }
-
         var hologramLocation = location.clone()
 
         this.lines.forEach {

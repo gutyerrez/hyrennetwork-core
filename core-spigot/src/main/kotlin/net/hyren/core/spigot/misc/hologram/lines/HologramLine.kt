@@ -31,13 +31,16 @@ class HologramLine(
     fun isSpawned() = this.armorStand !== null && !this.armorStand!!.isDead
 
     fun spawn(location: Location) {
-        val world = (location.world as CraftWorld).handle
+        val worldServer = (location.world as CraftWorld).handle
+        val chunkProviderServer = worldServer.chunkProviderServer
 
-        val hologramArmorStand = HologramArmorStand(world, location.x, location.y, location.z)
+        chunkProviderServer.loadChunk(location.blockX, location.blockZ)
+
+        val hologramArmorStand = HologramArmorStand(worldServer, location.x, location.y, location.z)
 
         hologramArmorStand.setPosition(location.x, location.y, location.z)
 
-        world.addEntity(hologramArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM)
+        worldServer.addEntity(hologramArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
         this.armorStand = hologramArmorStand.bukkitEntity as ArmorStand
 
