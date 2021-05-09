@@ -19,12 +19,11 @@ class HologramArmorStand(
         this.isInvisible = true
         this.isSmall = true
         this.customNameVisible = true
-        this.noclip = true
 
         this.setArms(false)
-        this.setGravity(false)
+        this.setGravity(true)
         this.setBasePlate(false)
-        this.n(false)
+        this.n(true)
     }
 
     override fun d(
