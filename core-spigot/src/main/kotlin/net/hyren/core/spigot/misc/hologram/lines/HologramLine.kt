@@ -23,19 +23,20 @@ class HologramLine(
 
     fun update() {
         if (isSpawned()) {
+            val dataWatcher = DataWatcher(livingEntity)
+
+            dataWatcher.watch(
+                2, IChatBaseComponent.ChatSerializer.a(
+                    ChatComponentText(
+                        this@HologramLine.text
+                    )
+                )
+            )
+
             val packet = PacketPlayOutEntityMetadata(
                 livingEntity.id,
-                DataWatcher(
-                    livingEntity
-                ).apply {
-                    this.watch(
-                        2, IChatBaseComponent.ChatSerializer.a(
-                            ChatComponentText(
-                                this@HologramLine.text
-                            )
-                        )
-                    )
-                }, false
+                dataWatcher,
+                false
             )
 
             Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
@@ -43,6 +44,7 @@ class HologramLine(
     }
 
     fun isSpawned() = this::livingEntity.isInitialized && !livingEntity.dead
+
     fun spawn(location: Location) {
         val worldServer = (location.world as CraftWorld).handle
         val hologramArmorStand = EntityArmorStand(worldServer)
