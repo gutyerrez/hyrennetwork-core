@@ -25,7 +25,7 @@ class HologramLine(
         if (isSpawned()) {
             val dataWatcher = livingEntity.dataWatcher
 
-            dataWatcher.watch(2, IChatBaseComponent.ChatSerializer.a(this.text))
+            dataWatcher.watch(2, this.text)
             dataWatcher.watch(3, 1.toByte())
 
             val packet = PacketPlayOutEntityMetadata(livingEntity.id, dataWatcher, true)
