@@ -13,7 +13,7 @@ class HologramLine(
     private var text: String
 ) {
 
-    private lateinit var livingEntity: EntityArmorStand
+    private lateinit var entityArmorStand: EntityArmorStand
 
     fun update(text: String) {
         this.text = text
@@ -23,36 +23,42 @@ class HologramLine(
 
     fun update() {
         if (isSpawned()) {
-            val dataWatcher = livingEntity.dataWatcher
+            val dataWatcher = entityArmorStand.dataWatcher
 
             dataWatcher.watch(2, this.text)
             dataWatcher.watch(3, 1.toByte())
 
-            val packet = PacketPlayOutEntityMetadata(livingEntity.id, dataWatcher, true)
+            val packet = PacketPlayOutEntityMetadata(entityArmorStand.id, dataWatcher, true)
 
             Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
+
+            println("Atualizar linhas")
+
+            println(entityArmorStand.locX)
+            println(entityArmorStand.locY)
+            println(entityArmorStand.locZ)
         }
     }
 
-    fun isSpawned() = this::livingEntity.isInitialized && !livingEntity.dead
+    fun isSpawned() = this::entityArmorStand.isInitialized && !entityArmorStand.dead
 
     fun spawn(location: Location) {
         val worldServer = (location.world as CraftWorld).handle
 
-        this.livingEntity = EntityArmorStand(worldServer, location.x, location.y, location.z)
+        this.entityArmorStand = EntityArmorStand(worldServer, location.x, location.y, location.z)
 
-        this.livingEntity.isSmall = true
-        this.livingEntity.customNameVisible = true
-        this.livingEntity.isInvisible = true
-        this.livingEntity.noclip = true
+        this.entityArmorStand.isSmall = true
+        this.entityArmorStand.customNameVisible = true
+        this.entityArmorStand.isInvisible = true
+        this.entityArmorStand.noclip = true
 
-        this.livingEntity.setArms(false)
-        this.livingEntity.setGravity(true)
-        this.livingEntity.setBasePlate(false)
+        this.entityArmorStand.setArms(false)
+        this.entityArmorStand.setGravity(true)
+        this.entityArmorStand.setBasePlate(false)
 
-        this.livingEntity.n(true)
+        this.entityArmorStand.n(true)
 
-        val packet = PacketPlayOutSpawnEntityLiving(livingEntity)
+        val packet = PacketPlayOutSpawnEntityLiving(entityArmorStand)
 
         Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
 
@@ -60,14 +66,14 @@ class HologramLine(
     }
 
     fun destroy() {
-        val packet = PacketPlayOutEntityDestroy(livingEntity.id)
+        val packet = PacketPlayOutEntityDestroy(entityArmorStand.id)
 
         Bukkit.getOnlinePlayers().forEach { player -> player.sendPacket(packet) }
     }
 
     fun teleport(location: Location) {
         val packet = PacketPlayOutEntityTeleport(
-            livingEntity.id,
+            entityArmorStand.id,
             MathHelper.floor(location.x * 32.0),
             MathHelper.floor(location.y * 32.0),
             MathHelper.floor(location.z * 32.0),
