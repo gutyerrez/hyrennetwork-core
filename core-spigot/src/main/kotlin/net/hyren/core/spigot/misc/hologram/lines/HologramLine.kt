@@ -27,7 +27,7 @@ class HologramLine(
             val dataWatcher = livingEntity.dataWatcher
 
             dataWatcher.watch(2, CraftChatMessage.fromString(this.text))
-            dataWatcher.watch(3, true)
+            dataWatcher.watch(3, 1.toByte())
 
             val packet = PacketPlayOutEntityMetadata(livingEntity.id, dataWatcher, true)
 
