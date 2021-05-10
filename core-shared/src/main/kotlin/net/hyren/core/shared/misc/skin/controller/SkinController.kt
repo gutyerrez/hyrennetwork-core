@@ -1,7 +1,6 @@
 package net.hyren.core.shared.misc.skin.controller
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.sun.jdi.request.InvalidRequestStateException
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
@@ -40,7 +39,7 @@ object SkinController {
 
 			val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-			if (response.code != 200) throw InvalidRequestStateException() else {
+			if (response.code != 200) return null else {
 				val bytes = response.body?.bytes()
 
 				if (bytes?.isEmpty() == true) return null
@@ -83,7 +82,7 @@ object SkinController {
 
 				val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-				if (response.code != 200) throw InvalidRequestStateException() else {
+				if (response.code != 200) return@invoker null else {
 					val bytes = response.body?.bytes()
 
 					if (bytes?.isEmpty() == true) return@invoker null
