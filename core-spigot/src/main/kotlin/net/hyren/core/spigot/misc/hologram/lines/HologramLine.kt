@@ -22,11 +22,7 @@ class HologramLine(
         this.update()
     }
 
-    fun update() = if (isSpawned()) {
-        println("Atualizar")
-
-        entityArmorStand.customName = text
-    } else Unit
+    fun update() = if (isSpawned()) entityArmorStand.customName = text else Unit
 
     fun isSpawned() = this::entityArmorStand.isInitialized && !entityArmorStand.dead
 
