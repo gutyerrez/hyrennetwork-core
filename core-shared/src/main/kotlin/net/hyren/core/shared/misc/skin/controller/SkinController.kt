@@ -1,5 +1,7 @@
 package net.hyren.core.shared.misc.skin.controller
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.sun.jdi.request.InvalidRequestStateException
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
@@ -9,50 +11,103 @@ import okhttp3.Request
  */
 object SkinController {
 
-	private const val API_END_POINT = "https://api.mojang.com"
-	private const val SESSION_END_POINT = "https://sessionserver.mojang.com"
+	// Mojang
+	private const val MOJANG_API_END_POINT = "https://api.mojang.com"
+	private const val MOJANG_SESSION_END_POINT = "https://sessionserver.mojang.com"
+
+	// Minetools
+	private const val MINETOOLS_API_END_POINT = "https://api.minetools.eu"
 
 	fun fetchSkinByName(name: String): Skin? {
 		val request = Request.Builder()
-			.url("$API_END_POINT/users/profiles/minecraft/$name")
+			.url("$MOJANG_API_END_POINT/users/profiles/minecraft/$name")
 			.header("Content-Type", "application/json")
 			.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
 			.get()
 			.build()
 
-		val response = CoreConstants.OK_HTTP.newCall(request)
-			.execute()
-			.body ?: return null
+		val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-		val bytes = response.bytes()
+		lateinit var minecraftProfile: MinecraftProfile
 
-		if (bytes.isEmpty()) return null
-
-		val minecraftProfile = CoreConstants.JACKSON.readValue(
-			bytes,
-			MinecraftProfile::class.java
-		)
-
-		val skin: () -> Skin? = invoker@{
+		if (response.code != 200) {
 			val request = Request.Builder()
-				.url("$SESSION_END_POINT/session/minecraft/profile/${minecraftProfile.id}?unsigned=false")
+				.url("$MINETOOLS_API_END_POINT/uuid/$name")
 				.header("Content-Type", "application/json")
 				.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
 				.get()
 				.build()
 
-			val response = CoreConstants.OK_HTTP.newCall(request)
-				.execute()
-				.body ?: return@invoker null
+			val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-			val bytes = response.bytes()
+			if (response.code != 200) throw InvalidRequestStateException() else {
+				val bytes = response.body?.bytes()
 
-			if (bytes.isEmpty()) return@invoker null
+				if (bytes?.isEmpty() == true) return null
 
-			val minecraftProfileData = CoreConstants.JACKSON.readValue(
+				minecraftProfile = CoreConstants.JACKSON.readValue(
+					bytes,
+					MinecraftProfile::class.java
+				)
+			}
+		} else {
+			val bytes = response.body?.bytes()
+
+			if (bytes?.isEmpty() == true) return null
+
+			minecraftProfile = CoreConstants.JACKSON.readValue(
 				bytes,
-				MinecraftProfileData::class.java
+				MinecraftProfile::class.java
 			)
+		}
+
+		val skin: () -> Skin? = invoker@{
+			val request = Request.Builder()
+				.url("$MOJANG_SESSION_END_POINT/session/minecraft/profile/${minecraftProfile.id}?unsigned=false")
+				.header("Content-Type", "application/json")
+				.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
+				.get()
+				.build()
+
+			val response = CoreConstants.OK_HTTP.newCall(request).execute()
+
+			lateinit var minecraftProfileData: MinecraftProfileData
+
+			if (response.code != 200) {
+				val request = Request.Builder()
+					.url("$MINETOOLS_API_END_POINT/profile/${minecraftProfile.id}")
+					.header("Content-Type", "application/json")
+					.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
+					.get()
+					.build()
+
+				val response = CoreConstants.OK_HTTP.newCall(request).execute()
+
+				if (response.code != 200) throw InvalidRequestStateException() else {
+					val bytes = response.body?.bytes()
+
+					if (bytes?.isEmpty() == true) return@invoker null
+
+					val jsonResponse = CoreConstants.JACKSON.readValue(
+						bytes,
+						JsonNode::class.java
+					)
+
+					minecraftProfileData = CoreConstants.JACKSON.readValue(
+						jsonResponse.get("raw").asText(),
+						MinecraftProfileData::class.java
+					)
+				}
+			} else {
+				val bytes = response.body?.bytes()
+
+				if (bytes?.isEmpty() == true) return@invoker null
+
+				minecraftProfileData = CoreConstants.JACKSON.readValue(
+					bytes,
+					MinecraftProfileData::class.java
+				)
+			}
 
 			val properties = minecraftProfileData.properties[0]
 
