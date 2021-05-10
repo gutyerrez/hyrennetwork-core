@@ -8,21 +8,18 @@ import net.minecraft.server.v1_8_R3.WorldServer
 /**
  * @author Gutyerrez
  */
-class HologramArmorStand(
-    worldServer: WorldServer,
-    x: Double,
-    y: Double,
-    z: Double
-) : EntityArmorStand(worldServer, x, y, z) {
+class HologramArmorStand : EntityArmorStand {
 
-    init {
-        this.isInvisible = true
+    constructor(worldServer: WorldServer) : super(worldServer) {
         this.isSmall = true
         this.customNameVisible = true
+        this.isInvisible = true
+        this.noclip = true
 
-        this.setArms(false)
-        this.setGravity(true)
-        this.setBasePlate(false)
+        setArms(false)
+        setGravity(true)
+        setBasePlate(false)
+
         this.n(true)
     }
 

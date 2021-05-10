@@ -33,9 +33,24 @@ class HologramLine(
     fun spawn(location: Location) {
         val worldServer = (location.world as CraftWorld).handle
 
-        val hologramArmorStand = HologramArmorStand(worldServer, location.x, location.y, location.z)
+        val hologramArmorStand = HologramArmorStand(worldServer)
 
-        hologramArmorStand.setPosition(location.x, location.y, location.z)
+        hologramArmorStand.setLocation(
+            location.x,
+            location.y,
+            location.z,
+            location.yaw,
+            location.pitch
+        )
+
+        hologramArmorStand.setPosition(
+            location.x,
+            location.y,
+            location.z
+        )
+
+        hologramArmorStand.yaw = location.yaw
+        hologramArmorStand.pitch = location.pitch
 
         worldServer.addEntity(hologramArmorStand, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
