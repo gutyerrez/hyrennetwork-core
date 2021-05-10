@@ -19,8 +19,6 @@ jobs:
         run: chmod +x gradlew
       - name: Clean project
         run: ./gradlew clean
-      - name: Build project
-        run: ./gradlew shadowJar
       - name: Delete old versions of this packages
         uses: hyrendev/delete-packages-version-action@0.1-ALPHA
         with:
@@ -33,10 +31,8 @@ jobs:
               "net.hyren.core-shared",
               "net.hyren.core-spigot"
             ]
-      - name: Await all deleted packages propagation
-        uses: kibertoad/wait-action@1.0.1
-        with:
-          time: 15s
+      - name: Build project
+        run: ./gradlew shadowJar
       - name: Deploy project
         run: ./gradlew publish
       - name: Deploy project to remote servers
