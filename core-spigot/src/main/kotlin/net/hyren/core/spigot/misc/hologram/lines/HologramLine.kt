@@ -5,7 +5,6 @@ import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage
 
 /**
  * @author Gutyerrez
@@ -26,7 +25,7 @@ class HologramLine(
         if (isSpawned()) {
             val dataWatcher = livingEntity.dataWatcher
 
-            dataWatcher.watch(2, CraftChatMessage.fromString(this.text))
+            dataWatcher.watch(2, IChatBaseComponent.ChatSerializer.a(this.text))
             dataWatcher.watch(3, 1.toByte())
 
             val packet = PacketPlayOutEntityMetadata(livingEntity.id, dataWatcher, true)
