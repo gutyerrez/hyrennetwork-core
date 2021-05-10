@@ -1,5 +1,6 @@
 package net.hyren.core.spigot.misc.hologram.lines
 
+import net.hyren.core.spigot.CoreSpigotPlugin
 import net.hyren.core.spigot.misc.player.sendPacket
 import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Bukkit
@@ -58,9 +59,13 @@ class HologramLine(
 
         this.entityArmorStand.n(true)
 
+        worldServer.addEntity(entityArmorStand)
+
         val packet = PacketPlayOutSpawnEntityLiving(entityArmorStand)
 
-        Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CoreSpigotPlugin.instance, {
+            Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
+        }, 20, 20)
 
         this.update()
     }
