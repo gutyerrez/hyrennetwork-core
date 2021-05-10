@@ -28,9 +28,14 @@ class HologramLine(
                 DataWatcher(
                     livingEntity
                 ).apply {
-                        this.watch(2, IChatBaseComponent.ChatSerializer.a(this@HologramLine.text))
-                },
-                false
+                    this.watch(
+                        2, IChatBaseComponent.ChatSerializer.a(
+                            ChatComponentText(
+                                this@HologramLine.text
+                            )
+                        )
+                    )
+                }, false
             )
 
             Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
@@ -38,7 +43,6 @@ class HologramLine(
     }
 
     fun isSpawned() = this::livingEntity.isInitialized && !livingEntity.dead
-
     fun spawn(location: Location) {
         val worldServer = (location.world as CraftWorld).handle
         val hologramArmorStand = EntityArmorStand(worldServer)
@@ -46,18 +50,11 @@ class HologramLine(
         this.livingEntity = hologramArmorStand
 
         hologramArmorStand.setLocation(
-            location.x,
-            location.y,
-            location.z,
-            location.yaw,
-            location.pitch
+            location.x, location.y, location.z, location.yaw, location.pitch
         )
         hologramArmorStand.setPosition(
-            location.x,
-            location.y,
-            location.z
+            location.x, location.y, location.z
         )
-
         val packet = PacketPlayOutSpawnEntityLiving(hologramArmorStand)
 
         Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
@@ -73,16 +70,9 @@ class HologramLine(
 
     fun teleport(location: Location) {
         val packet = PacketPlayOutEntityTeleport(
-            livingEntity.id,
-            MathHelper.floor(location.x * 32.0),
-            MathHelper.floor(location.y * 32.0),
-            MathHelper.floor(location.z * 32.0),
-            (location.yaw * 256.0f / 360.0f).toInt().toByte(),
-            (location.yaw * 256.0f / 360.0f).toInt().toByte(),
-            false
+            livingEntity.id, MathHelper.floor(location.x * 32.0), MathHelper.floor(location.y * 32.0), MathHelper.floor(location.z * 32.0), (location.yaw * 256.0f / 360.0f).toInt().toByte(), (location.yaw * 256.0f / 360.0f).toInt().toByte(), false
         )
 
         Bukkit.getOnlinePlayers().forEach { player -> player.sendPacket(packet) }
     }
-
 }
