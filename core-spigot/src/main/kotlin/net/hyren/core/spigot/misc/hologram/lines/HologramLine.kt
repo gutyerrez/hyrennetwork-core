@@ -5,6 +5,7 @@ import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage
 
 /**
  * @author Gutyerrez
@@ -13,7 +14,7 @@ class HologramLine(
     private var text: String
 ) {
 
-    private lateinit var livingEntity: Entity
+    private lateinit var livingEntity: EntityArmorStand
 
     fun update(text: String) {
         this.text = text
@@ -23,39 +24,14 @@ class HologramLine(
 
     fun update() {
         if (isSpawned()) {
-//            val dataWatcher = DataWatcher(livingEntity)
-//
-//            dataWatcher.watch(
-//                2, IChatBaseComponent.ChatSerializer.a(
-//                    ChatComponentText(
-//                        this@HologramLine.text
-//                    )
-//                )
-//            )
-            println(livingEntity.dataWatcher)
+            val dataWatcher = livingEntity.dataWatcher
 
-//            val packet = PacketPlayOutEntityMetadata(livingEntity.id, livingEntity.dataWatcher, true)
-//
-//            val a = packet::class.java.getDeclaredField("a")
-//
-//            a.isAccessible = true
-//
-//            a.set(packet, livingEntity.id)
-//
-//            val b = packet::class.java.getDeclaredField("b")
-//
-//            b.isAccessible = true
-//
-//            val dataWatcher = b.get(packet) as MutableList<DataWatcher.WatchableObject>
-//
-//            dataWatcher.add(
-//                DataWatcher.WatchableObject(
-//                    livingEntity.id,
-//
-//                )
-//            )
-//
-//            Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
+            dataWatcher.watch(2, CraftChatMessage.fromString(this.text))
+            dataWatcher.watch(3, true)
+
+            val packet = PacketPlayOutEntityMetadata(livingEntity.id, dataWatcher, true)
+
+            Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
         }
     }
 
@@ -63,17 +39,21 @@ class HologramLine(
 
     fun spawn(location: Location) {
         val worldServer = (location.world as CraftWorld).handle
-        val hologramArmorStand = EntityArmorStand(worldServer)
 
-        this.livingEntity = hologramArmorStand
+        this.livingEntity = EntityArmorStand(worldServer, location.x, location.y, location.z)
 
-        hologramArmorStand.setLocation(
-            location.x, location.y, location.z, location.yaw, location.pitch
-        )
-        hologramArmorStand.setPosition(
-            location.x, location.y, location.z
-        )
-        val packet = PacketPlayOutSpawnEntityLiving(hologramArmorStand)
+        this.livingEntity.isSmall = true
+        this.livingEntity.customNameVisible = true
+        this.livingEntity.isInvisible = true
+        this.livingEntity.noclip = true
+
+        this.livingEntity.setArms(false)
+        this.livingEntity.setGravity(true)
+        this.livingEntity.setBasePlate(false)
+
+        this.livingEntity.n(true)
+
+        val packet = PacketPlayOutSpawnEntityLiving(livingEntity)
 
         Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
 
@@ -88,7 +68,13 @@ class HologramLine(
 
     fun teleport(location: Location) {
         val packet = PacketPlayOutEntityTeleport(
-            livingEntity.id, MathHelper.floor(location.x * 32.0), MathHelper.floor(location.y * 32.0), MathHelper.floor(location.z * 32.0), (location.yaw * 256.0f / 360.0f).toInt().toByte(), (location.yaw * 256.0f / 360.0f).toInt().toByte(), false
+            livingEntity.id,
+            MathHelper.floor(location.x * 32.0),
+            MathHelper.floor(location.y * 32.0),
+            MathHelper.floor(location.z * 32.0),
+            (location.yaw * 256.0f / 360.0f).toInt().toByte(),
+            (location.yaw * 256.0f / 360.0f).toInt().toByte(),
+            false
         )
 
         Bukkit.getOnlinePlayers().forEach { player -> player.sendPacket(packet) }
