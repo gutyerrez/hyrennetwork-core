@@ -23,23 +23,39 @@ class HologramLine(
 
     fun update() {
         if (isSpawned()) {
-            val dataWatcher = DataWatcher(livingEntity)
+//            val dataWatcher = DataWatcher(livingEntity)
+//
+//            dataWatcher.watch(
+//                2, IChatBaseComponent.ChatSerializer.a(
+//                    ChatComponentText(
+//                        this@HologramLine.text
+//                    )
+//                )
+//            )
+            println(livingEntity.dataWatcher)
 
-            dataWatcher.watch(
-                2, IChatBaseComponent.ChatSerializer.a(
-                    ChatComponentText(
-                        this@HologramLine.text
-                    )
-                )
-            )
-
-            val packet = PacketPlayOutEntityMetadata(
-                livingEntity.id,
-                dataWatcher,
-                false
-            )
-
-            Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
+//            val packet = PacketPlayOutEntityMetadata(livingEntity.id, livingEntity.dataWatcher, true)
+//
+//            val a = packet::class.java.getDeclaredField("a")
+//
+//            a.isAccessible = true
+//
+//            a.set(packet, livingEntity.id)
+//
+//            val b = packet::class.java.getDeclaredField("b")
+//
+//            b.isAccessible = true
+//
+//            val dataWatcher = b.get(packet) as MutableList<DataWatcher.WatchableObject>
+//
+//            dataWatcher.add(
+//                DataWatcher.WatchableObject(
+//                    livingEntity.id,
+//
+//                )
+//            )
+//
+//            Bukkit.getOnlinePlayers().forEach { it.sendPacket(packet) }
         }
     }
 
