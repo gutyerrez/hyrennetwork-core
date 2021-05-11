@@ -18,7 +18,7 @@ class ServersConfigurationsLocalCache : LocalCache {
 	private val CACHE = Caffeine.newBuilder()
 		.expireAfterWrite(10, TimeUnit.SECONDS)
 		.build<Server, ServerConfiguration?> {
-			CoreSpigotProvider.Repositories.Postgres.SERVERS_CONFIGURATION_REPOSITORY.provide().fetchServerConfigurationByServerName(
+			CoreSpigotProvider.Repositories.MariaDB.SERVERS_CONFIGURATION_REPOSITORY.provide().fetchServerConfigurationByServerName(
 				FetchServerConfigurationByServerNameDTO(
 					it.name
 				)

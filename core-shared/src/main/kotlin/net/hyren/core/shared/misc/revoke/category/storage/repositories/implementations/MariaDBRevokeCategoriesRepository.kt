@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class PostgresRevokeCategoriesRepository : IRevokeCategoriesRepository {
+class MariaDBRevokeCategoriesRepository : IRevokeCategoriesRepository {
 
     override fun fetchAll(): Map<String, RevokeCategory> {
         return transaction {

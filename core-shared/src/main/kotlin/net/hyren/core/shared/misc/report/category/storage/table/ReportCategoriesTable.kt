@@ -1,6 +1,6 @@
 package net.hyren.core.shared.misc.report.category.storage.table
 
-import net.hyren.core.shared.providers.databases.postgres.dao.StringTable
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringTable
 
 /**
  * @author SrGutyerrez

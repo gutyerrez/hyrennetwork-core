@@ -1,4 +1,4 @@
-package net.hyren.core.shared.providers.databases.postgres
+package net.hyren.core.shared.providers.databases.mariadb
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -10,7 +10,7 @@ import java.net.InetSocketAddress
 /**
  * @author SrGutyerrez
  **/
-class PostgresDatabaseProvider(
+class MariaDBDatabaseProvider(
         private val address: InetSocketAddress,
         private val user: String,
         private val password: String,
@@ -25,7 +25,7 @@ class PostgresDatabaseProvider(
         val hikariConfig = HikariConfig()
 
         // setup datasource
-        hikariConfig.dataSourceClassName = "org.postgresql.ds.PGSimpleDataSource"
+        hikariConfig.dataSourceClassName = "org.mariadb.jdbc.MariaDbDataSource"
 
         // setup data properties
         hikariConfig.addDataSourceProperty("serverName", this.address.address.hostAddress)

@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class PostgresUsersRepository : IUsersRepository {
+class MariaDBUsersRepository : IUsersRepository {
 
     override fun fetchById(fetchUserById: FetchUserByIdDTO): User? {
         return transaction {

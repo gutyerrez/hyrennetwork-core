@@ -19,7 +19,7 @@ class UsersPunishmentsLocalCache : LocalCache {
     private val CACHE_BY_ID = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build<EntityID<Int>, UserPunishment> {
-                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().fetchById(
+                CoreProvider.Repositories.MariaDB.USERS_PUNISHMENTS_REPOSITORY.provide().fetchById(
                         FetchUserPunishmentByIdDTO(
                                 it
                         )
@@ -29,7 +29,7 @@ class UsersPunishmentsLocalCache : LocalCache {
     private val CACHE_BY_UUID = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build<EntityID<UUID>, List<UserPunishment>> {
-                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().fetchByUserId(
+                CoreProvider.Repositories.MariaDB.USERS_PUNISHMENTS_REPOSITORY.provide().fetchByUserId(
                         FetchUserPunishmentsByUserIdDTO(
                                 it
                         )

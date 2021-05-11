@@ -29,7 +29,7 @@ object SkinService {
 		if (!Patterns.NICK.matches(name)) return CommonResponse.INVALID_NICKNAME
 
 		val userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)
-			?: CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByName(
+			?: CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().fetchByName(
 				FetchUserSkinByNameDTO(name)
 			)
 
@@ -38,13 +38,13 @@ object SkinService {
 		if (skin === null) return CommonResponse.SKIN_NOT_FOUND
 
 		if (userSkin !== null && userSkin.userId == user.id) {
-			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
+			CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().update(
 				UpdateUserSkinDTO(
 					userSkin
 				)
 			)
 		} else if (userSkin !== null && userSkin.userId != user.id) {
-			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
+			CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
 						name,
@@ -58,7 +58,7 @@ object SkinService {
 				)
 			)
 		} else {
-			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
+			CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
 						name,
@@ -86,7 +86,7 @@ object SkinService {
 		val skin = SkinController.fetchSkinByName(user.name)
 
 		if (skin !== null) {
-			val userSkin = CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByUserIdAndName(
+			val userSkin = CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().fetchByUserIdAndName(
 				FetchUserSkinByUserIdAndNameDTO(
 					user.id,
 					user.name
@@ -94,13 +94,13 @@ object SkinService {
 			)
 
 			if (userSkin !== null) {
-				CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().update(
+				CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().update(
 					UpdateUserSkinDTO(
 						userSkin
 					)
 				)
 			} else {
-				CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().create(
+				CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().create(
 					CreateUserSkinDTO(
 						UserSkin(
 							user.name,

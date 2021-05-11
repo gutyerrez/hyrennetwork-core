@@ -14,7 +14,7 @@ class MaintenanceLocalCache : LocalCache {
 	private val CACHE = Caffeine.newBuilder()
 		.expireAfterWrite(15, TimeUnit.SECONDS)
 		.build<Application, Boolean> {
-			CoreProvider.Repositories.Postgres.MAINTENANCE_REPOSITORY.provide().fetchByApplication(it)
+			CoreProvider.Repositories.MariaDB.MAINTENANCE_REPOSITORY.provide().fetchByApplication(it)
 		}
 
 	fun fetch(

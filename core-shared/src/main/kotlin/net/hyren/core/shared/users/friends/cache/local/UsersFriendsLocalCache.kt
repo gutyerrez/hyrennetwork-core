@@ -19,7 +19,7 @@ class UsersFriendsLocalCache : LocalCache {
     private val FRIENDS_CACHE = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<EntityID<UUID>, List<FriendUser>> {
-            CoreProvider.Repositories.Postgres.USERS_FRIENDS_REPOSITORY.provide().fetchByUserId(
+            CoreProvider.Repositories.MariaDB.USERS_FRIENDS_REPOSITORY.provide().fetchByUserId(
                 FetchFriendUsersByUserIdDTO(
                     it
                 )
@@ -29,7 +29,7 @@ class UsersFriendsLocalCache : LocalCache {
     private val FRIEND_REQUESTS_CACHE = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<EntityID<UUID>, List<FriendUser>> {
-            CoreProvider.Repositories.Postgres.USERS_FRIENDS_REPOSITORY.provide().fetchFriendRequestsByUserId(
+            CoreProvider.Repositories.MariaDB.USERS_FRIENDS_REPOSITORY.provide().fetchFriendRequestsByUserId(
                 FetchFriendRequestsByUserIdDTO(
                     it
                 )

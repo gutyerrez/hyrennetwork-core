@@ -2,8 +2,8 @@ package net.hyren.core.shared.misc.report.category.storage.dao
 
 import net.hyren.core.shared.misc.report.category.data.ReportCategory
 import net.hyren.core.shared.misc.report.category.storage.table.ReportCategoriesTable
-import net.hyren.core.shared.providers.databases.postgres.dao.StringEntity
-import net.hyren.core.shared.providers.databases.postgres.dao.StringEntityClass
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntity
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**

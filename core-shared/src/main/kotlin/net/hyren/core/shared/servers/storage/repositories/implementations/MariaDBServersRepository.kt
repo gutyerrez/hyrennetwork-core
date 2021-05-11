@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class PostgresServersRepository : IServersRepository {
+class MariaDBServersRepository : IServersRepository {
 
     override fun fetchAll(): Map<EntityID<String>, Server> {
         return transaction {

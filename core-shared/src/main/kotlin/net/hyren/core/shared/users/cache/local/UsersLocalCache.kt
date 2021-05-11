@@ -21,7 +21,7 @@ class UsersLocalCache : LocalCache {
 	private val CACHE_BY_ID = Caffeine.newBuilder()
 		.expireAfterWrite(5, TimeUnit.MINUTES)
 		.build<EntityID<UUID>, User?> {
-			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchById(
+			CoreProvider.Repositories.MariaDB.USERS_REPOSITORY.provide().fetchById(
 				FetchUserByIdDTO(it)
 			)
 		}
@@ -29,7 +29,7 @@ class UsersLocalCache : LocalCache {
 	private val CACHE_BY_NAME = Caffeine.newBuilder()
 		.expireAfterWrite(5, TimeUnit.MINUTES)
 		.build<String, User?> {
-			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByName(
+			CoreProvider.Repositories.MariaDB.USERS_REPOSITORY.provide().fetchByName(
 				FetchUserByNameDTO(it)
 			)
 		}
@@ -37,7 +37,7 @@ class UsersLocalCache : LocalCache {
 	private val CACHE_BY_DISCORD_ID = Caffeine.newBuilder()
 		.expireAfterWrite(5, TimeUnit.MINUTES)
 		.build<Long, User?> {
-			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByDiscordId(
+			CoreProvider.Repositories.MariaDB.USERS_REPOSITORY.provide().fetchByDiscordId(
 				FetchUserByDiscordIdDTO(it)
 			)
 		}
@@ -45,7 +45,7 @@ class UsersLocalCache : LocalCache {
 	private val CACHE_BY_LAST_ADDRESS = Caffeine.newBuilder()
 		.expireAfterWrite(5, TimeUnit.MINUTES)
 		.build<String, List<User>> {
-			CoreProvider.Repositories.Postgres.USERS_REPOSITORY.provide().fetchByLastAddress(
+			CoreProvider.Repositories.MariaDB.USERS_REPOSITORY.provide().fetchByLastAddress(
 				FetchUserByLastAddressDTO(it)
 			)
 		}

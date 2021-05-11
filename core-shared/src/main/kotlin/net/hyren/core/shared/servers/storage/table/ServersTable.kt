@@ -1,6 +1,6 @@
 package net.hyren.core.shared.servers.storage.table
 
-import net.hyren.core.shared.providers.databases.postgres.dao.StringTable
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringTable
 import net.hyren.core.shared.servers.ServerType
 
 /**

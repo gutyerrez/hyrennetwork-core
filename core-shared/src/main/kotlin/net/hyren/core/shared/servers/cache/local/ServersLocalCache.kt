@@ -18,7 +18,7 @@ class ServersLocalCache : LocalCache {
     private val CACHE_BY_NAME = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<EntityID<String>, Server> {
-            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchByName(
+            CoreProvider.Repositories.MariaDB.SERVERS_REPOSITORY.provide().fetchByName(
                 FetchServerByNameDTO(
                     it
                 )
@@ -28,7 +28,7 @@ class ServersLocalCache : LocalCache {
     private val CACHE_BY_ALL = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<Any, Array<Server>> {
-            CoreProvider.Repositories.Postgres.SERVERS_REPOSITORY.provide().fetchAll().values.toTypedArray()
+            CoreProvider.Repositories.MariaDB.SERVERS_REPOSITORY.provide().fetchAll().values.toTypedArray()
         }
 
     fun fetchAll() = this.CACHE_BY_ALL.get(

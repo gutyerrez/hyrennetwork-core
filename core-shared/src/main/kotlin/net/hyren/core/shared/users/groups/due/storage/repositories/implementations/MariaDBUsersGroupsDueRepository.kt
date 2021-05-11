@@ -16,7 +16,7 @@ import org.joda.time.DateTime
 /**
  * @author SrGutyerrez
  **/
-class PostgresUsersGroupsDueRepository : IUsersGroupsDueRepository {
+class MariaDBUsersGroupsDueRepository : IUsersGroupsDueRepository {
 
     override fun fetchUsersGroupsDueByUserId(
         fetchUserGroupDueByUserIdDTO: FetchUserGroupDueByUserIdDTO

@@ -25,8 +25,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.29.1")
     implementation("org.jetbrains.exposed:exposed-jodatime:0.29.1")
 
-    // postgres
-    implementation("org.postgresql:postgresql:42.2.16")
+    // maria db
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.7.2")
 
     // redis
     implementation("redis.clients:jedis:3.3.0")

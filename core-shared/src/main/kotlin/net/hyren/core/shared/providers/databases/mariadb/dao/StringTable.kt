@@ -1,4 +1,4 @@
-package net.hyren.core.shared.providers.databases.postgres.dao
+package net.hyren.core.shared.providers.databases.mariadb.dao
 
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable

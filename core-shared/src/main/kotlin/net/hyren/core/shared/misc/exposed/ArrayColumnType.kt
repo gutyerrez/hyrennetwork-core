@@ -5,7 +5,6 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
-import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
 
@@ -25,10 +24,10 @@ class ArrayColumnType(
     override fun valueFromDB(
         value: Any
     ): Any {
-        if (value is PGobject) {
-            if (value.value === null) error("Cannot read null array")
+        if (value is java.sql.Array) {
+            if (value.array === null) error("Cannot read null array")
 
-            return CoreConstants.JACKSON.readValue(value.value, kClass.java)
+            return value.array
         } else if (value is String) {
             return CoreConstants.JACKSON.readValue(value, kClass.java)
         } else if (value is Array<*>) {
@@ -44,12 +43,7 @@ class ArrayColumnType(
         value: Any?
     ) {
         super.setParameter(stmt, index, value.let {
-            PGobject().apply {
-                this.type = sqlType()
-                this.value = if (value === null) null else {
-                    CoreConstants.JACKSON.writerWithDefaultPrettyPrinter().writeValueAsString(value)
-                }
-            }
+            CoreConstants.JACKSON.writerWithDefaultPrettyPrinter().writeValueAsString(value)
         })
     }
 

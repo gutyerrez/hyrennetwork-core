@@ -85,7 +85,7 @@ open class User(
                     CoreConstants.DATE_TIME_ZONE
                 )
 
-                CoreProvider.Repositories.Postgres.USERS_PUNISHMENTS_REPOSITORY.provide().update(
+                CoreProvider.Repositories.MariaDB.USERS_PUNISHMENTS_REPOSITORY.provide().update(
                     UpdateUserPunishmentByIdDTO(
                         it.id
                     ) { userPunishmentDAO ->
@@ -137,7 +137,7 @@ open class User(
     }
 
     fun attemptLogin(password: String): Boolean {
-        val userPasswords = CoreProvider.Repositories.Postgres.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
+        val userPasswords = CoreProvider.Repositories.MariaDB.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
             FetchUserPasswordByUserIdDTO(this.getUniqueId())
         )
 

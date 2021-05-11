@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author Gutyerrez
  */
-class PostgresUsersPasswordsRepository : IUsersPasswordsRepository {
+class MariaDBUsersPasswordsRepository : IUsersPasswordsRepository {
 
     override fun fetchByUserId(fetchUserPasswordByUserIdDTO: FetchUserPasswordByUserIdDTO): List<UserPassword> {
         return transaction {

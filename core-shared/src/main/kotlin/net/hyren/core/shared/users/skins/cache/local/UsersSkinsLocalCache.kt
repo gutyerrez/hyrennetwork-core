@@ -18,7 +18,7 @@ class UsersSkinsLocalCache : LocalCache {
 	private val CACHE = Caffeine.newBuilder()
 		.expireAfterWrite(3, TimeUnit.MINUTES)
 		.build<EntityID<UUID>, List<UserSkin>> {
-			CoreProvider.Repositories.Postgres.USERS_SKINS_REPOSITORY.provide().fetchByUserId(
+			CoreProvider.Repositories.MariaDB.USERS_SKINS_REPOSITORY.provide().fetchByUserId(
 				FetchUserSkinsByUserIdDTO(
 					it
 				)

@@ -19,7 +19,7 @@ class RevokeCategoriesLocalCache : LocalCache {
 
     override fun populate() {
         this.CACHE.putAll(
-                CoreProvider.Repositories.Postgres.REVOKE_CATEGORIES_REPOSITORY.provide().fetchAll()
+                CoreProvider.Repositories.MariaDB.REVOKE_CATEGORIES_REPOSITORY.provide().fetchAll()
         )
     }
 

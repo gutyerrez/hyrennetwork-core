@@ -1,4 +1,4 @@
-package net.hyren.core.shared.providers.databases.postgres.providers
+package net.hyren.core.shared.providers.databases.mariadb.providers
 
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.storage.repositories.IRepository
@@ -8,7 +8,7 @@ import kotlin.reflect.full.createInstance
 /**
  * @author SrGutyerrez
  **/
-class PostgresRepositoryProvider<T: IRepository>(
+class MariaDBRepositoryProvider<T: IRepository>(
         private val repositoryClass: KClass<out T>
 ) : IProvider<T> {
 

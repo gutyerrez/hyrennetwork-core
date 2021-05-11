@@ -1,7 +1,7 @@
 package net.hyren.core.shared.servers.storage.dao
 
-import net.hyren.core.shared.providers.databases.postgres.dao.StringEntity
-import net.hyren.core.shared.providers.databases.postgres.dao.StringEntityClass
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntity
+import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntityClass
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.servers.storage.table.ServersTable
 import org.jetbrains.exposed.dao.id.EntityID

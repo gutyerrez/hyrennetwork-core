@@ -1,10 +1,10 @@
 package net.hyren.core.spigot
 
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
-import net.hyren.core.shared.providers.databases.postgres.providers.PostgresRepositoryProvider
+import net.hyren.core.shared.providers.databases.mariadb.providers.MariaDBRepositoryProvider
 import net.hyren.core.spigot.misc.server.configuration.cache.local.ServersConfigurationsLocalCache
 import net.hyren.core.spigot.misc.server.configuration.storage.repositories.IServersConfigurationRepository
-import net.hyren.core.spigot.misc.server.configuration.storage.repositories.implementations.PostgresServersConfigurationRepository
+import net.hyren.core.spigot.misc.server.configuration.storage.repositories.implementations.MariaDBServersConfigurationRepository
 
 /**
  * @author Gutyerrez
@@ -12,17 +12,17 @@ import net.hyren.core.spigot.misc.server.configuration.storage.repositories.impl
 object CoreSpigotProvider {
 
     fun prepare() {
-        Repositories.Postgres.SERVERS_CONFIGURATION_REPOSITORY.prepare()
+        Repositories.MariaDB.SERVERS_CONFIGURATION_REPOSITORY.prepare()
 
         Cache.Local.SERVER_CONFIGURATION.prepare()
     }
 
     object Repositories {
 
-        object Postgres {
+        object MariaDB {
 
-            val SERVERS_CONFIGURATION_REPOSITORY = PostgresRepositoryProvider<IServersConfigurationRepository>(
-                PostgresServersConfigurationRepository::class
+            val SERVERS_CONFIGURATION_REPOSITORY = MariaDBRepositoryProvider<IServersConfigurationRepository>(
+                MariaDBServersConfigurationRepository::class
             )
 
         }

@@ -18,7 +18,7 @@ class IgnoredUsersLocalCache : LocalCache {
     private val CACHE = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build<EntityID<UUID>, List<IgnoredUser>> {
-                CoreProvider.Repositories.Postgres.IGNORED_USERS_REPOSITORY.provide().fetchByUserId(
+                CoreProvider.Repositories.MariaDB.IGNORED_USERS_REPOSITORY.provide().fetchByUserId(
                         FetchIgnoredUsersByUserIdDTO(
                                 it
                         )
