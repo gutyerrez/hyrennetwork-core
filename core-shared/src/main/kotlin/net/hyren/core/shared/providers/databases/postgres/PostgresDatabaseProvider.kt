@@ -15,10 +15,11 @@ class PostgresDatabaseProvider(
         private val user: String,
         private val password: String,
         private val database: String,
-        private val schema: String
-) : IDatabaseProvider<Unit> {
+        private val schema: String,
+        private val primaryDatabase: Boolean = false
+) : IDatabaseProvider<Database> {
 
-    private lateinit var hikariDataSource: HikariDataSource
+    private lateinit var _database: Database
 
     override fun prepare() {
         val hikariConfig = HikariConfig()
@@ -40,17 +41,19 @@ class PostgresDatabaseProvider(
         hikariConfig.maximumPoolSize = 10
         hikariConfig.connectionTimeout = 5000
 
-        this.hikariDataSource = HikariDataSource(hikariConfig)
+        val hikariDataSource = HikariDataSource(hikariConfig)
 
-        val primaryConnection = Database.connect(this.hikariDataSource)
+        this._database = Database.connect(hikariDataSource)
 
-        TransactionManager.defaultDatabase = primaryConnection
+        if (primaryDatabase) {
+            TransactionManager.defaultDatabase = _database
+        }
     }
 
-    override fun provide() { /* not implemented method */ }
+    override fun provide() = _database
 
     override fun shutdown() {
-        this.hikariDataSource.close()
+        TransactionManager.closeAndUnregister(_database)
     }
 
 }
