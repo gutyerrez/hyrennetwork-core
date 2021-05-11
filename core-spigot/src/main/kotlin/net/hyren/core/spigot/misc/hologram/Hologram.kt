@@ -27,6 +27,14 @@ class Hologram(
         this.lines[position].update(text)
     }
 
+    fun remove(
+        position: Int
+    ) {
+        this.lines[position].destroy()
+
+        this.lines.removeAt(position)
+    }
+
     fun update() {
         this.lines.forEach { it.update() }
     }
