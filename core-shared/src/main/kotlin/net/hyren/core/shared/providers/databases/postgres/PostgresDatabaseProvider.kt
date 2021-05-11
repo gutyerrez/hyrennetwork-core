@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import net.hyren.core.shared.providers.databases.IDatabaseProvider
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.net.InetSocketAddress
 
 /**
@@ -41,7 +42,9 @@ class PostgresDatabaseProvider(
 
         this.hikariDataSource = HikariDataSource(hikariConfig)
 
-        Database.connect(this.hikariDataSource)
+        val primaryConnection = Database.connect(this.hikariDataSource)
+
+        TransactionManager.defaultDatabase = primaryConnection
     }
 
     override fun provide() { /* not implemented method */ }
