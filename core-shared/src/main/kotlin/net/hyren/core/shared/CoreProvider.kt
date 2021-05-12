@@ -191,7 +191,6 @@ object CoreProvider {
                 Env.getString("databases.maria_db.user"),
                 Env.getString("databases.maria_db.password"),
                 Env.getString("databases.maria_db.database"),
-                Env.getString("databases.maria_db.schema"),
                 true
             )
 

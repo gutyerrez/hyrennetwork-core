@@ -11,35 +11,29 @@ import java.net.InetSocketAddress
  * @author SrGutyerrez
  **/
 class MariaDBDatabaseProvider(
-        private val address: InetSocketAddress,
+        private val inetSocketAddress: InetSocketAddress,
         private val user: String,
         private val password: String,
         private val database: String,
-        private val schema: String,
         private val primaryDatabase: Boolean = false
 ) : IDatabaseProvider<Database> {
 
     private lateinit var _database: Database
 
     override fun prepare() {
-        val hikariConfig = HikariConfig()
+        val hikariDataSource = HikariDataSource(
+            HikariConfig().apply {
+                jdbcUrl = "jdbc:mysql://${inetSocketAddress.address.hostAddress}:${inetSocketAddress.port}/$database"
+                driverClassName = "com.mysql.cj.jdbc.Driver"
+                username = username
+                password = password
+                maximumPoolSize = 10
 
-        // setup driver
-        hikariConfig.driverClassName = "com.mysql.cj.jdbc.Driver"
+                connectionTestQuery = "SELECT 1;"
 
-        // setup data properties
-        hikariConfig.addDataSourceProperty("serverName", this.address.address.hostAddress)
-        hikariConfig.addDataSourceProperty("portNumber", this.address.port)
-        hikariConfig.addDataSourceProperty("databaseName", this.database)
-        hikariConfig.addDataSourceProperty("user", this.user)
-        hikariConfig.addDataSourceProperty("password", this.password)
-
-        hikariConfig.connectionTestQuery = "SELECT 1;"
-
-        hikariConfig.maximumPoolSize = 10
-        hikariConfig.connectionTimeout = 5000
-
-        val hikariDataSource = HikariDataSource(hikariConfig)
+                connectionTimeout = 5000
+            }
+        )
 
         this._database = Database.connect(hikariDataSource)
 
