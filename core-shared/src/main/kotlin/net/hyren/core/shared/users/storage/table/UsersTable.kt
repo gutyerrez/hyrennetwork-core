@@ -12,7 +12,9 @@ import java.util.*
  **/
 object UsersTable : UUIDTable("users") {
 
-    override val id: Column<EntityID<UUID>> = customUUID("id")
+    override val id: Column<EntityID<UUID>> = customUUID("id").entityId()
+
+    override val primaryKey by lazy { PrimaryKey(id) }
 
     val name = varchar("name", 16)
     var email = varchar("email", 255).nullable()

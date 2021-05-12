@@ -13,7 +13,7 @@ import java.util.*
  */
 fun Table.customUUID(
     name: String
-): Column<EntityID<UUID>> = registerColumn(name, UUIDColumnType())
+): Column<UUID> = registerColumn(name, UUIDColumnType())
 
 class UUIDColumnType : ColumnType() {
     override fun sqlType(): String = currentDialect.dataTypeProvider.uuidType()
