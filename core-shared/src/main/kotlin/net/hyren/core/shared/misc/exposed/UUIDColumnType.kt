@@ -23,7 +23,7 @@ class UUIDColumnType : ColumnType() {
             value is EntityID<*> -> {
                 println("1: ${value.value}")
 
-                value.value as UUID
+                return UUID.randomUUID()
             }
             value is UUID -> value
             value is ByteArray -> ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
@@ -38,8 +38,6 @@ class UUIDColumnType : ColumnType() {
     override fun nonNullValueToString(value: Any): String = "'${valueToUUID(value)}'"
 
     private fun valueToUUID(value: Any): UUID {
-        println("valueToUUID: ${value::class.qualifiedName}")
-
         return when (value) {
             is EntityID<*> -> {
                 println("2: ${value.value}")
