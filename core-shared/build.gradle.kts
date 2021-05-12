@@ -20,13 +20,13 @@ dependencies {
     implementation("com.zaxxer:HikariCP:3.4.5")
 
     // exposed
-    implementation("org.jetbrains.exposed:exposed-core:0.29.1")
-    implementation("org.jetbrains.exposed:exposed-dao:0.29.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.29.1")
-    implementation("org.jetbrains.exposed:exposed-jodatime:0.29.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.31.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.31.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.31.1")
+    implementation("org.jetbrains.exposed:exposed-jodatime:0.31.1")
 
     // maria db
-    implementation("org.mariadb.jdbc:mariadb-java-client:2.7.2")
+    implementation("mysql:mysql-connector-java:8.0.19")
 
     // redis
     implementation("redis.clients:jedis:3.3.0")

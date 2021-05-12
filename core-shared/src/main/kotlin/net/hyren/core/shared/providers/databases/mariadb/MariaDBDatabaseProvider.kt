@@ -24,6 +24,9 @@ class MariaDBDatabaseProvider(
     override fun prepare() {
         val hikariConfig = HikariConfig()
 
+        // setup driver
+        hikariConfig.driverClassName = "com.mysql.cj.jdbc.Driver"
+
         // setup datasource
         hikariConfig.dataSourceClassName = "org.mariadb.jdbc.MariaDbDataSource"
 
