@@ -31,6 +31,10 @@ jobs:
               "net.hyren.core-shared",
               "net.hyren.core-spigot"
             ]
+      - name: Waiting github packages propagation
+        uses: jakejarvis/wait-action@master
+        with:
+          time: 30s
       - name: Build project
         run: ./gradlew shadowJar
       - name: Deploy project
