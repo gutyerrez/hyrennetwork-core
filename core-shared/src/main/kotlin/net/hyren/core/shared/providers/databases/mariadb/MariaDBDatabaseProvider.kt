@@ -34,8 +34,6 @@ class MariaDBDatabaseProvider(
         hikariConfig.addDataSourceProperty("user", this.user)
         hikariConfig.addDataSourceProperty("password", this.password)
 
-        hikariConfig.schema = this.schema
-
         hikariConfig.connectionTestQuery = "SELECT 1;"
 
         hikariConfig.maximumPoolSize = 10
