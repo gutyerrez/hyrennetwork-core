@@ -11,7 +11,7 @@ import java.util.*
  */
 open class UUIDTable(name: String = "", columnName: String = "id") : IdTable<UUID>(name) {
 
-    override val id: Column<EntityID<UUID>> = customUUID(name)
+    override val id: Column<EntityID<UUID>> = customUUID(columnName)
 
     override val primaryKey by lazy { super.primaryKey ?: PrimaryKey(id) }
 
