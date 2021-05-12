@@ -80,7 +80,7 @@ class BungeeServerConnector : ServerConnector {
 
 		if (bukkitApplication === null) {
 			val disconnectMessage = ComponentBuilder()
-				.append("§c§lREDE FANTASY")
+				.append(CoreConstants.Info.ERROR_SERVER_NAME)
 				.append("\n\n")
 				.append("§cNão foi possível localizar a aplicação.")
 				.create()

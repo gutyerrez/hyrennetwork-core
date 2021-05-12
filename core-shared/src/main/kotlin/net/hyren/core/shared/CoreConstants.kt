@@ -83,6 +83,7 @@ object CoreConstants {
 
 		const val SERVER_NAME = "Rede Fantasy"
 		const val COLORED_SERVER_NAME = "§6§lREDE FANTASY"
+		const val ERROR_SERVER_NAME = "§c§lREDE FANTASY"
 
 		// url
 
