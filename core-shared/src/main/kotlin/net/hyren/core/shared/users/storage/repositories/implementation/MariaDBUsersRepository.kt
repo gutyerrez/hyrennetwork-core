@@ -15,7 +15,7 @@ class MariaDBUsersRepository : IUsersRepository {
     override fun fetchById(fetchUserById: FetchUserByIdDTO): User? {
         return transaction {
             return@transaction UserDAO.find {
-                UsersTable.name eq "Gutyerrez"
+                UsersTable.id eq fetchUserById.id
             }.firstOrNull()?.asUser()
         }
     }
