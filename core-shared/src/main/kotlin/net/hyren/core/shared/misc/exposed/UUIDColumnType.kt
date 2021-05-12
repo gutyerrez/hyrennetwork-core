@@ -21,7 +21,7 @@ class UUIDColumnType : ColumnType() {
     override fun valueFromDB(value: Any): UUID {
         return when {
             value is EntityID<*> -> {
-                println(value.value)
+                println("1: ${value.value}")
 
                 value.value as UUID
             }
@@ -42,7 +42,7 @@ class UUIDColumnType : ColumnType() {
 
         return when (value) {
             is EntityID<*> -> {
-                println(value.value)
+                println("2: ${value.value}")
 
                 value.value as UUID
             }
