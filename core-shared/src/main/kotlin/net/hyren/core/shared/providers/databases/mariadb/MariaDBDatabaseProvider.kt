@@ -27,9 +27,6 @@ class MariaDBDatabaseProvider(
         // setup driver
         hikariConfig.driverClassName = "com.mysql.cj.jdbc.Driver"
 
-        // setup datasource
-        hikariConfig.dataSourceClassName = "org.mariadb.jdbc.MariaDbDataSource"
-
         // setup data properties
         hikariConfig.addDataSourceProperty("serverName", this.address.address.hostAddress)
         hikariConfig.addDataSourceProperty("portNumber", this.address.port)
