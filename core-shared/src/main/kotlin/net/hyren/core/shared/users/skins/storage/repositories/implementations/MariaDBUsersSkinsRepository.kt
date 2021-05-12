@@ -1,7 +1,6 @@
 package net.hyren.core.shared.users.skins.storage.repositories.implementations
 
 import net.hyren.core.shared.CoreConstants
-import net.hyren.core.shared.misc.exposed.ilike
 import net.hyren.core.shared.users.skins.data.UserSkin
 import net.hyren.core.shared.users.skins.storage.dao.UserSkinDAO
 import net.hyren.core.shared.users.skins.storage.dto.*
@@ -31,7 +30,7 @@ class MariaDBUsersSkinsRepository : IUsersSkinsRepository {
 	): UserSkin? {
 		return transaction {
 			UserSkinDAO.find {
-				UsersSkinsTable.name ilike fetchUserSkinByNameDTO.name
+				UsersSkinsTable.name like fetchUserSkinByNameDTO.name
 			}.firstOrNull()?.toUserSkin()
 		}
 	}
@@ -42,7 +41,7 @@ class MariaDBUsersSkinsRepository : IUsersSkinsRepository {
 		return transaction {
 			UserSkinDAO.find {
 				UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
-					UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
+					UsersSkinsTable.name like fetchUserSkinByUserIdAndNameDTO.name
 				)
 			}.firstOrNull()?.toUserSkin()
 		}

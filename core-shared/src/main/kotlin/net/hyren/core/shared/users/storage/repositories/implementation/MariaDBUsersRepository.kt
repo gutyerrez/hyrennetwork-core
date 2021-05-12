@@ -1,6 +1,5 @@
 package net.hyren.core.shared.users.storage.repositories.implementation
 
-import net.hyren.core.shared.misc.exposed.ilike
 import net.hyren.core.shared.users.data.User
 import net.hyren.core.shared.users.storage.dao.UserDAO
 import net.hyren.core.shared.users.storage.dto.*
@@ -24,7 +23,7 @@ class MariaDBUsersRepository : IUsersRepository {
     override fun fetchByName(fetchUserByName: FetchUserByNameDTO): User? {
         return transaction {
             return@transaction UserDAO.find {
-                UsersTable.name ilike fetchUserByName.name
+                UsersTable.name like fetchUserByName.name
             }.firstOrNull()?.asUser()
         }
     }
