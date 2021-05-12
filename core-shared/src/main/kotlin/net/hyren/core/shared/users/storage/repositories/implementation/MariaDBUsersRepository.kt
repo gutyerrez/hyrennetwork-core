@@ -23,7 +23,7 @@ class MariaDBUsersRepository : IUsersRepository {
     override fun fetchByName(fetchUserByName: FetchUserByNameDTO): User? {
         return transaction {
             return@transaction UserDAO.find {
-                UsersTable.name like fetchUserByName.name
+                UsersTable.name eq fetchUserByName.name
             }.firstOrNull()?.asUser()
         }
     }
