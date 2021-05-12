@@ -1,20 +1,12 @@
 package net.hyren.core.shared.users.storage.table
 
-import net.hyren.core.shared.misc.exposed.customUUID
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.jodatime.datetime
-import java.util.*
 
 /**
  * @author SrGutyerrez
  **/
 object UsersTable : UUIDTable("users") {
-
-    override val id: Column<EntityID<UUID>> = customUUID("id").entityId()
-
-    override val primaryKey by lazy { PrimaryKey(id) }
 
     val name = varchar("name", 16)
     var email = varchar("email", 255).nullable()
