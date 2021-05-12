@@ -2,7 +2,6 @@ package net.hyren.core.shared.applications.status
 
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.servers.data.Server
-import org.influxdb.dto.Point
 import java.net.InetSocketAddress
 
 /**
@@ -24,28 +23,6 @@ open class ApplicationStatus(
     fun isSame(applicationName: String) = this.applicationName == applicationName
 
     fun isSameServer(other: ApplicationStatus) = this.server != null && this.server == other.server
-
-    open fun buildPoint(): Point.Builder {
-        val builder = Point.measurement("application_status")
-            .tag("application_name", this.applicationName)
-            .tag("application_type", this.applicationType.name)
-
-        if (this.server != null) {
-            builder.tag("server_name", this.server.getName())
-        }
-
-        builder.addField(
-            "address", String.format(
-                "%s:%d", this.address.address.hostAddress, this.address.port
-            )
-        ).addField("online_since", this.onlineSince)
-            .addField("heap_size", this.heapSize)
-            .addField("heap_max_size", this.heapMaxSize)
-            .addField("heap_free_size", this.heapFreeSize)
-            .addField("online_players", this.onlinePlayers)
-
-        return builder
-    }
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false

@@ -27,7 +27,6 @@ import net.hyren.core.shared.misc.revoke.category.storage.repositories.implement
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
 import net.hyren.core.shared.providers.cache.redis.RedisCacheProvider
-import net.hyren.core.shared.providers.databases.influx.InfluxDatabaseProvider
 import net.hyren.core.shared.providers.databases.mariadb.MariaDBDatabaseProvider
 import net.hyren.core.shared.providers.databases.mariadb.providers.MariaDBRepositoryProvider
 import net.hyren.core.shared.providers.databases.redis.RedisDatabaseProvider
@@ -161,7 +160,6 @@ object CoreProvider {
             Databases.MariaDB.MARIA_DB_MAIN.prepare()
             Databases.Redis.REDIS_MAIN.prepare()
             Databases.Redis.REDIS_ECHO.prepare()
-            Databases.Influx.INFLUX_MAIN.prepare()
 
             Repositories.MariaDB.SERVERS_REPOSITORY.prepare()
             Repositories.MariaDB.APPLICATIONS_REPOSITORY.prepare()
@@ -218,20 +216,6 @@ object CoreProvider {
             )
 
             val ECHO = EchoProvider(REDIS_ECHO)
-
-        }
-
-        object Influx {
-
-            val INFLUX_MAIN = InfluxDatabaseProvider(
-                InetSocketAddress(
-                    Env.getString("databases.influx_db.host"),
-                    Env.getInt("databases.influx_db.port")
-                ),
-                Env.getString("databases.influx_db.user"),
-                Env.getString("databases.influx_db.password"),
-                Env.getString("databases.influx_db.database")
-            )
 
         }
 

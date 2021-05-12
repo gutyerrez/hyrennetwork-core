@@ -31,9 +31,6 @@ dependencies {
     // redis
     implementation("redis.clients:jedis:3.3.0")
 
-    // influx db
-    implementation("org.influxdb:influxdb-java:2.20")
-
     // jackson
     implementation("com.fasterxml.jackson.core:jackson-core:2.12.3")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
