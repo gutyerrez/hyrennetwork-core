@@ -24,7 +24,21 @@ class UUIDColumnType : ColumnType() {
         return when {
             value is UUID -> value
             value is ByteArray -> {
-                println("ByteArray: $value")
+                // Start Check if is uuid
+                println(value.size)
+
+                if (value.size >= 36) {
+                    println("ByteArray: $value/${value.size}")
+
+                    val possibleUUID = String(value)
+
+                    println("Value from ByteArray: $possibleUUID")
+
+                    if (possibleUUID.matches(uuidRegexp)) {
+                        return UUID.fromString(possibleUUID)
+                    }
+                }
+                // End Check
 
                 ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
             }
