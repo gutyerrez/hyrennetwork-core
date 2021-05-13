@@ -36,9 +36,9 @@ class UUIDColumnType : ColumnType() {
     override fun notNullValueToDB(value: Any): Any {
         println("To database: " + value)
 
-        val _value = currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
+        val _value = currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value)) as ByteArray
 
-        println("To database 2: " + _value)
+        println("To database 2: " + String(_value))
 
         return _value
     }
