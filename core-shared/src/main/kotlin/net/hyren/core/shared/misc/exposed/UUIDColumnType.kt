@@ -20,7 +20,6 @@ class UUIDColumnType : ColumnType() {
     override fun valueFromDB(value: Any): UUID = when {
         value is UUID -> value
         value is ByteArray -> {
-            println("ByteArray: " + value.contentToString())
             val possibleUUID = String(value)
 
             if (possibleUUID.matches(uuidRegexp)) {
@@ -38,19 +37,9 @@ class UUIDColumnType : ColumnType() {
         is MysqlDialect -> {
             value as UUID
 
-            val byteArray = ByteBuffer.allocate(36).putLong(
-                value.mostSignificantBits
-            ).putLong(
-                value.leastSignificantBits
-            ).array()
-
-            println("To DB: ${ByteBuffer.wrap(byteArray).let { b -> UUID(b.long, b.long) }}")
-
-            byteArray
+            value.toString()
         }
         else -> {
-            println(currentDialect::class.qualifiedName)
-
             currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
         }
     }
@@ -58,14 +47,9 @@ class UUIDColumnType : ColumnType() {
     override fun nonNullValueToString(value: Any): String = "'${valueToUUID(value)}'"
 
     private fun valueToUUID(value: Any): UUID = when (value) {
-        is UUID -> {
-            println("UUID is: " + value)
-
-            value
-        }
+        is UUID -> value
         is String -> UUID.fromString(value)
         is ByteArray -> {
-            println("Is that")
             val possibleUUID = String(value)
 
             if (possibleUUID.matches(uuidRegexp)) {
