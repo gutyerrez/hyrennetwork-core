@@ -39,7 +39,15 @@ class UUIDColumnType : ColumnType() {
     private fun valueToUUID(value: Any): UUID = when (value) {
             is UUID -> value
             is String -> UUID.fromString(value)
-            is ByteArray -> ByteBuffer.wrap(value).let { UUID(it.long, it.long) }
+            is ByteArray -> {
+                val possibleUUID = String(value)
+
+                if (possibleUUID.matches(uuidRegexp)) {
+                    UUID.fromString(possibleUUID)
+                } else {
+                    ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
+                }
+            }
             else -> error("Unexpected value of type UUID: ${value.javaClass.canonicalName}")
     }
 
