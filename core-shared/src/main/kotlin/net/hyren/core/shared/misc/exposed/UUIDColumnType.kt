@@ -3,7 +3,7 @@ package net.hyren.core.shared.misc.exposed
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.vendors.MysqlDialect
+import org.jetbrains.exposed.sql.vendors.MariaDBDialect
 import org.jetbrains.exposed.sql.vendors.currentDialect
 import java.nio.ByteBuffer
 import java.util.*
@@ -34,8 +34,8 @@ class UUIDColumnType : ColumnType() {
         else -> error("Unexpected value of type UUID: $value of ${value::class.qualifiedName}")
     }
 
-    override fun notNullValueToDB(value: Any): Any = when (currentDialect.dataTypeProvider) {
-        is MysqlDialect -> {
+    override fun notNullValueToDB(value: Any): Any = when (currentDialect) {
+        is MariaDBDialect -> {
             value as UUID
 
             val byteArray = ByteBuffer.allocate(36).putLong(
@@ -48,7 +48,11 @@ class UUIDColumnType : ColumnType() {
 
             byteArray
         }
-        else -> currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
+        else -> {
+            println(currentDialect.dataTypeProvider::class.qualifiedName)
+
+            currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
+        }
     }
 
     override fun nonNullValueToString(value: Any): String = "'${valueToUUID(value)}'"
