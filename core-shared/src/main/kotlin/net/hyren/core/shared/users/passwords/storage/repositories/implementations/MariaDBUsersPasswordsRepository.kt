@@ -8,6 +8,8 @@ import net.hyren.core.shared.users.passwords.storage.repositories.IUsersPassword
 import net.hyren.core.shared.users.passwords.storage.table.UserPasswordTable
 import net.hyren.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -18,13 +20,11 @@ class MariaDBUsersPasswordsRepository : IUsersPasswordsRepository {
 
     override fun fetchByUserId(fetchUserPasswordByUserIdDTO: FetchUserPasswordByUserIdDTO): List<UserPassword> {
         return transaction {
-            val userPasswords = mutableListOf<UserPassword>()
+            addLogger(StdOutSqlLogger)
 
-            UserPasswordDAO.find {
+            return@transaction UserPasswordDAO.find {
                 UserPasswordTable.userId eq fetchUserPasswordByUserIdDTO.userId
-            }.forEach { userPasswords.add(it.asUserPassword()) }
-
-            return@transaction userPasswords
+            }.map { it.asUserPassword() }
         }
     }
 
