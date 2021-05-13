@@ -19,11 +19,15 @@ class UUIDColumnType : ColumnType() {
     override fun sqlType(): String = currentDialect.dataTypeProvider.uuidType()
 
     override fun valueFromDB(value: Any): UUID {
-        println(value::class.qualifiedName)
+        println(">> " + value::class.qualifiedName)
 
         return when {
             value is UUID -> value
-            value is ByteArray -> ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
+            value is ByteArray -> {
+                println("ByteArray: $value")
+
+                ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
+            }
             value is String && value.matches(uuidRegexp) -> UUID.fromString(value)
             value is String -> ByteBuffer.wrap(value.toByteArray()).let { b -> UUID(b.long, b.long) }
             else -> error("Unexpected value of type UUID: $value of ${value::class.qualifiedName}")
@@ -35,7 +39,7 @@ class UUIDColumnType : ColumnType() {
     override fun nonNullValueToString(value: Any): String = "'${valueToUUID(value)}'"
 
     private fun valueToUUID(value: Any): UUID {
-        println(value::class.qualifiedName)
+        println("> " + value::class.qualifiedName)
 
         return when (value) {
             is UUID -> value
