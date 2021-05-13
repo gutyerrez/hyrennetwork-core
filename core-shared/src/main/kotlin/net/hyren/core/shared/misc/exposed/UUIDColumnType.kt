@@ -38,7 +38,7 @@ class UUIDColumnType : ColumnType() {
         is MysqlDialect -> {
             value as UUID
 
-            val byteArray = ByteBuffer.allocate(32).putLong(
+            val byteArray = ByteBuffer.allocate(36).putLong(
                 value.mostSignificantBits
             ).putLong(
                 value.leastSignificantBits
