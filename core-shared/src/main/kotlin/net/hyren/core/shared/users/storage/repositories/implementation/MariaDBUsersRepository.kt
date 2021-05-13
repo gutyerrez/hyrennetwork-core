@@ -5,8 +5,6 @@ import net.hyren.core.shared.users.storage.dao.UserDAO
 import net.hyren.core.shared.users.storage.dto.*
 import net.hyren.core.shared.users.storage.repositories.IUsersRepository
 import net.hyren.core.shared.users.storage.table.UsersTable
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -16,8 +14,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun fetchById(fetchUserById: FetchUserByIdDTO): User? {
         return transaction {
-            addLogger(StdOutSqlLogger)
-
             return@transaction UserDAO.find {
                 UsersTable.id eq fetchUserById.id
             }.firstOrNull()?.asUser()
@@ -26,8 +22,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun fetchByName(fetchUserByName: FetchUserByNameDTO): User? {
         return transaction {
-            addLogger(StdOutSqlLogger)
-
             return@transaction UserDAO.find {
                 UsersTable.name like fetchUserByName.name
             }.firstOrNull()?.asUser()
@@ -36,8 +30,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun fetchByDiscordId(fetchUserByDiscordId: FetchUserByDiscordIdDTO): User? {
         return transaction {
-            addLogger(StdOutSqlLogger)
-
             return@transaction UserDAO.find {
                 UsersTable.discordId eq fetchUserByDiscordId.discordId
             }.firstOrNull()?.asUser()
@@ -46,8 +38,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun fetchByLastAddress(fetchUserByLastAddress: FetchUserByLastAddressDTO): List<User> {
         return transaction {
-            addLogger(StdOutSqlLogger)
-
             return@transaction UserDAO.find {
                 UsersTable.lastAddress eq fetchUserByLastAddress.lastAddress
             }.map { it.asUser() }
@@ -56,8 +46,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun create(createUserDTO: CreateUserDTO): User {
         return transaction {
-            addLogger(StdOutSqlLogger)
-
             return@transaction UserDAO.new(createUserDTO.id) {
                 this.name = createUserDTO.name
                 this.lastAddress = createUserDTO.lastAddress
@@ -67,8 +55,6 @@ class MariaDBUsersRepository : IUsersRepository {
 
     override fun update(updateUserByIdDTO: UpdateUserByIdDTO) {
         transaction {
-            addLogger(StdOutSqlLogger)
-
             UserDAO.find {
                 UsersTable.id eq updateUserByIdDTO.id
             }.map { updateUserByIdDTO.execute.accept(it) }
