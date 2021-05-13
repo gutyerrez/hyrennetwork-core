@@ -44,7 +44,7 @@ class UUIDColumnType : ColumnType() {
                 value.leastSignificantBits
             ).array()
 
-            println("To DB: ${String(byteArray)}")
+            println("To DB: ${ByteBuffer.wrap(byteArray).let { b -> UUID(b.long, b.long) }}")
 
             byteArray
         }
