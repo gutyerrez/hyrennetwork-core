@@ -23,10 +23,16 @@ class MariaDBDatabaseProvider(
     override fun prepare() {
         val hikariDataSource = HikariDataSource(
             HikariConfig().apply {
-                jdbcUrl = "jdbc:mysql://${inetSocketAddress.address.hostAddress}:${inetSocketAddress.port}/$database"
+                jdbcUrl = "jdbc:mysql://${
+                    this@MariaDBDatabaseProvider.inetSocketAddress.address.hostAddress
+                }:${
+                    this@MariaDBDatabaseProvider.inetSocketAddress.port
+                }/${
+                    this@MariaDBDatabaseProvider.database
+                }"
                 driverClassName = "com.mysql.cj.jdbc.Driver"
-                username = username
-                password = password
+                username = this@MariaDBDatabaseProvider.user
+                password = this@MariaDBDatabaseProvider.password
                 maximumPoolSize = 10
 
                 connectionTestQuery = "SELECT 1;"
