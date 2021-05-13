@@ -10,7 +10,7 @@ import org.joda.time.DateTime
  */
 object UserPasswordTable : IntIdTable("users_passwords") {
 
-    val userId = entityId("user_id", UsersTable)
+    val userId = reference("user_id", UsersTable)
     val password = varchar("password", 255)
     val enabled = bool("enabled").default(true)
     val createdAt = datetime("created_at").default(DateTime.now())
