@@ -19,6 +19,7 @@ class UUIDColumnType : ColumnType() {
     override fun valueFromDB(value: Any): UUID = when {
         value is UUID -> value
         value is ByteArray -> {
+            println("ByteArray: " + value.contentToString())
             val possibleUUID = String(value)
 
             if (possibleUUID.matches(uuidRegexp)) {
@@ -32,27 +33,37 @@ class UUIDColumnType : ColumnType() {
         else -> error("Unexpected value of type UUID: $value of ${value::class.qualifiedName}")
     }
 
-    override fun notNullValueToDB(value: Any): Any = currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
+    override fun notNullValueToDB(value: Any): Any = {
+        println("To database: " + value)
+
+        currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
+    }
 
     override fun nonNullValueToString(value: Any): String = "'${valueToUUID(value)}'"
 
     private fun valueToUUID(value: Any): UUID = when (value) {
-            is UUID -> value
-            is String -> UUID.fromString(value)
-            is ByteArray -> {
-                val possibleUUID = String(value)
+        is UUID -> {
+            println("UUID is: " + value)
 
-                if (possibleUUID.matches(uuidRegexp)) {
-                    UUID.fromString(possibleUUID)
-                } else {
-                    ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
-                }
+            value
+        }
+        is String -> UUID.fromString(value)
+        is ByteArray -> {
+            println("Is that")
+            val possibleUUID = String(value)
+
+            if (possibleUUID.matches(uuidRegexp)) {
+                UUID.fromString(possibleUUID)
+            } else {
+                ByteBuffer.wrap(value).let { b -> UUID(b.long, b.long) }
             }
-            else -> error("Unexpected value of type UUID: ${value.javaClass.canonicalName}")
+        }
+        else -> error("Unexpected value of type UUID: ${value.javaClass.canonicalName}")
     }
 
     companion object {
         private val uuidRegexp = Regex("[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}", RegexOption.IGNORE_CASE)
     }
+}
 
 }
