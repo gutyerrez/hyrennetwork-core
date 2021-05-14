@@ -5,7 +5,7 @@ import net.md_5.bungee.api.chat.BaseComponent
 /**
  * @author Gutyerrez
  */
-interface Wrapper<T> {
+interface IWrapper<T> {
 
     fun sendMessage(
         senderName: String,

@@ -316,7 +316,7 @@ open class User(
         ).forEach {
             val count = reports[it.reportCategory] ?: 0
 
-            reports[it.reportCategory] = count + 1
+//            reports[it.reportCategory] = count + 1
         }
 
         return reports

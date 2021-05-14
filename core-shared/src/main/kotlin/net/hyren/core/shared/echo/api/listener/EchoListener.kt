@@ -3,4 +3,7 @@ package net.hyren.core.shared.echo.api.listener
 /**
  * @author SrGutyerrez
  **/
-interface EchoListener
+interface EchoPacketListener
+
+@Deprecated("EchoListener is unused", ReplaceWith("EchoPacketListener"))
+interface EchoListener : EchoPacketListener

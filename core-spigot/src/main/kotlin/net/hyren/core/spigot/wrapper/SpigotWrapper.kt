@@ -1,6 +1,6 @@
 package net.hyren.core.spigot.wrapper
 
-import net.hyren.core.shared.wrapper.Wrapper
+import net.hyren.core.shared.wrapper.IWrapper
 import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 /**
  * @author Gutyerrez
  */
-class SpigotWrapper : Wrapper<CommandSender> {
+class SpigotWrapper : IWrapper<CommandSender> {
 
     override fun sendMessage(
         senderName: String,

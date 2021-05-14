@@ -1,22 +1,9 @@
 package net.hyren.core.shared
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.datatype.guava.GuavaModule
-import com.fasterxml.jackson.datatype.joda.JodaModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.google.gson.GsonBuilder
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.misc.cooldowns.CooldownManager
-import net.hyren.core.shared.misc.jackson.ServersDeserializer
-import net.hyren.core.shared.misc.jackson.ServersSerializer
-import net.hyren.core.shared.misc.jackson.addSerializerAndDeserializer
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
 import java.util.*
@@ -30,12 +17,6 @@ object CoreConstants {
 	const val MAX_LOGIN_ATTEMPTS = 3
 
 	val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
-
-	val JACKSON = ObjectMapper()
-
-	val GSON = GsonBuilder()
-		.setPrettyPrinting()
-		.create()
 
 	val OK_HTTP = OkHttpClient()
 	val RANDOM = Random()
@@ -56,28 +37,6 @@ object CoreConstants {
 		"/login",
 		"/register"
 	)
-
-	init {
-		JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-		JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
-		JACKSON.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
-		JACKSON.registerModule(GuavaModule())
-		JACKSON.registerModule(KotlinModule())
-		JACKSON.registerModule(JodaModule())
-		JACKSON.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-		JACKSON.setVisibility(
-			JACKSON.serializationConfig.defaultVisibilityChecker
-				.with(JsonAutoDetect.Visibility.NONE)
-				.withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-		)
-
-		JACKSON.registerModule(SimpleModule().apply {
-			this.addSerializerAndDeserializer(
-				ServersSerializer(),
-				ServersDeserializer()
-			)
-		})
-	}
 
 	object Info {
 

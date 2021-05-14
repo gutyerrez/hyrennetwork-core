@@ -1,35 +1,36 @@
 package net.hyren.core.shared.misc.exposed
 
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import java.sql.SQLFeatureNotSupportedException
-import kotlin.reflect.KClass
 
 /**
  * @author Gutyerrez
  */
 fun <T> Table.array(
-    name: String,
-    kClass: KClass<*>
-): Column<Array<T>> = registerColumn(name, ArrayColumnType(kClass))
+    name: String
+): Column<Array<T>> = registerColumn(name, ArrayColumnType())
 
-class ArrayColumnType(
-    private val kClass: KClass<*>
-) : ColumnType() {
-    override fun sqlType() = "JSON"
+class ArrayColumnType : ColumnType() {
+
+    override fun sqlType() = "longtext"
 
     override fun valueFromDB(
         value: Any
     ): Any {
         if (value is java.sql.Array) {
-            if (value.array === null) error("Cannot read null array")
+            if (value.array === null) {
+                error("Cannot read null array")
+            }
 
             return value.array
         } else if (value is String) {
-            return CoreConstants.JACKSON.readValue(value, kClass.java)
+            return Json.decodeFromString<Array<Any>>(value)
         } else if (value is Array<*>) {
             return value
         }
@@ -38,13 +39,10 @@ class ArrayColumnType(
     }
 
     override fun setParameter(
-        stmt: PreparedStatementApi,
-        index: Int,
-        value: Any?
+        stmt: PreparedStatementApi, index: Int, value: Any?
     ) {
         super.setParameter(stmt, index, value.let {
-            CoreConstants.JACKSON.writerWithDefaultPrettyPrinter().writeValueAsString(value)
+            Json.encodeToString(it)
         })
     }
-
 }

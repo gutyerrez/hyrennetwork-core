@@ -1,15 +1,10 @@
 package net.hyren.core.spigot
 
-import com.fasterxml.jackson.databind.module.SimpleModule
-import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
-import net.hyren.core.shared.misc.jackson.addSerializerAndDeserializer
 import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import net.hyren.core.spigot.listeners.GenericListener
-import net.hyren.core.spigot.misc.jackson.ItemStackDeserializer
-import net.hyren.core.spigot.misc.jackson.ItemStackSerializer
 import net.hyren.core.spigot.misc.plugin.CustomPlugin
 import net.hyren.core.spigot.misc.utils.PacketEvent
 import net.hyren.core.spigot.misc.utils.PacketListener
@@ -73,17 +68,6 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 event.quitMessage = null
             }
         }, this)
-
-        /**
-         * Serializers and Deserializers
-         */
-
-        CoreConstants.JACKSON.registerModule(SimpleModule().apply {
-            this.addSerializerAndDeserializer(
-                ItemStackSerializer(),
-                ItemStackDeserializer()
-            )
-        })
 
         /**
          * Protocol

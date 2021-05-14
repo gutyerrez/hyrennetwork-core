@@ -1,8 +1,9 @@
 package net.hyren.core.shared.environment
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromJsonElement
 import net.hyren.core.shared.misc.utils.FileUtils
 import java.io.File
 import java.io.FileNotFoundException
@@ -12,7 +13,7 @@ import java.io.FileNotFoundException
  **/
 object Env {
 
-    private val ENVIRONMENT_MAP = mutableMapOf<String, JsonElement?>()
+    private lateinit var ENVIRONMENT_MAP: Map<String, JsonElement?>
 
     private var INITIALIZED = false
 
@@ -22,12 +23,9 @@ object Env {
         if (!file.exists()) {
             throw FileNotFoundException("Can't find environment file")
         }
-
         val contents = FileUtils.readFileToString(file)
 
-        val json = CoreConstants.GSON.fromJson(contents, JsonObject::class.java)
-
-        FileUtils.mapJsonObject("", json, ENVIRONMENT_MAP)
+        this.ENVIRONMENT_MAP = Json.decodeFromString(contents)
 
         INITIALIZED = true
     }
@@ -43,43 +41,56 @@ object Env {
     fun getString(key: String, defaultValue: String = ""): String {
         val jsonElement = get(key)
 
-        return jsonElement?.asString ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getInt(key: String, defaultValue: Int = 0): Int {
         val jsonElement = get(key)
 
-        return jsonElement?.asInt ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getDouble(key: String, defaultValue: Double = 0.0): Double {
         val jsonElement = get(key)
 
-        return jsonElement?.asDouble ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getFloat(key: String, defaultValue: Float = 0F): Float {
         val jsonElement = get(key)
 
-        return jsonElement?.asFloat ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getLong(key: String, defaultValue: Long = 0): Long {
         val jsonElement = get(key)
 
-        return jsonElement?.asLong ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
         val jsonElement = get(key)
 
-        return jsonElement?.asBoolean ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
 
     fun getShort(key: String, defaultValue: Short = 0): Short {
         val jsonElement = get(key)
 
-        return jsonElement?.asShort ?: defaultValue
+        return jsonElement?.let {
+            Json.decodeFromJsonElement(it)
+        } ?: defaultValue
     }
-
 }

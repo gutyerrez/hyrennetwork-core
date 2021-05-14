@@ -6,10 +6,6 @@ dependencies {
     // kotlinx
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
-    // google
-    implementation("com.google.guava:guava:29.0-jre")
-    implementation("com.google.code.gson:gson:2.8.6")
-
     // commons-lang 3
     implementation("org.apache.commons:commons-lang3:3.11")
 
@@ -31,13 +27,8 @@ dependencies {
     // redis
     implementation("redis.clients:jedis:3.3.0")
 
-    // jackson
-    implementation("com.fasterxml.jackson.core:jackson-core:2.12.3")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.12.3")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.12.3")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.12.3")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
+    // serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     // eventbus
     implementation("org.greenrobot:eventbus:3.2.0")

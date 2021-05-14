@@ -3,7 +3,7 @@ package net.hyren.core.shared.echo.api.misc.subscriber
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.echo.api.Echo
 import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
-import net.hyren.core.shared.echo.api.listener.EchoListener
+import net.hyren.core.shared.echo.api.listener.EchoPacketListener
 import net.hyren.core.shared.echo.api.packets.EchoPacket
 import net.hyren.core.shared.echo.api.packets.EchoPacketHeader
 import net.hyren.core.shared.echo.api.response.Respondable
@@ -90,7 +90,7 @@ open class EchoSubscriber(
         }
     }
 
-    fun registerListener(listener: EchoListener) {
+    fun registerListener(listener: EchoPacketListener) {
         this.EVENT_BUS.register(listener)
     }
 

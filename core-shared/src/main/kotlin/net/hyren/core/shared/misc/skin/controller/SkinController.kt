@@ -1,6 +1,10 @@
 package net.hyren.core.shared.misc.skin.controller
 
-import com.fasterxml.jackson.databind.JsonNode
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
@@ -40,38 +44,26 @@ object SkinController {
 			val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
 			if (response.code != 200) return null else {
-				val bytes = response.body?.bytes()
+				val body = response.body?.string()
 
-				if (bytes?.isEmpty() == true) return null
+				if (body == null || body.isEmpty()) return null
 
-				val jsonNode = CoreConstants.JACKSON.readValue(
-					bytes,
-					JsonNode::class.java
-				)
+				val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-				if (jsonNode.get("id").isNull) return null
+				if (jsonObject["id"] == null) return null
 
-				minecraftProfile = CoreConstants.JACKSON.readValue(
-					jsonNode.asText(),
-					MinecraftProfile::class.java
-				)
+				minecraftProfile = Json.decodeFromJsonElement(jsonObject)
 			}
 		} else {
-			val bytes = response.body?.bytes()
+			val body = response.body?.string()
 
-			if (bytes?.isEmpty() == true) return null
+			if (body == null || body.isEmpty()) return null
 
-			val jsonNode = CoreConstants.JACKSON.readValue(
-				bytes,
-				JsonNode::class.java
-			)
+			val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-			if (jsonNode.get("id").isNull) return null
+			if (jsonObject["id"] == null) return null
 
-			minecraftProfile = CoreConstants.JACKSON.readValue(
-				jsonNode.asText(),
-				MinecraftProfile::class.java
-			)
+			minecraftProfile = Json.decodeFromJsonElement(jsonObject)
 		}
 
 		val skin: () -> Skin? = invoker@{
@@ -97,38 +89,26 @@ object SkinController {
 				val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
 				if (response.code != 200) return@invoker null else {
-					val bytes = response.body?.bytes()
+					val body = response.body?.string()
 
-					if (bytes?.isEmpty() == true) return@invoker null
+					if (body == null || body.isEmpty()) return@invoker null
 
-					val jsonNode = CoreConstants.JACKSON.readValue(
-						bytes,
-						JsonNode::class.java
-					)
+					val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-					if (!jsonNode.has("raw") || jsonNode.get("raw").get("id").isNull) return@invoker null
+					if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) return@invoker null
 
-					minecraftProfileData = CoreConstants.JACKSON.readValue(
-						jsonNode.asText(),
-						MinecraftProfileData::class.java
-					)
+					minecraftProfileData = Json.decodeFromJsonElement(jsonObject["raw"]!!)
 				}
 			} else {
-				val bytes = response.body?.bytes()
+				val body = response.body?.string()
 
-				if (bytes?.isEmpty() == true) return@invoker null
+				if (body == null || body.isEmpty()) return@invoker null
 
-				val jsonNode = CoreConstants.JACKSON.readValue(
-					bytes,
-					JsonNode::class.java
-				)
+				val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-				if (jsonNode.get("id").isNull) return@invoker null
+				if (!jsonObject.containsKey("id")) return@invoker null
 
-				minecraftProfile = CoreConstants.JACKSON.readValue(
-					jsonNode.asText(),
-					MinecraftProfile::class.java
-				)
+				minecraftProfile = Json.decodeFromJsonElement(jsonObject)
 			}
 
 			val properties = minecraftProfileData.properties[0]

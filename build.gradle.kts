@@ -1,6 +1,6 @@
 plugins {
-	kotlin("jvm") version "1.4.31"
-	kotlin("plugin.serialization") version "1.4.31"
+	kotlin("jvm") version "1.5.0"
+	kotlin("plugin.serialization") version "1.5.0"
 
 	id("com.github.johnrengelman.shadow") version "6.1.0"
 
@@ -9,6 +9,7 @@ plugins {
 }
 
 allprojects {
+	plugins.apply("org.jetbrains.kotlin.plugin.serialization")
 	plugins.apply("com.github.johnrengelman.shadow")
 	plugins.apply("org.jetbrains.kotlin.jvm")
 	plugins.apply("maven-publish")

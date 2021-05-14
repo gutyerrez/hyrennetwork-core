@@ -1,12 +1,15 @@
 package net.hyren.core.shared.misc.punish.durations
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import net.hyren.core.shared.misc.punish.PunishType
 
 /**
  * @author SrGutyerrez
  **/
+@Serializable
 data class PunishDuration(
-        @JsonProperty val duration: Long,
-        @JsonProperty("punish_type") val punishType: PunishType
+    val duration: Long,
+    @SerialName("punish_type")
+    val punishType: PunishType
 )

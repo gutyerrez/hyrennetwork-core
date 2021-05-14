@@ -1,6 +1,10 @@
 package net.hyren.core.shared.world.location
 
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.misc.utils.NumberUtils
@@ -8,9 +12,10 @@ import net.hyren.core.shared.misc.utils.NumberUtils
 /**
  * @author SrGutyerrez
  **/
+@Serializable
 data class SerializedLocation(
-	val applicationName: String? = null,
-	val worldName: String = "world",
+	@SerialName("application_name") val applicationName: String? = null,
+	@SerialName("world_name") val worldName: String = "world",
 	val x: Double,
 	val y: Double,
 	val z: Double,
@@ -43,10 +48,7 @@ data class SerializedLocation(
 		fun of(string: String?): SerializedLocation? {
 			if (string == null) return null
 
-			return CoreConstants.JACKSON.readValue(
-				string,
-				SerializedLocation::class.java
-			)
+			return Json.decodeFromString(string)
 		}
 
 	}
@@ -75,6 +77,6 @@ data class SerializedLocation(
 		)
 	}
 
-	override fun toString() = CoreConstants.JACKSON.writeValueAsString(this)
+	override fun toString() = Json.encodeToString(this)
 
 }

@@ -5,6 +5,6 @@ package net.hyren.core.shared.wrapper
  */
 object CoreWrapper {
 
-    lateinit var WRAPPER: Wrapper<*>
+    lateinit var WRAPPER: IWrapper<*>
 
 }

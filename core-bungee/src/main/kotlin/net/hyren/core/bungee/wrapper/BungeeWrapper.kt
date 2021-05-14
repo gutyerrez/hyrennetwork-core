@@ -1,6 +1,6 @@
 package net.hyren.core.bungee.wrapper
 
-import net.hyren.core.shared.wrapper.Wrapper
+import net.hyren.core.shared.wrapper.IWrapper
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.chat.BaseComponent
@@ -9,7 +9,7 @@ import net.md_5.bungee.api.chat.TextComponent
 /**
  * @author Gutyerrez
  */
-class BungeeWrapper : Wrapper<CommandSender> {
+class BungeeWrapper : IWrapper<CommandSender> {
 
     override fun sendMessage(
         senderName: String,

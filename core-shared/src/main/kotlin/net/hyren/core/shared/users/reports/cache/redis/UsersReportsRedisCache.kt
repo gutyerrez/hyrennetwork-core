@@ -1,6 +1,8 @@
 package net.hyren.core.shared.users.reports.cache.redis
 
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.cache.redis.RedisCache
 import net.hyren.core.shared.users.reports.data.Report
@@ -29,10 +31,7 @@ class UsersReportsRedisCache : RedisCache {
                 if (user.isOnline()) {
                     val value = it.get(key)
 
-                    val _reports = CoreConstants.JACKSON.readValue(
-                            value,
-                            Array<Report>::class.java
-                    )
+                    val _reports = Json.decodeFromString<Array<Report>>(value)
 
                     reports[userId] = _reports.asList()
                 }
@@ -49,10 +48,7 @@ class UsersReportsRedisCache : RedisCache {
             val value = it.get("reports:${userId}")
 
             if (value != null) {
-                val _reports = CoreConstants.JACKSON.readValue(
-                        value,
-                        Array<Report>::class.java
-                )
+                val _reports = Json.decodeFromString<Array<Report>>(value)
 
                 reports.addAll(_reports)
             }
@@ -67,7 +63,7 @@ class UsersReportsRedisCache : RedisCache {
         reports.add(report)
 
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val value = CoreConstants.JACKSON.writeValueAsString(reports.toTypedArray())
+            val value = Json.encodeToString(report)
 
             it.set("reports:$userId", value)
         }

@@ -1,11 +1,11 @@
 package net.hyren.core.shared.echo.api.buffer
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
-import com.google.gson.JsonArray
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
@@ -98,11 +98,8 @@ class EchoBufferInput(
 
         if (valid) {
             return EntityID(
-                CoreConstants.JACKSON.readValue(
-                    this.readString(),
-                    object : TypeReference<T>() {
-                        //
-                    }
+                Json.decodeFromString(
+                    this.readString()!!
                 ),
                 table
             )
@@ -172,10 +169,11 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        return CoreConstants.JACKSON.readValue(
-            this.readString(),
-            object : TypeReference<List<T>>() { /* no body */ }
-        )
+        return this.readString()?.let {
+            Json.decodeFromString<List<T>>(
+                it
+            )
+        }
     }
 
     inline fun <reified T> readArray(): Array<T>? {
@@ -183,26 +181,13 @@ class EchoBufferInput(
 
         if (!valid) return null
 
-        val output = CoreConstants.GSON.fromJson(
-            this.readString(),
-            JsonArray::class.java
-        )
-
-        val array = java.lang.reflect.Array.newInstance(
-            T::class.java,
-            output.size()
-        ) as Array<T>
-
-        output.forEachIndexed { index, it ->
-            array[index] = CoreConstants.GSON.fromJson(
-                it,
-                T::class.java
+        return this.readString()?.let {
+            Json.decodeFromString<Array<T>>(
+                it
             )
         }
-
-        return array
     }
 
-    fun readJsonNode() = CoreConstants.JACKSON.readTree(this.readString())
+    fun readJson() = Json.encodeToJsonElement(this.readString())
 
 }

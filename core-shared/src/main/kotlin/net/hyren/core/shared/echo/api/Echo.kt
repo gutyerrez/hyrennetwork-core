@@ -4,7 +4,7 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.api.buffer.EchoBufferOutput
-import net.hyren.core.shared.echo.api.listener.EchoListener
+import net.hyren.core.shared.echo.api.listener.EchoPacketListener
 import net.hyren.core.shared.echo.api.misc.subscriber.EchoSubscriber
 import net.hyren.core.shared.echo.api.packets.EchoPacket
 import net.hyren.core.shared.echo.api.packets.EchoPacketHeader
@@ -290,7 +290,7 @@ open class Echo(
         return echoSubscriber
     }
 
-    fun registerListener(listener: EchoListener) {
+    fun registerListener(listener: EchoPacketListener) {
         if (this.defaultSubscriber == null) {
             throw RuntimeException("Error while registering echo listener, Default subscriber is null")
         }

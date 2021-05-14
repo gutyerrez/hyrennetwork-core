@@ -2,15 +2,15 @@ package net.hyren.core.shared.echo.api.buffer
 
 import com.google.common.io.ByteArrayDataOutput
 import com.google.common.io.ByteStreams
-import com.google.gson.JsonObject
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
-import java.io.Serializable
 import java.net.Inet6Address
 import java.net.InetSocketAddress
 import java.util.*
@@ -81,9 +81,7 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
             this.writeString(
-                CoreConstants.JACKSON.writeValueAsString(
-                    entityId.value
-                )
+                Json.encodeToString(entityId.value)
             )
         }
     }
@@ -136,7 +134,7 @@ class EchoBufferOutput {
         this.writeString(serializedLocation.toString())
     }
 
-    fun writeJsonObject(jsonObject: JsonObject) {
+    fun writeJsonObject(jsonObject: JsonElement) {
         this.writeString(jsonObject.toString())
     }
 
@@ -161,28 +159,24 @@ class EchoBufferOutput {
         }
     }
 
-    inline fun <reified T: Serializable> writeList(list: List<T>?) {
+    inline fun <reified T> writeList(list: List<T>?) {
         if (list === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
             this.writeString(
-                CoreConstants.JACKSON.writeValueAsString(
-                    list
-                )
+                Json.encodeToString(list)
             )
         }
     }
 
-    inline fun <reified T: Serializable> writeArray(array: Array<T>?) {
+    inline fun <reified T> writeArray(array: Array<T>?) {
         if (array === null) {
             this.writeBoolean(false)
         } else {
             this.writeBoolean(true)
             this.writeString(
-                CoreConstants.JACKSON.writeValueAsString(
-                    array
-                )
+                Json.encodeToString(array)
             )
         }
     }

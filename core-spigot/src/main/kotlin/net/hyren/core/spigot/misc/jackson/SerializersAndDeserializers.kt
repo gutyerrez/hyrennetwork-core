@@ -1,74 +1,36 @@
 package net.hyren.core.spigot.misc.jackson
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.core.JsonToken
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer
-import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
 import org.bukkit.inventory.ItemStack
 
 /**
  * @author Gutyerrez
  */
-open class ItemStackSerializer : StdScalarSerializer<ItemStack>(
-	ItemStack::class.java
-) {
+object ItemStackSerializer : KSerializer<ItemStack> {
+	override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NonNullableUUID", PrimitiveKind.STRING)
 
 	override fun serialize(
-		itemStack: ItemStack?,
-		jsonGenerator: JsonGenerator,
-		serializerProvider: SerializerProvider
+		encoder: Encoder,
+		value: ItemStack
 	) {
-		if (itemStack === null) {
-			jsonGenerator.writeNull()
-		} else {
-			jsonGenerator.writeObject(
-				itemStack.serialize()
+		encoder.apply {
+			encodeString(
+				Json.encodeToString(
+					value.serialize()
+				)
 			)
 		}
 	}
 
-	override fun serializeWithType(
-		itemStack: ItemStack?,
-		jsonGenerator: JsonGenerator,
-		serializerProvider: SerializerProvider,
-		typeSerializer: TypeSerializer
-	) {
-		val typeIdDef = typeSerializer.writeTypePrefix(
-			jsonGenerator,
-			typeSerializer.typeId(
-				itemStack,
-				ItemStack::class.java,
-				JsonToken.VALUE_STRING
-			)
-		)
-
-		this.serialize(itemStack, jsonGenerator, serializerProvider)
-
-		typeSerializer.writeTypeSuffix(jsonGenerator, typeIdDef)
-	}
-
-}
-
-open class ItemStackDeserializer : StdScalarDeserializer<ItemStack>(
-	ItemStack::class.java
-) {
-
 	override fun deserialize(
-		serializedItemStack: JsonParser?,
-		deserializationContext: DeserializationContext
-	): ItemStack? {
-		return if (serializedItemStack !== null) ItemStack.deserialize(
-			CoreConstants.JACKSON.readValue(
-				serializedItemStack,
-				MutableMap::class.java
-			) as MutableMap<String, Any?>
-		) else null
-	}
-
-
+		decoder: Decoder
+	): ItemStack = ItemStack.deserialize(Json.decodeFromString(decoder.decodeString()))
 }

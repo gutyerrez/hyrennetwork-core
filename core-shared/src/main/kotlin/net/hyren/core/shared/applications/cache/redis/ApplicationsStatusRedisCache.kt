@@ -1,7 +1,9 @@
 package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import net.hyren.core.shared.CoreConstants
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
@@ -33,11 +35,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
 
-            val json = CoreConstants.JACKSON.writeValueAsString(
-                applicationStatus
-            )
-
-            pipeline.set(key, json)
+            pipeline.set(key, Json.encodeToString(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
@@ -68,10 +66,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    val applicationStatus = CoreConstants.JACKSON.readValue(
-                        value,
-                        applicationStatusClass.java
-                    )
+                    val applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
 
                     if (applicationStatus.server == server)
                         applicationStatuses[key] = applicationStatus
@@ -98,10 +93,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             val value = it.get(key)
 
             if (value != null) {
-                applicationStatus = CoreConstants.JACKSON.readValue(
-                    value,
-                    applicationStatusClass.java
-                )
+                applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
 
                 this.CACHE.put(applicationName, applicationStatus!!)
             }
@@ -125,10 +117,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applicationsStatuses[key] = CoreConstants.JACKSON.readValue(
-                        value,
-                        applicationStatusClass.java
-                    )
+                    applicationsStatuses[key] = Json.decodeFromString(value)
                 }
 
                 cursor = result.cursor
@@ -169,10 +158,7 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applications[applicationName] = CoreConstants.JACKSON.readValue(
-                    value,
-                    statusClass.java
-                )
+                applications[applicationName] = Json.decodeFromString(value)
             }
 
             return applications
