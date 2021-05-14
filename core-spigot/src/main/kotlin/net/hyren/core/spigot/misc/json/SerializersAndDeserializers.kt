@@ -8,6 +8,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
+import net.hyren.core.spigot.misc.server.configuration.settings.ServerSettings
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -24,12 +25,37 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 		encoder: Encoder,
 		value: ItemStack
 	) {
-		val formatter = Json { allowStructuredMapKeys = true }
-
-		encoder.encodeString(formatter.encodeToString(value.serialize()))
+		encoder.encodeString(Json.encodeToString(value.serialize()))
 	}
 
 	override fun deserialize(
 		decoder: Decoder
-	): ItemStack = ItemStack.deserialize(Json.decodeFromString(decoder.decodeString()))
+	): ItemStack {
+		val value = decoder.decodeString()
+
+		println("To deserialize: $value")
+
+		return ItemStack.deserialize(Json.decodeFromString(value))
+	}
+}
+
+object ServerSettingsSerializer : KSerializer<ServerSettings> {
+	override val descriptor: SerialDescriptor = ContextualSerializer(
+		ServerSettings::class,
+		null,
+		emptyArray()
+	).descriptor
+
+	override fun serialize(
+		encoder: Encoder,
+		value: ServerSettings
+	) {
+		encoder.encodeString(
+			Json.encodeToString(value)
+		)
+	}
+
+	override fun deserialize(
+		decoder: Decoder
+	): ServerSettings = Json.decodeFromString(decoder.decodeString())
 }
