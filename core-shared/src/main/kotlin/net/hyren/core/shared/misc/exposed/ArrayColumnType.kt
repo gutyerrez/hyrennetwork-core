@@ -36,7 +36,7 @@ class ArrayColumnType<T>(
 
             return value.array
         } else if (value is String) {
-            return Json.decodeFromString(object : DeserializationStrategy<T> {
+            return Json.decodeFromString(object : DeserializationStrategy<Array<T>> {
                 override val descriptor: SerialDescriptor = ContextualSerializer(
                     kClass,
                     null,
@@ -45,7 +45,7 @@ class ArrayColumnType<T>(
 
                 override fun deserialize(
                     decoder: Decoder
-                ): T = kClass.serializer().deserialize(decoder) as T
+                ): Array<T> = kClass.serializer().deserialize(decoder) as Array<T>
             }, value) as Any
         } else if (value is Array<*>) {
             return value
