@@ -33,13 +33,9 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 
 		val gson = Gson()
 
-		val linkedTreeMap = gson.fromJson(json, LinkedTreeMap::class.java) as LinkedTreeMap<String, Any?>
-
-		val map = mutableMapOf<String, Any?>().apply {
-			linkedTreeMap.forEach { (t, u) -> put(t, u) }
-		}
-
-		return ItemStack.deserialize(map)
+		return ItemStack.deserialize(
+			gson.fromJson(json, LinkedTreeMap::class.java) as LinkedTreeMap<String, Any?>
+		)
 	}
 }
 
