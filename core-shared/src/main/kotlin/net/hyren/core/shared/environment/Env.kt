@@ -27,6 +27,8 @@ object Env {
 
         this.ENVIRONMENT_MAP = Json.decodeFromString(contents)
 
+        println(this.ENVIRONMENT_MAP)
+
         INITIALIZED = true
     }
 
