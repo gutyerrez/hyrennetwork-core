@@ -53,7 +53,7 @@ class ArrayColumnType<T>(
 
                     val array = java.lang.reflect.Array.newInstance(
                         kClass.java,
-                        0
+                        jsonArray.size
                     ) as Array<T>
 
                     var _index = 0
