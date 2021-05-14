@@ -28,7 +28,7 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 	override fun deserialize(
 		decoder: Decoder
 	): ItemStack {
-		val json = (decoder as JsonDecoder).json.toString()
+		val json = (decoder as JsonDecoder).decodeJsonElement().toString()
 
 		val gson = Gson()
 
