@@ -3,6 +3,7 @@ package net.hyren.core.shared.environment
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import net.hyren.core.shared.misc.utils.FileUtils
 import java.io.File
@@ -13,7 +14,7 @@ import java.io.FileNotFoundException
  **/
 object Env {
 
-    private lateinit var ENVIRONMENT_MAP: Map<String, JsonElement?>
+    private val ENVIRONMENT_MAP = mutableMapOf<String, JsonElement?>()
 
     private var INITIALIZED = false
 
@@ -25,9 +26,9 @@ object Env {
         }
         val contents = FileUtils.readFileToString(file)
 
-        this.ENVIRONMENT_MAP = Json.decodeFromString(contents)
+        val jsonObject = Json.decodeFromString<JsonObject>(contents)
 
-        println(this.ENVIRONMENT_MAP)
+        FileUtils.mapJsonObject(jsonObject = jsonObject, map = this.ENVIRONMENT_MAP)
 
         INITIALIZED = true
     }
