@@ -1,10 +1,7 @@
 package net.hyren.core.spigot.misc.json
 
-import kotlinx.serialization.ContextualSerializer
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
@@ -14,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 /**
  * @author Gutyerrez
  */
-object ItemStackSerializer : KSerializer<ItemStack> {
+object ItemStackSerializer : SerializationStrategy<ItemStack>, DeserializationStrategy<ItemStack> {
 	override val descriptor: SerialDescriptor = ContextualSerializer(
 		ItemStack::class,
 		null,
@@ -39,7 +36,7 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 	}
 }
 
-object ServerSettingsSerializer : KSerializer<ServerSettings> {
+object ServerSettingsSerializer : SerializationStrategy<ServerSettings>, DeserializationStrategy<ServerSettings> {
 	override val descriptor: SerialDescriptor = ContextualSerializer(
 		ServerSettings::class,
 		null,
