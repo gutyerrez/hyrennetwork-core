@@ -1,7 +1,5 @@
 package net.hyren.core.shared.misc.exposed
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes
-import com.mysql.cj.x.protobuf.MysqlxExpr
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -37,10 +35,6 @@ class ArrayColumnType<T>(
             }
 
             return value.array
-        } else if (value is MysqlxDatatypes.Array) {
-            println("asd")
-        } else if (value is MysqlxExpr.Array) {
-            println("bcd")
         } else if (value is String) {
             return Json.decodeFromString(object : DeserializationStrategy<Array<T>> {
                 override val descriptor: SerialDescriptor = ContextualSerializer(
@@ -51,8 +45,17 @@ class ArrayColumnType<T>(
 
                 override fun deserialize(
                     decoder: Decoder
-                ): Array<T> = kClass.serializer().deserialize(decoder) as Array<T>
-            }, value) as Any
+                ): Array<T> {
+                    val a = decoder.serializersModule.getContextual(kClass)?.deserialize(decoder)
+
+                    println(a)
+
+                    return java.lang.reflect.Array.newInstance(
+                        kClass.java,
+                        Int.MAX_VALUE
+                    ) as Array<T>
+                }
+            }, value)
         } else if (value is Array<*>) {
             return value
         }
