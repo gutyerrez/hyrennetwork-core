@@ -48,31 +48,16 @@ class ArrayColumnType<T>(
                 override fun deserialize(
                     decoder: Decoder
                 ): Array<T> {
-                    val jsonElement = (decoder as JsonDecoder).decodeJsonElement()
+                    val jsonArray = (decoder as JsonDecoder).decodeJsonElement().jsonArray
 
-                    println("JsonElement: $jsonElement")
-
-                    val jsonArray = jsonElement.jsonArray
-
-                    println("JsonArray: $jsonArray")
-
-                    if (jsonArray.isEmpty()) {
-                        return java.lang.reflect.Array.newInstance(
-                            kClass.java,
-                            0
-                        ) as Array<T>
+                    jsonArray.forEachIndexed { index, jsonElement ->
+                        println("$index -> $jsonElement")
                     }
 
-                    val array = java.lang.reflect.Array.newInstance(
+                    return java.lang.reflect.Array.newInstance(
                         kClass.java,
-                        jsonArray.size
+                        0
                     ) as Array<T>
-
-                    jsonArray.forEachIndexed { index, it ->
-                        array[index] = it as T
-                    }
-
-                    return array
                 }
             }, value)
         } else if (value is Array<*>) {
