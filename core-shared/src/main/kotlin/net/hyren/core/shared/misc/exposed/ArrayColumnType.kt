@@ -1,26 +1,31 @@
 package net.hyren.core.shared.misc.exposed
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import java.sql.SQLFeatureNotSupportedException
+import kotlin.reflect.KClass
 
 /**
  * @author Gutyerrez
  */
-fun <T> Table.array(
+inline fun <reified T> Table.array(
     name: String
-): Column<Array<T>> = registerColumn(name, ArrayColumnType())
+): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>(T::class))
 
-class ArrayColumnType : ColumnType() {
+class ArrayColumnType<T>(
+    private val kClass: KClass<*>
+) : ColumnType() {
 
     override fun sqlType() = "longtext"
 
+    @InternalSerializationApi
+    @ExperimentalSerializationApi
     override fun valueFromDB(
         value: Any
     ): Any {
@@ -31,7 +36,17 @@ class ArrayColumnType : ColumnType() {
 
             return value.array
         } else if (value is String) {
-            return Json.decodeFromString<JsonArray>(value)
+            return Json.decodeFromString(object : DeserializationStrategy<T> {
+                override val descriptor: SerialDescriptor = ContextualSerializer(
+                    kClass,
+                    null,
+                    emptyArray()
+                ).descriptor
+
+                override fun deserialize(
+                    decoder: Decoder
+                ): T = kClass.serializer().deserialize(decoder) as T
+            }, value) as Any
         } else if (value is Array<*>) {
             return value
         }
