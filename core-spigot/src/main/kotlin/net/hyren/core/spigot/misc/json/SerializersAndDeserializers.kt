@@ -1,9 +1,7 @@
 package net.hyren.core.spigot.misc.json
 
 import kotlinx.serialization.ContextualSerializer
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
@@ -14,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 /**
  * @author Gutyerrez
  */
-object ItemStackSerializer : SerializationStrategy<ItemStack>, DeserializationStrategy<ItemStack> {
+object ItemStackSerializer : KSerializer<ItemStack> {
 	override val descriptor: SerialDescriptor = ContextualSerializer(
 		ItemStack::class,
 		null,
