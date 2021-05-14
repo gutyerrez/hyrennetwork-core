@@ -2,6 +2,7 @@ package net.hyren.core.shared
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -59,6 +60,7 @@ object CoreConstants {
 	init {
 		JACKSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 		JACKSON.configure(DeserializationFeature.WRAP_EXCEPTIONS, true)
+		JACKSON.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
 		JACKSON.registerModule(GuavaModule())
 		JACKSON.registerModule(KotlinModule())
 		JACKSON.registerModule(JodaModule())
