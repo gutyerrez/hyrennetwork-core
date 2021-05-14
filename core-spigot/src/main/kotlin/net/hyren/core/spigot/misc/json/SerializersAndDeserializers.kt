@@ -33,19 +33,69 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 
 		val deserializedValues = mutableMapOf<String, Any>()
 
-		serializedItemStack.entries.forEach {
-			if (it.value !is JsonPrimitive) return@forEach
+		serializedItemStack.entries.forEach { entry ->
+			when (entry.value) {
+				is JsonObject -> {
+					(entry.value as JsonObject).entries.forEach {
+						val anotherMap = mutableMapOf<String, Any>()
 
-			val _key = it.key
-			val _value = it.value.jsonPrimitive
+						when {
+							entry.value is JsonPrimitive -> {
+								when {
+									(it.value as JsonPrimitive).intOrNull != null -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).int
+									}
+									(it.value as JsonPrimitive).doubleOrNull != null -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).double
+									}
+									(it.value as JsonPrimitive).floatOrNull != null -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).float
+									}
+									(it.value as JsonPrimitive).longOrNull != null -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).long
+									}
+									(it.value as JsonPrimitive).booleanOrNull != null -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).boolean
+									}
+									(it.value as JsonPrimitive).isString -> {
+										anotherMap[it.key] = (it.value as JsonPrimitive).toString()
+									}
+								}
+							}
+							entry.value is JsonArray -> {
+								val jsonArray = entry.value.jsonArray
 
-			when {
-				_value.intOrNull != null -> deserializedValues[_key] = _value.int
-				_value.doubleOrNull != null -> deserializedValues[_key] = _value.double
-				_value.floatOrNull != null -> deserializedValues[_key] = _value.float
-				_value.longOrNull != null -> deserializedValues[_key] = _value.long
-				_value.booleanOrNull != null -> deserializedValues[_key] = _value.boolean
-				_value.isString -> deserializedValues[_key] = _value.toString()
+								val lore = mutableListOf<String>()
+
+								jsonArray.forEach { element ->
+									lore.add(element.toString())
+								}
+							}
+						}
+					}
+				}
+				is JsonPrimitive -> {
+					when {
+						(entry.value as JsonPrimitive).intOrNull != null -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).int
+						}
+						(entry.value as JsonPrimitive).doubleOrNull != null -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).double
+						}
+						(entry.value as JsonPrimitive).floatOrNull != null -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).float
+						}
+						(entry.value as JsonPrimitive).longOrNull != null -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).long
+						}
+						(entry.value as JsonPrimitive).booleanOrNull != null -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).boolean
+						}
+						(entry.value as JsonPrimitive).isString -> {
+							deserializedValues[entry.key] = (entry.value as JsonPrimitive).toString()
+						}
+					}
+				}
 			}
 		}
 
