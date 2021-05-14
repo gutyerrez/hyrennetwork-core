@@ -6,8 +6,10 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
+import kotlinx.serialization.serializer
 import net.hyren.core.spigot.misc.server.configuration.settings.ServerSettings
 import org.bukkit.inventory.ItemStack
+import kotlin.reflect.full.starProjectedType
 
 /**
  * @author Gutyerrez
@@ -26,7 +28,28 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 
 	override fun deserialize(
 		decoder: Decoder
-	): ItemStack = ItemStack.deserialize(Json.decodeFromJsonElement((decoder as JsonDecoder).decodeJsonElement()))
+	): ItemStack {
+		lateinit var itemStack: ItemStack
+
+		val serializedItemStack = (decoder as JsonDecoder).decodeJsonElement().jsonObject
+
+		val deserializedValues = mutableMapOf<String, Any>()
+
+		serializedItemStack.entries.forEach {
+			val _key = it.key
+			val _value = it.value
+
+			val element = Json.encodeToJsonElement(serializer(_value::class.starProjectedType), _value)
+
+			deserializedValues[_key] = element
+		}
+
+		println(deserializedValues)
+
+		itemStack = ItemStack.deserialize(deserializedValues)
+
+		return itemStack
+	}
 }
 
 object ServerSettingsSerializer : KSerializer<ServerSettings> {
