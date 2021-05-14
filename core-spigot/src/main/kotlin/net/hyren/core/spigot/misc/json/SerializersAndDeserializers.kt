@@ -36,9 +36,9 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 		serializedItemStack.entries.forEach { entry ->
 			when (entry.value) {
 				is JsonObject -> {
-					(entry.value as JsonObject).entries.forEach {
-						val anotherMap = mutableMapOf<String, Any>()
+					val anotherMap = mutableMapOf<String, Any>()
 
+					(entry.value as JsonObject).entries.forEach {
 						when {
 							entry.value is JsonPrimitive -> {
 								when {
@@ -73,6 +73,8 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 							}
 						}
 					}
+
+					deserializedValues[entry.key] = anotherMap
 				}
 				is JsonPrimitive -> {
 					when {
