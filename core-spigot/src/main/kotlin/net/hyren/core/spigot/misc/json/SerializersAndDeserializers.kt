@@ -1,5 +1,6 @@
 package net.hyren.core.spigot.misc.json
 
+import com.google.gson.Gson
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -27,85 +28,11 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 	override fun deserialize(
 		decoder: Decoder
 	): ItemStack {
-		lateinit var itemStack: ItemStack
+		val json = (decoder as JsonDecoder).json.toString()
 
-		val serializedItemStack = (decoder as JsonDecoder).decodeJsonElement().jsonObject
+		val gson = Gson()
 
-		val deserializedValues = mutableMapOf<String, Any>()
-
-		serializedItemStack.entries.forEach { entry ->
-			when (entry.value) {
-				is JsonObject -> {
-					val anotherMap = mutableMapOf<String, Any>()
-
-					(entry.value as JsonObject).entries.forEach {
-						when {
-							entry.value is JsonPrimitive -> {
-								when {
-									(it.value as JsonPrimitive).intOrNull != null -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).int
-									}
-									(it.value as JsonPrimitive).doubleOrNull != null -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).double
-									}
-									(it.value as JsonPrimitive).floatOrNull != null -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).float
-									}
-									(it.value as JsonPrimitive).longOrNull != null -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).long
-									}
-									(it.value as JsonPrimitive).booleanOrNull != null -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).boolean
-									}
-									(it.value as JsonPrimitive).isString -> {
-										anotherMap[it.key] = (it.value as JsonPrimitive).toString()
-									}
-								}
-							}
-							entry.value is JsonArray -> {
-								val jsonArray = entry.value.jsonArray
-
-								val lore = mutableListOf<String>()
-
-								jsonArray.forEach { element ->
-									lore.add(element.toString())
-								}
-							}
-						}
-					}
-
-					deserializedValues[entry.key] = anotherMap
-				}
-				is JsonPrimitive -> {
-					when {
-						(entry.value as JsonPrimitive).intOrNull != null -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).int
-						}
-						(entry.value as JsonPrimitive).doubleOrNull != null -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).double
-						}
-						(entry.value as JsonPrimitive).floatOrNull != null -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).float
-						}
-						(entry.value as JsonPrimitive).longOrNull != null -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).long
-						}
-						(entry.value as JsonPrimitive).booleanOrNull != null -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).boolean
-						}
-						(entry.value as JsonPrimitive).isString -> {
-							deserializedValues[entry.key] = (entry.value as JsonPrimitive).toString()
-						}
-					}
-				}
-			}
-		}
-
-		println(deserializedValues)
-
-		itemStack = ItemStack.deserialize(deserializedValues)
-
-		return itemStack
+		return ItemStack.deserialize(gson.fromJson(json, Map::class.java) as Map<String, Any?>)
 	}
 }
 
