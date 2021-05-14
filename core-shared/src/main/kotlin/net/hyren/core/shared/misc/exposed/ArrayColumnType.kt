@@ -59,7 +59,9 @@ class ArrayColumnType<T>(
                     var _index = 0
 
                     jsonArray.forEachIndexed { index, jsonElement ->
-                        array[_index] = jsonElement.jsonObject as T
+                        val a = jsonElement.jsonObject as T
+
+                        println(a)
 
                         _index++
                     }
