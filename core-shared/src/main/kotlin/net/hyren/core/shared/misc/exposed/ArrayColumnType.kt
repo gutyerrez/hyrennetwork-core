@@ -14,9 +14,9 @@ import java.sql.SQLFeatureNotSupportedException
  */
 fun <T> Table.array(
     name: String
-): Column<Array<T>> = registerColumn(name, ArrayColumnType())
+): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>())
 
-class ArrayColumnType : ColumnType() {
+class ArrayColumnType<T> : ColumnType() {
 
     override fun sqlType() = "longtext"
 
@@ -30,7 +30,7 @@ class ArrayColumnType : ColumnType() {
 
             return value.array
         } else if (value is String) {
-            return Json.decodeFromString<Array<Any>>(value)
+            return Json.decodeFromString<Array<*>>(value)
         } else if (value is Array<*>) {
             return value
         }
