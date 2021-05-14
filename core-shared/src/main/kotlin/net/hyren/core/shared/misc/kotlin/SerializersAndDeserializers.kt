@@ -1,6 +1,6 @@
 package net.hyren.core.shared.misc.kotlin
 
-import kotlinx.serialization.KSerializer
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -238,4 +238,27 @@ object DateTimeSerializer : KSerializer<DateTime> {
     override fun deserialize(
         decoder: Decoder
     ): DateTime = DateTime.parse(decoder.decodeString())
+}
+
+@InternalSerializationApi
+@ExperimentalSerializationApi
+object DynamicLookupSerializer : KSerializer<Any> {
+    override val descriptor: SerialDescriptor = ContextualSerializer(
+        Any::class,
+        null,
+        emptyArray()
+    ).descriptor
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Any
+    ) {
+        val actualSerializer = encoder.serializersModule.getContextual(value::class) ?: value::class.serializer()
+
+        encoder.encodeSerializableValue(actualSerializer as KSerializer<Any>, value)
+    }
+
+    override fun deserialize(
+        decoder: Decoder
+    ) = error("Unsupported")
 }

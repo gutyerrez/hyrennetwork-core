@@ -1,8 +1,10 @@
 package net.hyren.core.shared.misc.exposed
 
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.hyren.core.shared.misc.kotlin.DynamicLookupSerializer
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -20,6 +22,8 @@ class ArrayColumnType<T> : ColumnType() {
 
     override fun sqlType() = "longtext"
 
+    @InternalSerializationApi
+    @ExperimentalSerializationApi
     override fun valueFromDB(
         value: Any
     ): Any {
@@ -30,7 +34,7 @@ class ArrayColumnType<T> : ColumnType() {
 
             return value.array
         } else if (value is String) {
-            return Json.decodeFromString(value)
+            return Json.decodeFromString(DynamicLookupSerializer, value)
         } else if (value is Array<*>) {
             return value
         }
