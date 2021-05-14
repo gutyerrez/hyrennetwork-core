@@ -52,7 +52,7 @@ class ArrayColumnType<T>(
 
                     return java.lang.reflect.Array.newInstance(
                         kClass.java,
-                        Int.MAX_VALUE
+                        255
                     ) as Array<T>
                 }
             }, value)
