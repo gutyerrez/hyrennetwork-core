@@ -4,6 +4,8 @@ import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.jsonArray
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -46,14 +48,25 @@ class ArrayColumnType<T>(
                 override fun deserialize(
                     decoder: Decoder
                 ): Array<T> {
-                    val a = decoder.serializersModule.getContextual(kClass)?.deserialize(decoder)
+                    val serializedArray = (decoder as JsonDecoder).decodeJsonElement().jsonArray
 
-                    println(a)
+                    if (serializedArray.isEmpty()) {
+                        return java.lang.reflect.Array.newInstance(
+                            kClass.java,
+                            0
+                        ) as Array<T>
+                    }
 
-                    return java.lang.reflect.Array.newInstance(
+                    val array = java.lang.reflect.Array.newInstance(
                         kClass.java,
                         255
                     ) as Array<T>
+
+                    serializedArray.forEachIndexed { index, it ->
+                        array[index] = it as T
+                    }
+
+                    return array
                 }
             }, value)
         } else if (value is Array<*>) {
