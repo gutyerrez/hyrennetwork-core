@@ -51,20 +51,20 @@ class ArrayColumnType<T>(
                 ): Array<T> {
                     val jsonArray = (decoder as JsonDecoder).decodeJsonElement().jsonArray
 
-                    val list = mutableListOf<T>()
-
-                    jsonArray.forEachIndexed { index, jsonElement ->
-                        println("$index -> $jsonElement")
-
-                        list.add(
-                            jsonElement.jsonObject as T
-                        )
-                    }
-
-                    return java.lang.reflect.Array.newInstance(
+                    val array = java.lang.reflect.Array.newInstance(
                         kClass.java,
                         0
                     ) as Array<T>
+
+                    var _index = 0
+
+                    jsonArray.forEachIndexed { index, jsonElement ->
+                        array[_index] = jsonElement.jsonObject as T
+
+                        _index++
+                    }
+
+                    return array
                 }
             }, value)
         } else if (value is Array<*>) {
