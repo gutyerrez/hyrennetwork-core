@@ -10,6 +10,5 @@ import net.hyren.core.shared.misc.punish.PunishType
 @Serializable
 data class PunishDuration(
     val duration: Long,
-    @SerialName("punish_type")
-    val punishType: PunishType
+    @SerialName("punish_type") val punishType: PunishType
 )

@@ -6,6 +6,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -50,8 +51,14 @@ class ArrayColumnType<T>(
                 ): Array<T> {
                     val jsonArray = (decoder as JsonDecoder).decodeJsonElement().jsonArray
 
+                    val list = mutableListOf<T>()
+
                     jsonArray.forEachIndexed { index, jsonElement ->
                         println("$index -> $jsonElement")
+
+                        list.add(
+                            jsonElement.jsonObject as T
+                        )
                     }
 
                     return java.lang.reflect.Array.newInstance(
