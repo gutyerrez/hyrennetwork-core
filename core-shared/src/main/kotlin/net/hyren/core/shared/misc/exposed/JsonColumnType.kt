@@ -4,7 +4,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -14,11 +14,11 @@ import java.sql.SQLFeatureNotSupportedException
 /**
  * @author Gutyerrez
  */
-fun <T> Table.json(
+inline fun <reified T> Table.json(
     name: String
-): Column<T> = registerColumn(name, JsonColumnType())
+): Column<T> = registerColumn(name, JsonColumnType<T>())
 
-class JsonColumnType : ColumnType() {
+class JsonColumnType<T> : ColumnType() {
 
     override fun sqlType() = "longtext"
 
@@ -26,7 +26,7 @@ class JsonColumnType : ColumnType() {
         value: Any
     ): Any {
         if (value is JsonElement) {
-            return Json.decodeFromJsonElement(value)
+            return (value.jsonObject as T) as Any
         } else if (value is String) {
             return Json.decodeFromString(value)
         }

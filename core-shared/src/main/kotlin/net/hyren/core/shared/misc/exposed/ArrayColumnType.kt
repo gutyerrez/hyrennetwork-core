@@ -3,6 +3,8 @@ package net.hyren.core.shared.misc.exposed
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.jsonArray
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -29,8 +31,10 @@ class ArrayColumnType<T> : ColumnType() {
             }
 
             return value.array
+        } else if (value is JsonArray) {
+            return (value.jsonArray as T) as Any
         } else if (value is String) {
-            return Json.decodeFromString<Array<*>>(value)
+            return Json.decodeFromString<Array<Any>>(value)
         } else if (value is Array<*>) {
             return value
         }
