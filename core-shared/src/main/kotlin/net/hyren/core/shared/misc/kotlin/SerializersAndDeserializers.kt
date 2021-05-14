@@ -1,11 +1,15 @@
 package net.hyren.core.shared.misc.kotlin
 
-import kotlinx.serialization.*
+import kotlinx.serialization.ContextualSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonArray
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.servers.data.Server
 import org.jetbrains.exposed.dao.id.EntityID
@@ -252,13 +256,13 @@ object DynamicLookupSerializer : KSerializer<Any> {
     override fun serialize(
         encoder: Encoder,
         value: Any
-    ) {
-        val actualSerializer = encoder.serializersModule.getContextual(value::class) ?: value::class.serializer()
-
-        encoder.encodeSerializableValue(actualSerializer as KSerializer<Any>, value)
-    }
+    ) = error("Uniplemented")
 
     override fun deserialize(
         decoder: Decoder
-    ) = error("Unsupported")
+    ): Any {
+        println(decoder.decodeString())
+
+        return JsonArray(emptyList())
+    }
 }
