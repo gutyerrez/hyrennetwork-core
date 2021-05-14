@@ -1,10 +1,9 @@
 package net.hyren.core.shared.misc.exposed
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import net.hyren.core.shared.misc.kotlin.DynamicLookupSerializer
+import kotlinx.serialization.json.JsonArray
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -16,14 +15,12 @@ import java.sql.SQLFeatureNotSupportedException
  */
 fun <T> Table.array(
     name: String
-): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>())
+): Column<Array<T>> = registerColumn(name, ArrayColumnType())
 
-class ArrayColumnType<T> : ColumnType() {
+class ArrayColumnType : ColumnType() {
 
     override fun sqlType() = "longtext"
 
-    @InternalSerializationApi
-    @ExperimentalSerializationApi
     override fun valueFromDB(
         value: Any
     ): Any {
@@ -34,7 +31,7 @@ class ArrayColumnType<T> : ColumnType() {
 
             return value.array
         } else if (value is String) {
-            return Json.decodeFromString(DynamicLookupSerializer, value)
+            return Json.decodeFromString<JsonArray>(value)
         } else if (value is Array<*>) {
             return value
         }

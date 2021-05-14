@@ -1,15 +1,11 @@
 package net.hyren.core.shared.misc.kotlin
 
-import kotlinx.serialization.ContextualSerializer
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonArray
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.servers.data.Server
 import org.jetbrains.exposed.dao.id.EntityID
@@ -242,27 +238,4 @@ object DateTimeSerializer : KSerializer<DateTime> {
     override fun deserialize(
         decoder: Decoder
     ): DateTime = DateTime.parse(decoder.decodeString())
-}
-
-@InternalSerializationApi
-@ExperimentalSerializationApi
-object DynamicLookupSerializer : KSerializer<Any> {
-    override val descriptor: SerialDescriptor = ContextualSerializer(
-        Any::class,
-        null,
-        emptyArray()
-    ).descriptor
-
-    override fun serialize(
-        encoder: Encoder,
-        value: Any
-    ) = error("Uniplemented")
-
-    override fun deserialize(
-        decoder: Decoder
-    ): Any {
-        println(decoder.decodeString())
-
-        return JsonArray(emptyList())
-    }
 }
