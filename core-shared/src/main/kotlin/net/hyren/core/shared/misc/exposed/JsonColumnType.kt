@@ -16,9 +16,9 @@ import java.sql.SQLFeatureNotSupportedException
  */
 inline fun <reified T> Table.json(
     name: String
-): Column<T> = registerColumn(name, JsonColumnType<T>())
+): Column<T> = registerColumn(name, JsonColumnType())
 
-class JsonColumnType<T> : ColumnType() {
+class JsonColumnType : ColumnType() {
 
     override fun sqlType() = "longtext"
 
@@ -26,7 +26,7 @@ class JsonColumnType<T> : ColumnType() {
         value: Any
     ): Any {
         if (value is JsonElement) {
-            return (value.jsonObject as T) as Any
+            return value.jsonObject
         } else if (value is String) {
             return Json.decodeFromString(value)
         }
