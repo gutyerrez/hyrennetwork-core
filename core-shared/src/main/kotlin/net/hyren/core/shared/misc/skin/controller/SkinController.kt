@@ -44,8 +44,15 @@ object SkinController {
 
 				if (bytes?.isEmpty() == true) return null
 
-				minecraftProfile = CoreConstants.JACKSON.readValue(
+				val jsonNode = CoreConstants.JACKSON.readValue(
 					bytes,
+					JsonNode::class.java
+				)
+
+				if (jsonNode.get("id").isNull) return null
+
+				minecraftProfile = CoreConstants.JACKSON.readValue(
+					jsonNode.asText(),
 					MinecraftProfile::class.java
 				)
 			}
@@ -87,13 +94,15 @@ object SkinController {
 
 					if (bytes?.isEmpty() == true) return@invoker null
 
-					val jsonResponse = CoreConstants.JACKSON.readValue(
+					val jsonNode = CoreConstants.JACKSON.readValue(
 						bytes,
 						JsonNode::class.java
 					)
 
+					if (!jsonNode.has("raw") || jsonNode.get("raw").get("id").isNull) return@invoker null
+
 					minecraftProfileData = CoreConstants.JACKSON.readValue(
-						jsonResponse.get("raw").asText(),
+						jsonNode.asText(),
 						MinecraftProfileData::class.java
 					)
 				}
