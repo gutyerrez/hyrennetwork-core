@@ -25,16 +25,15 @@ object InetSocketAddressSerializer : KSerializer<InetSocketAddress> {
         value: InetSocketAddress
     ) {
         encoder.apply {
-            encodeString(value.address.hostAddress)
-            encodeInt(value.port)
+            encodeString("${value.address.hostAddress}:${value.port}")
         }
     }
 
     override fun deserialize(
         decoder: Decoder
     ) = InetSocketAddress(
-        decoder.decodeString(),
-        decoder.decodeInt()
+        decoder.decodeString().split(":")[0],
+        decoder.decodeString().split(":")[1].toInt()
     )
 }
 
