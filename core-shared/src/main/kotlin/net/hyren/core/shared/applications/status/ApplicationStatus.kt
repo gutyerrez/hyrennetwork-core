@@ -1,6 +1,7 @@
 package net.hyren.core.shared.applications.status
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.hyren.core.shared.applications.ApplicationType
@@ -36,6 +37,7 @@ open class ApplicationStatus(
     @SerialName("heap_free_size")
     @SerializedName("heap_free_size")
     var heapFreeSize: Long? = null
+    @Required
     @SerialName("online_players")
     @SerializedName("online_players")
     var onlinePlayers: Int = 0
