@@ -68,6 +68,8 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                     val applicationStatus = Json.decodeFromString<ApplicationStatus?>(value)
 
+                    println(applicationStatus)
+
                     if (applicationStatus?.server == server)
                         applicationStatuses[key] = applicationStatus
                 }
@@ -118,6 +120,8 @@ class ApplicationsStatusRedisCache : RedisCache {
                     val value = it.get(key)
 
                     applicationsStatuses[key] = Json.decodeFromString(value)
+
+                    println(applicationsStatuses[key])
                 }
 
                 cursor = result.cursor
@@ -159,6 +163,8 @@ class ApplicationsStatusRedisCache : RedisCache {
                 val value = response.get()
 
                 applicationsStatuses[applicationName] = Json.decodeFromString(value)
+
+                println(applicationsStatuses[applicationName])
             }
 
             return applicationsStatuses
