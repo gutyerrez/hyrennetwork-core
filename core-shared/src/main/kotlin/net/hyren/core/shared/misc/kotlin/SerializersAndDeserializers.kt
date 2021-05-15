@@ -39,8 +39,9 @@ object ApplicationStatusSerializer : KSerializer<ApplicationStatus> {
     ): ApplicationStatus {
         val jsonDecoder = decoder as JsonDecoder
 
-        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
-
+        val jsonObject = Json.parseToJsonElement(
+            jsonDecoder.decodeString()
+        ).jsonObject
 
         return ApplicationStatus(
             jsonObject["application_name"]!!.toString(),

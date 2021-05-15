@@ -69,8 +69,6 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                     val applicationStatus = Json.decodeFromString<ApplicationStatus?>(value)
 
-                    println(applicationStatus)
-
                     if (applicationStatus?.server == server)
                         applicationStatuses[key] = applicationStatus
                 }
