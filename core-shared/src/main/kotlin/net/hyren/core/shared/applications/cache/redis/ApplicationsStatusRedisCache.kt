@@ -1,8 +1,8 @@
 package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.google.gson.Gson
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
@@ -35,9 +35,11 @@ class ApplicationsStatusRedisCache : RedisCache {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
 
-            println(Json.encodeToString(applicationStatus))
+            val gson = Gson()
 
-            pipeline.set(key, Json.encodeToString(applicationStatus))
+            print(gson.toJson(applicationStatus))
+
+            pipeline.set(key, gson.toJson(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
