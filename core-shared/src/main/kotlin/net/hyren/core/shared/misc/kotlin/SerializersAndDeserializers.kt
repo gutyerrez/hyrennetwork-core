@@ -31,10 +31,13 @@ object InetSocketAddressSerializer : KSerializer<InetSocketAddress> {
 
     override fun deserialize(
         decoder: Decoder
-    ) = InetSocketAddress(
-        decoder.decodeString().split(":")[0],
-        decoder.decodeString().split(":")[1].toInt()
-    )
+    ): InetSocketAddress {
+        val decoded = decoder.decodeString()
+
+        return InetSocketAddress(
+            decoded.split(":")[0], decoded.split(":")[1].toInt()
+        )
+    }
 }
 
 object ServerSerializer : KSerializer<Server> {
