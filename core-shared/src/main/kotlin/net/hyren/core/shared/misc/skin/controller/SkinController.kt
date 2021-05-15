@@ -1,5 +1,6 @@
 package net.hyren.core.shared.misc.skin.controller
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -98,7 +99,7 @@ object SkinController {
 
 					if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) return@invoker null
 
-					minecraftProfileData = Json.decodeFromJsonElement(jsonObject["raw"]!!)
+					minecraftProfileData = Json.decodeFromJsonElement<@Contextual MinecraftProfileData>(jsonObject["raw"]!!)
 				}
 			} else {
 				val body = response.body?.string()
@@ -109,7 +110,7 @@ object SkinController {
 
 				if (!jsonObject.containsKey("id") || jsonObject["id"] == null) return@invoker null
 
-				minecraftProfileData = Json.decodeFromJsonElement(jsonObject)
+				minecraftProfileData = Json.decodeFromJsonElement<@Contextual MinecraftProfileData>(jsonObject)
 			}
 
 			val properties = minecraftProfileData.properties[0]
