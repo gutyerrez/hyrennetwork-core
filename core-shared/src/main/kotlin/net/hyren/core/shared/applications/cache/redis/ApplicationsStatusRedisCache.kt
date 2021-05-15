@@ -85,22 +85,18 @@ class ApplicationsStatusRedisCache : RedisCache {
         applicationName: String,
         applicationStatusClass: KClass<out ApplicationStatus>
     ): ApplicationStatus? {
-        var applicationStatus = this.CACHE.getIfPresent(applicationName)
-
-        if (applicationStatus != null) return applicationStatus
-
         val key = this.getKey(applicationName)
 
-        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val value = it.get(key)
 
-            if (value != null) {
-                val applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
+            println("Value: " + value)
 
-                this.CACHE.put(applicationName, applicationStatus)
+            if (value != null) {
+                this.CACHE.put(applicationName, Json.decodeFromString(value))
             }
 
-            return applicationStatus
+            return@use CACHE.getIfPresent(key)
         }
     }
 

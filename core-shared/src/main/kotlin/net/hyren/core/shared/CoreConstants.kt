@@ -63,7 +63,7 @@ object CoreConstants {
 			CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
 				it,
 				ApplicationStatus::class
-			) !== null
+			) != null
 		}
 		.filter {
 			println("Filtrar: " + it.name)
