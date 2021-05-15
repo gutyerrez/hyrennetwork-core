@@ -1,5 +1,6 @@
 package net.hyren.core.shared.misc.skin.controller
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -122,6 +123,7 @@ object SkinController {
 		return skin.invoke()
 	}
 
+	@Serializable
 	internal open class MinecraftProfile(
 		val id: String,
 		val name: String
@@ -136,6 +138,7 @@ object SkinController {
 		name
 	)
 
+	@Serializable
 	internal data class MinecraftProfileDataProperties(
 		val name: String,
 		val value: String,
