@@ -17,13 +17,13 @@ open class ApplicationStatus(
     @SerialName("application_type") val applicationType: ApplicationType,
     @Serializable(ServerSerializer::class) val server: Server?,
     @Serializable(InetSocketAddressSerializer::class) val address: InetSocketAddress,
-    @SerialName("online_since") val onlineSince: Long,
-    @SerialName("online_players") var onlinePlayers: Int = 0
+    @SerialName("online_since") val onlineSince: Long
 ) {
 
     @SerialName("heap_size") var heapSize: Long? = null
     @SerialName("heap_max_size") var heapMaxSize: Long? = null
     @SerialName("heap_free_size") var heapFreeSize: Long? = null
+    @SerialName("online_players") var onlinePlayers: Int = 0
 
     fun isSame(applicationName: String) = this.applicationName == applicationName
 
