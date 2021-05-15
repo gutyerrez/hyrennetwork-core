@@ -141,18 +141,17 @@ object NullableServerSerializer : KSerializer<Server?> {
     ) {
         value?.let {
             encoder.apply {
-                encodeBoolean(true)
                 encodeString(value.name.value)
             }
-        } ?: encoder.apply { encodeBoolean(false) }
+        } ?: encoder.encodeString("undefined")
     }
 
     override fun deserialize(
         decoder: Decoder
     ): Server? {
-        val valid = decoder.decodeBoolean()
+        val valid = decoder.decodeString()
 
-        return if (valid) {
+        return if (valid != "undefined") {
             CoreProvider.Cache.Local.SERVERS.provide().fetchByName(decoder.decodeString())
         } else null
     }
