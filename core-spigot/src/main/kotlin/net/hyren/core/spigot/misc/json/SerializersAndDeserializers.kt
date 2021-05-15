@@ -1,7 +1,6 @@
 package net.hyren.core.spigot.misc.json
 
 import com.google.gson.Gson
-import com.google.gson.internal.LinkedTreeMap
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -34,7 +33,7 @@ object ItemStackSerializer : KSerializer<ItemStack> {
 		val gson = Gson()
 
 		return ItemStack.deserialize(
-			gson.fromJson(json, LinkedTreeMap::class.java) as LinkedTreeMap<String, Any?>
+			gson.fromJson(json, LinkedHashMap::class.java) as LinkedHashMap<String, Any?>
 		)
 	}
 }
