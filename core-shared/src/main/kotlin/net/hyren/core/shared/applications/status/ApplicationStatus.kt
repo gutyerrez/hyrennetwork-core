@@ -21,7 +21,12 @@ open class ApplicationStatus(
     @SerialName("application_type")
     @SerializedName("application_type")
     val applicationType: ApplicationType,
-    @Serializable(ServerSerializer::class) val server: Server?,
+    @SerialName("server")
+    @SerializedName("server")
+    @Serializable(ServerSerializer::class)
+    val server: Server?,
+    @SerialName("address")
+    @SerializedName("address")
     @Serializable(InetSocketAddressSerializer::class)
     val address: InetSocketAddress,
     @SerialName("online_since")
