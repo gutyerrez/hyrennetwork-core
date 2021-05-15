@@ -9,6 +9,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonArray
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
+import net.hyren.core.shared.misc.preferences.data.Preference
 import net.hyren.core.shared.misc.punish.durations.PunishDuration
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
@@ -74,6 +75,9 @@ class ArrayColumnType<T>(
                             when (kClass) {
                                 PunishDuration::class -> {
                                     array[_index] = Json.decodeFromJsonElement<PunishDuration>(jsonElement) as T
+                                }
+                                Preference::class -> {
+                                    array[_index] = Json.decodeFromJsonElement<Preference>(jsonElement) as T
                                 }
                                 else -> this@ArrayColumnType.deserialize.invoke(decoder)
                             }
