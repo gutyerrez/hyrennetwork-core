@@ -1,13 +1,15 @@
 package net.hyren.core.shared.misc.skin.controller
 
-import kotlinx.serialization.Contextual
+import kotlinx.serialization.ContextualSerializer
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.*
 import net.hyren.core.shared.CoreConstants
+import net.hyren.core.shared.misc.kotlin.sizedArray
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
 
@@ -99,7 +101,10 @@ object SkinController {
 
 					if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) return@invoker null
 
-					minecraftProfileData = Json.decodeFromJsonElement<@Contextual MinecraftProfileData>(jsonObject["raw"]!!)
+					minecraftProfileData = Json.decodeFromJsonElement(
+						MinecraftProfileDataSerializer,
+						jsonObject["raw"]!!
+					)
 				}
 			} else {
 				val body = response.body?.string()
@@ -110,7 +115,10 @@ object SkinController {
 
 				if (!jsonObject.containsKey("id") || jsonObject["id"] == null) return@invoker null
 
-				minecraftProfileData = Json.decodeFromJsonElement<@Contextual MinecraftProfileData>(jsonObject)
+				minecraftProfileData = Json.decodeFromJsonElement(
+					MinecraftProfileDataSerializer,
+					jsonObject
+				)
 			}
 
 			val properties = minecraftProfileData.properties[0]
@@ -145,6 +153,56 @@ object SkinController {
 		val value: String,
 		val signature: String
 	)
+
+	internal object MinecraftProfileDataSerializer : KSerializer<MinecraftProfileData> {
+		override val descriptor: SerialDescriptor = ContextualSerializer(
+			MinecraftProfileData::class,
+			null,
+			emptyArray()
+		).descriptor
+
+		override fun serialize(
+			encoder: Encoder,
+			value: MinecraftProfileData
+		) = error("Unsupported")
+
+		override fun deserialize(
+			decoder: Decoder
+		): MinecraftProfileData {
+			val jsonDecoder = decoder as JsonDecoder
+
+			val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+
+			val id = jsonObject["id"]!!.toString()
+			val name = jsonObject["name"]!!.toString()
+			val propertiesJsonArray = jsonObject["properties"]!!.jsonArray
+
+			val properties = sizedArray<MinecraftProfileDataProperties>(
+				propertiesJsonArray.size
+			)
+
+			propertiesJsonArray.forEachIndexed { index, it ->
+				val jsonObject = it.jsonObject
+
+				val name = jsonObject["name"]!!.toString()
+				val signature = jsonObject["signature"]!!.toString()
+				val value = jsonObject["value"]!!.toString()
+
+				properties[index] = MinecraftProfileDataProperties(
+					name,
+					signature,
+					value
+				)
+			}
+
+			return MinecraftProfileData(
+				id,
+				name,
+				properties
+			)
+		}
+
+	}
 
 }
 
