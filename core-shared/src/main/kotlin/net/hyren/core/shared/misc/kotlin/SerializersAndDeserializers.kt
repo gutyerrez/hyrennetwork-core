@@ -6,9 +6,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonEncoder
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kotlinx.serialization.json.*
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.servers.data.Server
 import org.jetbrains.exposed.dao.id.EntityID
@@ -40,10 +38,13 @@ object InetSocketAddressSerializer : KSerializer<InetSocketAddress> {
     override fun deserialize(
         decoder: Decoder
     ): InetSocketAddress {
-        val decoded = decoder.decodeString()
+        val jsonDecoder = decoder as JsonDecoder
+
+        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
         return InetSocketAddress(
-            decoded.split(":")[0], decoded.split(":")[1].toInt()
+            jsonObject["address"]!!.jsonPrimitive.toString(),
+            jsonObject["port"]!!.jsonPrimitive.int
         )
     }
 }
