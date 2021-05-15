@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.misc.kotlin.InetSocketAddressSerializer
-import net.hyren.core.shared.misc.kotlin.ServerSerializer
+import net.hyren.core.shared.misc.kotlin.NullableServerSerializer
 import net.hyren.core.shared.servers.data.Server
 import java.net.InetSocketAddress
 
@@ -24,7 +24,7 @@ open class ApplicationStatus(
     @Required
     @SerialName("server")
     @SerializedName("server")
-    @Serializable(ServerSerializer::class)
+    @Serializable(NullableServerSerializer::class)
     val server: Server?,
     @SerialName("address")
     @SerializedName("address")
