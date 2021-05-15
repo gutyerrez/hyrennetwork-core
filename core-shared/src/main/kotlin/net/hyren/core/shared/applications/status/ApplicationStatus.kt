@@ -23,7 +23,7 @@ open class ApplicationStatus(
     @SerialName("heap_size") var heapSize: Long? = null
     @SerialName("heap_max_size") var heapMaxSize: Long? = null
     @SerialName("heap_free_size") var heapFreeSize: Long? = null
-    @SerialName("online_players") var onlinePlayers: Int = 0
+    @SerialName("online_players") var onlinePlayers: Int? = null
 
     fun isSame(applicationName: String) = this.applicationName == applicationName
 

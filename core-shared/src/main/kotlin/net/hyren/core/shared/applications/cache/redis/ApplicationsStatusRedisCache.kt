@@ -35,11 +35,9 @@ class ApplicationsStatusRedisCache : RedisCache {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
 
-            val json = Json { this.encodeDefaults }
+            println(Json.encodeToString(applicationStatus))
 
-            println(json.encodeToString(applicationStatus))
-
-            pipeline.set(key, json.encodeToString(applicationStatus))
+            pipeline.set(key, Json.encodeToString(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }

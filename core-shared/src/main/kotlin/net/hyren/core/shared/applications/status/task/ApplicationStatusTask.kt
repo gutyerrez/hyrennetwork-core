@@ -13,13 +13,17 @@ abstract class ApplicationStatusTask(
     abstract fun buildApplicationStatus(applicationStatus: ApplicationStatus)
 
     override fun run() {
-        this.buildApplicationStatus(this.applicationStatus)
+        try {
+            this.buildApplicationStatus(this.applicationStatus)
 
-        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
+            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
 
-        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
-            ApplicationStatus::class
-        )
+            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
+                ApplicationStatus::class
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }
