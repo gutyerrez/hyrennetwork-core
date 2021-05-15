@@ -1,5 +1,6 @@
 package net.hyren.core.shared.applications.status
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.hyren.core.shared.applications.ApplicationType
@@ -13,17 +14,31 @@ import java.net.InetSocketAddress
  **/
 @Serializable
 open class ApplicationStatus(
-    @SerialName("application_name") val applicationName: String,
-    @SerialName("application_type") val applicationType: ApplicationType,
+    @SerialName("application_name")
+    @SerializedName("application_name")
+    val applicationName: String,
+    @SerialName("application_type")
+    @SerializedName("application_type")
+    val applicationType: ApplicationType,
     @Serializable(ServerSerializer::class) val server: Server?,
     @Serializable(InetSocketAddressSerializer::class) val address: InetSocketAddress,
-    @SerialName("online_since") val onlineSince: Long
+    @SerialName("online_since")
+    @SerializedName("online_since")
+    val onlineSince: Long
 ) {
 
-    @SerialName("heap_size") var heapSize: Long? = null
-    @SerialName("heap_max_size") var heapMaxSize: Long? = null
-    @SerialName("heap_free_size") var heapFreeSize: Long? = null
-    @SerialName("online_players") var onlinePlayers: Int = 0
+    @SerialName("heap_size")
+    @SerializedName("heap_size")
+    var heapSize: Long? = null
+    @SerialName("heap_max_size")
+    @SerializedName("heap_max_size")
+    var heapMaxSize: Long? = null
+    @SerialName("heap_free_size")
+    @SerializedName("heap_free_size")
+    var heapFreeSize: Long? = null
+    @SerialName("online_players")
+    @SerializedName("online_players")
+    var onlinePlayers: Int = 0
 
     fun isSame(applicationName: String) = this.applicationName == applicationName
 
