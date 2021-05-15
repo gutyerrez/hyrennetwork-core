@@ -38,7 +38,7 @@ object ApplicationStatusSerializer : KSerializer<ApplicationStatus> {
         val jsonObject = buildJsonObject {
             put("application_name", value.applicationName)
             put("application_type", value.applicationType.name)
-            put("server", Json.encodeToJsonElement(
+            put("server", Json.encodeToString(
                 NullableServerSerializer,
                 value.server
             ))
@@ -68,9 +68,9 @@ object ApplicationStatusSerializer : KSerializer<ApplicationStatus> {
             ApplicationType.valueOf(
                 jsonObject["application_type"]!!.toString(),
             ),
-            Json.decodeFromJsonElement(
+            Json.decodeFromString(
                 NullableServerSerializer,
-                jsonObject["server"]!!
+                jsonObject["server"]!!.toString()
             ),
             Json.decodeFromJsonElement(
                 InetSocketAddressSerializer,
@@ -139,11 +139,7 @@ object NullableServerSerializer : KSerializer<Server?> {
         encoder: Encoder,
         value: Server?
     ) {
-        value?.let {
-            encoder.apply {
-                encodeString(value.name.value)
-            }
-        } ?: encoder.encodeString("undefined")
+        encoder.apply { encodeString(value?.name?.value ?: "undefined") }
     }
 
     override fun deserialize(
@@ -152,7 +148,7 @@ object NullableServerSerializer : KSerializer<Server?> {
         val valid = decoder.decodeString()
 
         return if (valid != "undefined") {
-            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(decoder.decodeString())
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(valid)
         } else null
     }
 }
