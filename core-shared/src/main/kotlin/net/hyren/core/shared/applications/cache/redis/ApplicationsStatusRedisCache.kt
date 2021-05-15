@@ -2,8 +2,6 @@ package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.gson.Gson
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
@@ -28,16 +26,14 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     private fun getKey(name: String) = "applications:$name"
 
+    private val gson = Gson()
+
     fun update(
         applicationStatus: ApplicationStatus
     ) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
-
-            val gson = Gson()
-
-            print(gson.toJson(applicationStatus))
 
             pipeline.set(key, gson.toJson(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
@@ -70,7 +66,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    val applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
+                    val applicationStatus = gson.fromJson(value, ApplicationStatus::class.java)
 
                     if (applicationStatus.server == server)
                         applicationStatuses[key] = applicationStatus
@@ -97,7 +93,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             val value = it.get(key)
 
             if (value != null) {
-                applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
+                val applicationStatus = gson.fromJson(value, ApplicationStatus::class.java)
 
                 this.CACHE.put(applicationName, applicationStatus!!)
             }
@@ -121,7 +117,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applicationsStatuses[key] = Json.decodeFromString(value)
+                    applicationsStatuses[key] = gson.fromJson(value, ApplicationStatus::class.java)
                 }
 
                 cursor = result.cursor
@@ -138,7 +134,7 @@ class ApplicationsStatusRedisCache : RedisCache {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
 
-            val applications = mutableMapOf<String, ApplicationStatus>()
+            val applicationsStatuses = mutableMapOf<String, ApplicationStatus>()
 
             val responses = mutableMapOf<String, Response<String>>()
 
@@ -146,7 +142,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 val status = this.CACHE.getIfPresent(name)
 
                 if (status != null) {
-                    applications[name] = status
+                    applicationsStatuses[name] = status
                 } else {
                     val response = this.getResponse(name, pipeline)
 
@@ -162,10 +158,10 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applications[applicationName] = Json.decodeFromString(value)
+                applicationsStatuses[applicationName] = gson.fromJson(value, ApplicationStatus::class.java)
             }
 
-            return applications
+            return applicationsStatuses
         }
     }
 
