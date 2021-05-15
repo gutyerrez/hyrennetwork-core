@@ -21,6 +21,7 @@ open class ApplicationStatus(
     @SerialName("application_type")
     @SerializedName("application_type")
     val applicationType: ApplicationType,
+    @Required
     @SerialName("server")
     @SerializedName("server")
     @Serializable(ServerSerializer::class)
