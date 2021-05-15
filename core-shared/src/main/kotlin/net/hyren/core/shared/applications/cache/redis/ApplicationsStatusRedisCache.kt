@@ -1,7 +1,7 @@
 package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.google.gson.Gson
+import com.google.gson.*
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
@@ -10,6 +10,8 @@ import net.hyren.core.shared.servers.data.Server
 import redis.clients.jedis.Pipeline
 import redis.clients.jedis.Response
 import redis.clients.jedis.ScanParams
+import java.lang.reflect.Type
+import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -26,7 +28,35 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     private fun getKey(name: String) = "applications:$name"
 
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(InetSocketAddress::class.java, object : JsonSerializer<InetSocketAddress>, JsonDeserializer<InetSocketAddress> {
+            override fun serialize(
+                src: InetSocketAddress,
+                typeOfSrc: Type,
+                context: JsonSerializationContext
+            ): JsonElement {
+                val jsonObject = JsonObject()
+
+                jsonObject.addProperty("address", src.address.hostAddress)
+                jsonObject.addProperty("port", src.port)
+
+                return jsonObject
+            }
+
+            override fun deserialize(
+                json: JsonElement,
+                typeOfT: Type,
+                context: JsonDeserializationContext
+            ): InetSocketAddress {
+                val jsonObject = json.asJsonObject
+
+                return InetSocketAddress(
+                    jsonObject.get("address").asString,
+                    jsonObject.get("port").asInt
+                )
+            }
+        })
+        .create()
 
     fun update(
         applicationStatus: ApplicationStatus
