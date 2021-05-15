@@ -26,6 +26,7 @@ open class ApplicationStatus(
     var heapMaxSize: Long? = null
     @SerialName("heap_free_size")
     var heapFreeSize: Long? = null
+    @Serializable
     @SerialName("online_players")
     var onlinePlayers: Int = 0
 
