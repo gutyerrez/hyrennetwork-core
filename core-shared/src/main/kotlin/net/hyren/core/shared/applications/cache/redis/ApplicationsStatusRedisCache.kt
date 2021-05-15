@@ -8,6 +8,7 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.cache.redis.RedisCache
+import net.hyren.core.shared.misc.kotlin.ApplicationStatusSerializer
 import net.hyren.core.shared.servers.data.Server
 import redis.clients.jedis.Pipeline
 import redis.clients.jedis.Response
@@ -97,7 +98,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             if (value != null) {
                 println("Dale aqui")
 
-                this.CACHE.put(applicationName, Json.decodeFromString(value))
+                this.CACHE.put(applicationName, Json.decodeFromString(ApplicationStatusSerializer, value))
             }
 
             val application = CACHE.getIfPresent(key)
@@ -124,7 +125,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applicationsStatuses[key] = Json.decodeFromString(value)
+                    applicationsStatuses[key] = Json.decodeFromString(ApplicationStatusSerializer, value)
 
                     println(applicationsStatuses[key])
                 }
@@ -167,7 +168,7 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applicationsStatuses[applicationName] = Json.decodeFromString(value)
+                applicationsStatuses[applicationName] = Json.decodeFromString(ApplicationStatusSerializer, value)
 
                 println(applicationsStatuses[applicationName])
             }

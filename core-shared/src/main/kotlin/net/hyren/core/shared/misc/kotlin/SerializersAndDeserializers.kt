@@ -1,5 +1,6 @@
 package net.hyren.core.shared.misc.kotlin
 
+import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -8,6 +9,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import net.hyren.core.shared.CoreProvider
+import net.hyren.core.shared.applications.ApplicationType
+import net.hyren.core.shared.applications.status.ApplicationStatus
+import net.hyren.core.shared.misc.skin.controller.SkinController
 import net.hyren.core.shared.servers.data.Server
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
@@ -18,6 +22,46 @@ import java.util.*
 /**
  * @author Gutyerrez
  */
+object ApplicationStatusSerializer : KSerializer<ApplicationStatus> {
+    override val descriptor: SerialDescriptor = ContextualSerializer(
+        SkinController.MinecraftProfileData::class,
+        null,
+        emptyArray()
+    ).descriptor
+
+    override fun serialize(
+        encoder: Encoder,
+        value: ApplicationStatus
+    ) = error("Unimplemented")
+
+    override fun deserialize(
+        decoder: Decoder
+    ): ApplicationStatus {
+        val jsonDecoder = decoder as JsonDecoder
+
+        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+
+
+        return ApplicationStatus(
+            jsonObject["application_name"]!!.toString(),
+            ApplicationType.valueOf(
+                jsonObject["application_type"]!!.toString(),
+            ),
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(jsonObject["server"]!!.toString()),
+            InetSocketAddress(
+                jsonObject["address"]!!.jsonObject["address"]!!.toString(),
+                jsonObject["address"]!!.jsonObject["port"]!!.jsonPrimitive.int
+            ),
+            jsonObject["online_since"]!!.jsonPrimitive.long
+        ).apply {
+            heapSize = jsonObject["heap_size"]!!.jsonPrimitive.long
+            heapMaxSize = jsonObject["heap_max_size"]!!.jsonPrimitive.long
+            heapFreeSize = jsonObject["heap_free_size"]!!.jsonPrimitive.long
+            onlinePlayers = jsonObject["online_players"]!!.jsonPrimitive.int
+        }
+    }
+}
+
 object InetSocketAddressSerializer : KSerializer<InetSocketAddress> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NonNullableInetSocketAddress", PrimitiveKind.STRING)
 
