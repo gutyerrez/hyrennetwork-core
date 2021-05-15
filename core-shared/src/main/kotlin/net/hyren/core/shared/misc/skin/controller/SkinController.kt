@@ -107,9 +107,9 @@ object SkinController {
 
 				val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-				if (!jsonObject.containsKey("id")) return@invoker null
+				if (!jsonObject.containsKey("id") || jsonObject["id"] == null) return@invoker null
 
-				minecraftProfile = Json.decodeFromJsonElement(jsonObject)
+				minecraftProfileData = Json.decodeFromJsonElement(jsonObject)
 			}
 
 			val properties = minecraftProfileData.properties[0]
