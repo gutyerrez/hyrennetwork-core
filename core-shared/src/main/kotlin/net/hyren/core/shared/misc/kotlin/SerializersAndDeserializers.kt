@@ -32,26 +32,49 @@ object ApplicationStatusSerializer : KSerializer<ApplicationStatus> {
     override fun serialize(
         encoder: Encoder,
         value: ApplicationStatus
-    ) = error("Unimplemented")
+    ) {
+        val jsonEncoder = encoder as JsonEncoder
+
+        val jsonObject = buildJsonObject {
+            put("application_name", value.applicationName)
+            put("application_type", value.applicationType.name)
+            put("server", Json.encodeToJsonElement(
+                NullableServerSerializer,
+                value.server
+            ))
+            put("address", Json.encodeToJsonElement(
+                InetSocketAddressSerializer,
+                value.address
+            ))
+            put("online_since", value.onlineSince)
+            put("heap_size", value.heapSize)
+            put("heap_max_size", value.heapMaxSize)
+            put("heap_free_size", value.heapFreeSize)
+            put("online_players", value.onlinePlayers)
+        }
+
+        jsonEncoder.encodeJsonElement(jsonObject)
+    }
 
     override fun deserialize(
         decoder: Decoder
     ): ApplicationStatus {
         val jsonDecoder = decoder as JsonDecoder
 
-        val jsonObject = Json.parseToJsonElement(
-            jsonDecoder.decodeString()
-        ).jsonObject
+        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
         return ApplicationStatus(
             jsonObject["application_name"]!!.toString(),
             ApplicationType.valueOf(
                 jsonObject["application_type"]!!.toString(),
             ),
-            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(jsonObject["server"]!!.toString()),
-            InetSocketAddress(
-                jsonObject["address"]!!.jsonObject["address"]!!.toString(),
-                jsonObject["address"]!!.jsonObject["port"]!!.jsonPrimitive.int
+            Json.decodeFromJsonElement(
+                NullableServerSerializer,
+                jsonObject["server"]!!
+            ),
+            Json.decodeFromJsonElement(
+                InetSocketAddressSerializer,
+                jsonObject["address"]!!
             ),
             jsonObject["online_since"]!!.jsonPrimitive.long
         ).apply {
