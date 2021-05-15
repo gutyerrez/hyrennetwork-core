@@ -1,7 +1,7 @@
 package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.google.gson.*
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
@@ -12,8 +12,6 @@ import net.hyren.core.shared.servers.data.Server
 import redis.clients.jedis.Pipeline
 import redis.clients.jedis.Response
 import redis.clients.jedis.ScanParams
-import java.lang.reflect.Type
-import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -30,36 +28,6 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     private fun getKey(name: String) = "applications:$name"
 
-    private val gson = GsonBuilder()
-        .registerTypeAdapter(InetSocketAddress::class.java, object : JsonSerializer<InetSocketAddress>, JsonDeserializer<InetSocketAddress> {
-            override fun serialize(
-                src: InetSocketAddress,
-                typeOfSrc: Type,
-                context: JsonSerializationContext
-            ): JsonElement {
-                val jsonObject = JsonObject()
-
-                jsonObject.addProperty("address", src.address.hostAddress)
-                jsonObject.addProperty("port", src.port)
-
-                return jsonObject
-            }
-
-            override fun deserialize(
-                json: JsonElement,
-                typeOfT: Type,
-                context: JsonDeserializationContext
-            ): InetSocketAddress {
-                val jsonObject = json.asJsonObject
-
-                return InetSocketAddress(
-                    jsonObject.get("address").asString,
-                    jsonObject.get("port").asInt
-                )
-            }
-        })
-        .create()
-
     fun update(
         applicationStatus: ApplicationStatus
     ) {
@@ -67,11 +35,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
 
-            println("GSON: ${gson.toJson(applicationStatus)}")
-
-            println("Kotlinx.Serialization: ${Json.encodeToString(applicationStatus)}")
-
-            pipeline.set(key, gson.toJson(applicationStatus))
+            pipeline.set(key, Json.encodeToString(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
@@ -102,9 +66,9 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    val applicationStatus = gson.fromJson(value, ApplicationStatus::class.java)
+                    val applicationStatus = Json.decodeFromString<ApplicationStatus?>(value)
 
-                    if (applicationStatus.server == server)
+                    if (applicationStatus?.server == server)
                         applicationStatuses[key] = applicationStatus
                 }
 
@@ -129,9 +93,9 @@ class ApplicationsStatusRedisCache : RedisCache {
             val value = it.get(key)
 
             if (value != null) {
-                val applicationStatus = gson.fromJson(value, ApplicationStatus::class.java)
+                val applicationStatus = Json.decodeFromString<ApplicationStatus>(value)
 
-                this.CACHE.put(applicationName, applicationStatus!!)
+                this.CACHE.put(applicationName, applicationStatus)
             }
 
             return applicationStatus
@@ -153,7 +117,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applicationsStatuses[key] = gson.fromJson(value, ApplicationStatus::class.java)
+                    applicationsStatuses[key] = Json.decodeFromString(value)
                 }
 
                 cursor = result.cursor
@@ -194,7 +158,7 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applicationsStatuses[applicationName] = gson.fromJson(value, ApplicationStatus::class.java)
+                applicationsStatuses[applicationName] = Json.decodeFromString(value)
             }
 
             return applicationsStatuses
