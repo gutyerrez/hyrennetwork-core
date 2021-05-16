@@ -4,10 +4,10 @@ dependencies {
     compileOnly("net.md-5:brigadier:1.0.16-SNAPSHOT")
 
     // exposed
-    compileOnly("org.jetbrains.exposed:exposed-core:0.29.1")
-    compileOnly("org.jetbrains.exposed:exposed-dao:0.29.1")
-    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.29.1")
-    compileOnly("org.jetbrains.exposed:exposed-jodatime:0.29.1")
+    compileOnly("org.jetbrains.exposed:exposed-core:0.31.1")
+    compileOnly("org.jetbrains.exposed:exposed-dao:0.31.1")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.31.1")
+    compileOnly("org.jetbrains.exposed:exposed-jodatime:0.31.1")
 
     // eventbus
     compileOnly("org.greenrobot:eventbus:3.2.0")
