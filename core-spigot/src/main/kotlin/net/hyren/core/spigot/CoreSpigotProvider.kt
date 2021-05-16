@@ -14,6 +14,8 @@ import net.hyren.core.spigot.misc.server.configuration.data.ServerConfiguration
 import net.hyren.core.spigot.misc.server.configuration.settings.ServerSettings
 import net.hyren.core.spigot.misc.server.configuration.storage.repositories.IServersConfigurationRepository
 import net.hyren.core.spigot.misc.server.configuration.storage.repositories.implementations.MariaDBServersConfigurationRepository
+import net.hyren.core.spigot.misc.utils.ItemBuilder
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -42,13 +44,11 @@ object CoreSpigotProvider {
                             override fun serialize(
                                 jsonEncoder: JsonEncoder,
                                 value: ItemStack
-                            ) {
-                                println("Serializar")
-                            }
+                            ) = error("Não implementado ainda")
 
                             override fun deserialize(
                                 jsonDecoder: JsonDecoder
-                            ): ItemStack = error("Não implementado ainda")
+                            ) = error("Não implementado ainda")
                         }
                     )
 
@@ -124,7 +124,9 @@ object CoreSpigotProvider {
                                             jsonObject.getValue("server_settings").asJsonObject().getValue("npc_location").asJsonObject().getValue("pitch").asFloat(),
                                         )
                                     ),
-                                    null
+                                    ItemBuilder(
+                                        jsonObject.getValue("server_settings").asJsonObject().getValue("icon").asJsonObject().getValue("type").asEnum(Material::class)!!
+                                    ).build()
                                 )
                             }
                         }
