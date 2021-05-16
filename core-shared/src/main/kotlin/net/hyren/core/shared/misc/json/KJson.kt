@@ -1,18 +1,12 @@
 package net.hyren.core.shared.misc.json
 
 import com.google.common.base.Enums
-import kotlinx.serialization.ContextualSerializer
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.SerializersModuleBuilder
-import kotlinx.serialization.modules.overwriteWith
-import kotlinx.serialization.modules.plus
+import kotlinx.serialization.modules.*
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.groups.Group
@@ -424,9 +418,9 @@ object KJson {
     fun registerSerializer(
         serializers: SerializersModuleBuilder.() -> Unit
     ) {
-        val serializersModule = _json.serializersModule.plus(SerializersModule { serializers.invoke(this) })
+        val serializersModule = SerializersModule { serializers() }
 
-        _json.serializersModule.overwriteWith(serializersModule)
+        serializersModule.overwriteWith(_json.serializersModule)
     }
 
     /**
