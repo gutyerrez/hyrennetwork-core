@@ -228,6 +228,35 @@ object KJson {
                 }
             )
 
+            // PunishDuration serializer
+            contextual(
+                PunishDuration::class,
+                object : KSerializer<PunishDuration>() {
+                    override fun serialize(
+                        jsonEncoder: JsonEncoder,
+                        value: PunishDuration
+                    ) {
+                        jsonEncoder.encodeJsonElement(buildJsonObject {
+                            put("duration", value.duration)
+                            put("punish_type", Optional.ofNullable(
+                                value.punishType
+                            ).map { it.name }.orElse(null))
+                        })
+                    }
+
+                    override fun deserialize(
+                        jsonDecoder: JsonDecoder
+                    ): PunishDuration {
+                        val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                        return PunishDuration(
+                            jsonObject.getValue("duration").asLong(),
+                            jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
+                        )
+                    }
+                }
+            )
+
             // Preference serializer
             contextual(
                 Preference::class,
@@ -414,7 +443,9 @@ abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {
         jsonDecoder: JsonDecoder
     ): T
 
-    final override fun deserialize(decoder: Decoder): T = deserialize(
+    final override fun deserialize(
+        decoder: Decoder
+    ): T = deserialize(
         decoder as JsonDecoder
     )
 
