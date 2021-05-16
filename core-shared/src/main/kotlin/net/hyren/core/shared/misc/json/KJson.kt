@@ -424,9 +424,25 @@ object KJson {
 
         class2ContextualFactoryField.isAccessible = true
 
-        println("isAccessible: ${class2ContextualFactoryField.isAccessible}")
+        val class2ContextualFactory = class2ContextualFactoryField.get(_serializersModule) as MutableMap<KClass<*>, Any?>
 
-//        val a = class2ContextualFactoryField.get(_serializersModule) as Map<KClass<*>, *>
+        val instanceField = _serializers::class.java.getDeclaredField("INSTANCE")
+
+        instanceField.isAccessible = true
+
+        val serializersModule = SerializersModule { _serializers() }
+
+        val _class2ContextualFactory = serializersModule::class.java.getDeclaredField("class2ContextualFactory")
+
+        _class2ContextualFactory.isAccessible = true
+
+        val class2ContextualProvider = _class2ContextualFactory.get(serializersModule) as Map<KClass<*>, Any?>
+
+        class2ContextualProvider.forEach { (key, value) ->
+            class2ContextualFactory[key] = value
+        }
+
+        class2ContextualFactoryField.set(_serializersModule, class2ContextualFactory)
     }
 
     /**
