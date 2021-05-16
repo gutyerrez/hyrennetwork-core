@@ -1,7 +1,7 @@
 package net.hyren.core.spigot.echo.packets.listener
 
 import net.hyren.core.shared.CoreProvider
-import net.hyren.core.shared.echo.api.listener.EchoListener
+import net.hyren.core.shared.echo.api.listener.EchoPacketListener
 import net.hyren.core.shared.echo.packets.TitlePacket
 import net.hyren.core.spigot.misc.utils.Title
 import org.bukkit.Bukkit
@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.Subscribe
 /**
  * @author Gutyerrez
  */
-class TitleEchoPacketListener : EchoListener {
+class TitleEchoPacketListener : EchoPacketListener {
 
     @Subscribe
     fun on(packet: TitlePacket) {

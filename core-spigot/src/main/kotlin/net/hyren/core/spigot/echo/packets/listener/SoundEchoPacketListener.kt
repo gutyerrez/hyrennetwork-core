@@ -1,6 +1,6 @@
 package net.hyren.core.spigot.echo.packets.listener
 
-import net.hyren.core.shared.echo.api.listener.EchoListener
+import net.hyren.core.shared.echo.api.listener.EchoPacketListener
 import net.hyren.core.shared.echo.packets.SoundPacket
 import org.bukkit.Bukkit
 import org.greenrobot.eventbus.Subscribe
@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.Subscribe
 /**
  * @author Gutyerrez
  */
-class SoundEchoPacketListener : EchoListener {
+class SoundEchoPacketListener : EchoPacketListener {
 
     @Subscribe
     fun on(
