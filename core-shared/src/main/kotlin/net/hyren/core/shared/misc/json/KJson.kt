@@ -172,58 +172,70 @@ object KJson {
 
             // PunishCategory serializer
             contextual(
-                PunishCategory::class,
-                object : KSerializer<PunishCategory>() {
+                Array<PunishCategory>::class,
+                object : KSerializer<Array<PunishCategory>>() {
                     override fun serialize(
                         jsonEncoder: JsonEncoder,
-                        value: PunishCategory
+                        value: Array<PunishCategory>
                     ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("name", value.name.value)
-                            put("display_name", value.displayName)
-                            put("description", value._description)
-                            put("punish_durations", buildJsonArray {
-                                value.punishDurations.forEach {
-                                    add(buildJsonObject {
-                                        put("duration", it.duration)
-                                        put("punish_type", Optional.ofNullable(
-                                            it.punishType
-                                        ).map { it.name }.orElse(null))
+                        jsonEncoder.encodeJsonElement(buildJsonArray {
+                            value.forEach {
+                                addJsonObject {
+                                    put("name", it.name.value)
+                                    put("display_name", it.displayName)
+                                    put("description", it._description)
+                                    put("punish_durations", buildJsonArray {
+                                        it.punishDurations.forEach {
+                                            add(buildJsonObject {
+                                                put("duration", it.duration)
+                                                put("punish_type", Optional.ofNullable(
+                                                    it.punishType
+                                                ).map { it.name }.orElse(null))
+                                            })
+                                        }
                                     })
+                                    put("group", Optional.ofNullable(
+                                        it.group
+                                    ).map { it.name }.orElse(null))
+                                    put("enabled", it.enabled)
                                 }
-                            })
-                            put("group", Optional.ofNullable(
-                                value.group
-                            ).map { it.name }.orElse(null))
-                            put("enabled", value.enabled)
-                        }.asJsonObject())
+                            }
+                        }.asJsonArray())
                     }
 
                     override fun deserialize(
                         jsonDecoder: JsonDecoder
-                    ): PunishCategory {
-                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+                    ): Array<PunishCategory> {
+                        val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
 
-                        return PunishCategory(
-                            EntityID(
-                                jsonObject.getValue("name").asString(),
-                                PunishCategoriesTable
-                            ),
-                            jsonObject.getValue("display_name").asString(),
-                            jsonObject.getValue("description").asString(),
-                            sizedArray<PunishDuration>(jsonObject.getValue("punish_durations").asJsonArray().size).apply {
-                                jsonObject.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
-                                    val _jsonObject = jsonElement.asJsonObject()
+                        val array = sizedArray<PunishCategory>(jsonArray.size)
 
-                                    this[index] = PunishDuration(
-                                        _jsonObject.getValue("duration").asLong(),
-                                        _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
-                                    )
-                                }
-                            },
-                            jsonObject.getValue("group").asEnum(Group::class)!!,
-                            jsonObject.getValue("enabled").asBoolean()
-                        )
+                        jsonArray.forEachIndexed { index, it ->
+                            val it = it.asJsonObject()
+
+                            array[index] = PunishCategory(
+                                EntityID(
+                                    it.getValue("name").asString(),
+                                    PunishCategoriesTable
+                                ),
+                                it.getValue("display_name").asString(),
+                                it.getValue("description").asString(),
+                                sizedArray<PunishDuration>(it.getValue("punish_durations").asJsonArray().size).apply {
+                                    it.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
+                                        val _jsonObject = jsonElement.asJsonObject()
+
+                                        this[index] = PunishDuration(
+                                            _jsonObject.getValue("duration").asLong(),
+                                            _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
+                                        )
+                                    }
+                                },
+                                it.getValue("group").asEnum(Group::class)!!,
+                                it.getValue("enabled").asBoolean()
+                            )
+                        }
+
+                        return array
                     }
                 }
             )
