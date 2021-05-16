@@ -1,30 +1,41 @@
 package net.hyren.core.shared.tests
 
-import net.hyren.core.shared.applications.ApplicationType
-import net.hyren.core.shared.applications.status.ApplicationStatus
+import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.json.KJson
-import java.net.InetSocketAddress
+import net.hyren.core.shared.misc.punish.PunishType
+import net.hyren.core.shared.misc.punish.category.data.PunishCategory
+import net.hyren.core.shared.misc.punish.category.storage.table.PunishCategoriesTable
+import net.hyren.core.shared.misc.punish.durations.PunishDuration
+import org.jetbrains.exposed.dao.id.EntityID
 
 /**
  * @author Gutyerrez
  */
 fun main() {
-    val preference = ApplicationStatus(
-        "test-application",
-        ApplicationType.GENERIC,
-        null,
-        InetSocketAddress(
-            "0.0.0.0",
-            0
-        ),
-        System.currentTimeMillis()
+    val array = arrayOf(
+        PunishCategory(
+            EntityID(
+                "test",
+                PunishCategoriesTable
+            ),
+            "test orra",
+            "lalalala",
+            arrayOf(
+                PunishDuration(
+                    1000,
+                    PunishType.MUTE
+                )
+            ),
+            Group.DEFAULT,
+            true
+        )
     )
 
-    val json = KJson.encodeToString(preference)
+    val encoded = KJson.encodeToString(array)
 
-    println(json)
+    println(encoded)
 
-    val decoded = KJson.decodeFromString<ApplicationStatus>(json)
+    val decoded = KJson.decodeFromString(Array<PunishCategory>::class, encoded)
 
     println(decoded)
 }

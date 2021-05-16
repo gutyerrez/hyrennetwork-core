@@ -172,70 +172,58 @@ object KJson {
 
             // PunishCategory serializer
             contextual(
-                Array<PunishCategory>::class,
-                object : KSerializer<Array<PunishCategory>>() {
+                PunishCategory::class,
+                object : KSerializer<PunishCategory>() {
                     override fun serialize(
                         jsonEncoder: JsonEncoder,
-                        value: Array<PunishCategory>
+                        value: PunishCategory
                     ) {
-                        jsonEncoder.encodeJsonElement(buildJsonArray {
-                            value.forEach {
-                                addJsonObject {
-                                    put("name", it.name.value)
-                                    put("display_name", it.displayName)
-                                    put("description", it._description)
-                                    put("punish_durations", buildJsonArray {
-                                        it.punishDurations.forEach {
-                                            add(buildJsonObject {
-                                                put("duration", it.duration)
-                                                put("punish_type", Optional.ofNullable(
-                                                    it.punishType
-                                                ).map { it.name }.orElse(null))
-                                            })
-                                        }
+                        jsonEncoder.encodeJsonElement(buildJsonObject {
+                            put("name", value.name.value)
+                            put("display_name", value.displayName)
+                            put("description", value._description)
+                            put("punish_durations", buildJsonArray {
+                                value.punishDurations.forEach {
+                                    add(buildJsonObject {
+                                        put("duration", it.duration)
+                                        put("punish_type", Optional.ofNullable(
+                                            it.punishType
+                                        ).map { it.name }.orElse(null))
                                     })
-                                    put("group", Optional.ofNullable(
-                                        it.group
-                                    ).map { it.name }.orElse(null))
-                                    put("enabled", it.enabled)
                                 }
-                            }
-                        }.asJsonArray())
+                            })
+                            put("group", Optional.ofNullable(
+                                value.group
+                            ).map { it.name }.orElse(null))
+                            put("enabled", value.enabled)
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
                         jsonDecoder: JsonDecoder
-                    ): Array<PunishCategory> {
-                        val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
+                    ): PunishCategory {
+                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
-                        val array = sizedArray<PunishCategory>(jsonArray.size)
+                        return PunishCategory(
+                            EntityID(
+                                jsonObject.getValue("name").asString(),
+                                PunishCategoriesTable
+                            ),
+                            jsonObject.getValue("display_name").asString(),
+                            jsonObject.getValue("description").asString(),
+                            sizedArray<PunishDuration>(jsonObject.getValue("punish_durations").asJsonArray().size).apply {
+                                jsonObject.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
+                                    val _jsonObject = jsonElement.asJsonObject()
 
-                        jsonArray.forEachIndexed { index, it ->
-                            val it = it.asJsonObject()
-
-                            array[index] = PunishCategory(
-                                EntityID(
-                                    it.getValue("name").asString(),
-                                    PunishCategoriesTable
-                                ),
-                                it.getValue("display_name").asString(),
-                                it.getValue("description").asString(),
-                                sizedArray<PunishDuration>(it.getValue("punish_durations").asJsonArray().size).apply {
-                                    it.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
-                                        val _jsonObject = jsonElement.asJsonObject()
-
-                                        this[index] = PunishDuration(
-                                            _jsonObject.getValue("duration").asLong(),
-                                            _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
-                                        )
-                                    }
-                                },
-                                it.getValue("group").asEnum(Group::class)!!,
-                                it.getValue("enabled").asBoolean()
-                            )
-                        }
-
-                        return array
+                                    this[index] = PunishDuration(
+                                        _jsonObject.getValue("duration").asLong(),
+                                        _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
+                                    )
+                                }
+                            },
+                            jsonObject.getValue("group").asEnum(Group::class)!!,
+                            jsonObject.getValue("enabled").asBoolean()
+                        )
                     }
                 }
             )
