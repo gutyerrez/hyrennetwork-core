@@ -35,364 +35,366 @@ import kotlin.reflect.KClass
  */
 object KJson {
 
-    val _json: Json = Json {
-        isLenient = true
-        serializersModule = SerializersModule {
-            // InetSocketAddress serializer
-            contextual(
-                InetSocketAddress::class,
-                object : KSerializer<InetSocketAddress>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: InetSocketAddress
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("host", value.address.hostAddress)
-                            put("port", value.port)
-                        }.asJsonObject())
-                    }
-
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): InetSocketAddress {
-                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
-
-                        return InetSocketAddress(
-                            jsonObject.getValue("host").asString(),
-                            jsonObject.getValue("port").asInt()
-                        )
-                    }
+    val _serializersModule = SerializersModule {
+        // InetSocketAddress serializer
+        contextual(
+            InetSocketAddress::class,
+            object : KSerializer<InetSocketAddress>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: InetSocketAddress
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("host", value.address.hostAddress)
+                        put("port", value.port)
+                    }.asJsonObject())
                 }
-            )
 
-            // Server serializer
-            contextual(
-                Server::class,
-                object : KSerializer<Server>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: Server
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("name", value.name.value)
-                            put("display_name", value.displayName)
-                            put("server_type", Optional.ofNullable(
-                                value.serverType
-                            ).map { it.name }.orElse(null))
-                        }.asJsonObject())
-                    }
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): InetSocketAddress {
+                    val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): Server {
-                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+                    return InetSocketAddress(
+                        jsonObject.getValue("host").asString(),
+                        jsonObject.getValue("port").asInt()
+                    )
+                }
+            }
+        )
 
-                        return Server(
+        // Server serializer
+        contextual(
+            Server::class,
+            object : KSerializer<Server>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Server
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("name", value.name.value)
+                        put("display_name", value.displayName)
+                        put("server_type", Optional.ofNullable(
+                            value.serverType
+                        ).map { it.name }.orElse(null))
+                    }.asJsonObject())
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): Server {
+                    val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+
+                    return Server(
+                        EntityID(
+                            jsonObject.getValue("name").asString(),
+                            ServersTable
+                        ),
+                        jsonObject.getValue("display_name").asString(),
+                        jsonObject.getValue("server_type").asEnum(ServerType::class)!!
+                    )
+                }
+            }
+        )
+
+        // ApplicationStatus serializer
+        contextual(
+            ApplicationStatus::class,
+            object : KSerializer<ApplicationStatus>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: ApplicationStatus
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("application_name", value.applicationName)
+                        put("application_type", value.applicationType.name)
+                        value.server?.let {
+                            return@let buildJsonObject {
+                                put("name", it.name.value)
+                                put("display_name", it.displayName)
+                                put("server_type", Optional.ofNullable(
+                                    it.serverType
+                                ).map { it.name }.orElse(null))
+                            }
+                        }?.let { put("server", it) } ?: put("server", "undefined")
+
+                        put("inet_socket_address", buildJsonObject {
+                            put("host", value.inetSocketAddress.address.hostAddress)
+                            put("port", value.inetSocketAddress.port)
+                        })
+
+                        put("online_since", value.onlineSince)
+                        put("heap_size", value.heapSize ?: 0)
+                        put("heap_max_size", value.heapMaxSize ?: 0)
+                        put("heap_free_size", value.heapFreeSize ?: 0)
+                        put("online_players", value.onlinePlayers)
+                    }.asJsonObject())
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): ApplicationStatus {
+                    val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
+
+                    return ApplicationStatus(
+                        jsonObject.getValue("application_name").asString(),
+                        jsonObject.getValue("application_type").asEnum(ApplicationType::class)!!,
+                        if (jsonObject.getValue("server") is JsonPrimitive) {
+                            null
+                        } else Server(
                             EntityID(
-                                jsonObject.getValue("name").asString(),
+                                jsonObject.getValue("server").asJsonObject().getValue("name").asString(),
                                 ServersTable
                             ),
-                            jsonObject.getValue("display_name").asString(),
-                            jsonObject.getValue("server_type").asEnum(ServerType::class)!!
-                        )
+                            jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
+                            jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
+                        ),
+                        InetSocketAddress(
+                            jsonObject.getValue("inet_socket_address").asJsonObject().getValue("host").asString(),
+                            jsonObject.getValue("inet_socket_address").asJsonObject().getValue("port").asInt()
+                        ),
+                        jsonObject.getValue("online_since").asLong()
+                    ).apply {
+                        heapSize = jsonObject.getValue("heap_size").asLong()
+                        heapMaxSize = jsonObject.getValue("heap_max_size").asLong()
+                        heapFreeSize = jsonObject.getValue("heap_free_size").asLong()
+                        onlinePlayers = jsonObject.getValue("online_players").asInt()
                     }
                 }
-            )
+            }
+        )
 
-            // ApplicationStatus serializer
-            contextual(
-                ApplicationStatus::class,
-                object : KSerializer<ApplicationStatus>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: ApplicationStatus
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("application_name", value.applicationName)
-                            put("application_type", value.applicationType.name)
-                            value.server?.let {
-                                return@let buildJsonObject {
-                                    put("name", it.name.value)
-                                    put("display_name", it.displayName)
-                                    put("server_type", Optional.ofNullable(
-                                        it.serverType
-                                    ).map { it.name }.orElse(null))
-                                }
-                            }?.let { put("server", it) } ?: put("server", "undefined")
-
-                            put("inet_socket_address", buildJsonObject {
-                                put("host", value.inetSocketAddress.address.hostAddress)
-                                put("port", value.inetSocketAddress.port)
-                            })
-
-                            put("online_since", value.onlineSince)
-                            put("heap_size", value.heapSize ?: 0)
-                            put("heap_max_size", value.heapMaxSize ?: 0)
-                            put("heap_free_size", value.heapFreeSize ?: 0)
-                            put("online_players", value.onlinePlayers)
-                        }.asJsonObject())
-                    }
-
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): ApplicationStatus {
-                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
-
-                        return ApplicationStatus(
-                            jsonObject.getValue("application_name").asString(),
-                            jsonObject.getValue("application_type").asEnum(ApplicationType::class)!!,
-                            if (jsonObject.getValue("server") is JsonPrimitive) {
-                                null
-                            } else Server(
-                                EntityID(
-                                    jsonObject.getValue("server").asJsonObject().getValue("name").asString(),
-                                    ServersTable
-                                ),
-                                jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
-                                jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
-                            ),
-                            InetSocketAddress(
-                                jsonObject.getValue("inet_socket_address").asJsonObject().getValue("host").asString(),
-                                jsonObject.getValue("inet_socket_address").asJsonObject().getValue("port").asInt()
-                            ),
-                            jsonObject.getValue("online_since").asLong()
-                        ).apply {
-                            heapSize = jsonObject.getValue("heap_size").asLong()
-                            heapMaxSize = jsonObject.getValue("heap_max_size").asLong()
-                            heapFreeSize = jsonObject.getValue("heap_free_size").asLong()
-                            onlinePlayers = jsonObject.getValue("online_players").asInt()
-                        }
-                    }
-                }
-            )
-
-            // PunishCategory serializer
-            contextual(
-                PunishCategory::class,
-                object : KSerializer<PunishCategory>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: PunishCategory
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("name", value.name.value)
-                            put("display_name", value.displayName)
-                            put("description", value._description)
-                            put("punish_durations", buildJsonArray {
-                                value.punishDurations.forEach {
-                                    add(buildJsonObject {
-                                        put("duration", it.duration)
-                                        put("punish_type", Optional.ofNullable(
-                                            it.punishType
-                                        ).map { it.name }.orElse(null))
-                                    })
-                                }
-                            })
-                            put("group", Optional.ofNullable(
-                                value.group
-                            ).map { it.name }.orElse(null))
-                            put("enabled", value.enabled)
-                        }.asJsonObject())
-                    }
-
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): PunishCategory {
-                        val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
-
-                        return PunishCategory(
-                            EntityID(
-                                jsonObject.getValue("name").asString(),
-                                PunishCategoriesTable
-                            ),
-                            jsonObject.getValue("display_name").asString(),
-                            jsonObject.getValue("description").asString(),
-                            sizedArray<PunishDuration>(jsonObject.getValue("punish_durations").asJsonArray().size).apply {
-                                jsonObject.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
-                                    val _jsonObject = jsonElement.asJsonObject()
-
-                                    this[index] = PunishDuration(
-                                        _jsonObject.getValue("duration").asLong(),
-                                        _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
-                                    )
-                                }
-                            },
-                            jsonObject.getValue("group").asEnum(Group::class)!!,
-                            jsonObject.getValue("enabled").asBoolean()
-                        )
-                    }
-                }
-            )
-
-            // PunishDuration serializer
-            contextual(
-                Array<PunishDuration>::class,
-                object : KSerializer<Array<PunishDuration>>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: Array<PunishDuration>
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonArray {
-                            value.forEach {
-                                addJsonObject {
+        // PunishCategory serializer
+        contextual(
+            PunishCategory::class,
+            object : KSerializer<PunishCategory>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: PunishCategory
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("name", value.name.value)
+                        put("display_name", value.displayName)
+                        put("description", value._description)
+                        put("punish_durations", buildJsonArray {
+                            value.punishDurations.forEach {
+                                add(buildJsonObject {
                                     put("duration", it.duration)
                                     put("punish_type", Optional.ofNullable(
                                         it.punishType
-                                    ).map { it.name }.orElse(null)
-                                    )
-                                }
+                                    ).map { it.name }.orElse(null))
+                                })
                             }
                         })
-                    }
-
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): Array<PunishDuration> {
-                        val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
-
-                        val array = sizedArray<PunishDuration>(jsonArray.size)
-
-                        jsonArray.forEachIndexed { index, it ->
-                            val it = it.asJsonObject()
-
-                            array[index] = PunishDuration(
-                                it.getValue("duration").asLong(),
-                                it.getValue("punish_type").asEnum(PunishType::class)!!
-                            )
-                        }
-
-                        return array
-                    }
+                        put("group", Optional.ofNullable(
+                            value.group
+                        ).map { it.name }.orElse(null))
+                        put("enabled", value.enabled)
+                    }.asJsonObject())
                 }
-            )
 
-            // Preference serializer
-            contextual(
-                Preference::class,
-                object : KSerializer<Preference>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: Preference
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("name", value.name)
-                            put("preference_state", Optional.ofNullable(
-                                value.preferenceState
-                            ).map { it.name }.orElse(null))
-                        }.asJsonObject())
-                    }
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): PunishCategory {
+                    val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): Preference {
-                        val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
-
-                        return Preference(
+                    return PunishCategory(
+                        EntityID(
                             jsonObject.getValue("name").asString(),
-                            jsonObject.getValue("preference_state").asEnum(
-                                PreferenceState::class
-                            )!!
+                            PunishCategoriesTable
+                        ),
+                        jsonObject.getValue("display_name").asString(),
+                        jsonObject.getValue("description").asString(),
+                        sizedArray<PunishDuration>(jsonObject.getValue("punish_durations").asJsonArray().size).apply {
+                            jsonObject.getValue("punish_durations").asJsonArray().forEachIndexed { index, jsonElement ->
+                                val _jsonObject = jsonElement.asJsonObject()
+
+                                this[index] = PunishDuration(
+                                    _jsonObject.getValue("duration").asLong(),
+                                    _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
+                                )
+                            }
+                        },
+                        jsonObject.getValue("group").asEnum(Group::class)!!,
+                        jsonObject.getValue("enabled").asBoolean()
+                    )
+                }
+            }
+        )
+
+        // PunishDuration serializer
+        contextual(
+            Array<PunishDuration>::class,
+            object : KSerializer<Array<PunishDuration>>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Array<PunishDuration>
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonArray {
+                        value.forEach {
+                            addJsonObject {
+                                put("duration", it.duration)
+                                put("punish_type", Optional.ofNullable(
+                                    it.punishType
+                                ).map { it.name }.orElse(null)
+                                )
+                            }
+                        }
+                    })
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): Array<PunishDuration> {
+                    val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
+
+                    val array = sizedArray<PunishDuration>(jsonArray.size)
+
+                    jsonArray.forEachIndexed { index, it ->
+                        val it = it.asJsonObject()
+
+                        array[index] = PunishDuration(
+                            it.getValue("duration").asLong(),
+                            it.getValue("punish_type").asEnum(PunishType::class)!!
                         )
                     }
+
+                    return array
                 }
-            )
+            }
+        )
 
-            // ReportCategory
-            contextual(
-                ReportCategory::class,
-                object : KSerializer<ReportCategory>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: ReportCategory
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("name", value.name.value)
-                            put("display_name", value.displayName)
-                            put("description", value._description)
-                            put("enabled", value.enabled)
-                        }.asJsonObject())
-                    }
+        // Preference serializer
+        contextual(
+            Preference::class,
+            object : KSerializer<Preference>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Preference
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("name", value.name)
+                        put("preference_state", Optional.ofNullable(
+                            value.preferenceState
+                        ).map { it.name }.orElse(null))
+                    }.asJsonObject())
+                }
 
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): ReportCategory {
-                        val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): Preference {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
 
-                        return ReportCategory(
+                    return Preference(
+                        jsonObject.getValue("name").asString(),
+                        jsonObject.getValue("preference_state").asEnum(
+                            PreferenceState::class
+                        )!!
+                    )
+                }
+            }
+        )
+
+        // ReportCategory
+        contextual(
+            ReportCategory::class,
+            object : KSerializer<ReportCategory>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: ReportCategory
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("name", value.name.value)
+                        put("display_name", value.displayName)
+                        put("description", value._description)
+                        put("enabled", value.enabled)
+                    }.asJsonObject())
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): ReportCategory {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                    return ReportCategory(
+                        EntityID(
+                            jsonObject.getValue("name").asString(),
+                            ReportCategoriesTable
+                        ),
+                        jsonObject.getValue("display_name").asString(),
+                        jsonObject.getValue("description").asString(),
+                        jsonObject.getValue("enabled").asBoolean()
+                    )
+                }
+            }
+        )
+
+        // Report serializer
+        contextual(
+            Report::class,
+            object : KSerializer<Report>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Report
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("report_id", value.reporterId.value.toString())
+                        put("report_category", buildJsonObject {
+                            put("name", value.reportCategory.name.value)
+                            put("display_name", value.reportCategory.displayName)
+                            put("description", value.reportCategory._description)
+                            put("enabled", value.reportCategory.enabled)
+                        })
+                        put("reported_at", value.reportedAt.toString())
+                        put("server", buildJsonObject {
+                            put("name", value.server.name.value)
+                            put("display_name", value.server.displayName)
+                            put("server_type", Optional.ofNullable(
+                                value.server.serverType
+                            ).map { it.name }.orElse(null))
+                        })
+                    }.asJsonObject())
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): Report {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                    return Report(
+                        EntityID(
+                            UUID.fromString(
+                                jsonObject.getValue("reporter_id").asString()
+                            ),
+                            UsersTable
+                        ),
+                        ReportCategory(
                             EntityID(
-                                jsonObject.getValue("name").asString(),
+                                jsonObject.getValue("report_category").asJsonObject().getValue("name").asString(),
                                 ReportCategoriesTable
                             ),
-                            jsonObject.getValue("display_name").asString(),
-                            jsonObject.getValue("description").asString(),
-                            jsonObject.getValue("enabled").asBoolean()
-                        )
-                    }
-                }
-            )
-
-            // Report serializer
-            contextual(
-                Report::class,
-                object : KSerializer<Report>() {
-                    override fun serialize(
-                        jsonEncoder: JsonEncoder,
-                        value: Report
-                    ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("report_id", value.reporterId.value.toString())
-                            put("report_category", buildJsonObject {
-                                put("name", value.reportCategory.name.value)
-                                put("display_name", value.reportCategory.displayName)
-                                put("description", value.reportCategory._description)
-                                put("enabled", value.reportCategory.enabled)
-                            })
-                            put("reported_at", value.reportedAt.toString())
-                            put("server", buildJsonObject {
-                                put("name", value.server.name.value)
-                                put("display_name", value.server.displayName)
-                                put("server_type", Optional.ofNullable(
-                                    value.server.serverType
-                                ).map { it.name }.orElse(null))
-                            })
-                        }.asJsonObject())
-                    }
-
-                    override fun deserialize(
-                        jsonDecoder: JsonDecoder
-                    ): Report {
-                        val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
-
-                        return Report(
+                            jsonObject.getValue("report_category").asJsonObject().getValue("display_name").asString(),
+                            jsonObject.getValue("report_category").asJsonObject().getValue("description").asString(),
+                            jsonObject.getValue("report_category").asJsonObject().getValue("enabled").asBoolean()
+                        ),
+                        DateTime.parse(jsonObject.getValue("reported_at").toString()),
+                        Server(
                             EntityID(
-                                UUID.fromString(
-                                    jsonObject.getValue("reporter_id").asString()
-                                ),
-                                UsersTable
+                                jsonObject.getValue("server").asJsonObject().getValue("name").asString(),
+                                ServersTable
                             ),
-                            ReportCategory(
-                                EntityID(
-                                    jsonObject.getValue("report_category").asJsonObject().getValue("name").asString(),
-                                    ReportCategoriesTable
-                                ),
-                                jsonObject.getValue("report_category").asJsonObject().getValue("display_name").asString(),
-                                jsonObject.getValue("report_category").asJsonObject().getValue("description").asString(),
-                                jsonObject.getValue("report_category").asJsonObject().getValue("enabled").asBoolean()
-                            ),
-                            DateTime.parse(jsonObject.getValue("reported_at").toString()),
-                            Server(
-                                EntityID(
-                                    jsonObject.getValue("server").asJsonObject().getValue("name").asString(),
-                                    ServersTable
-                                ),
-                                jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
-                                jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
-                            )
+                            jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
+                            jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
                         )
-                    }
+                    )
                 }
-            )
-        }
+            }
+        )
+    }
+
+    val _json: Json = Json {
+        isLenient = true
+        serializersModule = _serializersModule
     }
 
     inline fun <reified T> encodeToString(
@@ -416,11 +418,15 @@ object KJson {
      */
 
     fun registerSerializer(
-        serializers: SerializersModuleBuilder.() -> Unit
+        _serializers: SerializersModuleBuilder.() -> Unit
     ) {
-        val serializersModule = SerializersModule { serializers() }
+        val class2ContextualFactoryField = _serializersModule::class.java.getDeclaredField("class2ContextualFactory")
 
-        serializersModule.overwriteWith(_json.serializersModule)
+        class2ContextualFactoryField.isAccessible = true
+
+        println("isAccessible: ${class2ContextualFactoryField.isAccessible}")
+
+//        val a = class2ContextualFactoryField.get(_serializersModule) as Map<KClass<*>, *>
     }
 
     /**
