@@ -24,7 +24,13 @@ class ArrayColumnType(
     override fun valueFromDB(
         value: Any
     ): Any = when (value) {
-        is String -> KJson.decodeFromString(kClass, value) ?: Any()
+        is String -> {
+            val decoded = KJson.decodeFromString(kClass, value)!!
+
+            println(decoded)
+
+            decoded
+        }
         value is Array<*> -> value
         else -> throw SQLFeatureNotSupportedException("Array does not support for this database")
     }
