@@ -17,6 +17,7 @@ import net.hyren.core.spigot.misc.server.configuration.storage.repositories.impl
 import net.hyren.core.spigot.misc.utils.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import java.util.stream.Collectors
 
 /**
  * @author Gutyerrez
@@ -125,7 +126,15 @@ object CoreSpigotProvider {
                                         )
                                     ),
                                     ItemBuilder(
-                                        jsonObject.getValue("server_settings").asJsonObject().getValue("icon").asJsonObject().getValue("type").asEnum(Material::class)!!
+                                        jsonObject.getValue("icon").asJsonObject().getValue("type").asEnum(Material::class)!!
+                                    ).name(
+                                        jsonObject.getValue("icon").asJsonObject().getValue("meta").asJsonObject().getValue("display_name").asString()
+                                    ).glowing(
+                                        jsonObject.getValue("icon").asJsonObject().getValue("meta").asJsonObject()["glowing"]?.asBoolean() == true
+                                    ).lore(
+                                        jsonObject.getValue("icon").asJsonObject().getValue("meta").asJsonObject().getValue("lore").asJsonArray().stream().map {
+                                            it.asString()
+                                        }.collect(Collectors.toUnmodifiableList()).toTypedArray()
                                     ).build()
                                 )
                             }
