@@ -30,12 +30,18 @@ class ApplicationsStatusRedisCache : RedisCache {
         applicationStatus: ApplicationStatus
     ) {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val pipeline = it.pipelined()
-            val key = this.getKey(applicationStatus.applicationName)
+            try {
+                val pipeline = it.pipelined()
+                val key = this.getKey(applicationStatus.applicationName)
 
-            pipeline.set(key, KJson.encodeToString(applicationStatus))
-            pipeline.expire(key, this.TTL_SECONDS)
-            pipeline.sync()
+                println(KJson.encodeToString(applicationStatus))
+
+                pipeline.set(key, KJson.encodeToString(applicationStatus))
+                pipeline.expire(key, this.TTL_SECONDS)
+                pipeline.sync()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
