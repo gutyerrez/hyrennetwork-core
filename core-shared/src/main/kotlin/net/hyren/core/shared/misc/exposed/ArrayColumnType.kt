@@ -11,11 +11,11 @@ import kotlin.reflect.KClass
 /**
  * @author Gutyerrez
  */
-inline fun <reified T> Table.array(name: String): Column<Array<T>> = registerColumn(name, ArrayColumnType(
-    Array<T>::class
+inline fun <reified T> Table.array(name: String): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>(
+    T::class
 ))
 
-class ArrayColumnType(
+class ArrayColumnType<T>(
     private val kClass: KClass<*>
 ) : ColumnType() {
 
@@ -25,7 +25,7 @@ class ArrayColumnType(
         value: Any
     ): Any = when (value) {
         is String -> {
-            val decoded = KJson.decodeFromString(kClass, value)!!
+            val decoded = KJson.decodeFromString(kClass, value)!! as Array<T>
 
             println(decoded)
 
