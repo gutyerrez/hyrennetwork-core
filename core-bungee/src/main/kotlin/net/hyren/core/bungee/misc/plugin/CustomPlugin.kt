@@ -13,15 +13,22 @@ abstract class CustomPlugin(
 ) : Plugin() {
 
     override fun onEnable() {
+        println("Starting plugin ${this.description.name}")
+
         if (prepareProviders) {
-            CoreProvider.prepare(
-                (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
-            )
+            println("Preparing providers")
 
-            val echo = CoreProvider.Databases.Redis.ECHO.provide()
+            try {
+                CoreProvider.prepare(
+                    (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
+                )
+                val echo = CoreProvider.Databases.Redis.ECHO.provide()
 
-            echo.defaultSubscriber = echo.subscribe { _, runnable ->
-                runnable.run()
+                echo.defaultSubscriber = echo.subscribe { _, runnable ->
+                    runnable.run()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
