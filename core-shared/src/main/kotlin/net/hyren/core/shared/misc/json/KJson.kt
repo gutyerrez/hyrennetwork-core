@@ -11,6 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.SerializersModuleBuilder
+import kotlinx.serialization.modules.overwriteWith
 import kotlinx.serialization.modules.plus
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.status.ApplicationStatus
@@ -255,8 +256,6 @@ object KJson {
                     ): Array<PunishDuration> {
                         val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
 
-                        println(jsonArray)
-
                         val array = sizedArray<PunishDuration>(jsonArray.size)
 
                         jsonArray.forEachIndexed { index, it ->
@@ -424,7 +423,11 @@ object KJson {
 
     fun registerSerializer(
         serializers: SerializersModuleBuilder.() -> Unit
-    ) = _json.serializersModule.plus(SerializersModule { serializers() })
+    ) {
+        val serializersModule = _json.serializersModule.plus(SerializersModule { serializers.invoke(this) })
+
+        _json.serializersModule.overwriteWith(serializersModule)
+    }
 
     /**
      * Class deserializers
