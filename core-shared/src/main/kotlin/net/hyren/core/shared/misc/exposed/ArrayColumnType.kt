@@ -11,11 +11,11 @@ import kotlin.reflect.KClass
 /**
  * @author Gutyerrez
  */
-inline fun <reified T> Table.array(name: String): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>(
+inline fun <reified T> Table.array(name: String): Column<Array<T>> = registerColumn(name, ArrayColumnType(
     Array<T>::class
 ))
 
-class ArrayColumnType<T>(
+class ArrayColumnType(
     private val kClass: KClass<*>
 ) : ColumnType() {
 
@@ -24,7 +24,15 @@ class ArrayColumnType<T>(
     override fun valueFromDB(
         value: Any
     ): Any = when (value) {
-        is String -> KJson.decodeFromString(kClass, value)!!
+        is String -> {
+            println("Encoded: $value")
+
+            val decoded = KJson.decodeFromString(kClass, value)
+
+            println("Decoded: $decoded")
+
+            decoded ?: Any()
+        }
         is Array<*> -> value
         else -> throw SQLFeatureNotSupportedException("Array does not support for this database")
     }
