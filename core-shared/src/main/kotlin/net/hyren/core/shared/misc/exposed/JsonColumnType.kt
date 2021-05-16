@@ -24,7 +24,7 @@ class JsonColumnType(
     override fun valueFromDB(
         value: Any
     ): Any = when (value) {
-        is String -> KJson.decodeFromString(kClass, value) as Any
+        is String -> KJson.decodeFromString(kClass, value) ?: Any()
         else -> throw SQLFeatureNotSupportedException("Array does not support for this database")
     }
 
