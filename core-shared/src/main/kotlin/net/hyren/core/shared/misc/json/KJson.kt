@@ -230,29 +230,42 @@ object KJson {
 
             // PunishDuration serializer
             contextual(
-                PunishDuration::class,
-                object : KSerializer<PunishDuration>() {
+                Array<PunishDuration>::class,
+                object : KSerializer<Array<PunishDuration>>() {
                     override fun serialize(
                         jsonEncoder: JsonEncoder,
-                        value: PunishDuration
+                        value: Array<PunishDuration>
                     ) {
-                        jsonEncoder.encodeJsonElement(buildJsonObject {
-                            put("duration", value.duration)
-                            put("punish_type", Optional.ofNullable(
-                                value.punishType
-                            ).map { it.name }.orElse(null))
+                        jsonEncoder.encodeJsonElement(buildJsonArray {
+                            value.forEach {
+                                addJsonObject {
+                                    put("duration", it.duration)
+                                    put("punish_type", Optional.ofNullable(
+                                        it.punishType
+                                    ).map { it.name }.orElse(null)
+                                    )
+                                }
+                            }
                         })
                     }
 
                     override fun deserialize(
                         jsonDecoder: JsonDecoder
-                    ): PunishDuration {
-                        val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+                    ): Array<PunishDuration> {
+                        val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
 
-                        return PunishDuration(
-                            jsonObject.getValue("duration").asLong(),
-                            jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
-                        )
+                        val array = sizedArray<PunishDuration>(jsonArray.size)
+
+                        jsonArray.forEachIndexed { index, it ->
+                            val it = it.asJsonObject()
+
+                            array[index] = PunishDuration(
+                                it.getValue("duration").asLong(),
+                                it.getValue("punish_type").asEnum(PunishType::class)!!
+                            )
+                        }
+
+                        return array
                     }
                 }
             )
