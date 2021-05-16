@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * @author Gutyerrez
  */
 inline fun <reified T> Table.array(name: String): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>(
-    T::class
+    Array<T>::class
 ))
 
 class ArrayColumnType<T>(

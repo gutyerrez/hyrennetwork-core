@@ -230,7 +230,7 @@ object KJson {
 
             // PunishDuration serializer
             contextual(
-                PunishDuration::class,
+                Array<PunishDuration>::class,
                 object : KSerializer<Array<PunishDuration>>() {
                     override fun serialize(
                         jsonEncoder: JsonEncoder,
