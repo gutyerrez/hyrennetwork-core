@@ -1,6 +1,10 @@
 package net.hyren.core.spigot
 
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonEncoder
 import net.hyren.core.shared.CoreProvider
+import net.hyren.core.shared.misc.json.KJson
+import net.hyren.core.shared.misc.json.KSerializer
 import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
@@ -16,6 +20,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
 
 /**
  * @author Gutyerrez
@@ -68,6 +73,28 @@ class CoreSpigotPlugin : CustomPlugin(true) {
                 event.quitMessage = null
             }
         }, this)
+
+        /**
+         * Serializers
+         */
+
+        KJson.registerSerializer<ItemStack> {
+            contextual(
+                ItemStack::class,
+                object : KSerializer<ItemStack>() {
+                    override fun serialize(
+                        jsonEncoder: JsonEncoder,
+                        value: ItemStack
+                    ) {
+                        println("Serializar")
+                    }
+
+                    override fun deserialize(
+                        jsonDecoder: JsonDecoder
+                    ): ItemStack = error("Não implementado ainda")
+                }
+            )
+        }
 
         /**
          * Protocol

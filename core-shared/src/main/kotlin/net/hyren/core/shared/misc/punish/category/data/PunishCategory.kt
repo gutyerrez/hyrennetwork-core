@@ -10,7 +10,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 data class PunishCategory(
     val name: EntityID<String>,
     val displayName: String,
-    private val description: String,
+    val _description: String,
     val punishDurations: Array<PunishDuration>,
     val group: Group,
     val enabled: Boolean
@@ -21,15 +21,15 @@ data class PunishCategory(
     fun getDescription(): String {
         val builder = StringBuilder()
 
-        if (this.description.contains("\\n")) {
-            val descriptions = this.description.split("\\n")
+        if (this._description.contains("\\n")) {
+            val descriptions = this._description.split("\\n")
 
             descriptions.forEachIndexed { index, text ->
                 builder.append(text)
 
                 if (index + 1 < descriptions.size) builder.append("\n")
             }
-        } else builder.append(this.description)
+        } else builder.append(this._description)
 
         return builder.toString()
     }

@@ -1,16 +1,12 @@
 package net.hyren.core.shared.misc.preferences.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import net.hyren.core.shared.misc.preferences.PreferenceState
 
 /**
  * @author SrGutyerrez
  **/
-@Serializable
 data class Preference(
     val name: String,
-    @SerialName("preference_state")
     var preferenceState: PreferenceState = PreferenceState.ENABLED
 ) {
 

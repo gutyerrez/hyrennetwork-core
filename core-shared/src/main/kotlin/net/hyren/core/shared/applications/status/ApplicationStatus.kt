@@ -1,42 +1,23 @@
 package net.hyren.core.shared.applications.status
 
-import kotlinx.serialization.Required
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import net.hyren.core.shared.applications.ApplicationType
-import net.hyren.core.shared.misc.kotlin.InetSocketAddressSerializer
-import net.hyren.core.shared.misc.kotlin.NullableServerSerializer
 import net.hyren.core.shared.servers.data.Server
 import java.net.InetSocketAddress
 
 /**
  * @author SrGutyerrez
  **/
-@Serializable
 open class ApplicationStatus(
-    @SerialName("application_name")
     val applicationName: String,
-    @SerialName("application_type")
     val applicationType: ApplicationType,
-    @Required
-    @SerialName("server")
-    @Serializable(NullableServerSerializer::class)
     val server: Server?,
-    @SerialName("address")
-    @Serializable(InetSocketAddressSerializer::class)
-    val address: InetSocketAddress,
-    @SerialName("online_since")
+    val inetSocketAddress: InetSocketAddress,
     val onlineSince: Long
 ) {
 
-    @SerialName("heap_size")
     var heapSize: Long? = null
-    @SerialName("heap_max_size")
     var heapMaxSize: Long? = null
-    @SerialName("heap_free_size")
     var heapFreeSize: Long? = null
-    @Required
-    @SerialName("online_players")
     var onlinePlayers: Int = 0
 
     fun isSame(applicationName: String) = this.applicationName == applicationName

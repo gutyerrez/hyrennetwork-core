@@ -1,13 +1,11 @@
 package net.hyren.core.shared.applications.cache.redis
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.cache.redis.RedisCache
-import net.hyren.core.shared.misc.kotlin.ApplicationStatusSerializer
+import net.hyren.core.shared.misc.json.KJson
 import net.hyren.core.shared.servers.data.Server
 import redis.clients.jedis.Pipeline
 import redis.clients.jedis.Response
@@ -35,10 +33,7 @@ class ApplicationsStatusRedisCache : RedisCache {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
 
-            pipeline.set(key, Json.encodeToString(
-                ApplicationStatusSerializer,
-                applicationStatus
-            ))
+            pipeline.set(key, KJson.encodeToString(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
             pipeline.sync()
         }
@@ -57,9 +52,9 @@ class ApplicationsStatusRedisCache : RedisCache {
     fun fetchApplicationStatusByServer(
         server: Server,
         applicationStatusClass: KClass<out ApplicationStatus>
-    ): Map<String, ApplicationStatus?> {
+    ): Map<String, ApplicationStatus> {
         return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
-            val applicationStatuses = mutableMapOf<String, ApplicationStatus?>()
+            val applicationStatuses = mutableMapOf<String, ApplicationStatus>()
             val scanParams = ScanParams().match("applications:*")
 
             do {
@@ -69,10 +64,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    val applicationStatus = Json.decodeFromString(
-                        ApplicationStatusSerializer,
-                        value
-                    )
+                    val applicationStatus = KJson.decodeFromString<ApplicationStatus>(value)
 
                     if (applicationStatus.server == server)
                         applicationStatuses[key] = applicationStatus
@@ -87,34 +79,26 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     fun fetchApplicationStatusByApplicationName(
         applicationName: String,
-        applicationStatusClass: KClass<out ApplicationStatus>
+        applicationStatusKClass: KClass<out ApplicationStatus>
     ): ApplicationStatus? {
         val key = this.getKey(applicationName)
 
-        println("Fetch status from $key")
-
-        return CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
+        CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val value = it.get(key)
 
-            println("Value: " + value)
-
             if (value != null) {
-                println("Dale aqui")
-
-                this.CACHE.put(applicationName, Json.decodeFromString(ApplicationStatusSerializer, value))
+                this.CACHE.put(
+                    applicationName,
+                    KJson.decodeFromString(applicationStatusKClass, value) as ApplicationStatus
+                )
             }
-
-            val application = CACHE.getIfPresent(key)
-
-            println("Aplicação nulla: ${application == null}")
-            println("Aplicação: ${Json.encodeToString(application)}")
-
-            return@use application
         }
+
+        return CACHE.getIfPresent(key)
     }
 
     fun fetchAllApplicationStatus(
-        applicationStatusClass: KClass<out ApplicationStatus>
+        applicationStatusKClass: KClass<out ApplicationStatus>
     ): Map<String, ApplicationStatus> {
         val applicationsStatuses = mutableMapOf<String, ApplicationStatus>()
 
@@ -128,9 +112,10 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    applicationsStatuses[key] = Json.decodeFromString(ApplicationStatusSerializer, value)
-
-                    println(applicationsStatuses[key])
+                    applicationsStatuses[key] = KJson.decodeFromString(
+                        applicationStatusKClass,
+                        value
+                    ) as ApplicationStatus
                 }
 
                 cursor = result.cursor
@@ -142,7 +127,7 @@ class ApplicationsStatusRedisCache : RedisCache {
 
     fun fetchAllApplicationStatusByApplicationsNames(
         applicationsNames: Collection<String>,
-        statusClass: KClass<out ApplicationStatus>
+        applicationStatusKClass: KClass<out ApplicationStatus>
     ): Map<String, ApplicationStatus> {
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
@@ -171,7 +156,10 @@ class ApplicationsStatusRedisCache : RedisCache {
 
                 val value = response.get()
 
-                applicationsStatuses[applicationName] = Json.decodeFromString(ApplicationStatusSerializer, value)
+                applicationsStatuses[applicationName] = KJson.decodeFromString(
+                    applicationStatusKClass,
+                    value
+                ) as ApplicationStatus
 
                 println(applicationsStatuses[applicationName])
             }
