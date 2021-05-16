@@ -13,8 +13,6 @@ abstract class ApplicationStatusTask(
     abstract fun buildApplicationStatus(applicationStatus: ApplicationStatus)
 
     override fun run() {
-        println("Teste")
-
         this.buildApplicationStatus(this.applicationStatus)
 
         CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
