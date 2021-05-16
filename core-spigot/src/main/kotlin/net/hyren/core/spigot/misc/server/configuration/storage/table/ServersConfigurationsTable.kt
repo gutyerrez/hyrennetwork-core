@@ -11,6 +11,6 @@ import org.jetbrains.exposed.sql.Table
 object ServersConfigurationsTable : Table("servers_configurations") {
 
 	val server = reference("name", ServersTable)
-	val configuration = json<ServerConfiguration>("configuration")
+	val configuration = json<ServerConfiguration>("configuration", ServerConfiguration::class)
 
 }

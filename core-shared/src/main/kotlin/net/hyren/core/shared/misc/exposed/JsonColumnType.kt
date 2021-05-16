@@ -11,9 +11,10 @@ import kotlin.reflect.KClass
 /**
  * @author Gutyerrez
  */
-inline fun <reified T> Table.json(name: String): Column<T> = registerColumn(name, JsonColumnType(
-    T::class
-))
+inline fun <reified T> Table.json(
+    name: String,
+    kClass: KClass<*>
+): Column<T> = registerColumn(name, JsonColumnType(kClass))
 
 class JsonColumnType(
     private val kClass: KClass<*>

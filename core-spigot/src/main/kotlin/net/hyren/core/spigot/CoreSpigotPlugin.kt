@@ -78,7 +78,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Serializers
          */
 
-        KJson.registerSerializer<ItemStack> {
+        KJson.registerSerializer {
             contextual(
                 ItemStack::class,
                 object : KSerializer<ItemStack>() {
