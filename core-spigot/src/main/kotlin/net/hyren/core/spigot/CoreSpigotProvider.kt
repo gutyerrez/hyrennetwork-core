@@ -134,7 +134,7 @@ object CoreSpigotProvider {
                                     ).lore(
                                         jsonObject.getValue("icon").asJsonObject().getValue("meta").asJsonObject().getValue("lore").asJsonArray().stream().map {
                                             it.asString()
-                                        }.collect(Collectors.toUnmodifiableList()).toTypedArray()
+                                        }.collect(Collectors.toList()).toTypedArray()
                                     ).build()
                                 )
                             }
