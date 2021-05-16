@@ -11,6 +11,6 @@ import org.jetbrains.exposed.sql.Table
 object UsersPreferencesTable : Table("users_preferences") {
 
     var userId = reference("user_id", UsersTable)
-    var preferences = array<Preference>("preferences")
+    var preferences = array<Preference>("preferences", Array<Preference>::class)
 
 }

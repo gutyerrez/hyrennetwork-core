@@ -41,6 +41,7 @@ import kotlin.reflect.KClass
 object KJson {
 
     val _json: Json = Json {
+        isLenient = true
         serializersModule = SerializersModule {
             // InetSocketAddress serializer
             contextual(
@@ -254,6 +255,8 @@ object KJson {
                     ): Array<PunishDuration> {
                         val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
 
+                        println(jsonArray)
+
                         val array = sizedArray<PunishDuration>(jsonArray.size)
 
                         jsonArray.forEachIndexed { index, it ->
@@ -415,7 +418,11 @@ object KJson {
         jsonElement: JsonElement
     ) = _json.decodeFromJsonElement<T>(jsonElement)
 
-    inline fun <reified T> registerSerializer(
+    /**
+     * Serializers register
+     */
+
+    fun registerSerializer(
         serializers: SerializersModuleBuilder.() -> Unit
     ) = _json.serializersModule.plus(SerializersModule { serializers() })
 
@@ -428,7 +435,6 @@ object KJson {
         kClass: KClass<*>,
         string: String
     ) = _json.serializersModule.getContextual(kClass)?.let { _json.decodeFromString(it, string) }
-
 
 }
 

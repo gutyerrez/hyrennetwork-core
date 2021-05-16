@@ -1,28 +1,24 @@
 package net.hyren.core.shared.tests
 
-import net.hyren.core.shared.misc.json.KJson
-import net.hyren.core.shared.misc.punish.PunishType
-import net.hyren.core.shared.misc.punish.durations.PunishDuration
+import net.hyren.core.shared.CoreProvider
+import net.hyren.core.shared.applications.ApplicationType
+import net.hyren.core.shared.applications.data.Application
+import java.net.InetSocketAddress
 
 /**
  * @author Gutyerrez
  */
 fun main() {
-    val array = arrayOf(
-        PunishDuration(
-            1000,
-            PunishType.MUTE
-        ),PunishDuration(
-            -1,
-            PunishType.BAN
+    CoreProvider.prepare(
+        Application(
+            "test-application",
+            "Test Application",
+            0,
+            InetSocketAddress(
+                "0.0.0.0",
+                0
+            ),
+            ApplicationType.GENERIC
         )
     )
-
-    val encoded = KJson.encodeToString(array)
-
-    println(encoded)
-
-    val decoded = KJson.decodeFromString(Array<PunishDuration>::class, encoded)
-
-    println(decoded)
 }
