@@ -1,5 +1,6 @@
 package net.hyren.core.shared.misc.json
 
+import com.google.common.base.Enums
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
@@ -40,7 +41,6 @@ import kotlin.reflect.KClass
 object KJson {
 
     val _json: Json = Json {
-        prettyPrint = true
         serializersModule = SerializersModule {
             // InetSocketAddress serializer
             contextual(
@@ -53,7 +53,7 @@ object KJson {
                         jsonEncoder.encodeJsonElement(buildJsonObject {
                             put("host", value.address.hostAddress)
                             put("port", value.port)
-                        })
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -80,8 +80,10 @@ object KJson {
                         jsonEncoder.encodeJsonElement(buildJsonObject {
                             put("name", value.name.value)
                             put("display_name", value.displayName)
-                            put("server_type", value.serverType.name)
-                        })
+                            put("server_type", Optional.ofNullable(
+                                value.serverType
+                            ).map { it.name }.orElse(null))
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -95,9 +97,7 @@ object KJson {
                                 ServersTable
                             ),
                             jsonObject.getValue("display_name").asString(),
-                            ServerType.valueOf(
-                                jsonObject.getValue("server_type").asString()
-                            )
+                            jsonObject.getValue("server_type").asEnum(ServerType::class)!!
                         )
                     }
                 }
@@ -118,7 +118,9 @@ object KJson {
                                 return@let buildJsonObject {
                                     put("name", it.name.value)
                                     put("display_name", it.displayName)
-                                    put("server_type", it.serverType.name)
+                                    put("server_type", Optional.ofNullable(
+                                        it.serverType
+                                    ).map { it.name }.orElse(null))
                                 }
                             }?.let { put("server", it) } ?: put("server", "undefined")
 
@@ -128,11 +130,11 @@ object KJson {
                             })
 
                             put("online_since", value.onlineSince)
-                            put("heap_size", value.heapSize)
-                            put("heap_max_size", value.heapMaxSize)
-                            put("heap_free_size", value.heapFreeSize)
+                            put("heap_size", value.heapSize ?: 0)
+                            put("heap_max_size", value.heapMaxSize ?: 0)
+                            put("heap_free_size", value.heapFreeSize ?: 0)
                             put("online_players", value.onlinePlayers)
-                        })
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -142,9 +144,7 @@ object KJson {
 
                         return ApplicationStatus(
                             jsonObject.getValue("application_name").asString(),
-                            ApplicationType.valueOf(
-                                jsonObject.getValue("application_type").asString()
-                            ),
+                            jsonObject.getValue("application_type").asEnum(ApplicationType::class)!!,
                             if (jsonObject.getValue("server") is JsonPrimitive) {
                                 null
                             } else Server(
@@ -153,9 +153,7 @@ object KJson {
                                     ServersTable
                                 ),
                                 jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
-                                ServerType.valueOf(
-                                    jsonObject.getValue("server").asJsonObject().getValue("server_type").asString()
-                                )
+                                jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
                             ),
                             InetSocketAddress(
                                 jsonObject.getValue("inet_socket_address").asJsonObject().getValue("host").asString(),
@@ -188,13 +186,17 @@ object KJson {
                                 value.punishDurations.forEach {
                                     add(buildJsonObject {
                                         put("duration", it.duration)
-                                        put("punish_type", it.punishType.name)
+                                        put("punish_type", Optional.ofNullable(
+                                            it.punishType
+                                        ).map { it.name }.orElse(null))
                                     })
                                 }
                             })
-                            put("group", value.group.name)
+                            put("group", Optional.ofNullable(
+                                value.group
+                            ).map { it.name }.orElse(null))
                             put("enabled", value.enabled)
-                        })
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -215,13 +217,11 @@ object KJson {
 
                                     this[index] = PunishDuration(
                                         _jsonObject.getValue("duration").asLong(),
-                                        PunishType.valueOf(
-                                            _jsonObject.getValue("punish_type").asString()
-                                        )
+                                        _jsonObject.getValue("punish_type").asEnum(PunishType::class)!!
                                     )
                                 }
                             },
-                            Group.valueOf(jsonObject.getValue("group").asString()),
+                            jsonObject.getValue("group").asEnum(Group::class)!!,
                             jsonObject.getValue("enabled").asBoolean()
                         )
                     }
@@ -238,8 +238,10 @@ object KJson {
                     ) {
                         jsonEncoder.encodeJsonElement(buildJsonObject {
                             put("name", value.name)
-                            put("preference_state", value.preferenceState.name)
-                        })
+                            put("preference_state", Optional.ofNullable(
+                                value.preferenceState
+                            ).map { it.name }.orElse(null))
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -249,9 +251,9 @@ object KJson {
 
                         return Preference(
                             jsonObject.getValue("name").asString(),
-                            PreferenceState.valueOf(
-                                jsonObject.getValue("preference_state").asString()
-                            )
+                            jsonObject.getValue("preference_state").asEnum(
+                                PreferenceState::class
+                            )!!
                         )
                     }
                 }
@@ -270,7 +272,7 @@ object KJson {
                             put("display_name", value.displayName)
                             put("description", value._description)
                             put("enabled", value.enabled)
-                        })
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -311,9 +313,11 @@ object KJson {
                             put("server", buildJsonObject {
                                 put("name", value.server.name.value)
                                 put("display_name", value.server.displayName)
-                                put("server_type", value.server.serverType.name)
+                                put("server_type", Optional.ofNullable(
+                                    value.server.serverType
+                                ).map { it.name }.orElse(null))
                             })
-                        })
+                        }.asJsonObject())
                     }
 
                     override fun deserialize(
@@ -344,9 +348,7 @@ object KJson {
                                     ServersTable
                                 ),
                                 jsonObject.getValue("server").asJsonObject().getValue("display_name").asString(),
-                                ServerType.valueOf(
-                                    jsonObject.getValue("server").asJsonObject().getValue("server_type").asString()
-                                )
+                                jsonObject.getValue("server").asJsonObject().getValue("server_type").asEnum(ServerType::class)!!
                             )
                         )
                     }
@@ -400,7 +402,10 @@ abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {
         value: T
     )
 
-    final override fun serialize(encoder: Encoder, value: T) = serialize(
+    final override fun serialize(
+        encoder: Encoder,
+        value: T
+    ) = serialize(
         encoder as JsonEncoder,
         value
     )
@@ -415,18 +420,25 @@ abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {
 
 }
 
-public fun JsonElement.asString(): String = this.toString()
+fun JsonElement.asString(): String = this.toString()
 
-public fun JsonElement.asInt(): Int = this.jsonPrimitive.int
+fun JsonElement.asInt(): Int = this.jsonPrimitive.int
 
-public fun JsonElement.asDouble(): Double = this.jsonPrimitive.double
+fun JsonElement.asDouble(): Double = this.jsonPrimitive.double
 
-public fun JsonElement.asFloat(): Float = this.jsonPrimitive.float
+fun JsonElement.asFloat(): Float = this.jsonPrimitive.float
 
-public fun JsonElement.asLong(): Long = this.jsonPrimitive.long
+fun JsonElement.asLong(): Long = this.jsonPrimitive.long
 
-public fun JsonElement.asBoolean(): Boolean = this.jsonPrimitive.boolean
+fun JsonElement.asBoolean(): Boolean = this.jsonPrimitive.boolean
 
-public fun JsonElement.asJsonObject(): JsonObject = this.jsonObject
+fun <T: Enum<T>> JsonElement.asEnum(
+    kClass: KClass<T>
+): T? = Enums.getIfPresent(
+    kClass.java,
+    this.asString().replace("\"", "")
+).orNull()
 
-public fun JsonElement.asJsonArray(): JsonArray = this.jsonArray
+fun JsonElement.asJsonObject(): JsonObject = this.jsonObject
+
+fun JsonElement.asJsonArray(): JsonArray = this.jsonArray

@@ -2,7 +2,6 @@ package net.hyren.core.shared.applications.status.task
 
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.status.ApplicationStatus
-import net.hyren.core.shared.misc.json.KJson
 
 /**
  * @author SrGutyerrez
@@ -14,21 +13,13 @@ abstract class ApplicationStatusTask(
     abstract fun buildApplicationStatus(applicationStatus: ApplicationStatus)
 
     override fun run() {
-        try {
-            println("asd")
+        this.buildApplicationStatus(this.applicationStatus)
 
-            println(KJson.encodeToString(applicationStatus))
+        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
 
-            this.buildApplicationStatus(this.applicationStatus)
-
-            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().update(this.applicationStatus)
-
-            CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
-                ApplicationStatus::class
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchAllApplicationStatus(
+            ApplicationStatus::class
+        )
     }
 
 }
