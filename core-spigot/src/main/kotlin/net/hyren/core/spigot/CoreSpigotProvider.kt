@@ -2,6 +2,8 @@ package net.hyren.core.spigot
 
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonEncoder
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import net.hyren.core.shared.misc.json.*
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
@@ -47,6 +49,43 @@ object CoreSpigotProvider {
                             override fun deserialize(
                                 jsonDecoder: JsonDecoder
                             ): ItemStack = error("Não implementado ainda")
+                        }
+                    )
+
+                    // SerializedLocation serializer
+                    contextual(
+                        SerializedLocation::class,
+                        object : KSerializer<SerializedLocation>() {
+                            override fun serialize(
+                                jsonEncoder: JsonEncoder,
+                                value: SerializedLocation
+                            ) {
+                                jsonEncoder.encodeJsonElement(buildJsonObject {
+                                    put("application_name", value.applicationName)
+                                    put("world_name", value.worldName)
+                                    put("x", value.x)
+                                    put("y", value.y)
+                                    put("z", value.z)
+                                    put("yaw", value.yaw)
+                                    put("pitch", value.pitch)
+                                })
+                            }
+
+                            override fun deserialize(
+                                jsonDecoder: JsonDecoder
+                            ): SerializedLocation {
+                                val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                                return SerializedLocation(
+                                    jsonObject.get("application_name")?.asString(),
+                                    jsonObject.getValue("world_name").asString(),
+                                    jsonObject.getValue("x").asDouble(),
+                                    jsonObject.getValue("y").asDouble(),
+                                    jsonObject.getValue("z").asDouble(),
+                                    jsonObject.getValue("yaw").asFloat(),
+                                    jsonObject.getValue("pitch").asFloat()
+                                )
+                            }
                         }
                     )
 
