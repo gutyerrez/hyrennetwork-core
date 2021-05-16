@@ -29,9 +29,13 @@ class ApplicationsStatusRedisCache : RedisCache {
     fun update(
         applicationStatus: ApplicationStatus
     ) {
+        println("Aopa")
+
         CoreProvider.Databases.Redis.REDIS_MAIN.provide().resource.use {
             val pipeline = it.pipelined()
             val key = this.getKey(applicationStatus.applicationName)
+
+            println(KJson.encodeToString(applicationStatus))
 
             pipeline.set(key, KJson.encodeToString(applicationStatus))
             pipeline.expire(key, this.TTL_SECONDS)
@@ -160,8 +164,6 @@ class ApplicationsStatusRedisCache : RedisCache {
                     applicationStatusKClass,
                     value
                 ) as ApplicationStatus
-
-                println(applicationsStatuses[applicationName])
             }
 
             return applicationsStatuses
