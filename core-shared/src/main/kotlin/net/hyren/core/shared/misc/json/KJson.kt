@@ -496,20 +496,20 @@ object KJson {
     }
 
     inline fun <reified T> encodeToString(
-        t: T
+        t: T?
     ) = _json.encodeToString(t)
 
     inline fun <reified T> encodeToJsonElement(
-        t: T
+        t: T?
     ) = _json.encodeToJsonElement(t)
 
     inline fun <reified T> decodeFromString(
-        string: String
-    ) = _json.decodeFromString<T>(string)
+        string: String?
+    ) = string?.let { _json.decodeFromString<T>(it) } ?: throw NullPointerException()
 
     inline fun <reified T> decodeFromJsonElement(
-        jsonElement: JsonElement
-    ) = _json.decodeFromJsonElement<T>(jsonElement)
+        jsonElement: JsonElement?
+    ) = jsonElement?.let { _json.decodeFromJsonElement<T>(it) } ?: throw NullPointerException()
 
     /**
      * Serializers register

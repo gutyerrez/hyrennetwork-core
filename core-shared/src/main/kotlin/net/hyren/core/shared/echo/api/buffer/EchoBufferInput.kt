@@ -96,7 +96,11 @@ class EchoBufferInput(
         val valid = this.readBoolean()
 
         if (valid) {
-            return KJson.decodeFromString(readString()!!)
+            val stringified = readString()
+
+            println("Stringified: $stringified")
+
+            return KJson.decodeFromString(stringified)
         }
 
         return null
