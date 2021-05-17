@@ -18,11 +18,19 @@ class ConnectUserToApplicationEchoPacketListener : EchoPacketListener {
         val userId = packet.userId!!
         val application = packet.application!!
 
+        println("UserId: $userId")
+
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
+
+        println("User id não é $user")
 
         if (user === null) return
 
+        println("User id não é null")
+
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(user.getUniqueId())
+
+        println("Proxied player não é $proxiedPlayer")
 
         if (proxiedPlayer === null) return
 
