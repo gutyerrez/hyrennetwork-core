@@ -64,7 +64,7 @@ class ApplicationsStatusRedisCache : RedisCache {
                 result.result.forEach { key ->
                     val value = it.get(key)
 
-                    val applicationStatus = KJson.decodeFromString<ApplicationStatus>(value)
+                    val applicationStatus = KJson.decodeFromString(applicationStatusClass, value) as ApplicationStatus
 
                     if (applicationStatus.server == server)
                         applicationStatuses[key] = applicationStatus
@@ -87,14 +87,16 @@ class ApplicationsStatusRedisCache : RedisCache {
             val value = it.get(key)
 
             if (value != null) {
+                println("Encoded value: $value")
+
                 this.CACHE.put(
                     applicationName,
                     KJson.decodeFromString(applicationStatusKClass, value) as ApplicationStatus
                 )
-            }
+            } else println("Value is null")
         }
 
-        return CACHE.getIfPresent(key)
+        return CACHE.getIfPresent(applicationName)
     }
 
     fun fetchAllApplicationStatus(
