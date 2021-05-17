@@ -3,13 +3,11 @@ package net.hyren.core.shared.echo.api.buffer
 import com.google.common.base.Enums
 import com.google.common.io.ByteArrayDataInput
 import com.google.common.io.ByteStreams
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.groups.Group
+import net.hyren.core.shared.misc.json.KJson
 import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
@@ -91,18 +89,24 @@ class EchoBufferInput(
         return null
     }
 
+    @Deprecated("readEntityID(table: IdTable<T>) is deprecated")
     inline fun <reified T: Comparable<T>> readEntityID(
-        table: IdTable<T>
+        table: IdTable<T> // ignore
     ): EntityID<T>? {
         val valid = this.readBoolean()
 
         if (valid) {
-            return EntityID(
-                Json.decodeFromString(
-                    this.readString()!!
-                ),
-                table
-            )
+            return KJson.decodeFromString(readString()!!)
+        }
+
+        return null
+    }
+
+    inline fun <reified T: Comparable<T>> readEntityID(): EntityID<T>? {
+        val valid = this.readBoolean()
+
+        if (valid) {
+            return KJson.decodeFromString(readString()!!)
         }
 
         return null
@@ -146,48 +150,40 @@ class EchoBufferInput(
         val valid = this.buffer.readBoolean()
 
         if (valid) return Application(
-            this.readString()!!,
-            this.readString()!!,
-            this.readInt(),
-            this.readAddressInetSocketAddress()!!,
-            this.readEnum(ApplicationType::class)!!,
-            this.readServer(),
-            this.readEnum(Group::class)
+            readString()!!,
+            readString()!!,
+            readInt(),
+            readAddressInetSocketAddress()!!,
+            readEnum(ApplicationType::class)!!,
+            readServer(),
+            readEnum(Group::class)
         )
 
         return null
     }
 
-    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(this.readEntityID(ServersTable))
+    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(readEntityID(ServersTable))
 
-    fun readSerializedLocation() = SerializedLocation.of(this.readString())
+    fun readSerializedLocation() = SerializedLocation.of(readString())
 
-    fun readBaseComponent() = ComponentSerializer.parse(this.readString())
+    fun readBaseComponent() = ComponentSerializer.parse(readString())
 
     inline fun <reified T> readList(): List<T>? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
         if (!valid) return null
 
-        return this.readString()?.let {
-            Json.decodeFromString<List<T>>(
-                it
-            )
-        }
+        return KJson.decodeFromString(readString()!!)
     }
 
     inline fun <reified T> readArray(): Array<T>? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
         if (!valid) return null
 
-        return this.readString()?.let {
-            Json.decodeFromString<Array<T>>(
-                it
-            )
-        }
+        return KJson.decodeFromString(readString()!!)
     }
 
-    fun readJson() = Json.encodeToJsonElement(this.readString())
+    fun readJson() = KJson.encodeToJsonElement(readString())
 
 }

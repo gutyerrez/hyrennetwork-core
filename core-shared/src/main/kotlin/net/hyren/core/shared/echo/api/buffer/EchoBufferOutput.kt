@@ -2,10 +2,10 @@ package net.hyren.core.shared.echo.api.buffer
 
 import com.google.common.io.ByteArrayDataOutput
 import com.google.common.io.ByteStreams
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import net.hyren.core.shared.applications.data.Application
+import net.hyren.core.shared.misc.json.KJson
+import net.hyren.core.shared.misc.json.asString
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
@@ -81,7 +81,7 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
             this.writeString(
-                Json.encodeToString(entityId.value)
+                KJson.encodeToString(entityId)
             )
         }
     }
@@ -134,9 +134,7 @@ class EchoBufferOutput {
         this.writeString(serializedLocation.toString())
     }
 
-    fun writeJsonObject(jsonObject: JsonElement) {
-        this.writeString(jsonObject.toString())
-    }
+    fun writeJsonObject(jsonObject: JsonElement) = this.writeString(jsonObject.asString())
 
     fun writeBaseComponent(baseComponents: Array<BaseComponent>?) {
         if (baseComponents === null) {
@@ -165,7 +163,7 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
             this.writeString(
-                Json.encodeToString(list)
+                KJson.encodeToString(list)
             )
         }
     }
@@ -176,7 +174,7 @@ class EchoBufferOutput {
         } else {
             this.writeBoolean(true)
             this.writeString(
-                Json.encodeToString(array)
+                KJson.encodeToString(array)
             )
         }
     }

@@ -25,8 +25,10 @@ import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IdTable
 import org.joda.time.DateTime
 import java.net.InetSocketAddress
+import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -417,6 +419,75 @@ object KJson {
                 }
             }
         )
+
+        // EntityID serializer
+        contextual(
+            EntityID::class,
+            object : KSerializer<EntityID<*>>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: EntityID<*>
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("table_class_qualified_name", value.table::class.qualifiedName)
+
+                        val value = value.value
+
+                        when (value) {
+                            is UUID -> put("id", value.toString())
+                            is Int -> put("id", value)
+                            is Double -> put("id", value)
+                            is Float  -> put("id", value)
+                            is Long -> put("id", value)
+                            is String -> put("id", value)
+                            else -> error("Unsupported id type ${value::class.qualifiedName}")
+                        }
+                    })
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): EntityID<*> {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                    val tableClassQualifiedName = jsonObject.getValue("table_class_qualified_name").asString()
+                    val table = Class.forName(tableClassQualifiedName).kotlin.objectInstance ?: throw SQLException("Cannot find table $tableClassQualifiedName")
+
+                    return when {
+                        jsonObject.getValue("id").isInt() -> {
+                            EntityID(
+                                jsonObject.getValue("id").asInt(),
+                                table as IdTable<Int>
+                            )
+                        }
+                        jsonObject.getValue("id").isDouble() -> {
+                            EntityID(
+                                jsonObject.getValue("id").asDouble(),
+                                table as IdTable<Double>
+                            )
+                        }
+                        jsonObject.getValue("id").isFloat() -> {
+                            EntityID(
+                                jsonObject.getValue("id").asFloat(),
+                                table as IdTable<Float>
+                            )
+                        }
+                        jsonObject.getValue("id").isLong() -> {
+                            EntityID(
+                                jsonObject.getValue("id").asLong(),
+                                table as IdTable<Long>
+                            )
+                        }
+                        else -> {
+                            EntityID(
+                                jsonObject.getValue("id").asString(),
+                                table as IdTable<String>
+                            )
+                        }
+                    }
+                }
+            }
+        )
     }
 
     val _json: Json = Json {
@@ -522,13 +593,23 @@ fun JsonElement.asString(): String = this.jsonPrimitive.content
 
 fun JsonElement.asInt(): Int = this.jsonPrimitive.int
 
+fun JsonElement.isInt() = this.jsonPrimitive.content.toIntOrNull() != null
+
 fun JsonElement.asDouble(): Double = this.jsonPrimitive.double
+
+fun JsonElement.isDouble() = this.jsonPrimitive.content.toDoubleOrNull() != null
 
 fun JsonElement.asFloat(): Float = this.jsonPrimitive.float
 
+fun JsonElement.isFloat() = this.jsonPrimitive.content.toFloatOrNull() != null
+
 fun JsonElement.asLong(): Long = this.jsonPrimitive.long
 
+fun JsonElement.isLong() = this.jsonPrimitive.content.toLongOrNull() != null
+
 fun JsonElement.asBoolean(): Boolean = this.jsonPrimitive.boolean
+
+fun JsonElement.isBoolean() = this.jsonPrimitive.content.toBooleanStrictOrNull() != null
 
 fun <T: Enum<T>> JsonElement.asEnum(
     kClass: KClass<T>
