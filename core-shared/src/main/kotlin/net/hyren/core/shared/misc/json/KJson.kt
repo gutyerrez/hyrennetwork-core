@@ -240,7 +240,7 @@ object KJson {
                                 )
                             }
                         }
-                    })
+                    }.asJsonArray())
                 }
 
                 override fun deserialize(
@@ -281,7 +281,7 @@ object KJson {
                                 ).map { it.name }.orElse(null))
                             })
                         }
-                    }.asJsonObject())
+                    }.asJsonArray())
                 }
 
                 override fun deserialize(
