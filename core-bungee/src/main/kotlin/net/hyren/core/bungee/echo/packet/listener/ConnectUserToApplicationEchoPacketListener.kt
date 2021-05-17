@@ -22,7 +22,7 @@ class ConnectUserToApplicationEchoPacketListener : EchoPacketListener {
 
         val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
-        println("User id não é $user")
+        println("User id é $user")
 
         if (user === null) return
 
@@ -30,7 +30,7 @@ class ConnectUserToApplicationEchoPacketListener : EchoPacketListener {
 
         val proxiedPlayer = ProxyServer.getInstance().getPlayer(user.getUniqueId())
 
-        println("Proxied player não é $proxiedPlayer")
+        println("ProxiedPlayer é $proxiedPlayer")
 
         if (proxiedPlayer === null) return
 
