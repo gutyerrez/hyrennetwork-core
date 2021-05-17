@@ -266,31 +266,43 @@ object KJson {
 
         // Preference serializer
         contextual(
-            Preference::class,
-            object : KSerializer<Preference>() {
+            Array<Preference>::class,
+            object : KSerializer<Array<Preference>>() {
                 override fun serialize(
                     jsonEncoder: JsonEncoder,
-                    value: Preference
+                    value: Array<Preference>
                 ) {
-                    jsonEncoder.encodeJsonElement(buildJsonObject {
-                        put("name", value.name)
-                        put("preference_state", Optional.ofNullable(
-                            value.preferenceState
-                        ).map { it.name }.orElse(null))
+                    jsonEncoder.encodeJsonElement(buildJsonArray {
+                        value.forEach {
+                            add(buildJsonObject {
+                                put("name", it.name)
+                                put("preference_state", Optional.ofNullable(
+                                    it.preferenceState
+                                ).map { it.name }.orElse(null))
+                            })
+                        }
                     }.asJsonObject())
                 }
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ): Preference {
-                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+                ): Array<Preference> {
+                    val jsonArray = jsonDecoder.decodeJsonElement().asJsonArray()
 
-                    return Preference(
-                        jsonObject.getValue("name").asString(),
-                        jsonObject.getValue("preference_state").asEnum(
-                            PreferenceState::class
-                        )!!
-                    )
+                    val array = sizedArray<Preference>(jsonArray.size)
+
+                    jsonArray.forEachIndexed { index, it ->
+                        val it = it.asJsonObject()
+
+                        array[index] = Preference(
+                            it.getValue("name").asString(),
+                            it.getValue("preference_state").asEnum(
+                                PreferenceState::class
+                            )!!
+                        )
+                    }
+
+                    return array
                 }
             }
         )
@@ -449,7 +461,13 @@ object KJson {
     fun decodeFromString(
         kClass: KClass<*>,
         string: String
-    ) = _json.serializersModule.getContextual(kClass)?.let { _json.decodeFromString(it, string) }
+    ) = _json.serializersModule.getContextual(kClass)?.let { _json.decodeFromString(it, string) } ?: throw DeserializerNotFoundException(
+        "Cannot find an deserializer for kclass $kClass"
+    )
+
+    internal class DeserializerNotFoundException(
+        message: String
+    ) : NullPointerException(message)
 
 }
 
