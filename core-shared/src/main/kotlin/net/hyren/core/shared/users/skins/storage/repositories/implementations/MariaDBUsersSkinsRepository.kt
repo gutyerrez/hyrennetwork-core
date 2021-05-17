@@ -94,7 +94,8 @@ class MariaDBUsersSkinsRepository : IUsersSkinsRepository {
 					it.signature = skin.signature
 					it.enabled = true
 					it.updatedAt = DateTime.now(
-						CoreConstants.DATE_TIME_ZONE)
+						CoreConstants.DATE_TIME_ZONE
+					)
 				} else it.enabled = false
 			}
 		}
