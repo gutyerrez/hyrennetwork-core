@@ -52,22 +52,26 @@ object SkinController {
 
 				if (body == null || body.isEmpty()) return null
 
-				val jsonObject = Json.decodeFromString<JsonObject>(body)
+				if (body.contains("null")) return null
 
-				if (jsonObject["id"] == null) return null
+				val jsonElement = Json.decodeFromString<JsonElement>(body)
 
-				minecraftProfile = Json.decodeFromJsonElement(jsonObject)
+				if (jsonElement !is JsonObject || jsonElement is JsonNull) return null
+
+				minecraftProfile = Json.decodeFromJsonElement(jsonElement)
 			}
 		} else {
 			val body = response.body?.string()
 
 			if (body == null || body.isEmpty()) return null
 
-			val jsonObject = Json.decodeFromString<JsonObject>(body)
+			if (body.contains("null")) return null
 
-			if (jsonObject["id"] == null) return null
+			val jsonElement = Json.decodeFromString<JsonElement>(body)
 
-			minecraftProfile = Json.decodeFromJsonElement(jsonObject)
+			if (jsonElement !is JsonObject || jsonElement is JsonNull) return null
+
+			minecraftProfile = Json.decodeFromJsonElement(jsonElement)
 		}
 
 		val skin: () -> Skin? = invoker@{
@@ -97,6 +101,8 @@ object SkinController {
 
 					if (body == null || body.isEmpty()) return@invoker null
 
+					if (body.contains("null")) return@invoker null
+
 					val jsonObject = Json.decodeFromString<JsonObject>(body)
 
 					if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) return@invoker null
@@ -110,6 +116,8 @@ object SkinController {
 				val body = response.body?.string()
 
 				if (body == null || body.isEmpty()) return@invoker null
+
+				if (body.contains("null")) return@invoker null
 
 				val jsonObject = Json.decodeFromString<JsonObject>(body)
 
