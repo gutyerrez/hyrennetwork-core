@@ -27,27 +27,27 @@ class HologramLine(
     fun isSpawned() = this::entityArmorStand.isInitialized && !entityArmorStand.dead
 
     fun spawn(location: Location) {
-        val worldServer = (location.world as CraftWorld).handle
+        _worldServer = (location.world as CraftWorld).handle
 
-        this.entityArmorStand = EntityArmorStand(worldServer, location.x, location.y, location.z)
+        entityArmorStand = EntityArmorStand(_worldServer, location.x, location.y, location.z)
 
-        this.entityArmorStand.isSmall = true
-        this.entityArmorStand.customNameVisible = true
-        this.entityArmorStand.isInvisible = true
-        this.entityArmorStand.noclip = true
+        entityArmorStand.isSmall = true
+        entityArmorStand.customNameVisible = true
+        entityArmorStand.isInvisible = true
+        entityArmorStand.noclip = true
 
-        this.entityArmorStand.setArms(false)
-        this.entityArmorStand.setGravity(true)
-        this.entityArmorStand.setBasePlate(false)
+        entityArmorStand.setArms(false)
+        entityArmorStand.setGravity(true)
+        entityArmorStand.setBasePlate(false)
 
-        this.entityArmorStand.n(true)
+        entityArmorStand.n(true)
 
-        worldServer.addEntity(entityArmorStand)
+        _worldServer.addEntity(entityArmorStand)
 
         this.update()
     }
 
-    fun destroy() = this._worldServer.removeEntity(this.entityArmorStand)
+    fun destroy() = if(isSpawned()) this._worldServer.removeEntity(this.entityArmorStand) else Unit
 
     fun teleport(location: Location) = this.entityArmorStand.teleportTo(location, false)
 
