@@ -30,7 +30,7 @@ class Hologram(
     fun remove(
         position: Int
     ) {
-        if (position > lines.size) return
+        if (position >= lines.size) return
 
         this.lines[position].destroy()
 
