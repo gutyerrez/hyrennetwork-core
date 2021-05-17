@@ -26,12 +26,7 @@ class BungeeServerConnector : ServerConnector {
 		val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
 
 		return if (user?.getPreferences()?.find { it == PREMIUM_ACCOUNT }?.preferenceState == PreferenceState.ENABLED) {
-			val lobby = CoreConstants.fetchLobbyApplication()
-
-			println("Lobby null: ${lobby == null}")
-			println("Lobby? ${lobby?.name}")
-
-			lobby?.address
+			CoreConstants.fetchLobbyApplication()?.address
 		} else {
 			CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 				.stream()
