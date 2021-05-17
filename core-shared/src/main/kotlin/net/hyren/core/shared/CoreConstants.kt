@@ -58,27 +58,22 @@ object CoreConstants {
 	).shuffled()
 		.stream()
 		.filter {
-			println(it.name)
-
 			CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
 				it,
 				ApplicationStatus::class
 			) != null
 		}
 		.filter {
-			println("Filtrar: " + it.name)
-
-			val usersByApplication = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it)
-
-			println(usersByApplication)
-
-			usersByApplication.size < it.slots ?: 0
+			CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(it).size < it.slots ?: 0
 		}
 		.min { application1, application2 ->
-			val usersByApplication1 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application1)
-			val usersByApplication2 = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(application2)
-
-			usersByApplication1.size.compareTo(usersByApplication2.size)
+			CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(
+				application1
+			).size.compareTo(
+				CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByApplication(
+					application2
+				).size
+			)
 		}
 		.orElse(null)
 
