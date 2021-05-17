@@ -87,13 +87,11 @@ class ApplicationsStatusRedisCache : RedisCache {
             val value = it.get(key)
 
             if (value != null) {
-                println("Encoded value: $value")
-
                 this.CACHE.put(
                     applicationName,
                     KJson.decodeFromString(applicationStatusKClass, value) as ApplicationStatus
                 )
-            } else println("Value is null")
+            }
         }
 
         return CACHE.getIfPresent(applicationName)

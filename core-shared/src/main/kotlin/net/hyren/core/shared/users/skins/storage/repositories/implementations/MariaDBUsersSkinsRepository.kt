@@ -86,25 +86,16 @@ class MariaDBUsersSkinsRepository : IUsersSkinsRepository {
 				skin
 			) = updateUserSkinDTO.userSkin
 
-			transaction {
-				UserSkinDAO.find {
-					UsersSkinsTable.userId eq userId
-				}.forEach {
-					it.enabled = false
-				}
-
-				UserSkinDAO.find {
-					UsersSkinsTable.userId eq userId and (
-						UsersSkinsTable.name eq name
-					)
-				}.firstOrNull().apply {
-					this?.value = skin.value
-					this?.signature = skin.signature
-					this?.enabled = true
-					this?.updatedAt = DateTime.now(
-						CoreConstants.DATE_TIME_ZONE
-					)
-				}
+			UserSkinDAO.find {
+				UsersSkinsTable.userId eq userId
+			}.forEach {
+				if (it.name == name) {
+					it.value = skin.value
+					it.signature = skin.signature
+					it.enabled = true
+					it.updatedAt = DateTime.now(
+						CoreConstants.DATE_TIME_ZONE)
+				} else it.enabled = false
 			}
 		}
 	}
