@@ -2,7 +2,7 @@ package net.hyren.core.spigot.misc.hologram
 
 import net.hyren.core.spigot.misc.hologram.lines.HologramLine
 import org.bukkit.Location
-import java.util.stream.Collectors
+import kotlin.streams.toList
 
 /**
  * @author Gutyerrez
@@ -16,7 +16,7 @@ class Hologram(
 
     init {
         this.lines.addAll(
-            _lines.stream().map { HologramLine(it) }.collect(Collectors.toList())
+            _lines.stream().map { HologramLine(it) }.toList()
         )
     }
 
@@ -24,7 +24,9 @@ class Hologram(
         position: Int,
         text: String
     ) {
-        this.lines[position].update(text)
+        if (position >= this.lines.size) {
+            this.lines.add(position, HologramLine(text))
+        } else this.lines[position].update(text)
     }
 
     fun remove(
