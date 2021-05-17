@@ -426,10 +426,6 @@ object KJson {
 
         val class2ContextualFactory = class2ContextualFactoryField.get(_serializersModule) as MutableMap<KClass<*>, Any?>
 
-        val instanceField = _serializers::class.java.getDeclaredField("INSTANCE")
-
-        instanceField.isAccessible = true
-
         val serializersModule = SerializersModule { _serializers() }
 
         val _class2ContextualFactory = serializersModule::class.java.getDeclaredField("class2ContextualFactory")
@@ -489,7 +485,7 @@ abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {
 
 }
 
-fun JsonElement.asString(): String = this.toString()
+fun JsonElement.asString(): String = this.jsonPrimitive.content
 
 fun JsonElement.asInt(): Int = this.jsonPrimitive.int
 
@@ -505,7 +501,7 @@ fun <T: Enum<T>> JsonElement.asEnum(
     kClass: KClass<T>
 ): T? = Enums.getIfPresent(
     kClass.java,
-    this.asString().replace("\"", "")
+    this.asString()
 ).orNull()
 
 fun JsonElement.asJsonObject(): JsonObject = this.jsonObject
