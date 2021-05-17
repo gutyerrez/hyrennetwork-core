@@ -63,6 +63,33 @@ object KJson {
             }
         )
 
+        // UUID serializer
+        contextual(
+            UUID::class,
+            object : KSerializer<UUID>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: UUID
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("most_significant_bits", value.mostSignificantBits)
+                        put("least_significant_bits", value.leastSignificantBits)
+                    })
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): UUID {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                    return UUID(
+                        jsonObject.getValue("most_significant_bits").asLong(),
+                        jsonObject.getValue("least_significant_bits").asLong()
+                    )
+                }
+            }
+        )
+
         // Server serializer
         contextual(
             Server::class,
