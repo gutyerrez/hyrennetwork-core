@@ -159,7 +159,6 @@ object CoreProvider {
 
             Databases.PostgreSQL.POSTGRESQL_MAIN.prepare()
             Databases.Redis.REDIS_MAIN.prepare()
-            Databases.Redis.REDIS_ECHO.prepare()
 
             Repositories.PostgreSQL.SERVERS_REPOSITORY.prepare()
             Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.prepare()
@@ -201,21 +200,13 @@ object CoreProvider {
 
             val REDIS_MAIN = RedisDatabaseProvider(
                 InetSocketAddress(
-                    Env.getString("databases.redis.main.host"),
-                    Env.getInt("databases.redis.main.port")
+                    Env.getString("databases.redis.host"),
+                    Env.getInt("databases.redis.port")
                 ),
-                Env.getString("databases.redis.main.password"),
+                Env.getString("databases.redis.password"),
             )
 
-            val REDIS_ECHO = RedisDatabaseProvider(
-                InetSocketAddress(
-                    Env.getString("databases.redis.echo.host"),
-                    Env.getInt("databases.redis.echo.port")
-                ),
-                Env.getString("databases.redis.echo.password")
-            )
-
-            val ECHO = EchoProvider(REDIS_ECHO)
+            val ECHO = EchoProvider(REDIS_MAIN)
 
         }
 
