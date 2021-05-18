@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
+import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
 
@@ -20,13 +21,14 @@ class JsonColumnType(
     private val kClass: KClass<*>
 ) : ColumnType() {
 
-    override fun sqlType() = "longtext"
+    override fun sqlType() = "JSON"
 
     override fun valueFromDB(
         value: Any
     ): Any = when (value) {
-        is String -> KJson.decodeFromString(kClass, value) ?: Any()
-        else -> throw SQLFeatureNotSupportedException("Array does not support for this database")
+        is PGobject -> KJson.decodeFromString(kClass, value.value)
+        is String -> KJson.decodeFromString(kClass, value)
+        else -> throw SQLFeatureNotSupportedException("Json does not support for this database")
     }
 
     override fun setParameter(

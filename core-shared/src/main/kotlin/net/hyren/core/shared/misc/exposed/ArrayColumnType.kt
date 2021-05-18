@@ -21,7 +21,7 @@ class ArrayColumnType(
     private val kClass: KClass<*>
 ) : ColumnType() {
 
-    override fun sqlType() = "longtext"
+    override fun sqlType() = "JSON"
 
     override fun valueFromDB(
         value: Any
