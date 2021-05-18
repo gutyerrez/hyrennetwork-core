@@ -19,6 +19,12 @@ class MariaDBUsersRepository : IUsersRepository {
             addLogger(StdOutSqlLogger)
 
             return@transaction UserDAO.find {
+                println("eq: ${UsersTable.id eq fetchUserById.id}")
+
+                println("UsersTable.id: ${UsersTable.id}")
+                println("FetchUserById.id: ${fetchUserById.id}")
+
+
                 UsersTable.id eq fetchUserById.id
             }.firstOrNull()?.asUser()
         }
