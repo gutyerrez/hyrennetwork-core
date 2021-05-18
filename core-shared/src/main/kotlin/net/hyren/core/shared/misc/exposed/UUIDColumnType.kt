@@ -35,16 +35,7 @@ class UUIDColumnType : ColumnType() {
     override fun notNullValueToDB(value: Any): Any = when (value) {
         is UUID -> {
             if (value.toString().length == 36) {
-                println("AAAA: $value")
-
-                val byteArray = ByteBuffer.allocate(36)
-                    .putLong(value.mostSignificantBits)
-                    .putLong(value.leastSignificantBits)
-                    .array()
-
-                println(byteArray.contentToString())
-
-                byteArray
+                value
             } else currentDialect.dataTypeProvider.uuidToDB(value)
         }
         else -> currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
