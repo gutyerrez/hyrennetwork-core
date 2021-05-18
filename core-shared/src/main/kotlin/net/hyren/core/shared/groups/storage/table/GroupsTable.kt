@@ -1,6 +1,6 @@
 package net.hyren.core.shared.groups.storage.table
 
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringTable
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringTable
 
 /**
  * @author SrGutyerrez

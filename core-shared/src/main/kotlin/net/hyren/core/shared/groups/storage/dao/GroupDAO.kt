@@ -2,8 +2,8 @@ package net.hyren.core.shared.groups.storage.dao
 
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.groups.storage.table.GroupsTable
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntity
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntityClass
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntity
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**

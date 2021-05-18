@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBUsersRepository : IUsersRepository {
+class PostgreSQLUsersRepository : IUsersRepository {
 
     override fun fetchById(fetchUserById: FetchUserByIdDTO): User? {
         return transaction {

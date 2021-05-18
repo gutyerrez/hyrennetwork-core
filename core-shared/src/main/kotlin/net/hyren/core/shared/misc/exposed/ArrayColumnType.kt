@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
+import org.postgresql.util.PGobject
 import java.sql.SQLFeatureNotSupportedException
 import kotlin.reflect.KClass
 
@@ -25,7 +26,8 @@ class ArrayColumnType(
     override fun valueFromDB(
         value: Any
     ): Any = when (value) {
-        is String -> KJson.decodeFromString(kClass, value) ?: Any()
+        is PGobject -> KJson.decodeFromString(kClass, value.value)
+        is String -> KJson.decodeFromString(kClass, value)
         is Array<*> -> value
         else -> throw SQLFeatureNotSupportedException("Array does not support for this database")
     }

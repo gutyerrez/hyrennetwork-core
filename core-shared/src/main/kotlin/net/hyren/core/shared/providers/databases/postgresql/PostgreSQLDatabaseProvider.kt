@@ -1,4 +1,4 @@
-package net.hyren.core.shared.providers.databases.mariadb
+package net.hyren.core.shared.providers.databases.postgresql
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -10,38 +10,36 @@ import java.net.InetSocketAddress
 /**
  * @author SrGutyerrez
  **/
-class MariaDBDatabaseProvider(
+class PostgreSQLDatabaseProvider(
         private val inetSocketAddress: InetSocketAddress,
         private val user: String,
         private val password: String,
         private val database: String,
+        private val schema: String,
         private val primaryDatabase: Boolean = false
 ) : IDatabaseProvider<Database> {
 
     private lateinit var _database: Database
 
     override fun prepare() {
-        val hikariDataSource = HikariDataSource(
+        _database = Database.connect(HikariDataSource(
             HikariConfig().apply {
-                jdbcUrl = "jdbc:mysql://${
-                    this@MariaDBDatabaseProvider.inetSocketAddress.address.hostAddress
-                }:${
-                    this@MariaDBDatabaseProvider.inetSocketAddress.port
-                }/${
-                    this@MariaDBDatabaseProvider.database
-                }"
-                driverClassName = "com.mysql.cj.jdbc.Driver"
-                username = this@MariaDBDatabaseProvider.user
-                password = this@MariaDBDatabaseProvider.password
+                dataSourceClassName = "org.postgresql.ds.PGSimpleDataSource"
+
+                dataSourceProperties["serverName"] = this@PostgreSQLDatabaseProvider.inetSocketAddress.address.hostAddress
+                dataSourceProperties["portNumber"] = this@PostgreSQLDatabaseProvider.inetSocketAddress.port
+                dataSourceProperties["databaseName"] = this@PostgreSQLDatabaseProvider.database
+                dataSourceProperties["user"] = this@PostgreSQLDatabaseProvider.user
+                dataSourceProperties["password"] = this@PostgreSQLDatabaseProvider.password
+
                 maximumPoolSize = 10
+                connectionTimeout = 5000
+
+                schema = this@PostgreSQLDatabaseProvider.schema
 
                 connectionTestQuery = "SELECT 1;"
-
-                connectionTimeout = 5000
             }
-        )
-
-        this._database = Database.connect(hikariDataSource)
+        ))
 
         if (primaryDatabase) {
             TransactionManager.defaultDatabase = _database

@@ -6,60 +6,60 @@ import net.hyren.core.shared.applications.cache.redis.ApplicationsStatusRedisCac
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.storage.dto.FetchApplicationByInetSocketAddressDTO
 import net.hyren.core.shared.applications.storage.repositories.IApplicationsRepository
-import net.hyren.core.shared.applications.storage.repositories.implementations.MariaDBApplicationsRepository
+import net.hyren.core.shared.applications.storage.repositories.implementations.PostgreSQLApplicationsRepository
 import net.hyren.core.shared.environment.Env
 import net.hyren.core.shared.exceptions.ApplicationAlreadyPreparedException
 import net.hyren.core.shared.exceptions.InvalidApplicationException
 import net.hyren.core.shared.groups.storage.repositories.IGroupsRepository
-import net.hyren.core.shared.groups.storage.repositories.implementations.MariaDBGroupsRepository
+import net.hyren.core.shared.groups.storage.repositories.implementations.PostgreSQLGroupsRepository
 import net.hyren.core.shared.misc.maintenance.cache.local.MaintenanceLocalCache
 import net.hyren.core.shared.misc.maintenance.repositories.IMaintenanceRepository
-import net.hyren.core.shared.misc.maintenance.repositories.implementations.MariaDBMaintenanceRepository
+import net.hyren.core.shared.misc.maintenance.repositories.implementations.PostgreSQLMaintenanceRepository
 import net.hyren.core.shared.misc.punish.category.cache.local.PunishCategoriesLocalCache
 import net.hyren.core.shared.misc.punish.category.storage.repositories.IPunishCategoriesRepository
-import net.hyren.core.shared.misc.punish.category.storage.repositories.implementations.MariaDBPunishCategoriesRepository
+import net.hyren.core.shared.misc.punish.category.storage.repositories.implementations.PostgreSQLPunishCategoriesRepository
 import net.hyren.core.shared.misc.report.category.cache.local.ReportCategoriesLocalCache
 import net.hyren.core.shared.misc.report.category.storage.repositories.IReportCategoriesRepository
-import net.hyren.core.shared.misc.report.category.storage.repositories.implementations.MariaDBReportCategoriesRepository
+import net.hyren.core.shared.misc.report.category.storage.repositories.implementations.PostgreSQLReportCategoriesRepository
 import net.hyren.core.shared.misc.revoke.category.cache.local.RevokeCategoriesLocalCache
 import net.hyren.core.shared.misc.revoke.category.storage.repositories.IRevokeCategoriesRepository
-import net.hyren.core.shared.misc.revoke.category.storage.repositories.implementations.MariaDBRevokeCategoriesRepository
+import net.hyren.core.shared.misc.revoke.category.storage.repositories.implementations.PostgreSQLRevokeCategoriesRepository
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
 import net.hyren.core.shared.providers.cache.redis.RedisCacheProvider
-import net.hyren.core.shared.providers.databases.mariadb.MariaDBDatabaseProvider
-import net.hyren.core.shared.providers.databases.mariadb.providers.MariaDBRepositoryProvider
+import net.hyren.core.shared.providers.databases.postgresql.PostgreSQLDatabaseProvider
+import net.hyren.core.shared.providers.databases.postgresql.providers.PostgreSQLRepositoryProvider
 import net.hyren.core.shared.providers.databases.redis.RedisDatabaseProvider
 import net.hyren.core.shared.providers.databases.redis.echo.providers.EchoProvider
 import net.hyren.core.shared.servers.cache.local.ServersLocalCache
 import net.hyren.core.shared.servers.storage.repositories.IServersRepository
-import net.hyren.core.shared.servers.storage.repositories.implementations.MariaDBServersRepository
+import net.hyren.core.shared.servers.storage.repositories.implementations.PostgreSQLServersRepository
 import net.hyren.core.shared.users.cache.local.UsersLocalCache
 import net.hyren.core.shared.users.cache.redis.UsersLoggedRedisCache
 import net.hyren.core.shared.users.cache.redis.UsersStatusRedisCache
 import net.hyren.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import net.hyren.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
-import net.hyren.core.shared.users.friends.storage.repositories.implementations.MariaDBUsersFriendsRepository
+import net.hyren.core.shared.users.friends.storage.repositories.implementations.PostgreSQLUsersFriendsRepository
 import net.hyren.core.shared.users.groups.due.cache.local.UsersGroupsDueLocalCache
 import net.hyren.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
-import net.hyren.core.shared.users.groups.due.storage.repositories.implementations.MariaDBUsersGroupsDueRepository
+import net.hyren.core.shared.users.groups.due.storage.repositories.implementations.PostgreSQLUsersGroupsDueRepository
 import net.hyren.core.shared.users.ignored.cache.local.IgnoredUsersLocalCache
 import net.hyren.core.shared.users.ignored.storage.repositories.IIgnoredUsersRepository
-import net.hyren.core.shared.users.ignored.storage.repositories.implementations.MariaDBIgnoredUsersRepository
+import net.hyren.core.shared.users.ignored.storage.repositories.implementations.PostgreSQLIgnoredUsersRepository
 import net.hyren.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
-import net.hyren.core.shared.users.passwords.storage.repositories.implementations.MariaDBUsersPasswordsRepository
+import net.hyren.core.shared.users.passwords.storage.repositories.implementations.PostgreSQLUsersPasswordsRepository
 import net.hyren.core.shared.users.preferences.cache.local.UsersPreferencesLocalCache
 import net.hyren.core.shared.users.preferences.storage.repositories.IUsersPreferencesRepository
-import net.hyren.core.shared.users.preferences.storage.repositories.implementations.MariaDBUsersPreferencesRepository
+import net.hyren.core.shared.users.preferences.storage.repositories.implementations.PostgreSQLUsersPreferencesRepository
 import net.hyren.core.shared.users.punishments.cache.local.UsersPunishmentsLocalCache
 import net.hyren.core.shared.users.punishments.storage.repositories.IUsersPunishmentsRepository
-import net.hyren.core.shared.users.punishments.storage.repositories.implementations.MariaDBUsersPunishmentsRepository
+import net.hyren.core.shared.users.punishments.storage.repositories.implementations.PostgreSQLUsersPunishmentsRepository
 import net.hyren.core.shared.users.reports.cache.redis.UsersReportsRedisCache
 import net.hyren.core.shared.users.skins.cache.local.UsersSkinsLocalCache
 import net.hyren.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
-import net.hyren.core.shared.users.skins.storage.repositories.implementations.MariaDBUsersSkinsRepository
+import net.hyren.core.shared.users.skins.storage.repositories.implementations.PostgreSQLUsersSkinsRepository
 import net.hyren.core.shared.users.storage.repositories.IUsersRepository
-import net.hyren.core.shared.users.storage.repositories.implementation.MariaDBUsersRepository
+import net.hyren.core.shared.users.storage.repositories.implementation.PostgreSQLUsersRepository
 import org.apache.commons.io.IOUtils
 import java.net.InetSocketAddress
 import java.net.URL
@@ -73,19 +73,19 @@ object CoreProvider {
 
     init {
         // repositories
-        PROVIDERS.add(Repositories.MariaDB.GROUPS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_GROUPS_DUE_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.REPORT_CATEGORIES_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.PUNISH_CATEGORIES_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.REVOKE_CATEGORIES_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_PUNISHMENTS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_PASSWORDS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_FRIENDS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.IGNORED_USERS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_PREFERENCES_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.USERS_SKINS_REPOSITORY)
-        PROVIDERS.add(Repositories.MariaDB.MAINTENANCE_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.GROUPS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.REPORT_CATEGORIES_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.PUNISH_CATEGORIES_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.REVOKE_CATEGORIES_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_PUNISHMENTS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_PASSWORDS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_FRIENDS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.IGNORED_USERS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_PREFERENCES_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.USERS_SKINS_REPOSITORY)
+        PROVIDERS.add(Repositories.PostgreSQL.MAINTENANCE_REPOSITORY)
 
         // local cache
         PROVIDERS.add(Cache.Local.SERVERS)
@@ -121,13 +121,13 @@ object CoreProvider {
 
         val address = InetSocketAddress(
             IOUtils.toString(
-                URL("http://checkip.amazonaws.com"),
+                URL("https://checkip.amazonaws.com"),
                 Charsets.UTF_8
             ).trim(),
             port
         )
 
-        val application = Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
+        val application = Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
             FetchApplicationByInetSocketAddressDTO(
                 address
             )
@@ -150,19 +150,19 @@ object CoreProvider {
 
         prepareProviders()
 
-        Repositories.MariaDB.GROUPS_REPOSITORY.provide().fetchAll()
+        Repositories.PostgreSQL.GROUPS_REPOSITORY.provide().fetchAll()
     }
 
     private fun preparePrimaryProviders() {
         if (!primaryPrepared) {
             primaryPrepared = true
 
-            Databases.MariaDB.MARIA_DB_MAIN.prepare()
+            Databases.PostgreSQL.POSTGRESQL_MAIN.prepare()
             Databases.Redis.REDIS_MAIN.prepare()
             Databases.Redis.REDIS_ECHO.prepare()
 
-            Repositories.MariaDB.SERVERS_REPOSITORY.prepare()
-            Repositories.MariaDB.APPLICATIONS_REPOSITORY.prepare()
+            Repositories.PostgreSQL.SERVERS_REPOSITORY.prepare()
+            Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.prepare()
 
             Databases.Redis.ECHO.prepare()
         }
@@ -181,16 +181,17 @@ object CoreProvider {
 
     object Databases {
 
-        object MariaDB {
+        object PostgreSQL {
 
-            val MARIA_DB_MAIN = MariaDBDatabaseProvider(
+            val POSTGRESQL_MAIN = PostgreSQLDatabaseProvider(
                 InetSocketAddress(
-                    Env.getString("databases.maria_db.host"),
-                    Env.getInt("databases.maria_db.port")
+                    Env.getString("databases.postgresql.host"),
+                    Env.getInt("databases.postgresql.port")
                 ),
-                Env.getString("databases.maria_db.user"),
-                Env.getString("databases.maria_db.password"),
-                Env.getString("databases.maria_db.database"),
+                Env.getString("databases.postgresql.user"),
+                Env.getString("databases.postgresql.password"),
+                Env.getString("databases.postgresql.database"),
+                Env.getString("databases.postgresql.schema"),
                 true
             )
 
@@ -222,66 +223,66 @@ object CoreProvider {
 
     object Repositories {
 
-        object MariaDB {
+        object PostgreSQL {
 
-            val GROUPS_REPOSITORY = MariaDBRepositoryProvider<IGroupsRepository>(
-                MariaDBGroupsRepository::class
+            val GROUPS_REPOSITORY = PostgreSQLRepositoryProvider<IGroupsRepository>(
+                PostgreSQLGroupsRepository::class
             )
 
-            val USERS_REPOSITORY = MariaDBRepositoryProvider<IUsersRepository>(
-                MariaDBUsersRepository::class
+            val USERS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersRepository>(
+                PostgreSQLUsersRepository::class
             )
 
-            val SERVERS_REPOSITORY = MariaDBRepositoryProvider<IServersRepository>(
-                MariaDBServersRepository::class
+            val SERVERS_REPOSITORY = PostgreSQLRepositoryProvider<IServersRepository>(
+                PostgreSQLServersRepository::class
             )
 
-            val APPLICATIONS_REPOSITORY = MariaDBRepositoryProvider<IApplicationsRepository>(
-                MariaDBApplicationsRepository::class
+            val APPLICATIONS_REPOSITORY = PostgreSQLRepositoryProvider<IApplicationsRepository>(
+                PostgreSQLApplicationsRepository::class
             )
 
-            val USERS_GROUPS_DUE_REPOSITORY = MariaDBRepositoryProvider<IUsersGroupsDueRepository>(
-                MariaDBUsersGroupsDueRepository::class
+            val USERS_GROUPS_DUE_REPOSITORY = PostgreSQLRepositoryProvider<IUsersGroupsDueRepository>(
+                PostgreSQLUsersGroupsDueRepository::class
             )
 
-            val REPORT_CATEGORIES_REPOSITORY = MariaDBRepositoryProvider<IReportCategoriesRepository>(
-                MariaDBReportCategoriesRepository::class
+            val REPORT_CATEGORIES_REPOSITORY = PostgreSQLRepositoryProvider<IReportCategoriesRepository>(
+                PostgreSQLReportCategoriesRepository::class
             )
 
-            val PUNISH_CATEGORIES_REPOSITORY = MariaDBRepositoryProvider<IPunishCategoriesRepository>(
-                MariaDBPunishCategoriesRepository::class
+            val PUNISH_CATEGORIES_REPOSITORY = PostgreSQLRepositoryProvider<IPunishCategoriesRepository>(
+                PostgreSQLPunishCategoriesRepository::class
             )
 
-            val REVOKE_CATEGORIES_REPOSITORY = MariaDBRepositoryProvider<IRevokeCategoriesRepository>(
-                MariaDBRevokeCategoriesRepository::class
+            val REVOKE_CATEGORIES_REPOSITORY = PostgreSQLRepositoryProvider<IRevokeCategoriesRepository>(
+                PostgreSQLRevokeCategoriesRepository::class
             )
 
-            val USERS_PUNISHMENTS_REPOSITORY = MariaDBRepositoryProvider<IUsersPunishmentsRepository>(
-                MariaDBUsersPunishmentsRepository::class
+            val USERS_PUNISHMENTS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersPunishmentsRepository>(
+                PostgreSQLUsersPunishmentsRepository::class
             )
 
-            val USERS_PASSWORDS_REPOSITORY = MariaDBRepositoryProvider<IUsersPasswordsRepository>(
-                MariaDBUsersPasswordsRepository::class
+            val USERS_PASSWORDS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersPasswordsRepository>(
+                PostgreSQLUsersPasswordsRepository::class
             )
 
-            val USERS_FRIENDS_REPOSITORY = MariaDBRepositoryProvider<IUsersFriendsRepository>(
-                MariaDBUsersFriendsRepository::class
+            val USERS_FRIENDS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersFriendsRepository>(
+                PostgreSQLUsersFriendsRepository::class
             )
 
-            val IGNORED_USERS_REPOSITORY = MariaDBRepositoryProvider<IIgnoredUsersRepository>(
-                MariaDBIgnoredUsersRepository::class
+            val IGNORED_USERS_REPOSITORY = PostgreSQLRepositoryProvider<IIgnoredUsersRepository>(
+                PostgreSQLIgnoredUsersRepository::class
             )
 
-            val USERS_PREFERENCES_REPOSITORY = MariaDBRepositoryProvider<IUsersPreferencesRepository>(
-                MariaDBUsersPreferencesRepository::class
+            val USERS_PREFERENCES_REPOSITORY = PostgreSQLRepositoryProvider<IUsersPreferencesRepository>(
+                PostgreSQLUsersPreferencesRepository::class
             )
 
-            val USERS_SKINS_REPOSITORY = MariaDBRepositoryProvider<IUsersSkinsRepository>(
-                MariaDBUsersSkinsRepository::class
+            val USERS_SKINS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersSkinsRepository>(
+                PostgreSQLUsersSkinsRepository::class
             )
 
-            val MAINTENANCE_REPOSITORY = MariaDBRepositoryProvider<IMaintenanceRepository>(
-                MariaDBMaintenanceRepository::class
+            val MAINTENANCE_REPOSITORY = PostgreSQLRepositoryProvider<IMaintenanceRepository>(
+                PostgreSQLMaintenanceRepository::class
             )
 
         }

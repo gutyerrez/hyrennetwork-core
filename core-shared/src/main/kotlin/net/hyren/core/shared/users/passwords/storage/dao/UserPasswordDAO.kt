@@ -1,7 +1,7 @@
 package net.hyren.core.shared.users.passwords.storage.dao
 
 import net.hyren.core.shared.users.passwords.data.UserPassword
-import net.hyren.core.shared.users.passwords.storage.table.UserPasswordTable
+import net.hyren.core.shared.users.passwords.storage.table.UsersPasswordsTable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -13,12 +13,12 @@ class UserPasswordDAO(
     id: EntityID<Int>
 ) : IntEntity(id) {
 
-    companion object : IntEntityClass<UserPasswordDAO>(UserPasswordTable)
+    companion object : IntEntityClass<UserPasswordDAO>(UsersPasswordsTable)
 
-    var userId by UserPasswordTable.userId
-    var password by UserPasswordTable.password
-    var enabled by UserPasswordTable.enabled
-    val createdAt by UserPasswordTable.createdAt
+    var userId by UsersPasswordsTable.userId
+    var password by UsersPasswordsTable.password
+    var enabled by UsersPasswordsTable.enabled
+    val createdAt by UsersPasswordsTable.createdAt
 
     fun asUserPassword() = UserPassword(
         id,

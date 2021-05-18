@@ -546,10 +546,12 @@ object KJson {
     @ExperimentalSerializationApi
     fun decodeFromString(
         kClass: KClass<*>,
-        string: String
-    ) = _json.serializersModule.getContextual(kClass)?.let { _json.decodeFromString(it, string) } ?: throw DeserializerNotFoundException(
-        "Cannot find an deserializer for kclass $kClass"
-    )
+        string: String?
+    ) = _json.serializersModule.getContextual(kClass)?.let {
+        _json.decodeFromString(it, string?.let {
+            string
+        } ?: throw IllegalArgumentException())
+    } ?: throw DeserializerNotFoundException("Cannot find an deserializer for kclass $kClass")
 
     internal class DeserializerNotFoundException(
         message: String

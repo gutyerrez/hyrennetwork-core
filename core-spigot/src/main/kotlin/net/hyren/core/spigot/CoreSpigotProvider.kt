@@ -7,13 +7,13 @@ import kotlinx.serialization.json.put
 import net.hyren.core.shared.misc.json.*
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
-import net.hyren.core.shared.providers.databases.mariadb.providers.MariaDBRepositoryProvider
+import net.hyren.core.shared.providers.databases.postgresql.providers.PostgreSQLRepositoryProvider
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.hyren.core.spigot.misc.server.configuration.cache.local.ServersConfigurationsLocalCache
 import net.hyren.core.spigot.misc.server.configuration.data.ServerConfiguration
 import net.hyren.core.spigot.misc.server.configuration.settings.ServerSettings
 import net.hyren.core.spigot.misc.server.configuration.storage.repositories.IServersConfigurationRepository
-import net.hyren.core.spigot.misc.server.configuration.storage.repositories.implementations.MariaDBServersConfigurationRepository
+import net.hyren.core.spigot.misc.server.configuration.storage.repositories.implementations.PostgreSQLServersConfigurationRepository
 import net.hyren.core.spigot.misc.utils.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -27,7 +27,7 @@ object CoreSpigotProvider {
     fun prepare() {
         Serializers.CUSTOM_SERIALIZERS.prepare()
 
-        Repositories.MariaDB.SERVERS_CONFIGURATION_REPOSITORY.prepare()
+        Repositories.PostgreSQL.SERVERS_CONFIGURATION_REPOSITORY.prepare()
 
         Cache.Local.SERVER_CONFIGURATION.prepare()
     }
@@ -151,10 +151,10 @@ object CoreSpigotProvider {
 
     object Repositories {
 
-        object MariaDB {
+        object PostgreSQL {
 
-            val SERVERS_CONFIGURATION_REPOSITORY = MariaDBRepositoryProvider<IServersConfigurationRepository>(
-                MariaDBServersConfigurationRepository::class
+            val SERVERS_CONFIGURATION_REPOSITORY = PostgreSQLRepositoryProvider<IServersConfigurationRepository>(
+                PostgreSQLServersConfigurationRepository::class
             )
 
         }

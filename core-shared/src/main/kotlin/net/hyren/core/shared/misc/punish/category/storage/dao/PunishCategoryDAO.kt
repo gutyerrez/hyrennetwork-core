@@ -2,8 +2,8 @@ package net.hyren.core.shared.misc.punish.category.storage.dao
 
 import net.hyren.core.shared.misc.punish.category.data.PunishCategory
 import net.hyren.core.shared.misc.punish.category.storage.table.PunishCategoriesTable
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntity
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntityClass
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntity
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**

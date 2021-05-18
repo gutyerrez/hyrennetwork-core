@@ -24,6 +24,9 @@ dependencies {
     // maria db
     implementation("mysql:mysql-connector-java:8.0.19")
 
+    // postgresql
+    implementation("org.postgresql:postgresql:42.2.20")
+
     // redis
     implementation("redis.clients:jedis:3.3.0")
 

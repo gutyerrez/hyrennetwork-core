@@ -19,7 +19,7 @@ class PunishCategoriesLocalCache : LocalCache {
 
     override fun populate() {
         this.CACHE.putAll(
-                CoreProvider.Repositories.MariaDB.PUNISH_CATEGORIES_REPOSITORY.provide().fetchAll()
+                CoreProvider.Repositories.PostgreSQL.PUNISH_CATEGORIES_REPOSITORY.provide().fetchAll()
         )
     }
 

@@ -10,7 +10,7 @@ import net.hyren.core.shared.users.friends.storage.repositories.IUsersFriendsRep
 /**
  * @author SrGutyerrez
  **/
-class MariaDBUsersFriendsRepository : IUsersFriendsRepository {
+class PostgreSQLUsersFriendsRepository : IUsersFriendsRepository {
 
     override fun fetchByUserId(
         fetchFriendUsersByUserIdDTO: FetchFriendUsersByUserIdDTO

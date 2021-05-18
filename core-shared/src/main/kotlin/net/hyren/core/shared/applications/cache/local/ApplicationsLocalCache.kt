@@ -18,7 +18,7 @@ class ApplicationsLocalCache : LocalCache {
     private val CACHE_BY_NAME = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<String, Application> {
-            CoreProvider.Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByName(
+            CoreProvider.Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByName(
                 FetchApplicationByNameDTO(
                     it
                 )
@@ -28,7 +28,7 @@ class ApplicationsLocalCache : LocalCache {
     private val CACHE_BY_ADDRESS = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<InetSocketAddress, Application> {
-            CoreProvider.Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
+            CoreProvider.Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByInetSocketAddress(
                 FetchApplicationByInetSocketAddressDTO(
                     it
                 )
@@ -38,7 +38,7 @@ class ApplicationsLocalCache : LocalCache {
     private val CACHE_BY_SERVER = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<Server, List<Application>> {
-            CoreProvider.Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByServer(
+            CoreProvider.Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByServer(
                 FetchApplicationsByServerDTO(
                     it
                 )
@@ -48,7 +48,7 @@ class ApplicationsLocalCache : LocalCache {
     private val CACHE_BY_TYPE = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<ApplicationType, List<Application>> {
-            CoreProvider.Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByType(
+            CoreProvider.Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByType(
                 FetchApplicationsByTypeDTO(
                     it
                 )
@@ -58,7 +58,7 @@ class ApplicationsLocalCache : LocalCache {
     private val CACHE_BY_SERVER_AND_APPLICATION = Caffeine.newBuilder()
         .expireAfterWrite(15, TimeUnit.SECONDS)
         .build<ApplicationByServerAndApplicationTypeLookup, Application> {
-            CoreProvider.Repositories.MariaDB.APPLICATIONS_REPOSITORY.provide().fetchByServerAndApplicationType(
+            CoreProvider.Repositories.PostgreSQL.APPLICATIONS_REPOSITORY.provide().fetchByServerAndApplicationType(
                 FetchApplicationsByServerAndApplicationTypeDTO(
                     it.server,
                     it.applicationType

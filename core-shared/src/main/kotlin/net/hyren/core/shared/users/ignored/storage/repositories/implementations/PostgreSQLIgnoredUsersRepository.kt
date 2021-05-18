@@ -9,7 +9,7 @@ import net.hyren.core.shared.users.ignored.storage.repositories.IIgnoredUsersRep
 /**
  * @author SrGutyerrez
  **/
-class MariaDBIgnoredUsersRepository : IIgnoredUsersRepository {
+class PostgreSQLIgnoredUsersRepository : IIgnoredUsersRepository {
 
     override fun fetchByUserId(
         fetchIgnoredUsersByUserIdDTO: FetchIgnoredUsersByUserIdDTO

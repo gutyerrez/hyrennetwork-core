@@ -3,8 +3,8 @@ package net.hyren.core.shared.applications.storage.dao
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.storage.table.ApplicationsTable
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntity
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringEntityClass
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntity
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntityClass
 import net.hyren.core.shared.servers.storage.dto.FetchServerByNameDTO
 import org.jetbrains.exposed.dao.id.EntityID
 import java.net.InetSocketAddress
@@ -35,7 +35,7 @@ class ApplicationDAO(
             port,
         ),
         applicationType,
-        CoreProvider.Repositories.MariaDB.SERVERS_REPOSITORY.provide().fetchByName(
+        CoreProvider.Repositories.PostgreSQL.SERVERS_REPOSITORY.provide().fetchByName(
             FetchServerByNameDTO(
                 serverName
             )

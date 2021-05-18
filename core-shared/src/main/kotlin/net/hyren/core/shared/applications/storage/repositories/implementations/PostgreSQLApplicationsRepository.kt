@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBApplicationsRepository : IApplicationsRepository {
+class PostgreSQLApplicationsRepository : IApplicationsRepository {
 
     override fun fetchAll(): Map<String, Application> {
         return transaction {

@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 /**
  * @author Gutyerrez
  */
-object UserPasswordTable : IntIdTable("users_passwords") {
+object UsersPasswordsTable : IntIdTable("users_passwords") {
 
     val userId = reference("user_id", UsersTable)
     val password = varchar("password", 255)

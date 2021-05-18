@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBPunishCategoriesRepository : IPunishCategoriesRepository {
+class PostgreSQLPunishCategoriesRepository : IPunishCategoriesRepository {
 
     override fun fetchAll(): Map<String, PunishCategory> {
         return transaction {

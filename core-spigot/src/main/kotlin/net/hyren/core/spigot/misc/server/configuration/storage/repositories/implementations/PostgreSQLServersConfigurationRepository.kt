@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author Gutyerrez
  */
-class MariaDBServersConfigurationRepository : IServersConfigurationRepository {
+class PostgreSQLServersConfigurationRepository : IServersConfigurationRepository {
 
 	override fun fetchServerConfigurationByServerName(
 		fetchServerConfigurationByServerNameDTO: FetchServerConfigurationByServerNameDTO

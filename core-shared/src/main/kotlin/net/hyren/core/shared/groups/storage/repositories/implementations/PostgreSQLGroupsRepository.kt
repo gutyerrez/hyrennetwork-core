@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBGroupsRepository : IGroupsRepository {
+class PostgreSQLGroupsRepository : IGroupsRepository {
 
     override fun fetchAll() {
         transaction {

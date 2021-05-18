@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.update
 /**
  * @author Gutyerrez
  */
-class MariaDBMaintenanceRepository : IMaintenanceRepository {
+class PostgreSQLMaintenanceRepository : IMaintenanceRepository {
 
     override fun fetchByApplication(
         application: Application

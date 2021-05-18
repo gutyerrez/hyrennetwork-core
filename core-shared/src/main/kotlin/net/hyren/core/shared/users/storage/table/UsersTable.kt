@@ -1,6 +1,6 @@
 package net.hyren.core.shared.users.storage.table
 
-import net.hyren.core.shared.misc.exposed.table.UUIDTable
+import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.datetime
 
 /**

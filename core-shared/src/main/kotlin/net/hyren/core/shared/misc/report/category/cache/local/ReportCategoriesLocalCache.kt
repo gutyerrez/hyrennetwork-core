@@ -15,7 +15,7 @@ class ReportCategoriesLocalCache : LocalCache {
 
     override fun populate() {
         this.CACHE.putAll(
-                CoreProvider.Repositories.MariaDB.REPORT_CATEGORIES_REPOSITORY.provide().fetchAll()
+                CoreProvider.Repositories.PostgreSQL.REPORT_CATEGORIES_REPOSITORY.provide().fetchAll()
         )
     }
 

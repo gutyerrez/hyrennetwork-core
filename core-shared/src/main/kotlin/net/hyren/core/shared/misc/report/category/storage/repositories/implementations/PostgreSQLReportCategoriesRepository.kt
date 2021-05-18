@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBReportCategoriesRepository : IReportCategoriesRepository {
+class PostgreSQLReportCategoriesRepository : IReportCategoriesRepository {
 
     override fun fetchAll(): Map<String, ReportCategory> {
         return transaction {

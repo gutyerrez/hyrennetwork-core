@@ -19,13 +19,13 @@ class UsersGroupsDueLocalCache : LocalCache {
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build<UsersGroupsDueLookupCache, Map<Server?, List<Group>>> {
                 if (it.server == null) {
-                    CoreProvider.Repositories.MariaDB.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserId(
+                    CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserId(
                             FetchUserGroupDueByUserIdDTO(
                                     it.id
                             )
                     )
                 } else {
-                    CoreProvider.Repositories.MariaDB.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserIdAndServerName(
+                    CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserIdAndServerName(
                             FetchUserGroupDueByUserIdAndServerNameDTO(
                                     it.id,
                                     it.server

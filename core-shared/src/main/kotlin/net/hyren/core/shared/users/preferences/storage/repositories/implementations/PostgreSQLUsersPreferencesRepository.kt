@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.update
 /**
  * @author SrGutyerrez
  **/
-class MariaDBUsersPreferencesRepository : IUsersPreferencesRepository {
+class PostgreSQLUsersPreferencesRepository : IUsersPreferencesRepository {
 
     override fun fetchByUserId(
         fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
@@ -52,7 +52,7 @@ class MariaDBUsersPreferencesRepository : IUsersPreferencesRepository {
                 it[preferences] = updateUserPreferencesDTO.preferences
             }
 
-            if (updated <= 0) this@MariaDBUsersPreferencesRepository.create(
+            if (updated <= 0) this@PostgreSQLUsersPreferencesRepository.create(
                 CreateUserPreferencesDTO(
                     updateUserPreferencesDTO.userId,
                     updateUserPreferencesDTO.preferences

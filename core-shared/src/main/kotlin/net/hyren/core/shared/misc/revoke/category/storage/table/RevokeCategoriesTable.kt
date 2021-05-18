@@ -1,7 +1,7 @@
 package net.hyren.core.shared.misc.revoke.category.storage.table
 
 import net.hyren.core.shared.groups.Group
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringTable
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringTable
 
 /**
  * @author SrGutyerrez

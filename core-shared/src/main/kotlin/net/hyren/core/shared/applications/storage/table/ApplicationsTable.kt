@@ -2,7 +2,7 @@ package net.hyren.core.shared.applications.storage.table
 
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.groups.Group
-import net.hyren.core.shared.providers.databases.mariadb.dao.StringTable
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringTable
 import net.hyren.core.shared.servers.storage.table.ServersTable
 
 /**

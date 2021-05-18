@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * @author SrGutyerrez
  **/
-class MariaDBUsersPunishmentsRepository : IUsersPunishmentsRepository {
+class PostgreSQLUsersPunishmentsRepository : IUsersPunishmentsRepository {
 
     override fun fetchByUserId(fetchUserPunishmentsByUserIdDTO: FetchUserPunishmentsByUserIdDTO): List<UserPunishment> {
         return transaction {

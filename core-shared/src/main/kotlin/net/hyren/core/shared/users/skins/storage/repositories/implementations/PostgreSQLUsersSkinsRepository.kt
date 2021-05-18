@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 /**
  * @author SrGutyerrez
  **/
-class MariaDBUsersSkinsRepository : IUsersSkinsRepository {
+class PostgreSQLUsersSkinsRepository : IUsersSkinsRepository {
 
 	override fun fetchByUserId(
 		fetchUserSkinsByUserIdDTO: FetchUserSkinsByUserIdDTO
