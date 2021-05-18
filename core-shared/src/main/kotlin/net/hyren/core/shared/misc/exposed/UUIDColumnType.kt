@@ -35,7 +35,7 @@ class UUIDColumnType : ColumnType() {
     override fun notNullValueToDB(value: Any): Any = when (value) {
         is UUID -> {
             if (value.toString().length == 36) {
-                value
+                value.toString()
             } else currentDialect.dataTypeProvider.uuidToDB(value)
         }
         else -> currentDialect.dataTypeProvider.uuidToDB(valueToUUID(value))
