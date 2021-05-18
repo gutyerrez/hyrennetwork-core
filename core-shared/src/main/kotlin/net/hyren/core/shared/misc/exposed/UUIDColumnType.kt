@@ -14,7 +14,7 @@ fun Table.uuid4(columnName: String): Column<UUID> = registerColumn(columnName, U
 
 class UUIDColumnType : ColumnType() {
 
-    override fun sqlType(): String = currentDialect.dataTypeProvider.uuidType()
+    override fun sqlType() = "VARCHAR(36)"
 
     override fun valueFromDB(value: Any): UUID = when {
         value is UUID -> value
