@@ -6,7 +6,9 @@ import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.packets.DisconnectUserPacket
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.kotlin.copyFrom
+import net.hyren.core.shared.misc.preferences.FLY_IN_LOBBY
 import net.hyren.core.shared.misc.preferences.PreferenceRegistry
+import net.hyren.core.shared.misc.preferences.PreferenceState
 import net.hyren.core.shared.misc.preferences.data.Preference
 import net.hyren.core.shared.misc.punish.PunishType
 import net.hyren.core.shared.misc.report.category.data.ReportCategory
@@ -301,9 +303,13 @@ open class User(
     fun getPreferences(): Array<Preference> {
         var original = CoreProvider.Cache.Local.USERS_PREFERENCES.provide().fetchByUserId(
             this.id
-        ) ?: return PreferenceRegistry.fetchAll()
+        ) ?: return PreferenceRegistry.fetchAll().apply {
+            this.find { it == FLY_IN_LOBBY && this@User.hasGroup(Group.VIP) }?.preferenceState = PreferenceState.ENABLED
+        }
 
-        original = original.copyFrom(PreferenceRegistry.fetchAll())
+        original = original.copyFrom(PreferenceRegistry.fetchAll().apply {
+            this.find { !original.contains(it) && it == FLY_IN_LOBBY && this@User.hasGroup(Group.VIP) }?.preferenceState = PreferenceState.ENABLED
+        })
 
         return original
     }
