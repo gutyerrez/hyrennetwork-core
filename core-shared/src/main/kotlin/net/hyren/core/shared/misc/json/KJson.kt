@@ -6,6 +6,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
+import kotlinx.serialization.json.internal.*
 import kotlinx.serialization.modules.*
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.status.ApplicationStatus
@@ -548,14 +549,21 @@ object KJson {
         kClass: KClass<*>,
         string: String?
     ) = _json.serializersModule.getContextual(kClass)?.let {
-        _json.decodeFromString(it, string?.let {
-            string
-        } ?: throw IllegalArgumentException())
+        _json.decodeFromString(it, string ?: throw IllegalArgumentException())
     } ?: throw DeserializerNotFoundException("Cannot find an deserializer for kclass $kClass")
 
-    internal class DeserializerNotFoundException(
+    class DeserializerNotFoundException(
         message: String
     ) : NullPointerException(message)
+
+    /**
+     * Class serializers
+     */
+
+    @ExperimentalSerializationApi
+    fun fetchSerializerForKClass(
+        kClass: KClass<*>
+    ) = _json.serializersModule.getContextual(kClass) ?: throw DeserializerNotFoundException("Cannot find an deserializer for kclass $kClass")
 
 }
 
