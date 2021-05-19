@@ -4,8 +4,6 @@ import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.status.ApplicationStatus
-import net.hyren.core.shared.misc.preferences.PREMIUM_ACCOUNT
-import net.hyren.core.shared.misc.preferences.PreferenceState
 import net.hyren.core.shared.users.data.User
 import net.hyren.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -20,37 +18,25 @@ import java.util.*
  */
 class BungeeServerConnector : ServerConnector {
 
-	override fun fetchLobbyServer(userId: UUID?): InetSocketAddress? {
-		if (userId === null) return null
+	override fun fetchLobbyServer(userId: UUID?) = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
+		.stream()
+		.sorted { application1, application2 ->
+			val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+				application1,
+				ApplicationStatus::class
+			)
 
-		val user = CoreProvider.Cache.Local.USERS.provide().fetchById(userId)
+			val applicationStatus2 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
+				application2,
+				ApplicationStatus::class
+			)
 
-		return if (user?.getPreferences()?.find { it == PREMIUM_ACCOUNT }?.preferenceState == PreferenceState.ENABLED) {
-			CoreConstants.fetchLobbyApplication()?.address
-		} else {
-			CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
-				.stream()
-				.sorted { application1, application2 ->
-					val applicationStatus1 =
-						CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-							application1,
-							ApplicationStatus::class
-						)
-					val applicationStatus2 =
-						CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-							application2,
-							ApplicationStatus::class
-						)
+			if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
 
-					if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
+			if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0) return@sorted applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
 
-					if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0)
-						return@sorted applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
-
-					return@sorted 0
-				}.findFirst().orElse(null)?.address
-		}
-	}
+			return@sorted 0
+		}.findFirst().orElse(null)?.address
 
 	override fun updateAndGetNext(
 		proxiedPlayer: ProxiedPlayer,

@@ -12,8 +12,7 @@ object PreferenceRegistry {
     init {
         register(
             TELL_PREFERENCE,
-            PLAYER_VISIBILITY,
-            PREMIUM_ACCOUNT
+            PLAYER_VISIBILITY
         )
     }
 
@@ -36,5 +35,3 @@ val PLAYER_VISIBILITY = Preference("player-visibility-preference")
 val FLY_IN_LOBBY = Preference("fly-in-lobby-preference", PreferenceState.DISABLED)
 
 val LOBBY_COMMAND_PROTECTION = Preference("lobby-command-protection-preference")
-
-val PREMIUM_ACCOUNT = Preference("premium-account-preference", PreferenceState.DISABLED)
