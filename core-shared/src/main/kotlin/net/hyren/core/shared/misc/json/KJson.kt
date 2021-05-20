@@ -3,7 +3,6 @@ package net.hyren.core.shared.misc.json
 import com.google.common.base.Enums
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
@@ -33,7 +32,6 @@ import java.net.InetSocketAddress
 import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.internal.impl.resolve.calls.inference.CapturedType
 
 /**
  * @author Gutyerrez
@@ -561,11 +559,13 @@ object KJson {
     ): String {
         val result = Class.forName("kotlinx.serialization.json.internal.JsonStringBuilder").getConstructor().newInstance()
 
+        Class.forName("kotlinx.serialization.json.internal.StreamingJsonEncoder").constructors.forEachIndexed { index, constructor ->
+            println("Index: $index = ${constructor.parameters.contentToString()}")
+        }
+
         try {
             val writeMode = Class.forName("kotlinx.serialization.json.internal.WriteMode")
-            val encoder = Class.forName("kotlinx.serialization.json.internal.StreamingJsonEncoder").getConstructor(
-                result::class.java, Json::class.java, writeMode::class.java, Array::class.java
-            ).newInstance(
+            val encoder = Class.forName("kotlinx.serialization.json.internal.StreamingJsonEncoder").constructors[1].newInstance(
                 result, _json, (writeMode.enumConstants as Array<Enum<*>>).first { it.name == "OBJ" }, arrayOfNulls<Any>((writeMode.enumConstants as Array<Enum<*>>).size)
             )
             val encodeSerializableValue = encoder::class.java.getDeclaredMethod("encodeSerializableValue")
