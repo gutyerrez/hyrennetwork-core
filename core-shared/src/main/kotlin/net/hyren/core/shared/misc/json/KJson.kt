@@ -562,7 +562,10 @@ object KJson {
         try {
             val writeMode = Class.forName("kotlinx.serialization.json.internal.WriteMode")
             val encoder = Class.forName("kotlinx.serialization.json.internal.StreamingJsonEncoder").constructors[0].newInstance(
-                result, _json, (writeMode.enumConstants as Array<Enum<*>>).first { it.name == "OBJ" }, arrayOfNulls<Any>((writeMode.enumConstants as Array<Enum<*>>).size)
+                result,
+                _json,
+                (writeMode.enumConstants as Array<Enum<*>>).first { it.name == "OBJ" },
+                arrayOfNulls<JsonEncoder>((writeMode.enumConstants as Array<Enum<*>>).size)
             )
             val encodeSerializableValue = encoder::class.java.getDeclaredMethod("encodeSerializableValue")
 
