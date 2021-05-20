@@ -3,6 +3,7 @@ package net.hyren.core.shared.misc.json
 import com.google.common.base.Enums
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
@@ -32,6 +33,7 @@ import java.net.InetSocketAddress
 import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.jvm.internal.impl.resolve.calls.inference.CapturedType
 
 /**
  * @author Gutyerrez
@@ -548,9 +550,45 @@ object KJson {
     fun decodeFromString(
         kClass: KClass<*>,
         string: String?
-    ) = _json.serializersModule.getContextual(kClass)?.let {
-        _json.decodeFromString(it, string ?: throw IllegalArgumentException())
-    } ?: throw DeserializerNotFoundException("Cannot find an deserializer for kclass $kClass")
+    ) = _json.decodeFromString(
+        fetchSerializerForKClass(kClass),
+        string ?: throw IllegalArgumentException()
+    )
+
+    inline fun <reified T> encodeToString(
+        kClass: KClass<*>,
+        t: T?
+    ): String {
+        val result = Class.forName("kotlinx.serialization.json.internal.JsonStringBuilder").getConstructor().newInstance()
+
+        try {
+            val writeMode = Class.forName("kotlinx.serialization.json.internal.WriteMode")
+            val encoder = Class.forName("kotlinx.serialization.json.internal.StreamingJsonEncoder").getConstructor(
+                result::class.java, Json::class.java, writeMode::class.java, Array::class.java
+            ).newInstance(
+                result, _json, (writeMode.enumConstants as Array<Enum<*>>).first { it.name == "OBJ" }, arrayOfNulls<Any>((writeMode.enumConstants as Array<Enum<*>>).size)
+            )
+            val encodeSerializableValue = encoder::class.java.getDeclaredMethod("encodeSerializableValue")
+
+            encodeSerializableValue.isAccessible = true
+
+            encodeSerializableValue.invoke(
+                encoder, fetchSerializerForKClass(kClass), t
+            )
+
+            val toString = encoder::class.java.getDeclaredMethod("toString")
+
+            toString.isAccessible = true
+
+            return toString.invoke(encoder) as String
+        } finally {
+            val release = result::class.java.getDeclaredMethod("release")
+
+            release.isAccessible = true
+
+            release.invoke(result)
+        }
+    }
 
     class DeserializerNotFoundException(
         message: String
@@ -565,6 +603,10 @@ object KJson {
         kClass: KClass<*>
     ) = _json.serializersModule.getContextual(kClass) ?: throw DeserializerNotFoundException("Cannot find an deserializer for kclass $kClass")
 
+}
+
+fun <T> Json.encodeToString(serializer: KSerializer<out Any>, value: T): String {
+    return ""
 }
 
 abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {

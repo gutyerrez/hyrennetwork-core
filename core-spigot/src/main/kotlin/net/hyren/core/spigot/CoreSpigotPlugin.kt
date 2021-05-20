@@ -2,6 +2,7 @@ package net.hyren.core.spigot
 
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.wrapper.CoreWrapper
+import net.hyren.core.shared.servers.ServerType
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import net.hyren.core.spigot.listeners.GenericListener
@@ -99,6 +100,38 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
             }
         )
+
+        /**
+         * Rankup Application status
+         */
+        if (CoreProvider.application.server?.serverType == ServerType.RANK_UP) {
+            AsyncScheduler.scheduleAsyncRepeatingTask(
+                object : ApplicationStatusTask(
+                    ApplicationStatus(
+                        CoreProvider.application.name,
+                        CoreProvider.application.applicationType,
+                        CoreProvider.application.server,
+                        CoreProvider.application.address,
+                        this.onlineSince
+                    )
+                ) {
+                    override fun buildApplicationStatus(
+                        applicationStatus: ApplicationStatus
+                    ) {
+                        val runtime = Runtime.getRuntime()
+
+                        applicationStatus.heapSize = runtime.totalMemory()
+                        applicationStatus.heapMaxSize = runtime.maxMemory()
+                        applicationStatus.heapFreeSize = runtime.freeMemory()
+
+                        applicationStatus.onlinePlayers = Bukkit.getOnlinePlayers().size
+                    }
+                },
+                0,
+                1,
+                TimeUnit.SECONDS
+            )
+        }
     }
 
 }

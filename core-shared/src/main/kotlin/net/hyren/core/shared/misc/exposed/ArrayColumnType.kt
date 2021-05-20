@@ -14,9 +14,9 @@ import kotlin.reflect.KClass
 inline fun <reified T> Table.array(
     name: String,
     kClass: KClass<*>
-): Column<Array<T>> = registerColumn(name, ArrayColumnType<T>(kClass))
+): Column<Array<T>> = registerColumn(name, ArrayColumnType(kClass))
 
-class ArrayColumnType<T>(
+class ArrayColumnType(
     private val kClass: KClass<*>
 ) : ColumnType() {
 
@@ -32,7 +32,7 @@ class ArrayColumnType<T>(
     }
 
     override fun notNullValueToDB(value: Any) = when (value) {
-        is Array<*> -> KJson.encodeToString(value)
+        is Array<*> -> KJson.encodeToString(kClass, value)
         else -> throw SQLFeatureNotSupportedException("Cannot find serializer for ${value::class.qualifiedName}")
     }
 
