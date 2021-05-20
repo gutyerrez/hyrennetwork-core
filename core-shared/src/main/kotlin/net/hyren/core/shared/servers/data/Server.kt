@@ -18,7 +18,7 @@ data class Server(
     fun getFancyDisplayName() = StringUtils.replaceEach(
         this.displayName,
         arrayOf(
-            "Rankup UP",
+            "Rank UP",
             "Factions"
         ),
         arrayOf(
