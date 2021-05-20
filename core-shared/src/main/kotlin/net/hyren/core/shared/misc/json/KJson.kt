@@ -32,6 +32,7 @@ import java.net.InetSocketAddress
 import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.jvm.internal.impl.resolve.calls.inference.CapturedType
 
 /**
  * @author Gutyerrez
@@ -570,7 +571,7 @@ object KJson {
             val encodeSerializableValue = encoder::class.java.getDeclaredMethod(
                 "encodeSerializableValue",
                 SerializationStrategy::class.java,
-                T::class.java
+                CapturedType::class.java
             )
 
             encodeSerializableValue.isAccessible = true
