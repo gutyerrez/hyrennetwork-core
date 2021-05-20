@@ -569,7 +569,7 @@ object KJson {
             )
             val encodeSerializableValue = encoder::class.java.getDeclaredMethod(
                 "encodeSerializableValue",
-                kotlinx.serialization.KSerializer::class.java,
+                SerializationStrategy::class.java,
                 T::class.java
             )
 
