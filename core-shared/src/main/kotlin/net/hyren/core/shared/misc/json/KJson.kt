@@ -567,7 +567,11 @@ object KJson {
                 (writeMode.enumConstants as Array<Enum<*>>).first { it.name == "OBJ" },
                 arrayOfNulls<JsonEncoder>((writeMode.enumConstants as Array<Enum<*>>).size)
             )
-            val encodeSerializableValue = encoder::class.java.getDeclaredMethod("encodeSerializableValue")
+            val encodeSerializableValue = encoder::class.java.getDeclaredMethod(
+                "encodeSerializableValue",
+                kotlinx.serialization.KSerializer::class.java,
+                T::class.java
+            )
 
             encodeSerializableValue.isAccessible = true
 
