@@ -576,16 +576,12 @@ object KJson {
             encodeSerializableValue.isAccessible = true
 
             encodeSerializableValue.invoke(
-                encoder, fetchSerializerForKClass(kClass), t
+                encoder,
+                fetchSerializerForKClass(kClass),
+                t
             )
 
-            val toString = result::class.java.getMethod("toString")
-
-            println(result.toString())
-
-            toString.isAccessible = true
-
-            return toString.invoke(result) as String
+            return result.toString()
         } finally {
             val release = result::class.java.getDeclaredMethod("release")
 
