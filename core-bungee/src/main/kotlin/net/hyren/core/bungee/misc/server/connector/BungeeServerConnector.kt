@@ -46,12 +46,16 @@ class BungeeServerConnector : ServerConnector {
 			inetSocketAddress
 		) ?: return null
 
+		println("ASD")
+
 		if (arrayOf(
 				ApplicationType.LOGIN,
 				ApplicationType.LOBBY,
 				ApplicationType.PUNISHED_LOBBY
 			).contains(application.applicationType)
 		) return null
+
+		println("AAA")
 
 		return CoreConstants.fetchLobbyApplication()?.address
 	}
