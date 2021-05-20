@@ -579,7 +579,9 @@ object KJson {
                 encoder, fetchSerializerForKClass(kClass), t
             )
 
-            val toString = encoder::class.java.getMethod("kotlin\$toString")
+            val toString = result::class.java.getMethod("toString")
+
+            println(result.toString())
 
             toString.isAccessible = true
 
