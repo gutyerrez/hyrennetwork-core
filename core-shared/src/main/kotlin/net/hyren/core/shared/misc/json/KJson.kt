@@ -583,7 +583,7 @@ object KJson {
 
             toString.isAccessible = true
 
-            return toString.invoke(encoder) as String
+            return toString.invoke(result) as String
         } finally {
             val release = result::class.java.getDeclaredMethod("release")
 
