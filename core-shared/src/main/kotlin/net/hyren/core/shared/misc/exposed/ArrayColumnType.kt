@@ -37,10 +37,10 @@ class ArrayColumnType(
         index: Int,
         value: Any?
     ) {
-        super.setParameter(stmt, index, value.let {
+        super.setParameter(stmt, index, value?.let {
             PGobject().apply {
                 this.type = sqlType()
-                this.value = if (value == null) null else KJson.encodeToString(kClass, value)
+                this.value = KJson.encodeToString(kClass, value)
             }
         })
     }
