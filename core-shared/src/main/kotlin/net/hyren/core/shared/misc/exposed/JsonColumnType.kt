@@ -32,9 +32,16 @@ class JsonColumnType(
     }
 
     override fun setParameter(
-        stmt: PreparedStatementApi, index: Int, value: Any?
+        stmt: PreparedStatementApi,
+        index: Int,
+        value: Any?
     ) {
-        super.setParameter(stmt, index, value.let { KJson.encodeToString(it) })
+        super.setParameter(stmt, index, value.let {
+            PGobject().apply {
+                this.type = sqlType()
+                this.value = if (value == null) null else KJson.encodeToString(kClass, value)
+            }
+        })
     }
 
 }
