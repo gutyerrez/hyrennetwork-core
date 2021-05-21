@@ -79,8 +79,6 @@ class EchoBufferOutput {
         if (entityId === null) {
             this.writeBoolean(false)
         } else {
-            println(KJson.encodeToString(entityId))
-
             this.writeBoolean(true)
             this.writeString(
                 KJson.encodeToString(entityId)

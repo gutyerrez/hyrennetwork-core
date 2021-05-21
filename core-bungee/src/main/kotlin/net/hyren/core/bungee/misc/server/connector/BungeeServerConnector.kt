@@ -18,6 +18,12 @@ import java.util.*
  */
 class BungeeServerConnector : ServerConnector {
 
+	private val IGNORED_APPLICATIONS = arrayOf(
+		ApplicationType.LOGIN,
+		ApplicationType.LOBBY,
+		ApplicationType.PUNISHED_LOBBY
+	)
+
 	override fun fetchLobbyServer(userId: UUID?) = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
 		.stream()
 		.sorted { application1, application2 ->
@@ -42,22 +48,21 @@ class BungeeServerConnector : ServerConnector {
 		proxiedPlayer: ProxiedPlayer,
 		inetSocketAddress: InetSocketAddress
 	): InetSocketAddress? {
+		val user = CoreProvider.Cache.Local.USERS.provide().fetchById(proxiedPlayer.uniqueId)
+
+		if (user != null && IGNORED_APPLICATIONS.contains(user.getConnectedBukkitApplication()?.applicationType)) return null
+
 		val application = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByAddress(
 			inetSocketAddress
 		) ?: return null
 
-		println("ASD")
+		if (IGNORED_APPLICATIONS.contains(application.applicationType)) return null
 
-		if (arrayOf(
-				ApplicationType.LOGIN,
-				ApplicationType.LOBBY,
-				ApplicationType.PUNISHED_LOBBY
-			).contains(application.applicationType)
-		) return null
+		val targetApplication = CoreConstants.fetchLobbyApplication()
 
-		println("AAA")
+		if (user != null && user.getConnectedBukkitApplication() == targetApplication) return null
 
-		return CoreConstants.fetchLobbyApplication()?.address
+		return targetApplication?.address
 	}
 
 	override fun changedUserApplication(
