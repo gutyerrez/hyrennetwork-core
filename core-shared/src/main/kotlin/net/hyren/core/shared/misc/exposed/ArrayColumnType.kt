@@ -32,7 +32,13 @@ class ArrayColumnType(
     }
 
     override fun notNullValueToDB(value: Any) = when (value) {
-        is Array<*> -> KJson.encodeToString(kClass, value)
+        is Array<*> -> {
+            val encoded = KJson.encodeToString(kClass, value)
+
+            println("Encoded: ($encoded)")
+
+            encoded.trim()
+        }
         else -> throw SQLFeatureNotSupportedException("Cannot find serializer for ${value::class.qualifiedName}")
     }
 
