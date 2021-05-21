@@ -284,6 +284,35 @@ object KJson {
 
         // Preference serializer
         contextual(
+            Preference::class,
+            object : KSerializer<Preference>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Preference
+                ) {
+                    jsonEncoder.encodeJsonElement(buildJsonObject {
+                        put("name", value.name)
+                        put("preference_state", Optional.ofNullable(
+                            value.preferenceState
+                        ).map { it.name }.orElse(null))
+                    })
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ): Preference {
+                    val jsonObject = jsonDecoder.decodeJsonElement().asJsonObject()
+
+                    return Preference(
+                        jsonObject.getValue("name").asString(),
+                        jsonObject.getValue("preference_state").asEnum(PreferenceState::class)!!
+                    )
+                }
+            }
+        )
+
+        // Preferences serializer
+        contextual(
             Array<Preference>::class,
             object : KSerializer<Array<Preference>>() {
                 override fun serialize(
