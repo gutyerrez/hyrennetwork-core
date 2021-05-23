@@ -25,20 +25,19 @@ object DirectionUtils {
         BlockFace.WEST,
         BlockFace.NORTH_WEST
     )
-    fun yawToFace(yaw: Float) = when (yawToFace(yaw, true)) {
-        BlockFace.NORTH -> BlockFace.SOUTH
-        BlockFace.SOUTH -> BlockFace.NORTH
-        BlockFace.EAST -> BlockFace.WEST
-        BlockFace.WEST -> BlockFace.EAST
-        BlockFace.NORTH_WEST -> BlockFace.SOUTH_WEST
-        BlockFace.NORTH_EAST -> BlockFace.SOUTH_EAST
-        BlockFace.SOUTH_WEST -> BlockFace.NORTH_EAST
-        BlockFace.SOUTH_EAST -> BlockFace.NORTH_WEST
-        else -> null
-    }
 
-    fun yawToFace(yaw: Float, useSubCardinalDirections: Boolean) = if (useSubCardinalDirections) {
-        RADIAL[Math.round(yaw / 45f) and 0x7]
+    fun yawToFace(yaw: Float, useSubCardinalDirections: Boolean = true) = if (useSubCardinalDirections) {
+        when (RADIAL[Math.round(yaw / 45f) and 0x7]) {
+            BlockFace.NORTH -> BlockFace.SOUTH
+            BlockFace.SOUTH -> BlockFace.NORTH
+            BlockFace.EAST -> BlockFace.WEST
+            BlockFace.WEST -> BlockFace.EAST
+            BlockFace.NORTH_WEST -> BlockFace.SOUTH_WEST
+            BlockFace.NORTH_EAST -> BlockFace.SOUTH_EAST
+            BlockFace.SOUTH_WEST -> BlockFace.NORTH_EAST
+            BlockFace.SOUTH_EAST -> BlockFace.NORTH_WEST
+            else -> throw NullPointerException()
+        }
     } else {
         AXIAL[Math.round(yaw / 90f) and 0x3]
     }
