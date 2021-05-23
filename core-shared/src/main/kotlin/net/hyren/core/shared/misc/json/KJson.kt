@@ -518,6 +518,23 @@ object KJson {
                 }
             }
         )
+
+        // DateTime serializer
+        contextual(
+            DateTime::class,
+            object : KSerializer<DateTime>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: DateTime
+                ) {
+                    jsonEncoder.encodeString(value.toString())
+                }
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ) = DateTime.parse(jsonDecoder.decodeString())
+            }
+        )
     }
 
     val _json: Json = Json {

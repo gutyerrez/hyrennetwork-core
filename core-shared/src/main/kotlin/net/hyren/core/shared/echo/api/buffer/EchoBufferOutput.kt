@@ -11,6 +11,7 @@ import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
+import org.joda.time.DateTime
 import java.net.Inet6Address
 import java.net.InetSocketAddress
 import java.util.*
@@ -154,6 +155,15 @@ class EchoBufferOutput {
 
             this.writeBoolean(true)
             this.writeString(serialized)
+        }
+    }
+
+    fun writeDateTime(dateTime: DateTime?) {
+        if (dateTime == null) {
+            writeBoolean(false)
+        } else {
+            writeBoolean(true)
+            writeString(KJson.encodeToString(DateTime::class, dateTime))
         }
     }
 

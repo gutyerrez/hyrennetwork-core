@@ -13,6 +13,7 @@ import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
+import org.joda.time.DateTime
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -167,6 +168,12 @@ class EchoBufferInput(
     fun readSerializedLocation() = SerializedLocation.of(readString())
 
     fun readBaseComponent() = ComponentSerializer.parse(readString())
+
+    fun readDateTime(): DateTime? = if (readBoolean()) {
+        DateTime.parse(readString())
+    } else {
+        null
+    }
 
     inline fun <reified T> readList(): List<T>? {
         val valid = readBoolean()
