@@ -5,6 +5,6 @@ package net.hyren.core.shared.echo.api.response
  **/
 interface Respondable<T: Response> {
 
-    var response: T
+    var response: T?
 
 }

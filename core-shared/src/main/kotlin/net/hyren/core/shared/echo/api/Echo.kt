@@ -208,6 +208,47 @@ open class Echo(
         )
     }
 
+    fun <R : Response, T> publishToCurrentServer(
+        packet: T,
+        onResponse: Consumer<R>
+    ) where T : EchoPacket, T : Respondable<R> {
+        val responseUUID = UUID.randomUUID()
+
+        this.responseCallbacks[responseUUID] = onResponse as Consumer<Response>
+
+        this._publish(
+            packet,
+            this.createHeader(
+                responseUUID
+            ),
+            String.format(
+                this.SERVER_CHANNEL_NAME,
+                CoreProvider.application.server?.name
+            )
+        )
+    }
+
+    fun <R : Response, T> publishToServer(
+        packet: T,
+        targetServerName: String?,
+        onResponse: Consumer<R>
+    ) where T : EchoPacket, T : Respondable<R> {
+        val responseUUID = UUID.randomUUID()
+
+        this.responseCallbacks[responseUUID] = onResponse as Consumer<Response>
+
+        this._publish(
+            packet,
+            this.createHeader(
+                responseUUID
+            ),
+            String.format(
+                this.SERVER_CHANNEL_NAME,
+                targetServerName
+            )
+        )
+    }
+
     fun <T : EchoPacket> _publish(
         packet: T,
         packetHeader: EchoPacketHeader,

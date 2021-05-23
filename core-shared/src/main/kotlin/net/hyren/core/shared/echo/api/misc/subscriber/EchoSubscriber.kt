@@ -43,7 +43,7 @@ open class EchoSubscriber(
                         val responseUUID = packetHeader.responseUUID!!
 
                         val respondable = packet as Respondable<*>
-                        val response = respondable.getResponse()
+                        val response = respondable.response
 
                         if (response != null) {
                             echo._publishToApplication(
@@ -77,7 +77,7 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
-        if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName !== CoreProvider.application.name) {
+        if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName != CoreProvider.application.name) {
             if (!this.isListening(clazz, packetHeader)) return
 
             val packet = clazz.getDeclaredConstructor().newInstance()
