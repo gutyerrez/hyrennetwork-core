@@ -77,7 +77,7 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
-        if (packetHeader.senderApplicationName != null && packetHeader.senderApplicationName != CoreProvider.application.name) {
+        if (packetHeader.senderApplicationName != null && CoreProvider.application.server == null && packetHeader.senderApplicationName != CoreProvider.application.name) {
             if (!this.isListening(clazz, packetHeader)) return
 
             val packet = clazz.getDeclaredConstructor().newInstance()
