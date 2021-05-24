@@ -145,9 +145,9 @@ class ChatColor(
         AQUA
     ).contains(this)
 
-    operator fun ChatColor.plus(chatColor: ChatColor) = this.toString() + chatColor.toString()
+    public operator fun ChatColor.plus(chatColor: ChatColor) = this.toString() + chatColor.toString()
 
-    operator fun ChatColor.plus(string: String) = this.toString() + string
+    public operator fun ChatColor.plus(string: String) = this.toString() + string
 
     override fun toString() = String(
         charArrayOf(
