@@ -14,6 +14,7 @@ class ChatColor(
 ) {
 
     companion object {
+
         val COLOR_CHAR = '\u00A7'
         val ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx"
 
@@ -21,6 +22,7 @@ class ChatColor(
         private val BY_NAME: MutableMap<String, ChatColor> = HashMap()
 
         val STRIP_COLOR_PATTERN = Pattern.compile("(?i)$COLOR_CHAR[0-9A-FK-ORX]")
+
         val BLACK = ChatColor('0', "black", Color(0x000000))
         val DARK_BLUE = ChatColor('1', "dark_blue", Color(0x0000AA))
         val DARK_GREEN = ChatColor('2', "dark_green", Color(0x00AA00))
@@ -142,6 +144,10 @@ class ChatColor(
         BLUE,
         AQUA
     ).contains(this)
+
+    operator fun ChatColor.plus(chatColor: ChatColor): String {
+        return this.toString() + chatColor.toString()
+    }
 
     override fun toString() = String(
         charArrayOf(
