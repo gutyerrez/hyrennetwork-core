@@ -1,6 +1,5 @@
 package net.hyren.core.shared.misc.utils
 
-import org.apache.commons.lang3.ArrayUtils
 import java.awt.Color
 import java.util.*
 import java.util.regex.Pattern
@@ -126,26 +125,23 @@ class ChatColor(
         BY_NAME[name.toUpperCase(Locale.ROOT)] = this
     }
 
-    fun isColor() = ArrayUtils.contains(
-        arrayOf(
-            DARK_BLUE,
-            DARK_AQUA,
-            DARK_GRAY,
-            DARK_GREEN,
-            DARK_PURPLE,
-            DARK_RED,
-            LIGHT_PURPLE,
-            BLACK,
-            WHITE,
-            RED,
-            GREEN,
-            YELLOW,
-            GOLD,
-            BLUE,
-            AQUA
-        ),
-        this
-    )
+    fun isColor() = arrayOf(
+        DARK_BLUE,
+        DARK_AQUA,
+        DARK_GRAY,
+        DARK_GREEN,
+        DARK_PURPLE,
+        DARK_RED,
+        LIGHT_PURPLE,
+        BLACK,
+        WHITE,
+        RED,
+        GREEN,
+        YELLOW,
+        GOLD,
+        BLUE,
+        AQUA
+    ).contains(this)
 
     override fun toString() = String(
         charArrayOf(
