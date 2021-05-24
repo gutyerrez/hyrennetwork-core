@@ -1,6 +1,5 @@
 package net.hyren.core.shared.echo.api.misc.subscriber
 
-import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.echo.api.Echo
 import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
 import net.hyren.core.shared.echo.api.listener.EchoPacketListener
@@ -77,17 +76,17 @@ open class EchoSubscriber(
 
         packetHeader.read(buffer)
 
-        if (packetHeader.senderApplicationName != null && CoreProvider.application.server == null && packetHeader.senderApplicationName != CoreProvider.application.name) {
-            if (!this.isListening(clazz, packetHeader)) return
-
-            val packet = clazz.getDeclaredConstructor().newInstance()
-
-            packet.read(buffer)
-
-            packet.packetHeader = packetHeader
-
-            this.callPacket(String(channel), packet)
+        if (!this.isListening(clazz, packetHeader)) {
+            return
         }
+
+        val packet = clazz.getDeclaredConstructor().newInstance()
+
+        packet.read(buffer)
+
+        packet.packetHeader = packetHeader
+
+        this.callPacket(String(channel), packet)
     }
 
     fun registerListener(listener: EchoPacketListener) {
@@ -95,17 +94,17 @@ open class EchoSubscriber(
     }
 
     fun isListening(clazz: Class<out EchoPacket>, packetHeader: EchoPacketHeader): Boolean {
-        if (this.EVENT_BUS.hasSubscriberForEvent(clazz)) return true
-
-        if (Response::class.java.isAssignableFrom(clazz)) {
-            return if (packetHeader.responseUUID == null) {
+        return if (this.EVENT_BUS.hasSubscriberForEvent(clazz)) {
+            true
+        } else if (Response::class.java.isAssignableFrom(clazz)) {
+            if (packetHeader.responseUUID == null) {
                 false
             } else {
                 this.echo.responseCallbacks.containsKey(packetHeader.responseUUID)
             }
+        } else {
+            false
         }
-
-        return false
     }
 
 }
