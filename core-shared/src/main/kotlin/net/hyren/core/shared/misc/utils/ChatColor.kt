@@ -1,9 +1,7 @@
 package net.hyren.core.shared.misc.utils
 
 import java.awt.Color
-import java.util.*
 import java.util.regex.Pattern
-
 
 /**
  * @author SrGutyerrez
@@ -128,7 +126,7 @@ class ChatColor(
     init {
         ordinal = count++
         BY_CHAR[code] = this
-        BY_NAME[name.toUpperCase(Locale.ROOT)] = this
+        BY_NAME[name.uppercase()] = this
     }
 
     fun isColor() = arrayOf(
