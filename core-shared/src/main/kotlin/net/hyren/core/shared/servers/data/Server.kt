@@ -14,15 +14,12 @@ data class Server(
 
     fun getName() = name.value
 
-    fun getFancyDisplayName() = displayName.replace(
-        Regex("(Rank UP|Factions).*"),
-        when (serverType) {
-            ServerType.FACTIONS -> "F."
-            ServerType.RANK_UP -> "R."
-        }
-    )
+    fun getFancyDisplayName() = when (serverType) {
+        ServerType.FACTIONS -> "F. ${displayName.split(" ")[1]}"
+        ServerType.RANK_UP -> "R. ${displayName.split(" ")[1]}"
+    }
 
-    fun isAlphaServer() = Regex("(Alpha)").containsMatchIn(displayName)
+    fun isAlphaServer() = name.value.contains("alpha", true)
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false

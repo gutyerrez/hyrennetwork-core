@@ -18,14 +18,11 @@ data class Application(
     val restrictJoin: Group? = null
 ) {
 
-    fun getFancyDisplayName() = displayName.replace(
-        Regex("(Login|Lobby)"),
-        when (applicationType) {
-            ApplicationType.LOGIN -> "L."
-            ApplicationType.LOBBY -> "S."
-            else -> displayName
-        }
-    )
+    fun getFancyDisplayName() = when (applicationType) {
+        ApplicationType.LOGIN -> "L. ${name.split(" ")[1]}"
+        ApplicationType.LOBBY -> "S. ${name.split(" ")[1]}"
+        else -> displayName
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false
