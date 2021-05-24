@@ -22,7 +22,7 @@ class GroupDAO(
     val priority by GroupsTable.priority
     val discordRoleId by GroupsTable.discordRoleId
 
-    fun asGroup(): Group {
+    fun readGroup(): Group {
         val group = Group.valueOf(this.id.value)
 
         group.displayName = this.displayName

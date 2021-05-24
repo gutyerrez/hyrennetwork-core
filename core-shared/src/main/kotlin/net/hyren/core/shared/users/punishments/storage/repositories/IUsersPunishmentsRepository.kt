@@ -12,12 +12,20 @@ import net.hyren.core.shared.users.punishments.storage.dto.UpdateUserPunishmentB
  **/
 interface IUsersPunishmentsRepository : IRepository {
 
-    fun fetchByUserId(fetchUserPunishmentsByUserIdDTO: FetchUserPunishmentsByUserIdDTO): List<UserPunishment>
+    fun fetchByUserId(
+        fetchUserPunishmentsByUserIdDTO: FetchUserPunishmentsByUserIdDTO
+    ): List<UserPunishment>
 
-    fun fetchById(fetchUserPunishmentsByIdDTO: FetchUserPunishmentByIdDTO): UserPunishment?
+    fun fetchById(
+        fetchUserPunishmentsByIdDTO: FetchUserPunishmentByIdDTO
+    ): UserPunishment?
 
-    fun create(createUserPunishmentDTO: CreateUserPunishmentDTO): UserPunishment?
+    fun create(
+        createUserPunishmentDTO: CreateUserPunishmentDTO
+    ): UserPunishment?
 
-    fun update(updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO): Boolean
+    fun update(
+        updateUserPunishmentByIdDTO: UpdateUserPunishmentByIdDTO
+    ): Boolean
 
 }

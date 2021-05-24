@@ -23,7 +23,7 @@ interface IUsersSkinsRepository : IRepository {
 
     fun create(
         createUserSkinDTO: CreateUserSkinDTO
-    )
+    ): UserSkin
 
     fun update(
         updateUserSkinDTO: UpdateUserSkinDTO

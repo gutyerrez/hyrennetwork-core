@@ -26,7 +26,7 @@ class UserDAO(
     var createdAt by UsersTable.createdAt
     var updatedAt by UsersTable.updatedAt
 
-    fun asUser(): User = User(
+    fun toUser(): User = User(
         this.id,
         this.name,
         this.email,

@@ -32,7 +32,7 @@ class UserPunishmentDAO(
     var createdAt by UsersPunishmentsTable.createdAt
     var updatedAt by UsersPunishmentsTable.updatedAt
 
-    fun asUserPunishment() = UserPunishment(
+    fun toUserPunishment() = UserPunishment(
             this.id,
             this.userId,
             this.stafferId,

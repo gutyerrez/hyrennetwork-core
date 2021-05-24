@@ -1,7 +1,7 @@
 package net.hyren.core.shared.users.skins.storage.repositories.implementations
 
 import net.hyren.core.shared.CoreConstants
-import net.hyren.core.shared.users.skins.data.UserSkin
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.users.skins.storage.dao.UserSkinDAO
 import net.hyren.core.shared.users.skins.storage.dto.*
 import net.hyren.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
@@ -17,87 +17,77 @@ class PostgreSQLUsersSkinsRepository : IUsersSkinsRepository {
 
 	override fun fetchByUserId(
 		fetchUserSkinsByUserIdDTO: FetchUserSkinsByUserIdDTO
-	): List<UserSkin> {
-		return transaction {
-			return@transaction UserSkinDAO.find {
-				UsersSkinsTable.userId eq fetchUserSkinsByUserIdDTO.userId
-			}.map { it.toUserSkin() }
-		}
+	) = transaction(
+		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+	) {
+		UserSkinDAO.find {
+			UsersSkinsTable.userId eq fetchUserSkinsByUserIdDTO.userId
+		}.map { it.toUserSkin() }
 	}
 
 	override fun fetchByName(
 		fetchUserSkinByNameDTO: FetchUserSkinByNameDTO
-	): UserSkin? {
-		return transaction {
-			UserSkinDAO.find {
-				UsersSkinsTable.name like fetchUserSkinByNameDTO.name
-			}.firstOrNull()?.toUserSkin()
-		}
+	) = transaction(
+		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+	) {
+		UserSkinDAO.find {
+			UsersSkinsTable.name like fetchUserSkinByNameDTO.name
+		}.firstOrNull()?.toUserSkin()
 	}
 
 	override fun fetchByUserIdAndName(
 		fetchUserSkinByUserIdAndNameDTO: FetchUserSkinByUserIdAndNameDTO
-	): UserSkin? {
-		return transaction {
-			UserSkinDAO.find {
-				UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
-					UsersSkinsTable.name like fetchUserSkinByUserIdAndNameDTO.name
-				)
-			}.firstOrNull()?.toUserSkin()
-		}
+	) = transaction(
+		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+	) {
+		UserSkinDAO.find {
+			UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
+				UsersSkinsTable.name like fetchUserSkinByUserIdAndNameDTO.name
+			)
+		}.firstOrNull()?.toUserSkin()
 	}
 
 	override fun create(
 		createUserSkinDTO: CreateUserSkinDTO
+	) = transaction(
+		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
 	) {
-		val (
-			name,
-			userId,
-			skin,
-			enabled,
-			updatedAt
-		) = createUserSkinDTO.userSkin
+		UserSkinDAO.find {
+			UsersSkinsTable.userId eq createUserSkinDTO.userSkin.userId
+		}.forEach { it.enabled = false }
 
-		transaction {
-			UserSkinDAO.find {
-				UsersSkinsTable.userId eq userId
-			}.forEach {
-				it.enabled = false
-			}
-
-			UserSkinDAO.new {
-				this.name = name
-				this.userId = userId
-				this.value = skin.value
-				this.signature = skin.signature
-				this.enabled = enabled
-				this.updatedAt = updatedAt
-			}
-		}
+		UserSkinDAO.new {
+			this.name = createUserSkinDTO.userSkin.name
+			this.userId = createUserSkinDTO.userSkin.userId
+			this.value = createUserSkinDTO.userSkin.skin.value
+			this.signature = createUserSkinDTO.userSkin.skin.signature
+			this.enabled = createUserSkinDTO.userSkin.enabled
+			this.updatedAt = createUserSkinDTO.userSkin.updatedAt
+		}.toUserSkin()
 	}
 
 	override fun update(
 		updateUserSkinDTO: UpdateUserSkinDTO
+	) = transaction(
+		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
 	) {
-		transaction {
-			val (
-				name,
-				userId,
-				skin
-			) = updateUserSkinDTO.userSkin
+		val (
+			name,
+			userId,
+			skin
+		) = updateUserSkinDTO.userSkin
 
-			UserSkinDAO.find {
-				UsersSkinsTable.userId eq userId
-			}.forEach {
-				if (it.name == name) {
-					it.value = skin.value
-					it.signature = skin.signature
-					it.enabled = true
-					it.updatedAt = DateTime.now(
-						CoreConstants.DATE_TIME_ZONE
-					)
-				} else it.enabled = false
-			}
+		UserSkinDAO.find {
+			UsersSkinsTable.userId eq userId
+		}.forEach {
+			if (it.name == name) {
+				it.value = skin.value
+				it.signature = skin.signature
+				it.enabled = true
+				it.updatedAt = DateTime.now(
+					CoreConstants.DATE_TIME_ZONE
+				)
+			} else it.enabled = false
 		}
 	}
 

@@ -1,5 +1,6 @@
 package net.hyren.core.shared.misc.maintenance.repositories.implementations
 
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.misc.maintenance.repositories.IMaintenanceRepository
 import net.hyren.core.shared.misc.maintenance.storage.table.MaintenanceTable
@@ -15,28 +16,24 @@ class PostgreSQLMaintenanceRepository : IMaintenanceRepository {
 
     override fun fetchByApplication(
         application: Application
-    ): Boolean {
-        return transaction {
-            val result = MaintenanceTable.select {
-                MaintenanceTable.applicationName eq application.name
-            }
-
-            if (result.empty()) return@transaction false
-
-            return@transaction result.first()[MaintenanceTable.currentState]
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        MaintenanceTable.select {
+            MaintenanceTable.applicationName eq application.name
+        }.firstOrNull()?.get(MaintenanceTable.currentState) ?: false
     }
 
     override fun update(
         application: Application,
         newState: Boolean
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
     ) {
-        transaction {
-            val updated = MaintenanceTable.update({ MaintenanceTable.applicationName eq application.name }) {
-                it[currentState] = newState
-            }
-
-            if (updated <= 0) MaintenanceTable.insert {
+        if (MaintenanceTable.update({ MaintenanceTable.applicationName eq application.name }) {
+            it[currentState] = newState
+        } <= 0) {
+            MaintenanceTable.insert {
                 it[applicationName] = application.name
                 it[currentState] = newState
             }

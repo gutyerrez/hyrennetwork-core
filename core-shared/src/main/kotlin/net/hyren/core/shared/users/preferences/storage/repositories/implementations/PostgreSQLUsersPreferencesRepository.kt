@@ -1,7 +1,6 @@
 package net.hyren.core.shared.users.preferences.storage.repositories.implementations
 
-import net.hyren.core.shared.misc.preferences.PreferenceRegistry
-import net.hyren.core.shared.misc.preferences.data.Preference
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.users.preferences.storage.dto.CreateUserPreferencesDTO
 import net.hyren.core.shared.users.preferences.storage.dto.FetchUserPreferencesByUserIdDTO
 import net.hyren.core.shared.users.preferences.storage.dto.UpdateUserPreferencesDTO
@@ -19,43 +18,36 @@ class PostgreSQLUsersPreferencesRepository : IUsersPreferencesRepository {
 
     override fun fetchByUserId(
         fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
-    ): Array<Preference> {
-        return transaction {
-            val preferences = UsersPreferencesTable.select {
-                UsersPreferencesTable.userId eq fetchUserPreferencesByUserIdDTO.userId
-            }
-
-            if (preferences.empty()) return@transaction PreferenceRegistry.fetchAll()
-
-            return@transaction preferences.first()[
-                    UsersPreferencesTable.preferences
-            ]
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        UsersPreferencesTable.select {
+            UsersPreferencesTable.userId eq fetchUserPreferencesByUserIdDTO.userId
+        }.firstOrNull()?.get(UsersPreferencesTable.preferences) ?: emptyArray()
     }
 
     override fun create(
         createUserPreferencesDTO: CreateUserPreferencesDTO
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
     ) {
-        transaction {
-            UsersPreferencesTable.insert {
-                it[userId] = createUserPreferencesDTO.userId
-                it[preferences] = createUserPreferencesDTO.preferences
-            }
+        UsersPreferencesTable.insert {
+            it[userId] = createUserPreferencesDTO.userId
+            it[preferences] = createUserPreferencesDTO.preferences
         }
     }
 
     override fun update(
         updateUserPreferencesDTO: UpdateUserPreferencesDTO
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
     ) {
-        transaction {
-            val updated = UsersPreferencesTable.update ({ UsersPreferencesTable.userId eq updateUserPreferencesDTO.userId }) {
-                it[preferences] = updateUserPreferencesDTO.preferences
-            }
-
-            if (updated <= 0) this@PostgreSQLUsersPreferencesRepository.create(
+        if (UsersPreferencesTable.update ({ UsersPreferencesTable.userId eq updateUserPreferencesDTO.userId }) {
+            it[preferences] = updateUserPreferencesDTO.preferences
+        } <= 0) {
+            create(
                 CreateUserPreferencesDTO(
-                    updateUserPreferencesDTO.userId,
-                    updateUserPreferencesDTO.preferences
+                    updateUserPreferencesDTO.userId, updateUserPreferencesDTO.preferences
                 )
             )
         }

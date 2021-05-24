@@ -21,7 +21,7 @@ class PunishCategoryDAO(
     val group by PunishCategoriesTable.group
     val enabled by PunishCategoriesTable.enabled
 
-    fun asPunishCategory() = PunishCategory(
+    fun toPunishCategory() = PunishCategory(
             this.id,
             this.displayName,
             this.description,

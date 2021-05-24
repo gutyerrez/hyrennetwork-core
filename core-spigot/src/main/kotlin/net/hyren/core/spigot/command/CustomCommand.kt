@@ -21,7 +21,7 @@ abstract class CustomCommand(
     
     override fun getDescription0(): String = this.getDescription()
 
-    override fun getUsage() = super.getUsage0()
+    override fun getUsage() = this.getUsage0()
 
     override fun getAliases0(): Array<String> = this.aliases.map { it.toString() }.toTypedArray()
 

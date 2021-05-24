@@ -1,5 +1,6 @@
 package net.hyren.core.shared.groups.storage.repositories.implementations
 
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.groups.storage.dao.GroupDAO
 import net.hyren.core.shared.groups.storage.repositories.IGroupsRepository
@@ -11,15 +12,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
  **/
 class PostgreSQLGroupsRepository : IGroupsRepository {
 
-    override fun fetchAll() {
-        transaction {
-            Group.values().forEach {
-                val result = GroupDAO.find {
-                    GroupsTable.id eq it.name
-                }
-
-                if (!result.empty()) result.first().asGroup()
-            }
+    override fun fetchAll() = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        Group.values().forEach {
+            GroupDAO.find {
+                GroupsTable.id eq it.name
+            }.firstOrNull()?.readGroup()
         }
     }
 

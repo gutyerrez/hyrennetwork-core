@@ -5,6 +5,7 @@ import net.hyren.core.shared.storage.repositories.IRepository
 import net.hyren.core.shared.users.preferences.storage.dto.CreateUserPreferencesDTO
 import net.hyren.core.shared.users.preferences.storage.dto.FetchUserPreferencesByUserIdDTO
 import net.hyren.core.shared.users.preferences.storage.dto.UpdateUserPreferencesDTO
+import org.jetbrains.exposed.sql.statements.InsertStatement
 
 /**
  * @author SrGutyerrez
@@ -15,7 +16,9 @@ interface IUsersPreferencesRepository : IRepository {
         fetchUserPreferencesByUserIdDTO: FetchUserPreferencesByUserIdDTO
     ): Array<Preference>
 
-    fun create(createUserPreferencesDTO: CreateUserPreferencesDTO)
+    fun create(
+        createUserPreferencesDTO: CreateUserPreferencesDTO
+    ): InsertStatement<Number>
 
     fun update(updateUserPreferencesDTO: UpdateUserPreferencesDTO)
 

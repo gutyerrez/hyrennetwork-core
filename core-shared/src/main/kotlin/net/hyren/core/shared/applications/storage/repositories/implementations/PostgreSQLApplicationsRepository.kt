@@ -1,5 +1,6 @@
 package net.hyren.core.shared.applications.storage.repositories.implementations
 
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.storage.dao.ApplicationDAO
 import net.hyren.core.shared.applications.storage.dto.*
@@ -13,86 +14,70 @@ import org.jetbrains.exposed.sql.transactions.transaction
  **/
 class PostgreSQLApplicationsRepository : IApplicationsRepository {
 
-    override fun fetchAll(): Map<String, Application> {
-        return transaction {
-            val applications = mutableMapOf<String, Application>()
+    override fun fetchAll() = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        val applications = mutableMapOf<String, Application>()
 
-            ApplicationDAO.all().forEach {
-                applications[it.name.value] = it.asApplication()
-            }
-
-            return@transaction applications
+        ApplicationDAO.all().forEach {
+            applications[it.name.value] = it.toApplication()
         }
+
+        applications
     }
 
     override fun fetchByServer(
         fetchApplicationsByServerDTO: FetchApplicationsByServerDTO
-    ): List<Application> {
-        return transaction {
-            return@transaction ApplicationDAO.find {
-                ApplicationsTable.serverName eq fetchApplicationsByServerDTO.server.name
-            }.map { it.asApplication() }
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        ApplicationDAO.find {
+            ApplicationsTable.serverName eq fetchApplicationsByServerDTO.server.name
+        }.map { it.toApplication() }
     }
 
     override fun fetchByType(
         fetchApplicationsByTypeDTO: FetchApplicationsByTypeDTO
-    ): List<Application> {
-        return transaction {
-            return@transaction ApplicationDAO.find {
-                ApplicationsTable.applicationType eq fetchApplicationsByTypeDTO.applicationType
-            }.map { it.asApplication() }
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        ApplicationDAO.find {
+            ApplicationsTable.applicationType eq fetchApplicationsByTypeDTO.applicationType
+        }.map { it.toApplication() }
     }
 
     override fun fetchByServerAndApplicationType(
         fetchApplicationsByServerAndApplicationTypeDTO: FetchApplicationsByServerAndApplicationTypeDTO
-    ): Application? {
-        return transaction {
-            val result = ApplicationDAO.find {
-                ApplicationsTable.applicationType eq fetchApplicationsByServerAndApplicationTypeDTO.applicationType and (
-                        ApplicationsTable.serverName eq fetchApplicationsByServerAndApplicationTypeDTO.server.name
-                )
-            }
-
-            if (result.empty()) return@transaction null
-
-            return@transaction result.first().asApplication()
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        ApplicationDAO.find {
+            ApplicationsTable.applicationType eq fetchApplicationsByServerAndApplicationTypeDTO.applicationType and (
+                ApplicationsTable.serverName eq fetchApplicationsByServerAndApplicationTypeDTO.server.name
+            )
+        }.firstOrNull()?.toApplication()
     }
 
     override fun fetchByName(
         fetchApplicationByNameDTO: FetchApplicationByNameDTO
-    ): Application? {
-        return transaction {
-            var application: Application? = null
-
-            val result = ApplicationDAO.find {
-                ApplicationsTable.id eq fetchApplicationByNameDTO.applicationName
-            }
-
-            if (!result.empty()) application = result.first().asApplication()
-
-            return@transaction application
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        ApplicationDAO.find {
+            ApplicationsTable.id eq fetchApplicationByNameDTO.applicationName
+        }.firstOrNull()?.toApplication()
     }
 
     override fun fetchByInetSocketAddress(
         fetchApplicationByInetSocketAddressDTO: FetchApplicationByInetSocketAddressDTO
-    ): Application? {
-        return transaction {
-            var application: Application? = null
-
-            val result = ApplicationDAO.find {
-                ApplicationsTable.address eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.address.hostAddress and (
-                        ApplicationsTable.port eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.port
-                )
-            }
-
-            if (!result.empty()) application = result.first().asApplication()
-
-            return@transaction application
-        }
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        ApplicationDAO.find {
+            ApplicationsTable.address eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.address.hostAddress and (
+                ApplicationsTable.port eq fetchApplicationByInetSocketAddressDTO.inetSocketAddress.port
+            )
+        }.firstOrNull()?.toApplication()
     }
 
 }

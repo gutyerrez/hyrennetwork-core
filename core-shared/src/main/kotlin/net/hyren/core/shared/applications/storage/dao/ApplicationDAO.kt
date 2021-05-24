@@ -26,7 +26,7 @@ class ApplicationDAO(
     val serverName by ApplicationsTable.serverName
     val restrictJoinGroupName by ApplicationsTable.restrictJoinGroupName
 
-    fun asApplication() = Application(
+    fun toApplication() = Application(
         name.value,
         displayName,
         slots,
