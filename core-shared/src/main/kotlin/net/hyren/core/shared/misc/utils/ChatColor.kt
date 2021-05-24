@@ -115,6 +115,10 @@ class ChatColor(
             return null
         }
 
+        public operator fun ChatColor.plus(chatColor: ChatColor) = this.toString() + chatColor.toString()
+
+        public operator fun ChatColor.plus(string: String) = this.toString() + string
+
     }
 
     private var count = 0
@@ -144,10 +148,6 @@ class ChatColor(
         BLUE,
         AQUA
     ).contains(this)
-
-    public operator fun ChatColor.plus(chatColor: ChatColor) = this.toString() + chatColor.toString()
-
-    public operator fun ChatColor.plus(string: String) = this.toString() + string
 
     override fun toString() = String(
         charArrayOf(
