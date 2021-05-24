@@ -12,15 +12,17 @@ data class Server(
     val serverType: ServerType
 ) {
 
-    fun getName() = this.name.value
+    fun getName() = name.value
 
-    fun getFancyDisplayName() = this.displayName.replace(
-        Regex("(Rank UP|Factions)"),
+    fun getFancyDisplayName() = displayName.replace(
+        Regex("(Rank UP|Factions).*"),
         when (serverType) {
             ServerType.FACTIONS -> "F."
             ServerType.RANK_UP -> "R."
         }
     )
+
+    fun isAlphaServer() = Regex("(Alpha)").containsMatchIn(displayName)
 
     override fun equals(other: Any?): Boolean {
         if (other === null) return false
@@ -36,6 +38,6 @@ data class Server(
         return true
     }
 
-    override fun hashCode() = this.name.hashCode()
+    override fun hashCode() = name.hashCode()
 
 }
