@@ -304,7 +304,7 @@ interface Commandable<T> {
 		return
 	}
 
-	private fun getNameExact() = if (this.getParent() !== null) {
+	fun getNameExact() = if (this.getParent() !== null) {
 		val joiner = mutableListOf<String>()
 
 		var parent: Commandable<T>? = null
