@@ -117,6 +117,14 @@ class ChatColor(
 
         public operator fun ChatColor.plus(string: String) = this.toString() + string
 
+        public operator fun ChatColor.plus(char: Char) = this.toString() + char
+
+        public operator fun Any.plus(chatColor: ChatColor) = this.toString() + chatColor.toString()
+
+        public operator fun Any.plus(string: String) = this.toString() + string
+
+        public operator fun Any.plus(char: Char) = this.toString() + char
+
     }
 
     private var count = 0
