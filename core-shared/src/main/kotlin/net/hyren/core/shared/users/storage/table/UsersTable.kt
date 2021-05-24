@@ -1,7 +1,9 @@
 package net.hyren.core.shared.users.storage.table
 
+import net.hyren.core.shared.CoreConstants
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.datetime
+import org.joda.time.DateTime
 
 /**
  * @author SrGutyerrez
@@ -18,7 +20,11 @@ object UsersTable : UUIDTable("users") {
     val lastAddress = varchar("last_address", 255).nullable()
     val lastLobbyName = varchar("last_lobby_name", 255).nullable()
     val lastLoginAt = datetime("last_login_at").nullable()
-    val createdAt = datetime("created_at").nullable()
+    val createdAt = datetime("created_at").default(
+        DateTime.now(
+            CoreConstants.DATE_TIME_ZONE
+        )
+    )
     val updatedAt = datetime("updated_at").nullable()
 
 }

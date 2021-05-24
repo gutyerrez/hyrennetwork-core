@@ -43,7 +43,7 @@ open class User(
     open var lastAddress: String? = null,
     open var lastLobbyName: String? = null,
     open var lastLoginAt: DateTime? = null,
-    open var createdAt: DateTime? = null,
+    open var createdAt: DateTime,
     open var updatedAt: DateTime? = null
 ) {
 
