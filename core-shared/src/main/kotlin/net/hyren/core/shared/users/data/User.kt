@@ -90,8 +90,8 @@ open class User(
                 CoreProvider.Repositories.PostgreSQL.USERS_PUNISHMENTS_REPOSITORY.provide().update(
                     UpdateUserPunishmentByIdDTO(
                         it.id
-                    ) { userPunishmentDAO ->
-                        userPunishmentDAO.startTime = it.startTime
+                    ) {
+                        this.startTime = it.startTime
                     }
                 )
             }
