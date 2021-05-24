@@ -43,7 +43,9 @@ open class User(
     open var lastAddress: String? = null,
     open var lastLobbyName: String? = null,
     open var lastLoginAt: DateTime? = null,
-    open var createdAt: DateTime,
+    open var createdAt: DateTime = DateTime.now(
+        CoreConstants.DATE_TIME_ZONE
+    ),
     open var updatedAt: DateTime? = null
 ) {
 
