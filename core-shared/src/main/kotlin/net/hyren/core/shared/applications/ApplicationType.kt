@@ -1,7 +1,5 @@
 package net.hyren.core.shared.applications
 
-import org.apache.commons.lang3.ArrayUtils
-
 /**
  * @author SrGutyerrez
  **/
@@ -34,15 +32,12 @@ enum class ApplicationType {
     BUILD,
     GENERIC;
     
-    fun isTerrain() = ArrayUtils.contains(
-            arrayOf(
-                SERVER_WORLD,
-                SERVER_WORLD_NORTH,
-                SERVER_WORLD_EAST,
-                SERVER_WORLD_WEST,
-                SERVER_WORLD_SOUTH
-            ),
-            this
-    )
+    fun isTerrain() = arrayOf(
+        SERVER_WORLD,
+        SERVER_WORLD_NORTH,
+        SERVER_WORLD_EAST,
+        SERVER_WORLD_WEST,
+        SERVER_WORLD_SOUTH
+    ).contains(this)
 
 }

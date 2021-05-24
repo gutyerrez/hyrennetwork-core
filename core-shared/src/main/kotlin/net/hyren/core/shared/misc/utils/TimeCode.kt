@@ -1,6 +1,5 @@
 package net.hyren.core.shared.misc.utils
 
-import org.apache.commons.lang3.ArrayUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -29,7 +28,7 @@ enum class TimeCode(
             var unit: TimeCode? = null
 
             values().forEach {
-                if (ArrayUtils.contains(it.aliases, alias) || it.single === alias || it.plural === alias) unit = it
+                if (it.aliases.contains(alias) || it.single === alias || it.plural === alias) unit = it
             }
 
             return unit

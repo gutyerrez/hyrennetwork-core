@@ -3,7 +3,6 @@ package net.hyren.core.shared.applications.data
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.servers.data.Server
-import org.apache.commons.lang3.StringUtils
 import java.net.InetSocketAddress
 
 /**
@@ -19,16 +18,13 @@ data class Application(
     val restrictJoin: Group? = null
 ) {
 
-    fun getFancyDisplayName() = StringUtils.replaceEach(
-        this.displayName,
-        arrayOf(
-            "Login",
-            "Saguão"
-        ),
-        arrayOf(
-            "L.",
-            "S."
-        )
+    fun getFancyDisplayName() = displayName.replace(
+        Regex("(Login|Lobby)"),
+        when (applicationType) {
+            ApplicationType.LOGIN -> "L."
+            ApplicationType.LOBBY -> "S."
+            else -> displayName
+        }
     )
 
     override fun equals(other: Any?): Boolean {
