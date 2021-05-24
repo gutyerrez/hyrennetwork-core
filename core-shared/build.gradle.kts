@@ -6,9 +6,6 @@ dependencies {
     // kotlinx
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
-    // commons-lang 3
-    implementation("org.apache.commons:commons-lang3:3.11")
-
     // commons-io
     implementation("commons-io:commons-io:2.8.0")
 

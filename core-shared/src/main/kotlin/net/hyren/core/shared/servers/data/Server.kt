@@ -1,7 +1,6 @@
 package net.hyren.core.shared.servers.data
 
 import net.hyren.core.shared.servers.ServerType
-import org.apache.commons.lang3.StringUtils
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**
@@ -15,16 +14,12 @@ data class Server(
 
     fun getName() = this.name.value
 
-    fun getFancyDisplayName() = StringUtils.replaceEach(
-        this.displayName,
-        arrayOf(
-            "Rank UP",
-            "Factions"
-        ),
-        arrayOf(
-            "R.",
-            "F."
-        )
+    fun getFancyDisplayName() = this.displayName.replace(
+        Regex("(Rank UP|Factions)"),
+        when (serverType) {
+            ServerType.FACTIONS -> "F."
+            ServerType.RANK_UP -> "R."
+        }
     )
 
     override fun equals(other: Any?): Boolean {
