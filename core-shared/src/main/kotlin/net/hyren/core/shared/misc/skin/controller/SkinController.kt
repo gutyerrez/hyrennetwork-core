@@ -12,6 +12,7 @@ import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.misc.kotlin.sizedArray
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
+import java.net.SocketTimeoutException
 
 /**
  * @author Gutyerrez
@@ -26,20 +27,11 @@ object SkinController {
 	private const val MINETOOLS_API_END_POINT = "https://api.minetools.eu"
 
 	fun fetchSkinByName(name: String): Skin? {
-		val request = Request.Builder()
-			.url("$MOJANG_API_END_POINT/users/profiles/minecraft/$name")
-			.header("Content-Type", "application/json")
-			.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
-			.get()
-			.build()
-
-		val response = CoreConstants.OK_HTTP.newCall(request).execute()
-
 		lateinit var minecraftProfile: MinecraftProfile
 
-		if (response.code != 200) {
+		try {
 			val request = Request.Builder()
-				.url("$MINETOOLS_API_END_POINT/uuid/$name")
+				.url("$MOJANG_API_END_POINT/users/profiles/minecraft/$name")
 				.header("Content-Type", "application/json")
 				.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
 				.get()
@@ -47,48 +39,60 @@ object SkinController {
 
 			val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-			if (response.code != 200) return null else {
+			if (response.code != 200) {
+				val request = Request.Builder().url("$MINETOOLS_API_END_POINT/uuid/$name").header("Content-Type", "application/json").header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0").get().build()
+				val response = CoreConstants.OK_HTTP.newCall(request).execute()
+
+				if (response.code != 200) {
+					return null
+				} else {
+					val body = response.body?.string()
+
+					if (body == null || body.isEmpty()) {
+						return null
+					}
+
+					if (body.contains("null")) {
+						return null
+					}
+
+					val jsonElement = Json.decodeFromString<JsonElement>(body)
+
+					if (jsonElement !is JsonObject || jsonElement is JsonNull) {
+						return null
+					}
+
+					minecraftProfile = Json.decodeFromJsonElement(jsonElement)
+				}
+			} else {
 				val body = response.body?.string()
 
-				if (body == null || body.isEmpty()) return null
+				if (body == null || body.isEmpty()) {
+					return null
+				}
 
-				if (body.contains("null")) return null
+				if (body.contains("null")) {
+					return null
+				}
 
 				val jsonElement = Json.decodeFromString<JsonElement>(body)
 
-				if (jsonElement !is JsonObject || jsonElement is JsonNull) return null
+				if (jsonElement !is JsonObject || jsonElement is JsonNull) {
+					return null
+				}
 
 				minecraftProfile = Json.decodeFromJsonElement(jsonElement)
 			}
-		} else {
-			val body = response.body?.string()
-
-			if (body == null || body.isEmpty()) return null
-
-			if (body.contains("null")) return null
-
-			val jsonElement = Json.decodeFromString<JsonElement>(body)
-
-			if (jsonElement !is JsonObject || jsonElement is JsonNull) return null
-
-			minecraftProfile = Json.decodeFromJsonElement(jsonElement)
+		} catch (e: SocketTimeoutException) {
+			return null
 		}
 
-		val skin: () -> Skin? = invoker@{
-			val request = Request.Builder()
-				.url("$MOJANG_SESSION_END_POINT/session/minecraft/profile/${minecraftProfile.id}?unsigned=false")
-				.header("Content-Type", "application/json")
-				.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
-				.get()
-				.build()
-
-			val response = CoreConstants.OK_HTTP.newCall(request).execute()
-
+		val skin: () -> Skin? = skin@ {
 			lateinit var minecraftProfileData: MinecraftProfileData
 
-			if (response.code != 200) {
+			try {
 				val request = Request.Builder()
-					.url("$MINETOOLS_API_END_POINT/profile/${minecraftProfile.id}")
+					.url("$MOJANG_SESSION_END_POINT/session/minecraft/profile/${minecraftProfile.id}?unsigned=false")
 					.header("Content-Type", "application/json")
 					.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
 					.get()
@@ -96,45 +100,69 @@ object SkinController {
 
 				val response = CoreConstants.OK_HTTP.newCall(request).execute()
 
-				if (response.code != 200) return@invoker null else {
+				if (response.code != 200) {
+					val request = Request.Builder()
+						.url("$MINETOOLS_API_END_POINT/profile/${minecraftProfile.id}")
+						.header("Content-Type", "application/json")
+						.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0")
+						.get()
+						.build()
+
+					val response = CoreConstants.OK_HTTP.newCall(request).execute()
+
+					if (response.code != 200) {
+						return@skin null
+					} else {
+						val body = response.body?.string()
+
+						if (body == null || body.isEmpty()) {
+							return@skin null
+						}
+
+						if (body.contains("null")) {
+							return@skin null
+						}
+
+						val jsonObject = Json.decodeFromString<JsonObject>(body)
+
+						if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) {
+							return@skin null
+						}
+
+						minecraftProfileData = Json.decodeFromJsonElement(
+							MinecraftProfileDataSerializer,
+							jsonObject["raw"]!!
+						)
+					}
+				} else {
 					val body = response.body?.string()
 
-					if (body == null || body.isEmpty()) return@invoker null
+					if (body == null || body.isEmpty()) {
+						return@skin null
+					}
 
-					if (body.contains("null")) return@invoker null
+					if (body.contains("null")) {
+						return@skin null
+					}
 
 					val jsonObject = Json.decodeFromString<JsonObject>(body)
 
-					if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) return@invoker null
+					if (!jsonObject.containsKey("id") || jsonObject["id"] == null) {
+						return@skin null
+					}
 
 					minecraftProfileData = Json.decodeFromJsonElement(
 						MinecraftProfileDataSerializer,
-						jsonObject["raw"]!!
+						jsonObject
 					)
 				}
-			} else {
-				val body = response.body?.string()
 
-				if (body == null || body.isEmpty()) return@invoker null
+				val properties = minecraftProfileData.properties[0]
 
-				if (body.contains("null")) return@invoker null
-
-				val jsonObject = Json.decodeFromString<JsonObject>(body)
-
-				if (!jsonObject.containsKey("id") || jsonObject["id"] == null) return@invoker null
-
-				minecraftProfileData = Json.decodeFromJsonElement(
-					MinecraftProfileDataSerializer,
-					jsonObject
-				)
+				return@skin Skin(properties.value, properties.signature)
+			} catch (e: SocketTimeoutException) {
+				return@skin null
 			}
-
-			val properties = minecraftProfileData.properties[0]
-
-			Skin(
-				properties.value,
-				properties.signature
-			)
 		}
 
 		return skin.invoke()

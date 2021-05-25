@@ -7,6 +7,7 @@ import net.hyren.core.shared.misc.cooldowns.CooldownManager
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * @author SrGutyerrez
@@ -18,7 +19,12 @@ object CoreConstants {
 
 	val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
-	val OK_HTTP = OkHttpClient()
+	val OK_HTTP = OkHttpClient.Builder()
+		.connectTimeout(15, TimeUnit.SECONDS)
+		.readTimeout(15, TimeUnit.SECONDS)
+		.writeTimeout(15, TimeUnit.SECONDS)
+		.build()
+
 	val RANDOM = Random()
 	val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
 
