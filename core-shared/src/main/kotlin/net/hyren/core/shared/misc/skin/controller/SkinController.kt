@@ -26,6 +26,9 @@ object SkinController {
 	// Minetools
 	private const val MINETOOLS_API_END_POINT = "https://api.minetools.eu"
 
+	// Json
+	private val json = Json { ignoreUnknownKeys = true }
+
 	fun fetchSkinByName(name: String): Skin? {
 		lateinit var minecraftProfile: MinecraftProfile
 
@@ -56,13 +59,13 @@ object SkinController {
 						return null
 					}
 
-					val jsonElement = Json.decodeFromString<JsonElement>(body)
+					val jsonElement = json.decodeFromString<JsonElement>(body)
 
 					if (jsonElement !is JsonObject || jsonElement is JsonNull) {
 						return null
 					}
 
-					minecraftProfile = Json.decodeFromJsonElement(jsonElement)
+					minecraftProfile = json.decodeFromJsonElement(jsonElement)
 				}
 			} else {
 				val body = response.body?.string()
@@ -75,13 +78,13 @@ object SkinController {
 					return null
 				}
 
-				val jsonElement = Json.decodeFromString<JsonElement>(body)
+				val jsonElement = json.decodeFromString<JsonElement>(body)
 
 				if (jsonElement !is JsonObject || jsonElement is JsonNull) {
 					return null
 				}
 
-				minecraftProfile = Json.decodeFromJsonElement(jsonElement)
+				minecraftProfile = json.decodeFromJsonElement(jsonElement)
 			}
 		} catch (e: SocketTimeoutException) {
 			return null
@@ -123,13 +126,13 @@ object SkinController {
 							return@skin null
 						}
 
-						val jsonObject = Json.decodeFromString<JsonObject>(body)
+						val jsonObject = json.decodeFromString<JsonObject>(body)
 
 						if (!jsonObject.containsKey("raw") || jsonObject["raw"]?.jsonObject?.get("id") == null) {
 							return@skin null
 						}
 
-						minecraftProfileData = Json.decodeFromJsonElement(
+						minecraftProfileData = json.decodeFromJsonElement(
 							MinecraftProfileDataSerializer,
 							jsonObject["raw"]!!
 						)
@@ -145,13 +148,13 @@ object SkinController {
 						return@skin null
 					}
 
-					val jsonObject = Json.decodeFromString<JsonObject>(body)
+					val jsonObject = json.decodeFromString<JsonObject>(body)
 
 					if (!jsonObject.containsKey("id") || jsonObject["id"] == null) {
 						return@skin null
 					}
 
-					minecraftProfileData = Json.decodeFromJsonElement(
+					minecraftProfileData = json.decodeFromJsonElement(
 						MinecraftProfileDataSerializer,
 						jsonObject
 					)
