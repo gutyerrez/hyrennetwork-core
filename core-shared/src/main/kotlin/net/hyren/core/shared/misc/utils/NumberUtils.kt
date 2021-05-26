@@ -1,5 +1,7 @@
 package net.hyren.core.shared.misc.utils
 
+import net.hyren.core.shared.misc.kotlin.isInt
+import net.hyren.core.shared.misc.kotlin.isLong
 import java.util.*
 import kotlin.math.ln
 import kotlin.math.pow
@@ -61,24 +63,21 @@ object NumberUtils {
         )
     }
 
-    fun isValidInteger(string: String): Boolean {
-        return try {
-            string.toInt()
+    @Deprecated(
+        "Cannot use this function to validate int numbers",
+        ReplaceWith(
+            "isInt()",
+            "net.hyren.core.shared.misc.kotlin.StringKt.isInt"
+        )
+    )
+    fun isValidInteger(string: String) = string.isInt()
 
-            true
-        } catch (ignored: NumberFormatException) {
-            false
-        }
-    }
-
-    fun isValidLong(string: String): Boolean {
-        return try {
-            string.toLong()
-
-            true
-        } catch (ignored: NumberFormatException) {
-            false
-        }
-    }
-
+    @Deprecated(
+        "Cannot use this function to validate long numbers",
+        ReplaceWith(
+            "isLong()",
+            "net.hyren.core.shared.misc.kotlin.StringKt.isLong"
+        )
+    )
+    fun isValidLong(string: String) = string.isLong()
 }
