@@ -22,10 +22,10 @@ abstract class CustomCommand(
     override fun getDescription0(): String = this.getDescription()
 
     override fun getUsage() = this.getUsage0()
-    
+
     override fun getAliases() = getAliases0().toMutableList()
 
-    override fun getAliases0(): Array<String> = this.aliases.map { it.toString() }.toTypedArray()
+    override fun getAliases0() = emptyArray<String>()
 
     override fun isPlayer(
         commandSender: CommandSender
