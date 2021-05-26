@@ -1,14 +1,11 @@
 package net.hyren.core.shared.misc.skin.controller
 
-import kotlinx.serialization.ContextualSerializer
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.*
 import kotlinx.serialization.json.*
 import net.hyren.core.shared.CoreConstants
+import net.hyren.core.shared.misc.json.asString
 import net.hyren.core.shared.misc.kotlin.sizedArray
 import net.hyren.core.shared.misc.skin.Skin
 import okhttp3.Request
@@ -212,8 +209,8 @@ object SkinController {
 
 			val jsonObject = jsonDecoder.decodeJsonElement().jsonObject
 
-			val id = jsonObject["id"]!!.toString()
-			val name = jsonObject["name"]!!.toString()
+			val id = jsonObject["id"]!!.asString()
+			val name = jsonObject["name"]!!.asString()
 			val propertiesJsonArray = jsonObject["properties"]!!.jsonArray
 
 			val properties = sizedArray<MinecraftProfileDataProperties>(
@@ -223,9 +220,9 @@ object SkinController {
 			propertiesJsonArray.forEachIndexed { index, it ->
 				val jsonObject = it.jsonObject
 
-				val name = jsonObject["name"]!!.toString()
-				val signature = jsonObject["signature"]!!.toString()
-				val value = jsonObject["value"]!!.toString()
+				val name = jsonObject["name"]!!.asString()
+				val signature = jsonObject["signature"]!!.asString()
+				val value = jsonObject["value"]!!.asString()
 
 				properties[index] = MinecraftProfileDataProperties(
 					name,
