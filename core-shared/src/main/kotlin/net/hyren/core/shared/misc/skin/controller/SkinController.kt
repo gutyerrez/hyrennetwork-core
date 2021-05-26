@@ -226,8 +226,8 @@ object SkinController {
 
 				properties[index] = MinecraftProfileDataProperties(
 					name,
-					signature,
-					value
+					value,
+					signature
 				)
 			}
 
