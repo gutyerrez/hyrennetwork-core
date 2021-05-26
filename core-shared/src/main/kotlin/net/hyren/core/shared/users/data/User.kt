@@ -233,7 +233,8 @@ open class User(
         return CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchBukkitApplication(this)
     }
 
-    fun isOnline() = CoreProvider.Cache.Redis.USERS_STATUS.provide().isOnline(this)
+    // can overwrite by another code
+    open fun isOnline() = CoreProvider.Cache.Redis.USERS_STATUS.provide().isOnline(this)
 
     fun getPunishments() = CoreProvider.Cache.Local.USERS_PUNISHMENTS.provide().fetchByUserId(this.id) ?: emptyList()
 
