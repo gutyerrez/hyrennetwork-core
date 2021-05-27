@@ -21,15 +21,7 @@ import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
-import kotlin.Any
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Int
-import kotlin.Long
 import kotlin.Pair
-import kotlin.String
-import kotlin.apply
-import kotlin.arrayOf
 
 /**
  * @author SrGutyerrez
@@ -172,19 +164,24 @@ open class User(
 
     fun getUniqueId() = this.id.value
 
-    fun getGroups(server: Server? = CoreProvider.application.server): Map<Server?, List<Group>> {
+    fun getGroups(server: Server? = CoreProvider.application.server, strict: Boolean = false): Map<Server?, List<Group>> {
         val _groups = mutableMapOf<Server?, List<Group>>(
             Pair(null, listOf(Group.DEFAULT))
         )
 
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
+        } else if (strict) {
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchStrictByUserIdAndServerName(
+                this.getUniqueId(),
+                server.getName()
+            )
         } else {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(
                 this.getUniqueId(),
                 server.getName()
-            ) ?: _groups
-        }
+            )
+        } ?: _groups
     }
 
     fun getHighestGroup(server: Server? = CoreProvider.application.server): Group {
@@ -225,10 +222,13 @@ open class User(
         return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
-    fun hasStrictGroup(group: Group, server: Server? = CoreProvider.application.server): Boolean {
-        if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return true
-
-        return this.getGroups(server)[server]?.contains(group) ?: false
+    fun hasStrictGroup(
+        group: Group,
+        server: Server? = CoreProvider.application.server
+    ) = if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) {
+        true
+    } else {
+        this.getGroups(server, true)[server]?.contains(group) ?: false
     }
 
     fun getConnectedProxyName() =

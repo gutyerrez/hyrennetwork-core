@@ -33,14 +33,16 @@ class UsersGroupsDueLocalCache : LocalCache {
                 )
             }
 
-            groups.put(
-                it.server,
-                CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchGlobalUsersGroupsDueByUserId(
-                    FetchGlobalUserGroupsDueByUserIdDTO(
-                        it.userId
+            if (!it.isStrict) {
+                groups.put(
+                    it.server,
+                    CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchGlobalUsersGroupsDueByUserId(
+                        FetchGlobalUserGroupsDueByUserIdDTO(
+                            it.userId
+                        )
                     )
                 )
-            )
+            }
 
             groups
         }
@@ -65,7 +67,8 @@ class UsersGroupsDueLocalCache : LocalCache {
     )
 
     fun fetchByUserIdAndServerName(
-        id: EntityID<UUID>, serverName: String
+        id: EntityID<UUID>,
+        serverName: String
     ) = this.CACHE.get(
         UsersGroupsDueLookupCache(
             id,
@@ -76,7 +79,8 @@ class UsersGroupsDueLocalCache : LocalCache {
     )
 
     fun fetchByUserIdAndServerName(
-        id: UUID, serverName: String
+        id: UUID,
+        serverName: String
     ) = this.CACHE.get(
         UsersGroupsDueLookupCache(
             EntityID(
@@ -88,9 +92,38 @@ class UsersGroupsDueLocalCache : LocalCache {
         )
     )
 
+    fun fetchStrictByUserIdAndServerName(
+        id: EntityID<UUID>,
+        serverName: String
+    ) = this.CACHE.get(
+        UsersGroupsDueLookupCache(
+            id,
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+                serverName
+            ),
+            true
+        )
+    )
+
+    fun fetchStrictByUserIdAndServerName(
+        id: UUID,
+        serverName: String
+    ) = this.CACHE.get(
+        UsersGroupsDueLookupCache(
+            EntityID(
+                id, UsersTable
+            ),
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+                serverName
+            ),
+            true
+        )
+    )
+
     private class UsersGroupsDueLookupCache(
         val userId: EntityID<UUID>,
-        val server: Server? = null
+        val server: Server? = null,
+        val isStrict: Boolean = false
     )
 
 }
