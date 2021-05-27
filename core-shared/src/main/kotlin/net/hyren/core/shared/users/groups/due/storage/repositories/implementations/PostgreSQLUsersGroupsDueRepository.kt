@@ -73,7 +73,7 @@ class PostgreSQLUsersGroupsDueRepository : IUsersGroupsDueRepository {
     ) {
         UserGroupDueDAO.find {
             UsersGroupsDueTable.userId eq fetchGlobalUserGroupsDueByUserIdDTO.userId and (
-                UsersGroupsDueTable.group greater Group.YOUTUBER
+                UsersGroupsDueTable.group less Group.YOUTUBER
             )
         }.map { it.group }.toMutableList()
     }
