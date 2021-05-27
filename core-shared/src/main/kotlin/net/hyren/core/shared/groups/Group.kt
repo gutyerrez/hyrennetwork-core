@@ -6,12 +6,12 @@ import net.hyren.core.shared.misc.utils.ChatColor
  * @author SrGutyerrez
  **/
 enum class Group(
-        var displayName: String? = null,
-        var prefix: String? = null,
-        var suffix: String? = null,
-        var color: String? = null,
-        var priority: Int? = null,
-        var discordRoleId: Long? = null
+    var displayName: String? = null,
+    var prefix: String? = null,
+    var suffix: String? = null,
+    var color: String? = null,
+    var priority: Int? = null,
+    var discordRoleId: Long? = null
 ) {
 
     MASTER,
@@ -27,12 +27,6 @@ enum class Group(
     VIP_PLUS,
     VIP,
     DEFAULT;
-
-    init {
-        Group.values().forEach {
-            println("${it.name} -> ${it.ordinal}")
-        }
-    }
 
     fun getColoredPrefix() = "${ChatColor.fromHEX(color ?: "")}$prefix"
 
