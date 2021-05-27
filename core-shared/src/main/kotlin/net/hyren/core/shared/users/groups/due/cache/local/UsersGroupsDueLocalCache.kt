@@ -5,8 +5,9 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.cache.local.LocalCache
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.servers.data.Server
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdAndServerNameDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
+import net.hyren.core.shared.users.groups.due.storage.dto.*
+import net.hyren.core.shared.users.storage.table.UsersTable
+import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -16,38 +17,80 @@ import java.util.concurrent.TimeUnit
 class UsersGroupsDueLocalCache : LocalCache {
 
     private val CACHE = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .build<UsersGroupsDueLookupCache, Map<Server?, List<Group>>> {
-                if (it.server == null) {
-                    CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserId(
-                            FetchUserGroupDueByUserIdDTO(
-                                    it.id
-                            )
+        .expireAfterWrite(10, TimeUnit.MINUTES)
+        .build<UsersGroupsDueLookupCache, Map<Server?, List<Group>>> {
+            val groups = if (it.server == null) {
+                CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserId(
+                    FetchUserGroupDueByUserIdDTO(
+                        it.userId
                     )
-                } else {
-                    CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserIdAndServerName(
-                            FetchUserGroupDueByUserIdAndServerNameDTO(
-                                    it.id,
-                                    it.server
-                            )
+                )
+            } else {
+                CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchUsersGroupsDueByUserIdAndServerName(
+                    FetchUserGroupDueByUserIdAndServerNameDTO(
+                        it.userId, it.server
                     )
-                }
+                )
             }
 
-    fun fetchByUserId(id: UUID) = this.CACHE.get(UsersGroupsDueLookupCache(id))
+            groups.put(
+                it.server,
+                CoreProvider.Repositories.PostgreSQL.USERS_GROUPS_DUE_REPOSITORY.provide().fetchGlobalUsersGroupsDueByUserId(
+                    FetchGlobalUserGroupsDueByUserIdDTO(
+                        it.userId
+                    )
+                )
+            )
 
-    fun fetchByUserIdAndServerName(id: UUID, serverName: String) = this.CACHE.get(
+            groups
+        }
+
+    fun fetchByUserId(
+        id: EntityID<UUID>
+    ) = this.CACHE.get(
+        UsersGroupsDueLookupCache(
+            id
+        )
+    )
+
+    fun fetchByUserId(
+        id: UUID
+    ) = this.CACHE.get(
+        UsersGroupsDueLookupCache(
+            EntityID(
+                id,
+                UsersTable
+            )
+        )
+    )
+
+    fun fetchByUserIdAndServerName(
+        id: EntityID<UUID>, serverName: String
+    ) = this.CACHE.get(
         UsersGroupsDueLookupCache(
             id,
             CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
-                    serverName
+                serverName
             )
+        )
     )
+
+    fun fetchByUserIdAndServerName(
+        id: UUID, serverName: String
+    ) = this.CACHE.get(
+        UsersGroupsDueLookupCache(
+            EntityID(
+                id, UsersTable
+            ),
+            CoreProvider.Cache.Local.SERVERS.provide().fetchByName(
+                serverName
+            )
+        )
     )
 
     private class UsersGroupsDueLookupCache(
-            val id: UUID,
-            val server: Server? = null
+        val userId: EntityID<UUID>,
+        val server: Server? = null
     )
 
 }

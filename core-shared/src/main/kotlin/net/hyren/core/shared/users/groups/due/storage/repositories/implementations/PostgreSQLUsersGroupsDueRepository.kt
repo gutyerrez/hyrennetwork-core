@@ -4,14 +4,10 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.users.groups.due.storage.dao.UserGroupDueDAO
-import net.hyren.core.shared.users.groups.due.storage.dto.CreateUserGroupDueDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.DeleteUserGroupDueDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdAndServerNameDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
+import net.hyren.core.shared.users.groups.due.storage.dto.*
 import net.hyren.core.shared.users.groups.due.storage.repositories.IUsersGroupsDueRepository
 import net.hyren.core.shared.users.groups.due.storage.table.UsersGroupsDueTable
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
@@ -28,7 +24,7 @@ class PostgreSQLUsersGroupsDueRepository : IUsersGroupsDueRepository {
         val groups = mutableMapOf<Server?, MutableList<Group>>()
 
         UserGroupDueDAO.find {
-            UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdDTO.id and (
+            UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdDTO.userId and (
                 UsersGroupsDueTable.dueAt greater DateTime.now()
             )
         }.forEach {
@@ -52,7 +48,7 @@ class PostgreSQLUsersGroupsDueRepository : IUsersGroupsDueRepository {
         val groups = mutableMapOf<Server?, MutableList<Group>>()
 
         UserGroupDueDAO.find {
-            UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdAndServerNameDTO.id and (
+            UsersGroupsDueTable.userId eq fetchUserGroupDueByUserIdAndServerNameDTO.userId and (
                 UsersGroupsDueTable.serverName eq fetchUserGroupDueByUserIdAndServerNameDTO.server.name
             ) and (
                 UsersGroupsDueTable.dueAt greater DateTime.now()
@@ -68,6 +64,18 @@ class PostgreSQLUsersGroupsDueRepository : IUsersGroupsDueRepository {
         }
 
         groups
+    }
+
+    override fun fetchGlobalUsersGroupsDueByUserId(
+        fetchGlobalUserGroupsDueByUserIdDTO: FetchGlobalUserGroupsDueByUserIdDTO
+    ) = transaction(
+        CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
+    ) {
+        UserGroupDueDAO.find {
+            UsersGroupsDueTable.userId eq fetchGlobalUserGroupsDueByUserIdDTO.userId and (
+                UsersGroupsDueTable.group greater Group.YOUTUBER
+            )
+        }.map { it.group }.toMutableList()
     }
 
     override fun create(createUserGroupDueDTO: CreateUserGroupDueDTO) = transaction(

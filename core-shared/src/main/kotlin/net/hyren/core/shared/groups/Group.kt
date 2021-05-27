@@ -28,6 +28,12 @@ enum class Group(
     VIP,
     DEFAULT;
 
+    init {
+        Group.values().forEach {
+            println("${it.name} -> ${it.ordinal}")
+        }
+    }
+
     fun getColoredPrefix() = "${ChatColor.fromHEX(color ?: "")}$prefix"
 
     fun getFancyDisplayName() = "${ChatColor.fromHEX(color ?: "")}$displayName"

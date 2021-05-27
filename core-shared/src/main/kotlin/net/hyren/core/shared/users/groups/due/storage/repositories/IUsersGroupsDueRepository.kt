@@ -4,10 +4,7 @@ import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.storage.repositories.IRepository
 import net.hyren.core.shared.users.groups.due.storage.dao.UserGroupDueDAO
-import net.hyren.core.shared.users.groups.due.storage.dto.CreateUserGroupDueDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.DeleteUserGroupDueDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdAndServerNameDTO
-import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUserIdDTO
+import net.hyren.core.shared.users.groups.due.storage.dto.*
 
 /**
  * @author SrGutyerrez
@@ -15,19 +12,23 @@ import net.hyren.core.shared.users.groups.due.storage.dto.FetchUserGroupDueByUse
 interface IUsersGroupsDueRepository : IRepository {
 
     fun fetchUsersGroupsDueByUserId(
-            fetchUserGroupDueByUserIdDTO: FetchUserGroupDueByUserIdDTO
-    ): Map<Server?, List<Group>>
+        fetchUserGroupDueByUserIdDTO: FetchUserGroupDueByUserIdDTO
+    ): MutableMap<Server?, MutableList<Group>>
 
     fun fetchUsersGroupsDueByUserIdAndServerName(
-            fetchUserGroupDueByUserIdAndServerNameDTO: FetchUserGroupDueByUserIdAndServerNameDTO
-    ): Map<Server?, List<Group>>
+        fetchUserGroupDueByUserIdAndServerNameDTO: FetchUserGroupDueByUserIdAndServerNameDTO
+    ): MutableMap<Server?, MutableList<Group>>
+
+    fun fetchGlobalUsersGroupsDueByUserId(
+        fetchGlobalUserGroupsDueByUserIdDTO: FetchGlobalUserGroupsDueByUserIdDTO
+    ): MutableList<Group>
 
     fun create(
-            createUserGroupDueDTO: CreateUserGroupDueDTO
+        createUserGroupDueDTO: CreateUserGroupDueDTO
     ): UserGroupDueDAO
 
     fun delete(
-            deleteUserGroupDueDTO: DeleteUserGroupDueDTO
+        deleteUserGroupDueDTO: DeleteUserGroupDueDTO
     ): Boolean
 
 }

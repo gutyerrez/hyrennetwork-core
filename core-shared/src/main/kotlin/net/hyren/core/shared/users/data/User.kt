@@ -1,32 +1,35 @@
 package net.hyren.core.shared.users.data
 
-import net.hyren.core.shared.CoreConstants
-import net.hyren.core.shared.CoreProvider
+import net.hyren.core.shared.*
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.packets.DisconnectUserPacket
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.kotlin.copyFrom
-import net.hyren.core.shared.misc.preferences.FLY_IN_LOBBY
-import net.hyren.core.shared.misc.preferences.PreferenceRegistry
-import net.hyren.core.shared.misc.preferences.PreferenceState
+import net.hyren.core.shared.misc.preferences.*
 import net.hyren.core.shared.misc.preferences.data.Preference
 import net.hyren.core.shared.misc.punish.PunishType
 import net.hyren.core.shared.misc.report.category.data.ReportCategory
-import net.hyren.core.shared.misc.utils.ChatColor
-import net.hyren.core.shared.misc.utils.DateFormatter
-import net.hyren.core.shared.misc.utils.EncryptionUtil
+import net.hyren.core.shared.misc.utils.*
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import net.hyren.core.shared.users.punishments.data.UserPunishment
 import net.hyren.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
-import net.md_5.bungee.api.chat.BaseComponent
-import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.*
 import okhttp3.internal.toImmutableList
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
+import kotlin.Any
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.Long
+import kotlin.Pair
+import kotlin.String
+import kotlin.apply
+import kotlin.arrayOf
 
 /**
  * @author SrGutyerrez
@@ -145,7 +148,9 @@ open class User(
             FetchUserPasswordByUserIdDTO(this.getUniqueId())
         )
 
-        if (userPasswords.isEmpty()) return false
+        if (userPasswords.isEmpty()) {
+            return false
+        }
 
         val successfully = userPasswords.stream().anyMatch {
             it.enabled && it.password.contentEquals(
@@ -156,7 +161,9 @@ open class User(
             )
         }
 
-        if (!successfully) loginAttempts.getAndIncrement()
+        if (!successfully) {
+            loginAttempts.getAndIncrement()
+        }
 
         return successfully
     }
@@ -165,7 +172,7 @@ open class User(
 
     fun getUniqueId() = this.id.value
 
-    fun getGroups(server: Server? = null): Map<Server?, List<Group>> {
+    fun getGroups(server: Server? = CoreProvider.application.server): Map<Server?, List<Group>> {
         val _groups = mutableMapOf<Server?, List<Group>>(
             Pair(null, listOf(Group.DEFAULT))
         )
@@ -173,20 +180,21 @@ open class User(
         return if (server == null) {
             CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserId(this.getUniqueId()) ?: _groups
         } else {
-            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide()
-                .fetchByUserIdAndServerName(this.getUniqueId(), server.getName()) ?: _groups
+            CoreProvider.Cache.Local.USERS_GROUPS_DUE.provide().fetchByUserIdAndServerName(
+                this.getUniqueId(),
+                server.getName()
+            ) ?: _groups
         }
     }
 
-    fun getHighestGroup(server: Server? = null): Group {
+    fun getHighestGroup(server: Server? = CoreProvider.application.server): Group {
         if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return Group.MASTER
 
         val groups = this.getGroups()[server]
 
         if (groups === null) return Group.DEFAULT
 
-        return groups
-            .stream()
+        return groups.stream()
             .sorted { group1, group2 ->
                 group2.priority!!.compareTo(group1.priority!!)
             }
@@ -194,7 +202,7 @@ open class User(
             .orElse(Group.DEFAULT)
     }
 
-    fun hasGroup(group: Group, server: Server? = null): Boolean {
+    fun hasGroup(group: Group, server: Server? = CoreProvider.application.server): Boolean {
         if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return true
 
         val groups = if (server === null) {
@@ -217,7 +225,7 @@ open class User(
         return groups.stream().anyMatch { it.priority!! >= group.priority!! }
     }
 
-    fun hasStrictGroup(group: Group, server: Server? = null): Boolean {
+    fun hasStrictGroup(group: Group, server: Server? = CoreProvider.application.server): Boolean {
         if (this.getUniqueId() == CoreConstants.CONSOLE_UUID) return true
 
         return this.getGroups(server)[server]?.contains(group) ?: false
