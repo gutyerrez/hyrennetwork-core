@@ -525,12 +525,12 @@ object KJson {
                     jsonEncoder: JsonEncoder,
                     value: DateTime
                 ) {
-                    jsonEncoder.encodeString(value.asString())
+                    jsonEncoder.encodeString(value.toString())
                 }
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ) = DateTime.parse(jsonDecoder.decodeString())
+                ) = DateTime.parse(jsonDecoder.decodeJsonElement().asString())
             }
         )
     }
