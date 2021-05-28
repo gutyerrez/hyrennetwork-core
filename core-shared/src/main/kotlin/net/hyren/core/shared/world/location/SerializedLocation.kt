@@ -41,7 +41,7 @@ data class SerializedLocation(
 
 		@JvmStatic
 		fun of(string: String?) = string?.let {
-			KJson.decodeFromString<SerializedLocation>(SerializedLocation::class, it)
+			KJson.decodeFromString(SerializedLocation::class, it)
 		}
 
 	}

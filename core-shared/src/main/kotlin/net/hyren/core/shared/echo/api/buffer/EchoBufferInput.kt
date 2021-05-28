@@ -171,7 +171,7 @@ class EchoBufferInput(
         KJson.decodeFromString(
             DateTime::class,
             readString()
-        )
+        ) as DateTime
     } else {
         null
     }

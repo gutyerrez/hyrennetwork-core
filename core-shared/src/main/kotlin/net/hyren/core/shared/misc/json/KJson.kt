@@ -524,15 +524,11 @@ object KJson {
                 override fun serialize(
                     jsonEncoder: JsonEncoder,
                     value: DateTime
-                ) {
-                    jsonEncoder.encodeString(value.toString())
-                }
+                ) = jsonEncoder.encodeString(value.toString())
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ) = DateTime.parse(
-                    jsonDecoder.decodeString().split('"')[1].split('"')[0]
-                )
+                ) = DateTime.parse(jsonDecoder.decodeString())
             }
         )
     }
@@ -591,13 +587,13 @@ object KJson {
      */
 
     @ExperimentalSerializationApi
-    inline fun <reified T> decodeFromString(
+    fun decodeFromString(
         kClass: KClass<*>,
         string: String?
     ) = _json.decodeFromString(
         fetchSerializerForKClass(kClass),
         string ?: throw IllegalArgumentException()
-    ) as T
+    )
 
     inline fun <reified T> encodeToString(
         kClass: KClass<*>,
