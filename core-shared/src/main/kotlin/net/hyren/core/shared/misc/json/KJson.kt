@@ -3,8 +3,7 @@ package net.hyren.core.shared.misc.json
 import com.google.common.base.Enums
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.json.internal.*
 import kotlinx.serialization.modules.*
@@ -25,8 +24,7 @@ import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
 import java.net.InetSocketAddress
 import java.sql.SQLException
@@ -527,7 +525,7 @@ object KJson {
                     jsonEncoder: JsonEncoder,
                     value: DateTime
                 ) {
-                    jsonEncoder.encodeString(value.toString())
+                    jsonEncoder.encodeString(value.asString())
                 }
 
                 override fun deserialize(
