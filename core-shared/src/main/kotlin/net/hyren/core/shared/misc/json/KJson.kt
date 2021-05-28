@@ -591,13 +591,13 @@ object KJson {
      */
 
     @ExperimentalSerializationApi
-    fun decodeFromString(
+    inline fun <reified T> decodeFromString(
         kClass: KClass<*>,
         string: String?
     ) = _json.decodeFromString(
         fetchSerializerForKClass(kClass),
         string ?: throw IllegalArgumentException()
-    )
+    ) as T
 
     inline fun <reified T> encodeToString(
         kClass: KClass<*>,
