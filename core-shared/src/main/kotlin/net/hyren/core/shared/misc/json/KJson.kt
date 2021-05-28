@@ -530,7 +530,9 @@ object KJson {
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ) = DateTime.parse(jsonDecoder.decodeJsonElement().asString())
+                ) = DateTime.parse(
+                    jsonDecoder.decodeString().split('"')[1].split('"')[0]
+                )
             }
         )
     }
