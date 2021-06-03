@@ -11,7 +11,7 @@ object CoreSpigotConstants {
 
     val BUKKIT_LOCATION_PARSER = BukkitLocationParser()
 
-    val PROTOCOL_HANDLER = if (CoreProvider.application.server?.name?.value == "factions-medieval") {
+    val PROTOCOL_HANDLER = if (CoreProvider.application.server?.name?.value == "FACTIONS_MEDIEVAL") {
         null
     } else ProtocolHandler()
 
