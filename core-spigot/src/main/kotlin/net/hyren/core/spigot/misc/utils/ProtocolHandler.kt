@@ -2,16 +2,12 @@ package net.hyren.core.spigot.misc.utils
 
 import io.netty.channel.*
 import net.hyren.core.spigot.CoreSpigotPlugin
-import net.minecraft.server.v1_8_R3.NetworkManager
-import net.minecraft.server.v1_8_R3.PacketLoginInStart
+import net.minecraft.server.v1_8_R3.*
 import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.HandlerList
-import org.bukkit.event.Listener
+import org.bukkit.event.*
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.server.PluginDisableEvent
 import java.util.*
@@ -202,21 +198,23 @@ class ProtocolHandler {
         }
     }
 
-    internal fun injectChannelInternal(channel: Channel): PacketInterceptor {
+    internal fun injectChannelInternal(channel: Channel): PacketInterceptor? {
         val packetInterceptor = channel.pipeline().get(HANDLER_NAME)
 
         return if (packetInterceptor === null) {
-            val packetInterceptor = PacketInterceptor()
+            try {
+                val packetInterceptor = PacketInterceptor()
 
-            channel.pipeline().addBefore(
-                "packet_handler",
-                HANDLER_NAME,
-                packetInterceptor
-            )
+                channel.pipeline().addBefore(
+                    "packet_handler",
+                    HANDLER_NAME,
+                    packetInterceptor
+                )
 
-            UNINJECTED_CHANNELS.remove(channel)
+                UNINJECTED_CHANNELS.remove(channel)
 
-            return packetInterceptor
+                return packetInterceptor
+            } catch (ignored: NoSuchElementException) { return null }
         } else packetInterceptor as PacketInterceptor
     }
 

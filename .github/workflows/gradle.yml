@@ -1,12 +1,14 @@
-on: [ 'push' ]
+on:
+  push:
+    branches: [ 'main' ]
 
 jobs:
   core:
     runs-on: ubuntu-latest
 
     env:
-      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      MAVEN_USERNAME: Gutyerrez
+      MAVEN_PASSWORD: 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
 
     steps:
       - uses: actions/checkout@v2
