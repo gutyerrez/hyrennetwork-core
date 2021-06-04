@@ -44,3 +44,7 @@ infix fun <T, S> ExpressionWithColumnType<T>.any(t: S): Op<Boolean> {
 }
 
 infix fun <T, S> ExpressionWithColumnType<T>.contains(array: Array<in S>): Op<Boolean> = ContainsOp(this, QueryParameter(array, columnType))
+
+class ILikeOp(expr1: Expression<*>, expr2: Expression<*>) : ComparisonOp(expr1, expr2, "ILIKE")
+
+infix fun <T> ExpressionWithColumnType<T>.ilike(t: T) = ILikeOp(this, QueryParameter(t, columnType))

@@ -1,6 +1,7 @@
 package net.hyren.core.shared.users.storage.repositories.implementation
 
 import net.hyren.core.shared.CoreProvider
+import net.hyren.core.shared.misc.exposed.ilike
 import net.hyren.core.shared.users.storage.dao.UserDAO
 import net.hyren.core.shared.users.storage.dto.*
 import net.hyren.core.shared.users.storage.repositories.IUsersRepository
@@ -28,7 +29,7 @@ class PostgreSQLUsersRepository : IUsersRepository {
         CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
     ) {
         UserDAO.find {
-                UsersTable.name like fetchUserByName.name
+                UsersTable.name ilike fetchUserByName.name
         }.firstOrNull()?.toUser()
     }
 

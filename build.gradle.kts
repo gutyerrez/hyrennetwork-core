@@ -1,5 +1,5 @@
 plugins {
-	kotlin("jvm") version "1.5.0"
+	kotlin("jvm") version "1.5.10"
 	kotlin("plugin.serialization") version "1.5.0"
 
 	id("com.github.johnrengelman.shadow") version "6.1.0"
@@ -35,6 +35,8 @@ allprojects {
 
 		maven("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
 		maven("http://135.148.58.224:8081/artifactory/releases/") {
+			isAllowInsecureProtocol = true
+
 			credentials {
 				username = System.getenv("MAVEN_USERNAME")
 				password = System.getenv("MAVEN_PASSWORD")
@@ -60,6 +62,8 @@ allprojects {
 				create<MavenPublication>("maven") {
 					repositories {
 						maven("http://135.148.58.224:8081/artifactory/releases/") {
+							isAllowInsecureProtocol = true
+
 							credentials {
 								username = System.getenv("MAVEN_USERNAME")
 								password = System.getenv("MAVEN_PASSWORD")
