@@ -18,9 +18,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.31.1")
     implementation("org.jetbrains.exposed:exposed-jodatime:0.31.1")
 
-    // maria db
-    implementation("mysql:mysql-connector-java:8.0.19")
-
     // postgresql
     implementation("org.postgresql:postgresql:42.2.20")
 
