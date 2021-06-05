@@ -26,7 +26,7 @@ object CoreConstants {
 		.build()
 
 	val RANDOM = Random()
-	val DATE_TIME_ZONE = DateTimeZone.forID("America/Sao_Paulo")
+	val DATE_TIME_ZONE = DateTimeZone.getDefault()
 
 	val COOLDOWNS = CooldownManager()
 

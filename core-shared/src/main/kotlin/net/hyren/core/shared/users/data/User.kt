@@ -101,7 +101,7 @@ open class User(
             val staffer = CoreProvider.Cache.Local.USERS.provide().fetchById(activePunishment.stafferId)
 
             val message = ComponentBuilder()
-                .append("§c§lREDE FANTASY")
+                .append(CoreConstants.Info.COLORED_SERVER_NAME)
                 .append("\n\n")
                 .append("§cVocê está ${activePunishment.punishType.sampleName} do servidor")
                 .append("\n\n")
@@ -119,7 +119,9 @@ open class User(
                     .append(
                         "§cDuração: ${
                             DateFormatter.formatToDefault(
-                                activePunishment.startTime!!.withMillis(activePunishment.duration),
+                                (activePunishment.startTime ?: DateTime.now(
+                                    CoreConstants.DATE_TIME_ZONE
+                                )) + activePunishment.duration,
                                 " às "
                             )
                         }"
