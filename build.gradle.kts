@@ -31,12 +31,8 @@ allprojects {
 	repositories {
 		mavenCentral()
 
-		jcenter()
-
 		maven("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
-		maven("http://135.148.58.224:8081/artifactory/releases/") {
-			isAllowInsecureProtocol = true
-
+		maven("https://repository.hyren.net/") {
 			credentials {
 				username = System.getenv("MAVEN_USERNAME")
 				password = System.getenv("MAVEN_PASSWORD")
@@ -61,9 +57,7 @@ allprojects {
 			publications {
 				create<MavenPublication>("maven") {
 					repositories {
-						maven("http://135.148.58.224:8081/artifactory/releases/") {
-							isAllowInsecureProtocol = true
-
+						maven("https://repository.hyren.net/") {
 							credentials {
 								username = System.getenv("MAVEN_USERNAME")
 								password = System.getenv("MAVEN_PASSWORD")
