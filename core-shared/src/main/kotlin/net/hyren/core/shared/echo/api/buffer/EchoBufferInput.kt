@@ -1,17 +1,15 @@
 package net.hyren.core.shared.echo.api.buffer
 
-import com.google.common.base.Enums
-import com.google.common.io.*
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.json.KJson
-import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
+import java.io.*
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -23,64 +21,65 @@ class EchoBufferInput(
     bytes: ByteArray
 ) {
 
-    private val buffer: ByteArrayDataInput = ByteStreams.newDataInput(bytes)
+    private val buffer: DataInput = DataInputStream(ByteArrayInputStream(bytes))
 
-    fun readBoolean() = this.buffer.readBoolean()
+    fun readBoolean() = buffer.readBoolean()
 
-    fun readByte() = this.buffer.readByte()
+    fun readByte() = buffer.readByte()
 
-    fun readUnsignedByte() = this.buffer.readUnsignedByte()
+    fun readUnsignedByte() = buffer.readUnsignedByte()
 
-    fun readShort() = this.buffer.readShort()
+    fun readShort() = buffer.readShort()
 
-    fun readUnsignedShort() = this.buffer.readUnsignedShort()
+    fun readUnsignedShort() = buffer.readUnsignedShort()
 
-    fun readChar() = this.buffer.readChar()
+    fun readChar() = buffer.readChar()
 
     fun readInt(): Int? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
-        if (valid) this.buffer.readInt()
+        if (valid) {
+            return buffer.readInt()
+        }
 
         return null
     }
 
-    fun readLong() = this.buffer.readLong()
+    fun readLong() = buffer.readLong()
 
-    fun readDouble() = this.buffer.readDouble()
+    fun readDouble() = buffer.readDouble()
 
     fun readFloat(): Float? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
-        if (valid) return this.buffer.readFloat()
+        if (valid) {
+            return buffer.readFloat()
+        }
 
         return null
     }
 
     fun readString(): String? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
-        if (valid) return this.buffer.readUTF()
+        if (valid) {
+            return buffer.readUTF()
+        }
 
         return null
     }
 
-    fun <T : Enum<T>> readEnum(clazz: KClass<T>, deft: T? = null): T? {
-        val string = this.readString() ?: return null
-
-        val optional = Enums.getIfPresent(clazz.java, string)
-
-        if (deft !== null) return optional.or(deft)
-
-        return optional.orNull()
-    }
+    fun <T : Enum<T>> readEnum(
+        kClass: KClass<T>,
+        deft: T? = null
+    ): T? = EnumSet.allOf(kClass.java).find { it.name == readString() } ?: deft
 
     fun readUUID(): UUID? {
-        val valid = this.buffer.readBoolean()
+        val valid = buffer.readBoolean()
 
         if (valid) {
-            val mostSignificantBits = this.buffer.readLong()
-            val leastSignificantBits = this.buffer.readLong()
+            val mostSignificantBits = buffer.readLong()
+            val leastSignificantBits = buffer.readLong()
 
             return UUID(mostSignificantBits, leastSignificantBits)
         }
@@ -92,7 +91,7 @@ class EchoBufferInput(
     inline fun <reified T: Comparable<T>> readEntityID(
         table: IdTable<T> // ignore
     ): EntityID<T>? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
         if (valid) {
             return KJson.decodeFromString(readString())
@@ -102,7 +101,7 @@ class EchoBufferInput(
     }
 
     inline fun <reified T: Comparable<T>> readEntityID(): EntityID<T>? {
-        val valid = this.readBoolean()
+        val valid = readBoolean()
 
         if (valid) {
             return KJson.decodeFromString(readString()!!)
@@ -116,10 +115,10 @@ class EchoBufferInput(
         ReplaceWith("readAddressInetSocketAddress()"),
         DeprecationLevel.WARNING
     )
-    fun readAddress() = this.readAddressInetSocketAddress()
+    fun readAddress() = readAddressInetSocketAddress()
 
     fun readAddressInetSocketAddress(): InetSocketAddress? {
-        val value = this.readString() ?: return null
+        val value = readString() ?: return null
 
         if (value.startsWith("[")) {
             val i = value.lastIndexOf(']')
@@ -146,7 +145,7 @@ class EchoBufferInput(
     }
 
     fun readApplication(): Application? {
-        val valid = this.buffer.readBoolean()
+        val valid = buffer.readBoolean()
 
         if (valid) return Application(
             readString()!!,
@@ -161,7 +160,7 @@ class EchoBufferInput(
         return null
     }
 
-    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(readEntityID(ServersTable))
+    fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(readEntityID())
 
     fun readSerializedLocation() = SerializedLocation.of(readString())
 

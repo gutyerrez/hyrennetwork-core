@@ -1,6 +1,5 @@
 package net.hyren.core.shared.misc.json
 
-import com.google.common.base.Enums
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.*
@@ -684,35 +683,32 @@ abstract class KSerializer<T> : kotlinx.serialization.KSerializer<T> {
 
 }
 
-fun JsonElement.asString(): String = this.jsonPrimitive.content
+fun JsonElement.asString(): String = jsonPrimitive.content
 
-fun JsonElement.asInt(): Int = this.jsonPrimitive.int
+fun JsonElement.asInt(): Int = jsonPrimitive.int
 
-fun JsonElement.isInt() = this.jsonPrimitive.content.toIntOrNull() != null
+fun JsonElement.isInt() = jsonPrimitive.content.toIntOrNull() != null
 
-fun JsonElement.asDouble(): Double = this.jsonPrimitive.double
+fun JsonElement.asDouble(): Double = jsonPrimitive.double
 
-fun JsonElement.isDouble() = this.jsonPrimitive.content.toDoubleOrNull() != null
+fun JsonElement.isDouble() = jsonPrimitive.content.toDoubleOrNull() != null
 
-fun JsonElement.asFloat(): Float = this.jsonPrimitive.float
+fun JsonElement.asFloat(): Float = jsonPrimitive.float
 
-fun JsonElement.isFloat() = this.jsonPrimitive.content.toFloatOrNull() != null
+fun JsonElement.isFloat() = jsonPrimitive.content.toFloatOrNull() != null
 
-fun JsonElement.asLong(): Long = this.jsonPrimitive.long
+fun JsonElement.asLong(): Long = jsonPrimitive.long
 
-fun JsonElement.isLong() = this.jsonPrimitive.content.toLongOrNull() != null
+fun JsonElement.isLong() = jsonPrimitive.content.toLongOrNull() != null
 
-fun JsonElement.asBoolean(): Boolean = this.jsonPrimitive.boolean
+fun JsonElement.asBoolean(): Boolean = jsonPrimitive.boolean
 
-fun JsonElement.isBoolean() = this.jsonPrimitive.content.toBooleanStrictOrNull() != null
+fun JsonElement.isBoolean() = jsonPrimitive.content.toBooleanStrictOrNull() != null
 
 fun <T: Enum<T>> JsonElement.asEnum(
     kClass: KClass<T>
-): T? = Enums.getIfPresent(
-    kClass.java,
-    this.asString()
-).orNull()
+): T? = EnumSet.allOf(kClass.java).find { it.name == asString() }
 
-fun JsonElement.asJsonObject(): JsonObject = this.jsonObject
+fun JsonElement.asJsonObject(): JsonObject = jsonObject
 
-fun JsonElement.asJsonArray(): JsonArray = this.jsonArray
+fun JsonElement.asJsonArray(): JsonArray = jsonArray

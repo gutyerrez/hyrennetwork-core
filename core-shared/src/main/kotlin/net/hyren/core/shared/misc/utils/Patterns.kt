@@ -1,12 +1,10 @@
 package net.hyren.core.shared.misc.utils
 
-import com.google.common.base.Joiner
-
 /**
  * @author SrGutyerrez
  **/
 enum class Patterns(
-        val regex: Regex
+    val regex: Regex
 ) {
 
     SPACE(Regex(" ")),
@@ -31,26 +29,8 @@ enum class Patterns(
     IP(Regex("^(?:(?:0?0?\\d|0?[1-9]\\d|1\\d\\d|2[0-5][0-5]|2[0-4]\\d)\\.){3}(?:0?0?\\d|0?[1-9]\\d|1\\d\\d|2[0-5][0-5]|2[0-4]\\d)$")),
     URL(Regex("(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)"));
 
-    private val joiner = Joiner.on(this.regex.pattern)
+    fun matches(input: String) = regex.matches(input)
 
-    fun matches(input: String): Boolean {
-        return this.regex.matches(input)
-    }
-
-    fun split(input: String): List<String> {
-        return this.regex.split(input)
-    }
-
-    fun replace(input: String, replacement: String) {
-        this.regex.replace(input, replacement)
-    }
-
-    fun join(arguments: Collection<String>): String {
-        return this.joiner.join(arguments)
-    }
-
-    fun join(arguments: Array<String>): String {
-        return this.joiner.join(arguments)
-    }
+    fun split(input: String): List<String> = regex.split(input)
 
 }

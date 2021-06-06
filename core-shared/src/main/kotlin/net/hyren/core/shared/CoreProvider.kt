@@ -1,6 +1,5 @@
 package net.hyren.core.shared
 
-import com.google.common.collect.Lists
 import net.hyren.core.shared.applications.cache.local.ApplicationsLocalCache
 import net.hyren.core.shared.applications.cache.redis.ApplicationsStatusRedisCache
 import net.hyren.core.shared.applications.data.Application
@@ -8,8 +7,7 @@ import net.hyren.core.shared.applications.storage.dto.FetchApplicationByInetSock
 import net.hyren.core.shared.applications.storage.repositories.IApplicationsRepository
 import net.hyren.core.shared.applications.storage.repositories.implementations.PostgreSQLApplicationsRepository
 import net.hyren.core.shared.environment.Env
-import net.hyren.core.shared.exceptions.ApplicationAlreadyPreparedException
-import net.hyren.core.shared.exceptions.InvalidApplicationException
+import net.hyren.core.shared.exceptions.*
 import net.hyren.core.shared.groups.storage.repositories.IGroupsRepository
 import net.hyren.core.shared.groups.storage.repositories.implementations.PostgreSQLGroupsRepository
 import net.hyren.core.shared.misc.maintenance.cache.local.MaintenanceLocalCache
@@ -35,8 +33,7 @@ import net.hyren.core.shared.servers.cache.local.ServersLocalCache
 import net.hyren.core.shared.servers.storage.repositories.IServersRepository
 import net.hyren.core.shared.servers.storage.repositories.implementations.PostgreSQLServersRepository
 import net.hyren.core.shared.users.cache.local.UsersLocalCache
-import net.hyren.core.shared.users.cache.redis.UsersLoggedRedisCache
-import net.hyren.core.shared.users.cache.redis.UsersStatusRedisCache
+import net.hyren.core.shared.users.cache.redis.*
 import net.hyren.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import net.hyren.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
 import net.hyren.core.shared.users.friends.storage.repositories.implementations.PostgreSQLUsersFriendsRepository
@@ -60,16 +57,15 @@ import net.hyren.core.shared.users.skins.storage.repositories.IUsersSkinsReposit
 import net.hyren.core.shared.users.skins.storage.repositories.implementations.PostgreSQLUsersSkinsRepository
 import net.hyren.core.shared.users.storage.repositories.IUsersRepository
 import net.hyren.core.shared.users.storage.repositories.implementation.PostgreSQLUsersRepository
-import org.apache.commons.io.IOUtils
+import okhttp3.Request
 import java.net.InetSocketAddress
-import java.net.URL
 
 /**
  * @author SrGutyerrez
  **/
 object CoreProvider {
 
-    private val PROVIDERS = Lists.newArrayList<IProvider<*>>()
+    private val PROVIDERS = mutableListOf<IProvider<*>>()
 
     init {
         // repositories
@@ -120,10 +116,12 @@ object CoreProvider {
         preparePrimaryProviders()
 
         val address = InetSocketAddress(
-            IOUtils.toString(
-                URL("https://checkip.amazonaws.com"),
-                Charsets.UTF_8
-            ).trim(),
+            CoreConstants.OK_HTTP.newCall(
+                Request.Builder()
+                    .url("https://checkip.amazonaws.com")
+                    .method("GET", null)
+                    .build()
+            ).execute().body!!.string().trim(),
             port
         )
 

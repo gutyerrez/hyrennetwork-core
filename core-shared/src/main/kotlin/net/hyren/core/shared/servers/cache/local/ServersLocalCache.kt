@@ -1,9 +1,9 @@
 package net.hyren.core.shared.servers.cache.local
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.google.common.base.Strings
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.cache.local.LocalCache
+import net.hyren.core.shared.misc.caffeine.get
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.servers.storage.dto.FetchServerByNameDTO
 import net.hyren.core.shared.servers.storage.table.ServersTable
@@ -31,9 +31,7 @@ class ServersLocalCache : LocalCache {
             CoreProvider.Repositories.PostgreSQL.SERVERS_REPOSITORY.provide().fetchAll().values.toTypedArray()
         }
 
-    fun fetchAll() = this.CACHE_BY_ALL.get(
-        Strings.nullToEmpty(null)
-    ) ?: emptyArray()
+    fun fetchAll() = this.CACHE_BY_ALL.get() ?: emptyArray()
 
     fun fetchByName(name: EntityID<String>?): Server? {
         if (name === null) return null

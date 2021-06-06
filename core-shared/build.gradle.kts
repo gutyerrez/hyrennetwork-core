@@ -6,9 +6,6 @@ dependencies {
     // kotlinx
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
-    // commons-io
-    implementation("commons-io:commons-io:2.8.0")
-
     // hikari cp
     implementation("com.zaxxer:HikariCP:3.4.5")
 
@@ -33,6 +30,9 @@ dependencies {
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
     implementation("com.squareup.okio:okio:2.8.0")
+
+    // gson
+    compileOnly("com.google.code.gson:gson:2.8.7")
 
     // caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")

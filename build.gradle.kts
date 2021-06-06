@@ -31,13 +31,18 @@ allprojects {
 	repositories {
 		mavenCentral()
 
-		maven("https://hub.spigotmc.org/nexus/content/repositories/sonatype-nexus-snapshots/")
+		maven("https://libraries.minecraft.net/")
 		maven("https://repository.hyren.net/") {
 			credentials {
 				username = System.getenv("MAVEN_USERNAME")
 				password = System.getenv("MAVEN_PASSWORD")
 			}
 		}
+	}
+
+	dependencies {
+        // brigadier
+        compileOnly("com.mojang:brigadier:1.0.17")
 	}
 
 	configurations.all {

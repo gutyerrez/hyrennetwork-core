@@ -1,19 +1,16 @@
 package net.hyren.core.shared.echo.api.buffer
 
-import com.google.common.io.ByteArrayDataOutput
-import com.google.common.io.ByteStreams
 import kotlinx.serialization.json.JsonElement
 import net.hyren.core.shared.applications.data.Application
-import net.hyren.core.shared.misc.json.KJson
-import net.hyren.core.shared.misc.json.asString
+import net.hyren.core.shared.misc.json.*
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
-import java.net.Inet6Address
-import java.net.InetSocketAddress
+import java.io.*
+import java.net.*
 import java.util.*
 
 /**
@@ -21,75 +18,76 @@ import java.util.*
  **/
 class EchoBufferOutput {
 
-    private val buffer: ByteArrayDataOutput = ByteStreams.newDataOutput()
+    private val _bytearrayOutputStream = ByteArrayOutputStream()
+    private val buffer = DataOutputStream(_bytearrayOutputStream)
 
-    fun writeBoolean(boolean: Boolean) = this.buffer.writeBoolean(boolean)
+    fun writeBoolean(boolean: Boolean) = buffer.writeBoolean(boolean)
 
-    fun writeByte(byte: Int) = this.buffer.writeByte(byte)
+    fun writeByte(byte: Int) = buffer.writeByte(byte)
 
-    fun writeShort(short: Int) = this.buffer.writeShort(short)
+    fun writeShort(short: Int) = buffer.writeShort(short)
 
-    fun writeChar(char: Int) = this.buffer.writeChar(char)
+    fun writeChar(char: Int) = buffer.writeChar(char)
 
     fun writeInt(int: Int?) {
         if (int == null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.buffer.writeInt(int)
+            writeBoolean(true)
+            buffer.writeInt(int)
         }
     }
 
-    fun writeLong(long: Long) = this.buffer.writeLong(long)
+    fun writeLong(long: Long) = buffer.writeLong(long)
 
-    fun writeDouble(double: Double) = this.buffer.writeDouble(double)
+    fun writeDouble(double: Double) = buffer.writeDouble(double)
 
     fun writeFloat(float: Float?) {
         if (float === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.buffer.writeFloat(float)
+            writeBoolean(true)
+            buffer.writeFloat(float)
         }
     }
 
     fun writeString(string: String?) {
         if (string === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.buffer.writeUTF(string)
+            writeBoolean(true)
+            buffer.writeUTF(string)
         }
     }
 
-    fun <T : Enum<T>> writeEnum(enum: T?) = this.writeString(
+    fun <T : Enum<T>> writeEnum(enum: T?) = writeString(
         Optional.ofNullable(enum).map { it.name }.orElse(null)
     )
 
     fun writeUUID(uuid: UUID?) {
         if (uuid === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.writeLong(uuid.mostSignificantBits)
-            this.writeLong(uuid.leastSignificantBits)
+            writeBoolean(true)
+            writeLong(uuid.mostSignificantBits)
+            writeLong(uuid.leastSignificantBits)
         }
     }
 
     inline fun <reified T: Comparable<T>> writeEntityID(entityId: EntityID<T>?) {
         if (entityId === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.writeString(
+            writeBoolean(true)
+            writeString(
                 KJson.encodeToString(entityId)
             )
         }
     }
 
     fun writeByteArray(byteArray: ByteArray) {
-        this.writeBoolean(true)
-        this.buffer.write(byteArray)
+        writeBoolean(true)
+        buffer.write(byteArray)
     }
 
     fun writeAddress(address: InetSocketAddress) {
@@ -109,52 +107,52 @@ class EchoBufferOutput {
             }
         }
 
-        this.writeString("$host:${address.port}")
+        writeString("$host:${address.port}")
     }
 
     fun writeApplication(application: Application?) {
         if (application == null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.writeString(application.name)
-            this.writeString(application.displayName)
-            this.writeInt(application.slots)
-            this.writeAddress(application.address)
-            this.writeEnum(application.applicationType)
-            this.writeServer(application.server)
-            this.writeEnum(application.restrictJoin)
+            writeBoolean(true)
+            writeString(application.name)
+            writeString(application.displayName)
+            writeInt(application.slots)
+            writeAddress(application.address)
+            writeEnum(application.applicationType)
+            writeServer(application.server)
+            writeEnum(application.restrictJoin)
         }
     }
 
     fun writeServer(server: Server?) {
-        this.writeEntityID(server?.name)
+        writeEntityID(server?.name)
     }
 
     fun writeSerializedLocation(serializedLocation: SerializedLocation) {
-        this.writeString(serializedLocation.toString())
+        writeString(serializedLocation.toString())
     }
 
-    fun writeJsonObject(jsonObject: JsonElement) = this.writeString(jsonObject.asString())
+    fun writeJsonObject(jsonObject: JsonElement) = writeString(jsonObject.asString())
 
     fun writeBaseComponent(baseComponents: Array<BaseComponent>?) {
         if (baseComponents === null) {
-            this.writeString(null)
+            writeString(null)
         } else {
             val serialized = ComponentSerializer.toString(*baseComponents)
 
-            this.writeString(serialized)
+            writeString(serialized)
         }
     }
 
     fun writeBaseComponent(baseComponent: BaseComponent?) {
         if (baseComponent === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
             val serialized = ComponentSerializer.toString(baseComponent)
 
-            this.writeBoolean(true)
-            this.writeString(serialized)
+            writeBoolean(true)
+            writeString(serialized)
         }
     }
 
@@ -169,10 +167,10 @@ class EchoBufferOutput {
 
     inline fun <reified T> writeList(list: List<T>?) {
         if (list === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.writeString(
+            writeBoolean(true)
+            writeString(
                 KJson.encodeToString(list)
             )
         }
@@ -180,15 +178,15 @@ class EchoBufferOutput {
 
     inline fun <reified T> writeArray(array: Array<T>?) {
         if (array === null) {
-            this.writeBoolean(false)
+            writeBoolean(false)
         } else {
-            this.writeBoolean(true)
-            this.writeString(
+            writeBoolean(true)
+            writeString(
                 KJson.encodeToString(array)
             )
         }
     }
 
-    fun toByteArray() = this.buffer.toByteArray()
+    fun toByteArray() = _bytearrayOutputStream.toByteArray()
 
 }

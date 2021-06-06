@@ -1,9 +1,7 @@
 package net.hyren.core.shared.echo.packets
 
-import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
-import net.hyren.core.shared.echo.api.buffer.EchoBufferOutput
+import net.hyren.core.shared.echo.api.buffer.*
 import net.hyren.core.shared.echo.api.packets.EchoPacket
-import net.hyren.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
 
@@ -23,7 +21,7 @@ class UserGroupsUpdatedPacket(
     override fun read(
         buffer: EchoBufferInput
     ) {
-        this.userId = buffer.readEntityID(UsersTable)
+        this.userId = buffer.readEntityID()
     }
 
 }

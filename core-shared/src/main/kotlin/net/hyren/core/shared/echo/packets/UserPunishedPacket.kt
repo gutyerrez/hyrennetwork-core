@@ -1,10 +1,8 @@
 package net.hyren.core.shared.echo.packets
 
-import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
-import net.hyren.core.shared.echo.api.buffer.EchoBufferOutput
+import net.hyren.core.shared.echo.api.buffer.*
 import net.hyren.core.shared.echo.api.packets.EchoPacket
 import net.hyren.core.shared.echo.api.packets.annotations.ServerPacket
-import net.hyren.core.shared.users.punishments.storage.table.UsersPunishmentsTable
 import net.md_5.bungee.api.chat.BaseComponent
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
@@ -26,7 +24,7 @@ class UserPunishedPacket : EchoPacket() {
     }
 
     override fun read(buffer: EchoBufferInput) {
-        this.id = buffer.readEntityID(UsersPunishmentsTable)
+        this.id = buffer.readEntityID()
         this.userId = buffer.readUUID()
         this.message = buffer.readBaseComponent()
     }

@@ -1,11 +1,7 @@
 package net.hyren.core.shared.misc.utils
 
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
-import org.apache.commons.io.IOUtils
-import java.io.File
-import java.io.FileInputStream
+import kotlinx.serialization.json.*
+import java.io.*
 
 /**
  * @author SrGutyerrez
@@ -16,7 +12,9 @@ object FileUtils {
         val fileOutputStream = FileInputStream(file)
 
         fileOutputStream.use {
-            return IOUtils.toString(it, Charsets.UTF_8)
+            val inputStreamReader = it.reader()
+
+            return inputStreamReader.readText()
         }
     }
 
