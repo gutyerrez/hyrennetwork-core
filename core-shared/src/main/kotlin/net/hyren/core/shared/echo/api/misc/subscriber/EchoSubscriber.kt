@@ -76,7 +76,7 @@ open class EchoSubscriber(
     ) {
         val buffer = EchoBufferInput(message)
 
-        val kClass = Class.forName(buffer.readString()) as KClass<EchoPacket>
+        val kClass = (Class.forName(buffer.readString()) as Class<EchoPacket>).kotlin
 
         val packetHeader = EchoPacketHeader()
 
