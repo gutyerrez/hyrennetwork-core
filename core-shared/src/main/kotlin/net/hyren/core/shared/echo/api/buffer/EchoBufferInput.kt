@@ -35,67 +35,32 @@ class EchoBufferInput(
 
     fun readChar() = buffer.readChar()
 
-    fun readInt(): Int? {
-        val valid = readBoolean()
-
-        if (valid) {
-            return buffer.readInt()
-        }
-
-        return null
-    }
+    fun readInt(): Int? = if (readBoolean()) {
+        buffer.readInt()
+    } else { null }
 
     fun readLong() = buffer.readLong()
 
     fun readDouble() = buffer.readDouble()
 
-    fun readFloat(): Float? {
-        val valid = readBoolean()
+    fun readFloat(): Float? = if (readBoolean()) {
+        buffer.readFloat()
+    } else { null }
 
-        if (valid) {
-            return buffer.readFloat()
-        }
-
-        return null
-    }
-
-    fun readString(): String? {
-        val valid = readBoolean()
-
-        println("Is valid: $valid")
-
-        if (valid) {
-            val utf = buffer.readUTF()
-
-            println("Retornar o valor válido: $utf")
-
-            return utf
-        }
-
-        return null
-    }
+    fun readString(): String? = if (readBoolean()) {
+        buffer.readUTF()
+    } else { null }
 
     inline fun <reified T : Enum<T>> readEnum(
         kClass: KClass<T>,
         deft: T? = null
-    ): T? {
-        return readString().run {
-            EnumSet.allOf(kClass.java).firstOrNull { enum -> enum.name == this } ?: deft
-        }
+    ): T? = readString().run {
+        EnumSet.allOf(kClass.java).firstOrNull { enum -> enum.name == this } ?: deft
     }
 
-    fun readUUID(): UUID? {
-        val valid = buffer.readBoolean()
-
-        if (valid) {
-            val mostSignificantBits = buffer.readLong()
-            val leastSignificantBits = buffer.readLong()
-
-            return UUID(mostSignificantBits, leastSignificantBits)
-        }
-
-        return null
-    }
+    fun readUUID(): UUID? = if (buffer.readBoolean()) {
+        UUID(readLong(), readLong())
+    } else { null }
 
     @Deprecated(
         "readEntityID(table: IdTable<T>) is deprecated",
@@ -104,25 +69,11 @@ class EchoBufferInput(
     )
     inline fun <reified T: Comparable<T>> readEntityID(
         table: IdTable<T> // ignore
-    ): EntityID<T>? {
-        val valid = readBoolean()
+    ): EntityID<T>? = readEntityID()
 
-        if (valid) {
-            return KJson.decodeFromString(readString())
-        }
-
-        return null
-    }
-
-    inline fun <reified T: Comparable<T>> readEntityID(): EntityID<T>? {
-        val valid = readBoolean()
-
-        if (valid) {
-            return KJson.decodeFromString(readString()!!)
-        }
-
-        return null
-    }
+    inline fun <reified T: Comparable<T>> readEntityID(): EntityID<T>? = if (readBoolean()) {
+        KJson.decodeFromString(readString())
+    } else { null }
 
     @Deprecated(
         "read address is deprecated",
@@ -131,37 +82,31 @@ class EchoBufferInput(
     )
     fun readAddress() = readAddressInetSocketAddress()
 
-    fun readAddressInetSocketAddress(): InetSocketAddress? {
-        val value = readString() ?: return null
+    fun readAddressInetSocketAddress(): InetSocketAddress? = readString()?.let {
+        if (it.startsWith("[")) {
+            val i = it.lastIndexOf(']')
 
-        if (value.startsWith("[")) {
-            val i = value.lastIndexOf(']')
+            if (i == -1) { return null }
 
-            if (i == -1) {
-                return null
-            }
+            val j = it.indexOf(':', i)
+            val port = if (j > -1) it.substring(j + 1).toInt() else 0
 
-            val j = value.indexOf(':', i)
-            val port = if (j > -1) value.substring(j + 1).toInt() else 0
-
-            return InetSocketAddress(value.substring(0, i + 1), port)
+            InetSocketAddress(it.substring(0, i + 1), port)
         } else {
-            val i = value.indexOf(':')
+            val i = it.indexOf(':')
 
-            return if (i != -1 && value.indexOf(':', i + 1) == -1) {
-                val port = value.substring(i + 1).toInt()
+            if (i != -1 && it.indexOf(':', i + 1) == -1) {
+                val port = it.substring(i + 1).toInt()
 
-                InetSocketAddress(value.substring(0, i), port)
+                InetSocketAddress(it.substring(0, i), port)
             } else {
-                InetSocketAddress(value, 0)
+                InetSocketAddress(it, 0)
             }
         }
     }
 
-    fun readApplication(): Application? {
-        val valid = readBoolean()
-
-        if (valid) return Application(
+    fun readApplication(): Application? = if (readBoolean()) {
+        Application(
             readString()!!,
             readString()!!,
             readInt(),
@@ -170,9 +115,7 @@ class EchoBufferInput(
             readServer(),
             readEnum(Group::class)
         )
-
-        return null
-    }
+    } else { null }
 
     fun readServer() = CoreProvider.Cache.Local.SERVERS.provide().fetchByName(readEntityID())
 
@@ -185,29 +128,15 @@ class EchoBufferInput(
             DateTime::class,
             readString()
         ) as DateTime
-    } else {
-        null
-    }
+    } else { null }
 
-    inline fun <reified T> readList(): List<T>? {
-        val valid = readBoolean()
+    inline fun <reified T> readList(): List<T>? = if (readBoolean()) {
+        KJson.decodeFromString(readString())
+    } else { null }
 
-        if (valid) {
-            return KJson.decodeFromString(readString())
-        }
-
-        return null
-    }
-
-    inline fun <reified T> readArray(): Array<T>? {
-        val valid = readBoolean()
-
-        if (valid) {
-            return KJson.decodeFromString(readString())
-        }
-
-        return null
-    }
+    inline fun <reified T> readArray(): Array<T>? = if (readBoolean()) {
+        KJson.decodeFromString(readString())
+    } else { null }
 
     fun readJson() = KJson.encodeToJsonElement(readString())
 

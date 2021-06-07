@@ -8,6 +8,8 @@ import net.hyren.core.shared.echo.api.response.*
 import org.greenrobot.eventbus.EventBus
 import redis.clients.jedis.BinaryJedisPubSub
 import java.util.function.BiConsumer
+import kotlin.reflect.KClass
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * @author SrGutyerrez
@@ -23,18 +25,21 @@ open class EchoSubscriber(
         .throwSubscriberException(false)
         .build()
 
-    fun callPacket(channel: String, packet: EchoPacket) {
-        val clazz = packet::class.java
+    fun callPacket(
+        channel: String,
+        packet: EchoPacket
+    ) {
+        val kClass = packet::class
         val packetHeader = packet.packetHeader!!
 
         if (packet is Response) {
             val responseUUID = packetHeader.responseUUID
 
-            this.echo.responseCallbacks[responseUUID]?.accept(packet)
+            echo.responseCallbacks[responseUUID]?.accept(packet)
         } else {
-            this.dispatcher.accept(packet) {
-                if (this.EVENT_BUS.hasSubscriberForEvent(clazz)) {
-                    this.EVENT_BUS.post(packet)
+            dispatcher.accept(packet) {
+                if (EVENT_BUS.hasSubscriberForEvent(kClass.java)) {
+                    EVENT_BUS.post(packet)
 
                     if (packet is Respondable<*>) {
                         val responseUUID = packetHeader.responseUUID!!
@@ -52,7 +57,7 @@ open class EchoSubscriber(
                         } else {
                             val responseType = respondable::class.java.getMethod("getResponse").returnType
 
-                            this.echo._publishToApplication(
+                            echo._publishToApplication(
                                 responseType.getDeclaredConstructor().newInstance() as Response,
                                 responseUUID,
                                 packetHeader.senderServerName,
@@ -65,47 +70,40 @@ open class EchoSubscriber(
         }
     }
 
-    override fun onMessage(channel: ByteArray, message: ByteArray) {
-        println("Message size: ${message.size}")
-        println("Received message: ${String(message)} on ${String(channel)}")
-
+    override fun onMessage(
+        channel: ByteArray,
+        message: ByteArray
+    ) {
         val buffer = EchoBufferInput(message)
 
-        val clazz = Class.forName(buffer.readString()) as Class<out EchoPacket>
+        val kClass = Class.forName(buffer.readString()) as KClass<EchoPacket>
 
         val packetHeader = EchoPacketHeader()
 
         packetHeader.read(buffer)
 
-        if (!this.isListening(clazz, packetHeader)) {
-            return
+        if (isListening(kClass, packetHeader)) {
+            val packet = kClass.primaryConstructor!!.call()
+
+            packet.read(buffer)
+
+            packet.packetHeader = packetHeader
+
+            callPacket(String(channel), packet)
         }
-
-        val packet = clazz.getDeclaredConstructor().newInstance()
-
-        packet.read(buffer)
-
-        packet.packetHeader = packetHeader
-
-        this.callPacket(String(channel), packet)
     }
 
-    fun registerListener(listener: EchoPacketListener) {
-        this.EVENT_BUS.register(listener)
-    }
+    fun registerListener(
+        listener: EchoPacketListener
+    ) = EVENT_BUS.register(listener)
 
-    fun isListening(clazz: Class<out EchoPacket>, packetHeader: EchoPacketHeader): Boolean {
-        return if (this.EVENT_BUS.hasSubscriberForEvent(clazz)) {
-            true
-        } else if (Response::class.java.isAssignableFrom(clazz)) {
-            if (packetHeader.responseUUID == null) {
-                false
-            } else {
-                this.echo.responseCallbacks.containsKey(packetHeader.responseUUID)
-            }
-        } else {
-            false
-        }
+    private fun isListening(
+        kClass: KClass<out EchoPacket>,
+        packetHeader: EchoPacketHeader
+    ) = when {
+        EVENT_BUS.hasSubscriberForEvent(kClass.java) -> true
+        Response::class == kClass -> echo.responseCallbacks.containsKey(packetHeader.responseUUID)
+        else -> false
     }
 
 }

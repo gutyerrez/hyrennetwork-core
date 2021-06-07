@@ -265,8 +265,6 @@ open class Echo(
         this.subscribers.forEach { it.callPacket(channel, packet) }
 
         this.redisDatabaseProvider.provide().resource.use {
-            println("Send message to: $channel, size: ${buffer.toByteArray().size}")
-
             it.publish(channel.toByteArray(), buffer.toByteArray())
         }
     }
