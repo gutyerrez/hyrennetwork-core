@@ -1,6 +1,7 @@
 dependencies {
     // waterfall
     compileOnly("io.github.waterfallmc:waterfall-api:1.16-R0.5-SNAPSHOT")
+    compileOnly("io.github.waterfallmc:waterfall-chat:1.16-R0.5-SNAPSHOT")
     compileOnly("io.github.waterfallmc:waterfall-proxy:1.16-R0.5-SNAPSHOT")
     compileOnly("io.github.waterfallmc:waterfall-event:1.16-R0.5-SNAPSHOT")
 
