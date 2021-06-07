@@ -29,9 +29,9 @@ dependencies {
 
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
-    implementation("com.squareup.okio:okio:2.8.0")
 
-    // gson
+    // google
+    implementation("com.google.guava:guava:30.1.1-jre")
     compileOnly("com.google.code.gson:gson:2.8.7")
 
     // caffeine

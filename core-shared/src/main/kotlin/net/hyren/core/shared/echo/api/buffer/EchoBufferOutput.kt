@@ -1,5 +1,6 @@
 package net.hyren.core.shared.echo.api.buffer
 
+import com.google.common.io.ByteStreams
 import kotlinx.serialization.json.JsonElement
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.misc.json.*
@@ -9,7 +10,6 @@ import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
-import java.io.*
 import java.net.*
 import java.util.*
 
@@ -18,8 +18,7 @@ import java.util.*
  **/
 class EchoBufferOutput {
 
-    private val _bytearrayOutputStream = ByteArrayOutputStream()
-    private val buffer = DataOutputStream(_bytearrayOutputStream)
+    private val buffer = ByteStreams.newDataOutput()
 
     fun writeBoolean(boolean: Boolean) = buffer.writeBoolean(boolean)
 
@@ -187,6 +186,6 @@ class EchoBufferOutput {
         }
     }
 
-    fun toByteArray() = _bytearrayOutputStream.toByteArray()
+    fun toByteArray() = buffer.toByteArray()
 
 }
