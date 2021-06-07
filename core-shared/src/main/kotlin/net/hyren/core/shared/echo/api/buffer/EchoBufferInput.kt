@@ -65,9 +65,11 @@ class EchoBufferInput(
         println("Is valid: $valid")
 
         if (valid) {
-            println("Retornar o valor válido")
+            val utf = buffer.readUTF()
 
-            return buffer.readUTF()
+            println("Retornar o valor válido: $utf")
+
+            return utf
         }
 
         return null
@@ -81,8 +83,7 @@ class EchoBufferInput(
 
         println("UTF: $utf")
 
-//        EnumSet.allOf(kClass.java).find { it.name == readString() } ?: deft
-        return null
+        return EnumSet.allOf(kClass.java).firstOrNull { it.name == utf } ?: deft
     }
 
     fun readUUID(): UUID? {
