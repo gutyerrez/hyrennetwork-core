@@ -14,14 +14,18 @@ class ConnectUserToApplicationPacket(
     var application: Application? = null
 ) : EchoPacket() {
 
-    override fun write(buffer: EchoBufferOutput) {
-        buffer.writeEntityID(this.userId)
-        buffer.writeApplication(this.application)
+    override fun write(
+        buffer: EchoBufferOutput
+    ) {
+        buffer.writeEntityID(userId)
+        buffer.writeApplication(application)
     }
 
-    override fun read(buffer: EchoBufferInput) {
-        this.userId = buffer.readEntityID()
-        this.application = buffer.readApplication()
+    override fun read(
+        buffer: EchoBufferInput
+    ) {
+        userId = buffer.readEntityID()
+        application = buffer.readApplication()
     }
 
 }

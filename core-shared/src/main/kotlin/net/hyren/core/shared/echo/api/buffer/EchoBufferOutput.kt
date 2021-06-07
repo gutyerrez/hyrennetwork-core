@@ -61,7 +61,9 @@ class EchoBufferOutput {
     }
 
     fun <T : Enum<T>> writeEnum(enum: T?) = writeString(
-        Optional.ofNullable(enum).map { it.name }.orElse(null)
+        Optional.ofNullable(enum).map {
+            it.name
+        }.orElse(null)
     )
 
     fun writeUUID(uuid: UUID?) {
@@ -125,9 +127,7 @@ class EchoBufferOutput {
         }
     }
 
-    fun writeServer(server: Server?) {
-        writeEntityID(server?.name)
-    }
+    fun writeServer(server: Server?) = writeEntityID(server?.name)
 
     fun writeSerializedLocation(serializedLocation: SerializedLocation) {
         writeString(serializedLocation.toString())

@@ -62,17 +62,28 @@ class EchoBufferInput(
     fun readString(): String? {
         val valid = readBoolean()
 
+        println("Is valid: $valid")
+
         if (valid) {
+            println("Retornar o valor válido")
+
             return buffer.readUTF()
         }
 
         return null
     }
 
-    fun <T : Enum<T>> readEnum(
+    inline fun <reified T : Enum<T>> readEnum(
         kClass: KClass<T>,
         deft: T? = null
-    ): T? = EnumSet.allOf(kClass.java).find { it.name == readString() } ?: deft
+    ): T? {
+        val utf = readString()
+
+        println("UTF: $utf")
+
+//        EnumSet.allOf(kClass.java).find { it.name == readString() } ?: deft
+        return null
+    }
 
     fun readUUID(): UUID? {
         val valid = buffer.readBoolean()
@@ -182,17 +193,21 @@ class EchoBufferInput(
     inline fun <reified T> readList(): List<T>? {
         val valid = readBoolean()
 
-        if (!valid) return null
+        if (valid) {
+            return KJson.decodeFromString(readString())
+        }
 
-        return KJson.decodeFromString(readString()!!)
+        return null
     }
 
     inline fun <reified T> readArray(): Array<T>? {
         val valid = readBoolean()
 
-        if (!valid) return null
+        if (valid) {
+            return KJson.decodeFromString(readString())
+        }
 
-        return KJson.decodeFromString(readString()!!)
+        return null
     }
 
     fun readJson() = KJson.encodeToJsonElement(readString())
