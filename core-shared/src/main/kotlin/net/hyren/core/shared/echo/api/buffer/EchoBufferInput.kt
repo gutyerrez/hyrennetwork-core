@@ -1,6 +1,5 @@
 package net.hyren.core.shared.echo.api.buffer
 
-import com.google.common.io.ByteStreams
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
@@ -10,6 +9,7 @@ import net.hyren.core.shared.world.location.SerializedLocation
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
+import java.io.*
 import java.net.InetSocketAddress
 import java.util.*
 import kotlin.reflect.KClass
@@ -21,7 +21,7 @@ class EchoBufferInput(
     bytes: ByteArray
 ) {
 
-    private val buffer = ByteStreams.newDataInput(bytes)
+    private val buffer = DataInputStream(ByteArrayInputStream(bytes))
 
     fun readBoolean() = buffer.readBoolean()
 

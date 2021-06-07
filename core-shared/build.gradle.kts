@@ -4,7 +4,7 @@ dependencies {
     implementation(kotlin("reflect"))
 
     // kotlinx
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     // hikari cp
     implementation("com.zaxxer:HikariCP:3.4.5")
@@ -21,17 +21,13 @@ dependencies {
     // redis
     implementation("redis.clients:jedis:3.3.0")
 
-    // serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
-
     // eventbus
     implementation("org.greenrobot:eventbus:3.2.0")
 
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
 
-    // google
-    implementation("com.google.guava:guava:30.1.1-jre")
+    // gson
     compileOnly("com.google.code.gson:gson:2.8.7")
 
     // caffeine
