@@ -9,7 +9,6 @@ import org.greenrobot.eventbus.EventBus
 import redis.clients.jedis.BinaryJedisPubSub
 import java.util.function.BiConsumer
 import kotlin.reflect.KClass
-import kotlin.reflect.full.primaryConstructor
 
 /**
  * @author SrGutyerrez
@@ -83,7 +82,7 @@ open class EchoSubscriber(
         packetHeader.read(buffer)
 
         if (isListening(kClass, packetHeader)) {
-            val packet = kClass.primaryConstructor!!.call()
+            val packet = kClass.java.getConstructor().newInstance()
 
             packet.read(buffer)
 
