@@ -55,7 +55,7 @@ class EchoBufferInput(
         kClass: KClass<T>,
         deft: T? = null
     ): T? = readString().run {
-        EnumSet.allOf(kClass.java).firstOrNull { enum -> enum.name == this } ?: deft
+        EnumSet.allOf(kClass.java).firstOrNull { it.name == this } ?: deft
     }
 
     fun readUUID(): UUID? = if (buffer.readBoolean()) {

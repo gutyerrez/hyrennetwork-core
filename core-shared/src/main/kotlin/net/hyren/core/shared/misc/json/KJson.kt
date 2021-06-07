@@ -707,7 +707,7 @@ fun JsonElement.isBoolean() = jsonPrimitive.content.toBooleanStrictOrNull() != n
 
 fun <T: Enum<T>> JsonElement.asEnum(
     kClass: KClass<T>
-): T? = EnumSet.allOf(kClass.java).firstOrNull { it.name == asString() }
+): T? = asString().run { EnumSet.allOf(kClass.java).firstOrNull { it.name == this } }
 
 fun JsonElement.asJsonObject(): JsonObject = jsonObject
 
