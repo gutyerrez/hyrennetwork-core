@@ -3,10 +3,8 @@ package net.hyren.core.shared.echo.api.misc.subscriber
 import net.hyren.core.shared.echo.api.Echo
 import net.hyren.core.shared.echo.api.buffer.EchoBufferInput
 import net.hyren.core.shared.echo.api.listener.EchoPacketListener
-import net.hyren.core.shared.echo.api.packets.EchoPacket
-import net.hyren.core.shared.echo.api.packets.EchoPacketHeader
-import net.hyren.core.shared.echo.api.response.Respondable
-import net.hyren.core.shared.echo.api.response.Response
+import net.hyren.core.shared.echo.api.packets.*
+import net.hyren.core.shared.echo.api.response.*
 import org.greenrobot.eventbus.EventBus
 import redis.clients.jedis.BinaryJedisPubSub
 import java.util.function.BiConsumer
@@ -68,6 +66,9 @@ open class EchoSubscriber(
     }
 
     override fun onMessage(channel: ByteArray, message: ByteArray) {
+        println("Message size: ${message.size}")
+        println("Received message: ${String(message)} on ${String(channel)}")
+
         val buffer = EchoBufferInput(message)
 
         val clazz = Class.forName(buffer.readString()) as Class<out EchoPacket>

@@ -6,16 +6,13 @@ import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.api.buffer.EchoBufferOutput
 import net.hyren.core.shared.echo.api.listener.EchoPacketListener
 import net.hyren.core.shared.echo.api.misc.subscriber.EchoSubscriber
-import net.hyren.core.shared.echo.api.packets.EchoPacket
-import net.hyren.core.shared.echo.api.packets.EchoPacketHeader
-import net.hyren.core.shared.echo.api.response.Respondable
-import net.hyren.core.shared.echo.api.response.Response
+import net.hyren.core.shared.echo.api.packets.*
+import net.hyren.core.shared.echo.api.response.*
 import net.hyren.core.shared.providers.databases.redis.RedisDatabaseProvider
 import net.hyren.core.shared.servers.data.Server
 import redis.clients.jedis.util.SafeEncoder
 import java.util.*
-import java.util.function.BiConsumer
-import java.util.function.Consumer
+import java.util.function.*
 
 /**
  * @author SrGutyerrez
@@ -268,6 +265,8 @@ open class Echo(
         this.subscribers.forEach { it.callPacket(channel, packet) }
 
         this.redisDatabaseProvider.provide().resource.use {
+            println("Send message to: $channel, size: ${buffer.toByteArray().size}")
+
             it.publish(channel.toByteArray(), buffer.toByteArray())
         }
     }

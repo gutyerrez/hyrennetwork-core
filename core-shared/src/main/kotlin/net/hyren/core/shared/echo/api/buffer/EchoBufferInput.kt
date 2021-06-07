@@ -87,7 +87,11 @@ class EchoBufferInput(
         return null
     }
 
-    @Deprecated("readEntityID(table: IdTable<T>) is deprecated")
+    @Deprecated(
+        "readEntityID(table: IdTable<T>) is deprecated",
+        ReplaceWith("readEntityID()"),
+        DeprecationLevel.WARNING
+    )
     inline fun <reified T: Comparable<T>> readEntityID(
         table: IdTable<T> // ignore
     ): EntityID<T>? {
