@@ -1,5 +1,5 @@
 dependencies {
-    // kotlin lib
+    // kotlin
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
@@ -38,5 +38,5 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")
 
     // waterfall-chat
-    api("io.github.waterfallmc:waterfall-chat:1.16-R0.5-SNAPSHOT")
+    compileOnly("io.github.waterfallmc:waterfall-chat:1.16-R0.5-SNAPSHOT")
 }

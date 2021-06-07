@@ -31,18 +31,12 @@ allprojects {
 	repositories {
 		mavenCentral()
 
-		maven("https://libraries.minecraft.net/")
 		maven("https://repository.hyren.net/") {
 			credentials {
 				username = System.getenv("MAVEN_USERNAME")
 				password = System.getenv("MAVEN_PASSWORD")
 			}
 		}
-	}
-
-	dependencies {
-        // brigadier
-        compileOnly("com.mojang:brigadier:1.0.17")
 	}
 
 	configurations.all {
