@@ -2,7 +2,6 @@ package net.hyren.core.spigot.misc.hologram
 
 import net.hyren.core.spigot.misc.hologram.lines.HologramLine
 import org.bukkit.Location
-import kotlin.streams.toList
 
 /**
  * @author Gutyerrez
@@ -15,9 +14,7 @@ class Hologram(
     private val lines = mutableListOf<HologramLine>()
 
     init {
-        this.lines.addAll(
-            _lines.stream().map { HologramLine(it) }.toList()
-        )
+        this.lines.addAll(_lines.map { HologramLine(it) })
     }
 
     fun update(
