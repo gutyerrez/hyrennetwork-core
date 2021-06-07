@@ -79,11 +79,7 @@ class EchoBufferInput(
         kClass: KClass<T>,
         deft: T? = null
     ): T? {
-        val utf = readString()
-
-        println("UTF: $utf")
-
-        return EnumSet.allOf(kClass.java).firstOrNull { it.name == utf } ?: deft
+        return EnumSet.allOf(kClass.java).firstOrNull { it.name == readString() } ?: deft
     }
 
     fun readUUID(): UUID? {
