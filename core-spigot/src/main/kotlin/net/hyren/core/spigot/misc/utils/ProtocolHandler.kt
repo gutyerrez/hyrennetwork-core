@@ -172,25 +172,29 @@ class ProtocolHandler {
     )
 
     private fun registerChannelHandler() {
-        val craftServer = Bukkit.getServer() as CraftServer
-        val minecraftServer = craftServer.server
-        val serverConnection = minecraftServer.serverConnection ?: return
+        try {
+            val craftServer = Bukkit.getServer() as CraftServer
+            val minecraftServer = craftServer.server
+            val serverConnection = minecraftServer.serverConnection ?: return
+            var looking = true
 
-        var looking = true
+            this.NETWORK_MANAGERS = serverConnection.h
 
-        this.NETWORK_MANAGERS = serverConnection.h
+            do {
+                serverConnection.g.forEach {
+                    val serverChannel = it.channel()
 
-        do {
-            serverConnection.g.forEach {
-                val serverChannel = it.channel()
+                    SERVER_CHANNELS.add(serverChannel)
 
-                SERVER_CHANNELS.add(serverChannel)
+                    serverChannel.pipeline().addFirst(SERVER_CHANNEL_HANDLER)
 
-                serverChannel.pipeline().addFirst(SERVER_CHANNEL_HANDLER)
-
-                looking = false
+                    looking = false
+                }
             }
-        } while (looking)
+            while (looking)
+        } catch (e: NoClassDefFoundError) {
+            Bukkit.getLogger().warning("Cannot enable protocol handler")
+        }
     }
 
     fun registerListener(packetListener: PacketListener) = PACKET_LISTENERS.add(packetListener)

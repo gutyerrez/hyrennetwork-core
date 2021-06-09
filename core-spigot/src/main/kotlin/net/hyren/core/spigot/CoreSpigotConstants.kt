@@ -12,8 +12,7 @@ object CoreSpigotConstants {
     val BUKKIT_LOCATION_PARSER = BukkitLocationParser()
 
     val PROTOCOL_HANDLER = when (CoreProvider.application.server?.name?.value) {
-        "FACTIONS_MEDIEVAL" -> null
-        "RANK_UP_MACHINES" -> null
+        "FACTIONS_HEADS", "RANK_UP_MACHINES" -> null
         else -> ProtocolHandler()
     }
 
