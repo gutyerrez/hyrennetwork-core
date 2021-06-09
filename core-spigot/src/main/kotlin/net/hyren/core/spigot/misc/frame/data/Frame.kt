@@ -11,7 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player

@@ -1,17 +1,17 @@
 package net.hyren.core.spigot.inventory
 
-import com.google.common.collect.LinkedListMultimap
+import kotlin.math.ceil
 import kotlinx.coroutines.Runnable
 import net.hyren.core.spigot.misc.player.openInventory
 import net.hyren.core.spigot.misc.utils.ItemBuilder
-import net.minecraft.server.v1_8_R3.ChatComponentText
-import net.minecraft.server.v1_8_R3.EntityHuman
-import net.minecraft.server.v1_8_R3.IInventory
-import net.minecraft.server.v1_8_R3.ItemStack
+import net.minecraft.server.ChatComponentText
+import net.minecraft.server.EntityHuman
+import net.minecraft.server.IInventory
+import net.minecraft.server.ItemStack
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
+import org.bukkit.craftbukkit.entity.CraftHumanEntity
+import org.bukkit.craftbukkit.inventory.CraftInventory
+import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -20,8 +20,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
+import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
-import kotlin.math.ceil
 
 /**
  * @author Gutyerrez
@@ -35,7 +35,7 @@ open class CustomInventory(
 
 	private var PAGINATED = false
 
-	private val PAGES = LinkedListMultimap.create<Int, PaginatedItem>()
+	private val PAGES = ConcurrentHashMap<Int, LinkedHashSet<PaginatedItem>>()
 	private val LISTENERS = mutableMapOf<Int, ICustomInventory.ClickListener>()
 
 	private var onClose: Consumer<InventoryCloseEvent>? = null
@@ -172,11 +172,11 @@ open class CustomInventory(
 		if (PAGINATED) {
 			val paginatedItem = PaginatedItem(itemStack)
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE]!!.size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
-			PAGES.put(CURRENT_PAGE, paginatedItem)
+			PAGES[CURRENT_PAGE] = linkedSetOf(paginatedItem)
 		} else {
 			super.addItem(itemStack)
 		}
@@ -193,11 +193,11 @@ open class CustomInventory(
 				) = callback.accept(event)
 			})
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE]!!.size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
-			PAGES.put(CURRENT_PAGE, paginatedItem)
+			PAGES[CURRENT_PAGE] = linkedSetOf(paginatedItem)
 		} else for (i in 0 until this.size) {
 			if (this.contents[i] === null || this.contents[i].type === Material.AIR) {
 				this.setItem(i, itemStack, callback)
@@ -215,11 +215,11 @@ open class CustomInventory(
 				override fun run() = callback.run()
 			})
 
-			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE].size >= SLOTS.size) {
+			if (PAGES.containsKey(CURRENT_PAGE) && PAGES[CURRENT_PAGE]!!.size >= SLOTS.size) {
 				CURRENT_PAGE++
 			}
 
-			PAGES.put(CURRENT_PAGE, paginatedItem)
+			PAGES[CURRENT_PAGE] = linkedSetOf(paginatedItem)
 		} else for (i in 0 until this.size) {
 			if (this.contents[i] === null || this.contents[i].type === Material.AIR) {
 				this.setItem(i, itemStack, callback)
@@ -232,14 +232,14 @@ open class CustomInventory(
 		event: InventoryOpenEvent
 	) {
 		if (PAGINATED) {
-			if (PAGES.isEmpty) {
+			if (PAGES.isEmpty()) {
 				this.setItem(22, EMPTY)
 			} else {
-				val totalPages = ceil(PAGES.size().toDouble() / SLOTS.size.toDouble()).toInt()
+				val totalPages = ceil(PAGES.size.toDouble() / SLOTS.size.toDouble()).toInt()
 
 				SLOTS.forEach { this.clear(it) }
 
-				PAGES[PAGE].forEachIndexed { index, paginatedItem ->
+				PAGES[PAGE]?.forEachIndexed { index, paginatedItem ->
 					this.setItem(
 						SLOTS[index],
 						paginatedItem.itemStack

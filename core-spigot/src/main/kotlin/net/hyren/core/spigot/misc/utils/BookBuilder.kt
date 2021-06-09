@@ -3,10 +3,10 @@ package net.hyren.core.spigot.misc.utils
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
-import net.minecraft.server.v1_8_R3.ChatComponentText
-import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.ChatComponentText
+import net.minecraft.server.IChatBaseComponent
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftMetaBook
+import org.bukkit.craftbukkit.inventory.CraftMetaBook
 import org.bukkit.inventory.ItemStack
 
 /**

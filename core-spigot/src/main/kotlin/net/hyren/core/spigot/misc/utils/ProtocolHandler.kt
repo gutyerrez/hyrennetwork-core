@@ -1,13 +1,22 @@
 package net.hyren.core.spigot.misc.utils
 
-import io.netty.channel.*
+import io.netty.channel.Channel
+import io.netty.channel.ChannelDuplexHandler
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.ChannelInboundHandlerAdapter
+import io.netty.channel.ChannelInitializer
+import io.netty.channel.ChannelPromise
 import net.hyren.core.spigot.CoreSpigotPlugin
-import net.minecraft.server.v1_8_R3.*
+import net.minecraft.server.NetworkManager
+import net.minecraft.server.PacketLoginInStart
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.CraftServer
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
-import org.bukkit.event.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.HandlerList
+import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.server.PluginDisableEvent
 import java.util.*

@@ -1,12 +1,11 @@
 package net.hyren.core.spigot
 
-import java.util.concurrent.TimeUnit
 import net.hyren.core.shared.CoreProvider
-import net.hyren.core.shared.scheduler.AsyncScheduler
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.applications.status.task.ApplicationStatusTask
-import net.hyren.core.shared.wrapper.CoreWrapper
+import net.hyren.core.shared.scheduler.AsyncScheduler
 import net.hyren.core.shared.servers.ServerType
+import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
 import net.hyren.core.spigot.listeners.GenericListener
@@ -15,12 +14,13 @@ import net.hyren.core.spigot.misc.utils.PacketEvent
 import net.hyren.core.spigot.misc.utils.PacketListener
 import net.hyren.core.spigot.sign.CustomSign
 import net.hyren.core.spigot.wrapper.SpigotWrapper
-import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign
+import net.minecraft.server.PacketPlayInUpdateSign
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
