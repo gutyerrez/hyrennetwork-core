@@ -2,7 +2,7 @@ plugins {
 	kotlin("jvm") version "1.5.10"
 	kotlin("plugin.serialization") version "1.5.0"
 
-	id("com.github.johnrengelman.shadow") version "6.1.0"
+	id("com.github.johnrengelman.shadow") version "7.0.0"
 
 	`maven-publish`
 }
@@ -16,7 +16,7 @@ allprojects {
 	tasks {
 		compileKotlin {
 			kotlinOptions {
-				jvmTarget = "1.8"
+				jvmTarget = "16"
 			}
 		}
 

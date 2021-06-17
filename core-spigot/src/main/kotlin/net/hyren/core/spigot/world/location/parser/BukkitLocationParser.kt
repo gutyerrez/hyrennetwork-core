@@ -24,4 +24,4 @@ class BukkitLocationParser : LocationParser<Location> {
 
 }
 
-public inline fun SerializedLocation.asBukkitLocation() = CoreSpigotConstants.BUKKIT_LOCATION_PARSER.apply(this)
+fun SerializedLocation.asBukkitLocation() = CoreSpigotConstants.BUKKIT_LOCATION_PARSER.apply(this)

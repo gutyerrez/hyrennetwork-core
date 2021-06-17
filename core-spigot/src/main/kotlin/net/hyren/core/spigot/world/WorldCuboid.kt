@@ -2,13 +2,13 @@ package net.hyren.core.spigot.world
 
 import net.hyren.core.shared.world.location.SerializedLocation
 import net.hyren.core.spigot.world.vector.Vector2D
-import net.minecraft.server.AxisAlignedBB
+import net.minecraft.server.v1_8_R3.AxisAlignedBB
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
-import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
@@ -246,11 +246,10 @@ class WorldCuboid {
             maxZ.toDouble()
         )
 
-        val craftWorld = this.getBukkitWorld() as CraftWorld
-        val worldServer = craftWorld.handle
+        val worldServer = (getBukkitWorld() as CraftWorld).handle
 
         return worldServer.a(
-            null as net.minecraft.server.Entity?,
+            null as net.minecraft.server.v1_8_R3.Entity?,
             axisAlignedBB
         ) {
             if (predicate === null) return@a true

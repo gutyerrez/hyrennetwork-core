@@ -1,9 +1,9 @@
 package net.hyren.core.spigot.misc.hologram.lines
 
-import net.minecraft.server.EntityArmorStand
-import net.minecraft.server.WorldServer
+import net.minecraft.server.v1_8_R3.EntityArmorStand
+import net.minecraft.server.v1_8_R3.WorldServer
 import org.bukkit.Location
-import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
 
 /**
  * @author Gutyerrez

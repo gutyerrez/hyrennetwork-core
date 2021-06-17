@@ -1,7 +1,7 @@
 package net.hyren.core.spigot.listeners
 
 import net.hyren.core.spigot.inventory.CustomInventory
-import org.bukkit.craftbukkit.inventory.CraftInventory
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent

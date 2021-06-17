@@ -3,9 +3,9 @@ package net.hyren.core.spigot.sign
 import net.hyren.core.shared.misc.kotlin.sizedArray
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.server.BlockPosition
-import net.minecraft.server.IChatBaseComponent
-import net.minecraft.server.TileEntitySign
+import net.minecraft.server.v1_8_R3.BlockPosition
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.v1_8_R3.TileEntitySign
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.util.function.BiConsumer
