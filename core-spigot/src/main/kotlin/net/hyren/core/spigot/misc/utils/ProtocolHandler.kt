@@ -7,11 +7,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelPromise
 import net.hyren.core.spigot.CoreSpigotPlugin
-import net.minecraft.server.NetworkManager
-import net.minecraft.server.PacketLoginInStart
+import net.minecraft.server.v1_8_R3.NetworkManager
+import net.minecraft.server.v1_8_R3.PacketLoginInStart
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.CraftServer
-import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority

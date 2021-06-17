@@ -3,8 +3,8 @@ package net.hyren.core.spigot.misc.utils
 import net.hyren.core.shared.misc.utils.ChatColor
 import net.hyren.core.spigot.misc.player.sendPacket
 import net.md_5.bungee.api.chat.TextComponent
-import net.minecraft.server.Packet
-import net.minecraft.server.PacketPlayOutTitle
+import net.minecraft.server.v1_8_R3.Packet
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.entity.Player
 
 /**

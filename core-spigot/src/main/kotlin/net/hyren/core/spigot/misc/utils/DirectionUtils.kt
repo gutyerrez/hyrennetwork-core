@@ -1,5 +1,7 @@
 package net.hyren.core.spigot.misc.utils
 
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import org.bukkit.block.BlockFace
 import org.bukkit.util.Vector
 
@@ -27,7 +29,7 @@ object DirectionUtils {
     )
 
     fun yawToFace(yaw: Float, useSubCardinalDirections: Boolean = true) = if (useSubCardinalDirections) {
-        when (RADIAL[Math.round(yaw / 45f) and 0x7]) {
+        when (RADIAL[(yaw / 45f).roundToInt() and 0x7]) {
             BlockFace.NORTH -> BlockFace.SOUTH
             BlockFace.SOUTH -> BlockFace.NORTH
             BlockFace.EAST -> BlockFace.WEST
@@ -39,27 +41,19 @@ object DirectionUtils {
             else -> throw NullPointerException()
         }
     } else {
-        AXIAL[Math.round(yaw / 90f) and 0x3]
+        AXIAL[(yaw / 90f).roundToInt() and 0x3]
     }
 
-    fun vectorToFace(vector: Vector): BlockFace {
-        val absX = Math.abs(vector.x)
-        val absZ = Math.abs(vector.z)
-
-        val x = vector.x
-        val z = vector.z
-
-        return if (absX > absZ) {
-            if (x > 0) {
-                BlockFace.EAST
-            } else {
-                BlockFace.WEST
-            }
-        } else if (z > 0) {
-            BlockFace.SOUTH
+    fun vectorToFace(vector: Vector): BlockFace = if (abs(vector.x) > abs(vector.z)) {
+        if (vector.x > 0) {
+            BlockFace.EAST
         } else {
-            BlockFace.NORTH
+            BlockFace.WEST
         }
+    } else if (vector.z > 0) {
+        BlockFace.SOUTH
+    } else {
+        BlockFace.NORTH
     }
 
 }

@@ -1,10 +1,6 @@
 package net.hyren.core.spigot
 
 import net.hyren.core.shared.CoreProvider
-import net.hyren.core.shared.applications.status.ApplicationStatus
-import net.hyren.core.shared.applications.status.task.ApplicationStatusTask
-import net.hyren.core.shared.scheduler.AsyncScheduler
-import net.hyren.core.shared.servers.ServerType
 import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
@@ -14,13 +10,12 @@ import net.hyren.core.spigot.misc.utils.PacketEvent
 import net.hyren.core.spigot.misc.utils.PacketListener
 import net.hyren.core.spigot.sign.CustomSign
 import net.hyren.core.spigot.wrapper.SpigotWrapper
-import net.minecraft.server.PacketPlayInUpdateSign
+import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
@@ -78,7 +73,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Protocol
          */
 
-        CoreSpigotConstants.PROTOCOL_HANDLER?.registerListener(
+        CoreSpigotConstants.PROTOCOL_HANDLER.registerListener(
             object : PacketListener() {
 
                 override fun onReceive(
@@ -104,38 +99,6 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
             }
         )
-
-        /**
-         * Rankup Application status
-         */
-        if (CoreProvider.application.server?.serverType == ServerType.RANK_UP) {
-            AsyncScheduler.scheduleAsyncRepeatingTask(
-                object : ApplicationStatusTask(
-                    ApplicationStatus(
-                        CoreProvider.application.name,
-                        CoreProvider.application.applicationType,
-                        CoreProvider.application.server,
-                        CoreProvider.application.address,
-                        this.onlineSince
-                    )
-                ) {
-                    override fun buildApplicationStatus(
-                        applicationStatus: ApplicationStatus
-                    ) {
-                        val runtime = Runtime.getRuntime()
-
-                        applicationStatus.heapSize = runtime.totalMemory()
-                        applicationStatus.heapMaxSize = runtime.maxMemory()
-                        applicationStatus.heapFreeSize = runtime.freeMemory()
-
-                        applicationStatus.onlinePlayers = Bukkit.getOnlinePlayers().size
-                    }
-                },
-                0,
-                1,
-                TimeUnit.SECONDS
-            )
-        }
     }
 
 }

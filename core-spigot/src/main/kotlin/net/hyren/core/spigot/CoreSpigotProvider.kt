@@ -4,7 +4,16 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import net.hyren.core.shared.misc.json.*
+import net.hyren.core.shared.misc.json.KJson
+import net.hyren.core.shared.misc.json.KSerializer
+import net.hyren.core.shared.misc.json.asBoolean
+import net.hyren.core.shared.misc.json.asDouble
+import net.hyren.core.shared.misc.json.asEnum
+import net.hyren.core.shared.misc.json.asFloat
+import net.hyren.core.shared.misc.json.asInt
+import net.hyren.core.shared.misc.json.asJsonArray
+import net.hyren.core.shared.misc.json.asJsonObject
+import net.hyren.core.shared.misc.json.asString
 import net.hyren.core.shared.providers.IProvider
 import net.hyren.core.shared.providers.cache.local.LocalCacheProvider
 import net.hyren.core.shared.providers.databases.postgresql.providers.PostgreSQLRepositoryProvider
@@ -34,7 +43,7 @@ object CoreSpigotProvider {
 
     object Serializers {
 
-        val CUSTOM_SERIALIZERS = object : IProvider<Any> {
+        val CUSTOM_SERIALIZERS = object : IProvider<Unit> {
 
             override fun prepare() {
                 KJson.registerSerializer {
@@ -143,7 +152,7 @@ object CoreSpigotProvider {
                 }
             }
 
-            override fun provide() = Any()
+            override fun provide() = Unit
 
         }
 
