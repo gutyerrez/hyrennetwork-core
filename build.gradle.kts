@@ -22,17 +22,6 @@ allprojects {
 
 		shadowJar {
 			archiveFileName.set("${project.name}.jar")
-
-			doLast {
-				exec {
-					commandLine(
-						"cmd",
-						"echo",
-						"-e",
-						"Pão com mamão e açúcar"
-					)
-				}
-			}
 		}
 	}
 
