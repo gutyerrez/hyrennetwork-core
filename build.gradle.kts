@@ -26,7 +26,7 @@ allprojects {
 			doLast {
 				exec {
 					commandLine(
-						"bash",
+						"cmd",
 						"echo",
 						"-e",
 						"Pão com mamão e açúcar"
