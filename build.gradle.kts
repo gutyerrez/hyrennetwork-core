@@ -24,14 +24,13 @@ allprojects {
 			archiveFileName.set("${project.name}.jar")
 
 			doLast {
-				val servers = File("/home/configuration/servers/servers.txt").readLines()
-
-				servers.forEach {
-					println("Deploying generated files to $it")
-					
-					exec {
-						setCommandLine("git")
-					}
+				exec {
+					commandLine(
+						"bash",
+						"echo",
+						"-e",
+						"Pão com mamão e açúcar"
+					)
 				}
 			}
 		}
