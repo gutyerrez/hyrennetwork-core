@@ -12,11 +12,9 @@ jobs:
         run: chmod +x gradlew
       - name: Build project
         run: ./gradlew shadowJar
-      - name: Deploy project
+      - name: Deploy project to artifactory
         run: ./gradlew publish
       - name: Deploy to remote servers
-        uses: HyrenDev/scp-action@main
-        with:
-          files: |
-            core-spigot/build/libs/core-spigot.jar
-            core-bungee/build/libs/core-bungee.jar
+        run: |
+          sh /home/cloud/scripts/github/deploy.sh core-spigot/build/libs/core-spigot.jar
+          sh /home/cloud/scripts/github/deploy.sh core-bungee/build/libs/core-bungee.jar
