@@ -16,7 +16,7 @@ allprojects {
 	tasks {
 		compileKotlin {
 			kotlinOptions {
-				jvmTarget = "16"
+				jvmTarget = "1.8"
 			}
 		}
 
