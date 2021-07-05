@@ -15,6 +15,9 @@ import java.util.concurrent.TimeUnit
 object CoreConstants {
 
 	const val HOME_FOLDER = "/home"
+	const val CLOUD_FOLDER = "${HOME_FOLDER}/cloud"
+	const val THEMES_FOLDER = "${CLOUD_FOLDER}/themes"
+
 	const val MAX_LOGIN_ATTEMPTS = 3
 
 	val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
@@ -48,14 +51,14 @@ object CoreConstants {
 
 		// name
 
-		const val SERVER_NAME = "Rede Fantasy"
-		const val COLORED_SERVER_NAME = "§6§lREDE FANTASY"
-		const val ERROR_SERVER_NAME = "§c§lREDE FANTASY"
+		const val SERVER_NAME = "Hyren"
+		const val COLORED_SERVER_NAME = "§3§lHYREN"
+		const val ERROR_SERVER_NAME = "§c§lHYREN"
 
 		// url
 
-		const val DISCORD_URL = "discord.redefantasy.com"
-		const val SHOP_URL = "loja.redefantasy.com"
+		const val DISCORD_URL = "www.hyren.net/discord"
+		const val SHOP_URL = "www.loja.hyren.net"
 
 	}
 
