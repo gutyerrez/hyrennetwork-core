@@ -16,5 +16,5 @@ jobs:
         run: ./gradlew publish
       - name: Deploy to remote servers
         run: |
-          sh /home/cloud/scripts/github/deploy.sh core-spigot/build/libs/core-spigot.jar
-          sh /home/cloud/scripts/github/deploy.sh core-bungee/build/libs/core-bungee.jar
+          sh /home/cloud/scripts/services/github/actions/deploy.sh core-spigot/build/libs/core-spigot.jar
+          sh /home/cloud/scripts/services/github/actions/deploy.sh core-bungee/build/libs/core-bungee.jar
