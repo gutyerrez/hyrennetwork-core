@@ -1,6 +1,5 @@
 package net.hyren.core.spigot
 
-import com.scuti.blockexploits.spigot.BlockExploitsPlugin
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
@@ -74,7 +73,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
          * Scuti Block Exploits
          */
 
-        BlockExploitsPlugin.getInstance().onEnable()
+        // later
 
         /**
          * Protocol
