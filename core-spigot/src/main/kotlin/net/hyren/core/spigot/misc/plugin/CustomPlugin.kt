@@ -13,9 +13,7 @@ abstract class CustomPlugin(
 
     override fun onEnable() {
         if (prepareProviders) {
-            CoreProvider.prepare(
-                Bukkit.getPort()
-            )
+            CoreProvider.prepare(Bukkit.getServer().port)
 
             val echo = CoreProvider.Databases.Redis.ECHO.provide()
 

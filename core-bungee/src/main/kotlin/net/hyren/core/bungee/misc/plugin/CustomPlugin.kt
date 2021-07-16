@@ -13,11 +13,7 @@ abstract class CustomPlugin(
 ) : Plugin() {
 
     override fun onEnable() {
-        println("Starting plugin ${this.description.name}")
-
         if (prepareProviders) {
-            println("Preparing providers")
-
             try {
                 CoreProvider.prepare(
                     (BungeeCordConstants.LISTENER_INFO.socketAddress as InetSocketAddress).port
