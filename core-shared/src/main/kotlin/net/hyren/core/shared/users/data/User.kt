@@ -1,27 +1,30 @@
 package net.hyren.core.shared.users.data
 
-import net.hyren.core.shared.*
+import net.hyren.core.shared.CoreConstants
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.packets.DisconnectUserPacket
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.kotlin.copyFrom
-import net.hyren.core.shared.misc.preferences.*
+import net.hyren.core.shared.misc.preferences.FLY_IN_LOBBY
+import net.hyren.core.shared.misc.preferences.PreferenceRegistry
+import net.hyren.core.shared.misc.preferences.PreferenceState
 import net.hyren.core.shared.misc.preferences.data.Preference
 import net.hyren.core.shared.misc.punish.PunishType
 import net.hyren.core.shared.misc.report.category.data.ReportCategory
-import net.hyren.core.shared.misc.utils.*
+import net.hyren.core.shared.misc.utils.ChatColor
+import net.hyren.core.shared.misc.utils.DateFormatter
 import net.hyren.core.shared.servers.data.Server
-import net.hyren.core.shared.users.passwords.storage.dto.FetchUserPasswordByUserIdDTO
 import net.hyren.core.shared.users.punishments.data.UserPunishment
 import net.hyren.core.shared.users.punishments.storage.dto.UpdateUserPunishmentByIdDTO
-import net.md_5.bungee.api.chat.*
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ComponentBuilder
 import okhttp3.internal.toImmutableList
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
-import kotlin.Pair
 
 /**
  * @author SrGutyerrez
@@ -135,31 +138,6 @@ open class User(
         }
 
         return null
-    }
-
-    fun attemptLogin(password: String): Boolean {
-        val userPasswords = CoreProvider.Repositories.PostgreSQL.USERS_PASSWORDS_REPOSITORY.provide().fetchByUserId(
-            FetchUserPasswordByUserIdDTO(this.getUniqueId())
-        )
-
-        if (userPasswords.isEmpty()) {
-            return false
-        }
-
-        val successfully = userPasswords.stream().anyMatch {
-            it.enabled && it.password.contentEquals(
-                EncryptionUtil.hash(
-                    EncryptionUtil.Type.SHA256,
-                    password
-                )
-            )
-        }
-
-        if (!successfully) {
-            loginAttempts.getAndIncrement()
-        }
-
-        return successfully
     }
 
     fun getFancyName() = "${ChatColor.fromHEX(this.getHighestGroup().color!!)}$name"
