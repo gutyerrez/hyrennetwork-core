@@ -8,12 +8,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build project
-        run: ./gradlew shadowJar
+        run: gradle jar --refresh-dependencies
       - name: Deploy project to artifactory
-        run: ./gradlew publish
+        run: gradle publish
       - name: Deploy to remote servers
         run: |
           sh /home/cloud/scripts/services/github/actions/deploy.sh core-spigot/build/libs/core-spigot.jar
