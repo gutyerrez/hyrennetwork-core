@@ -7,7 +7,8 @@ import net.hyren.core.shared.applications.storage.dto.FetchApplicationByInetSock
 import net.hyren.core.shared.applications.storage.repositories.IApplicationsRepository
 import net.hyren.core.shared.applications.storage.repositories.implementations.PostgreSQLApplicationsRepository
 import net.hyren.core.shared.environment.Env
-import net.hyren.core.shared.exceptions.*
+import net.hyren.core.shared.exceptions.ApplicationAlreadyPreparedException
+import net.hyren.core.shared.exceptions.InvalidApplicationException
 import net.hyren.core.shared.groups.storage.repositories.IGroupsRepository
 import net.hyren.core.shared.groups.storage.repositories.implementations.PostgreSQLGroupsRepository
 import net.hyren.core.shared.misc.maintenance.cache.local.MaintenanceLocalCache
@@ -33,7 +34,8 @@ import net.hyren.core.shared.servers.cache.local.ServersLocalCache
 import net.hyren.core.shared.servers.storage.repositories.IServersRepository
 import net.hyren.core.shared.servers.storage.repositories.implementations.PostgreSQLServersRepository
 import net.hyren.core.shared.users.cache.local.UsersLocalCache
-import net.hyren.core.shared.users.cache.redis.*
+import net.hyren.core.shared.users.cache.redis.UsersLoggedRedisCache
+import net.hyren.core.shared.users.cache.redis.UsersStatusRedisCache
 import net.hyren.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import net.hyren.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
 import net.hyren.core.shared.users.friends.storage.repositories.implementations.PostgreSQLUsersFriendsRepository
@@ -43,8 +45,6 @@ import net.hyren.core.shared.users.groups.due.storage.repositories.implementatio
 import net.hyren.core.shared.users.ignored.cache.local.IgnoredUsersLocalCache
 import net.hyren.core.shared.users.ignored.storage.repositories.IIgnoredUsersRepository
 import net.hyren.core.shared.users.ignored.storage.repositories.implementations.PostgreSQLIgnoredUsersRepository
-import net.hyren.core.shared.users.passwords.storage.repositories.IUsersPasswordsRepository
-import net.hyren.core.shared.users.passwords.storage.repositories.implementations.PostgreSQLUsersPasswordsRepository
 import net.hyren.core.shared.users.preferences.cache.local.UsersPreferencesLocalCache
 import net.hyren.core.shared.users.preferences.storage.repositories.IUsersPreferencesRepository
 import net.hyren.core.shared.users.preferences.storage.repositories.implementations.PostgreSQLUsersPreferencesRepository
@@ -76,7 +76,6 @@ object CoreProvider {
         PROVIDERS.add(Repositories.PostgreSQL.PUNISH_CATEGORIES_REPOSITORY)
         PROVIDERS.add(Repositories.PostgreSQL.REVOKE_CATEGORIES_REPOSITORY)
         PROVIDERS.add(Repositories.PostgreSQL.USERS_PUNISHMENTS_REPOSITORY)
-        PROVIDERS.add(Repositories.PostgreSQL.USERS_PASSWORDS_REPOSITORY)
         PROVIDERS.add(Repositories.PostgreSQL.USERS_FRIENDS_REPOSITORY)
         PROVIDERS.add(Repositories.PostgreSQL.IGNORED_USERS_REPOSITORY)
         PROVIDERS.add(Repositories.PostgreSQL.USERS_PREFERENCES_REPOSITORY)
@@ -248,10 +247,6 @@ object CoreProvider {
 
             val USERS_PUNISHMENTS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersPunishmentsRepository>(
                 PostgreSQLUsersPunishmentsRepository::class
-            )
-
-            val USERS_PASSWORDS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersPasswordsRepository>(
-                PostgreSQLUsersPasswordsRepository::class
             )
 
             val USERS_FRIENDS_REPOSITORY = PostgreSQLRepositoryProvider<IUsersFriendsRepository>(

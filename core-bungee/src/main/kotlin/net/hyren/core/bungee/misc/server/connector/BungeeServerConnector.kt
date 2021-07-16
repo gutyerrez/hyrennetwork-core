@@ -3,7 +3,6 @@ package net.hyren.core.bungee.misc.server.connector
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
-import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.users.data.User
 import net.hyren.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.ComponentBuilder
@@ -24,25 +23,7 @@ class BungeeServerConnector : ServerConnector {
 		ApplicationType.PUNISHED_LOBBY
 	)
 
-	override fun fetchLobbyServer(userId: UUID?) = CoreProvider.Cache.Local.APPLICATIONS.provide().fetchByApplicationType(ApplicationType.LOGIN)
-		.stream()
-		.sorted { application1, application2 ->
-			val applicationStatus1 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-				application1,
-				ApplicationStatus::class
-			)
-
-			val applicationStatus2 = CoreProvider.Cache.Redis.APPLICATIONS_STATUS.provide().fetchApplicationStatusByApplication(
-				application2,
-				ApplicationStatus::class
-			)
-
-			if (applicationStatus1 === null || applicationStatus2 === null) return@sorted 0
-
-			if (applicationStatus1.onlinePlayers < application1.slots ?: 0 && applicationStatus2.onlinePlayers < application2.slots ?: 0) return@sorted applicationStatus2.onlinePlayers.compareTo(applicationStatus1.onlinePlayers)
-
-			return@sorted 0
-		}.findFirst().orElse(null)?.address
+	override fun fetchLobbyServer(userId: UUID?) = CoreConstants.fetchLobbyApplication()?.address
 
 	override fun updateAndGetNext(
 		proxiedPlayer: ProxiedPlayer,
@@ -56,11 +37,15 @@ class BungeeServerConnector : ServerConnector {
 			inetSocketAddress
 		) ?: return null
 
-		if (IGNORED_APPLICATIONS.contains(application.applicationType)) return null
+		if (IGNORED_APPLICATIONS.contains(application.applicationType)) {
+			return null
+		}
 
 		val targetApplication = CoreConstants.fetchLobbyApplication()
 
-		if (user != null && user.getConnectedBukkitApplication() == targetApplication) return null
+		if (user != null && user.getConnectedBukkitApplication() == targetApplication) {
+			return null
+		}
 
 		return targetApplication?.address
 	}
