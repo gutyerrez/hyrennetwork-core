@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build project
-        run: gradle jar --refresh-dependencies
+        run: gradle shadowJar --refresh-dependencies
       - name: Deploy project to artifactory
         run: gradle publish
       - name: Deploy to remote servers
