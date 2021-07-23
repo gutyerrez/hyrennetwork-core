@@ -96,7 +96,7 @@ data class Theme(
     }
 
     private fun Application.getThemesFolder(): String = when (applicationType) {
-        ApplicationType.LOGIN, ApplicationType.LOBBY -> "${CoreConstants.THEMES_FOLDER}/lobby"
+        ApplicationType.LOBBY -> "${CoreConstants.THEMES_FOLDER}/lobby"
         ApplicationType.SERVER_SPAWN, ApplicationType.SERVER_VIP -> "${CoreConstants.THEMES_FOLDER}/${name}"
         else -> throw RuntimeException("This application has not theme folder declared")
     }
