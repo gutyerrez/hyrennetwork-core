@@ -76,10 +76,8 @@ data class UserPunishment(
             CoreConstants.DATE_TIME_ZONE
         )
 
-        if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.DIRECTOR)) {
+        if (revoker.hasGroup(Group.MASTER) || revoker.hasGroup(Group.MANAGER)) {
             return true
-        } else if (revoker.hasGroup(Group.MANAGER)) {
-            return this.createdAt.plus(TimeUnit.DAYS.toMillis(7)) > currentDateTime
         } else if (revoker.hasGroup(Group.ADMINISTRATOR)) {
             return this.createdAt.plus(TimeUnit.DAYS.toMillis(3)) > currentDateTime
         } else if (revoker.hasGroup(Group.MODERATOR)) {

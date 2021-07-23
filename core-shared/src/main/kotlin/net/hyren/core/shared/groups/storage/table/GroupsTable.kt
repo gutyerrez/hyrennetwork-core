@@ -1,6 +1,8 @@
 package net.hyren.core.shared.groups.storage.table
 
+import net.hyren.core.shared.misc.exposed.array
 import net.hyren.core.shared.providers.databases.postgresql.dao.StringTable
+import net.md_5.bungee.api.chat.BaseComponent
 
 /**
  * @author SrGutyerrez
@@ -8,10 +10,9 @@ import net.hyren.core.shared.providers.databases.postgresql.dao.StringTable
 object GroupsTable : StringTable("groups") {
 
     val displayName = varchar("display_name", 255)
-    val prefix = varchar("prefix", 32)
-    val suffix = varchar("suffix", 32).nullable()
-    val color = varchar("color", 7)
+    val prefix = array<BaseComponent>("prefix", BaseComponent::class)
+    val suffix = array<BaseComponent>("suffix", BaseComponent::class).nullable()
     val priority = integer("priority")
-    val discordRoleId = long("discord_role_id").nullable()
+    val discordRoleId = long("discord_role_id")
 
 }

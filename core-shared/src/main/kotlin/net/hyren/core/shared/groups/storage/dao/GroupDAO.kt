@@ -10,7 +10,7 @@ import org.jetbrains.exposed.dao.id.EntityID
  * @author SrGutyerrez
  **/
 class GroupDAO(
-        name: EntityID<String>
+    name: EntityID<String>
 ) : StringEntity(name) {
 
     companion object : StringEntityClass<GroupDAO>(GroupsTable)
@@ -18,7 +18,6 @@ class GroupDAO(
     val displayName by GroupsTable.displayName
     val prefix by GroupsTable.prefix
     val suffix by GroupsTable.suffix
-    val color by GroupsTable.color
     val priority by GroupsTable.priority
     val discordRoleId by GroupsTable.discordRoleId
 
@@ -28,7 +27,6 @@ class GroupDAO(
         group.displayName = this.displayName
         group.prefix = this.prefix
         group.suffix = this.suffix
-        group.color = this.color
         group.priority = this.priority
         group.discordRoleId = this.discordRoleId
 

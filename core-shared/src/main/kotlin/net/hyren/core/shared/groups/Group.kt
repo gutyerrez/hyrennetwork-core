@@ -1,21 +1,14 @@
 package net.hyren.core.shared.groups
 
-import net.hyren.core.shared.misc.utils.ChatColor
+import net.md_5.bungee.api.chat.BaseComponent
+import kotlin.properties.Delegates
 
 /**
  * @author SrGutyerrez
  **/
-enum class Group(
-    var displayName: String? = null,
-    var prefix: String? = null,
-    var suffix: String? = null,
-    var color: String? = null,
-    var priority: Int? = null,
-    var discordRoleId: Long? = null
-) {
+enum class Group {
 
     MASTER,
-    DIRECTOR,
     MANAGER,
     ADMINISTRATOR,
     MODERATOR,
@@ -28,8 +21,34 @@ enum class Group(
     VIP,
     DEFAULT;
 
-    fun getColoredPrefix() = "${ChatColor.fromHEX(color ?: "")}$prefix"
+    lateinit var displayName: String
+    lateinit var prefix: Array<BaseComponent>
 
-    fun getFancyDisplayName() = "${ChatColor.fromHEX(color ?: "")}$displayName"
+    var suffix: Array<BaseComponent>? = null
+
+    var priority by Delegates.notNull<Int>()
+    var discordRoleId by Delegates.notNull<Long>()
+
+    companion object {
+
+        @Deprecated(
+            "Use manager",
+            ReplaceWith(
+                "Group.MANAGER"
+            )
+        )
+        val DIRECTOR = MANAGER
+
+    }
+
+    @Deprecated(
+        "Use prefix only",
+        ReplaceWith(
+            "prefix"
+        )
+    )
+    fun getColoredPrefix() = prefix
+
+    fun getFancyDisplayName() = "${prefix[0].color}$displayName"
 
 }
