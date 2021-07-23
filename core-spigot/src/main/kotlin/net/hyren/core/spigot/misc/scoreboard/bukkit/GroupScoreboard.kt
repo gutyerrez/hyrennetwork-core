@@ -18,16 +18,16 @@ open class GroupScoreboard : BaseScoreboard {
 
     fun registerTeams() {
         Group.values().forEach {
-            this.fetchOrCreateTeam(it)
+            fetchOrCreateTeam(it)
         }
     }
 
     fun registerUser(user: User) {
         val group = user.getHighestGroup()
 
-        val previousTeam = this.scoreboard.getEntryTeam(user.name)
+        val previousTeam = scoreboard.getEntryTeam(user.name)
 
-        val newTeam = this.fetchOrCreateTeam(group)
+        val newTeam = fetchOrCreateTeam(group)
 
         if (newTeam != previousTeam) {
             if (previousTeam !== null) previousTeam.removeEntry(user.name)
@@ -37,21 +37,24 @@ open class GroupScoreboard : BaseScoreboard {
     }
 
     private fun fetchOrCreateTeam(group: Group): Team {
-        val teamName = this.getName(group)
+        val teamName = getName(group)
 
-        var team: Team? = this.scoreboard.getTeam(teamName)
+        var team: Team? = scoreboard.getTeam(teamName)
 
         return if (team === null) {
-            team = this.scoreboard.registerNewTeam(teamName)
+            team = scoreboard.registerNewTeam(teamName)
 
             team.prefix = BaseComponent.toLegacyText(*group.prefix)
+
+            println(team.prefix)
+            println(team.prefix.length)
 
             team
         } else team
     }
 
     private fun getName(group: Group): String {
-        val index = -group.priority!! + Group.MASTER.priority!! + 1
+        val index = -group.priority + Group.MASTER.priority + 1
 
         val sequencePrefix = SequencePrefix()
 
