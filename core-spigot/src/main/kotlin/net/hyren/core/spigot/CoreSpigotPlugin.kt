@@ -1,10 +1,6 @@
 package net.hyren.core.spigot
 
 import net.hyren.core.shared.CoreProvider
-import net.hyren.core.shared.applications.ApplicationType
-import net.hyren.core.shared.applications.status.ApplicationStatus
-import net.hyren.core.shared.applications.status.task.ApplicationStatusTask
-import net.hyren.core.shared.scheduler.AsyncScheduler
 import net.hyren.core.shared.wrapper.CoreWrapper
 import net.hyren.core.spigot.echo.packets.listener.SoundEchoPacketListener
 import net.hyren.core.spigot.echo.packets.listener.TitleEchoPacketListener
@@ -20,7 +16,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Gutyerrez
@@ -106,64 +101,6 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
             }
         )
-
-        if (CoreProvider.application.applicationType == ApplicationType.LOBBY) {
-
-            /**
-             * World settings
-             */
-            Bukkit.getServer().worlds.forEach {
-                it.isAutoSave = true
-
-                it.isThundering = false
-                it.weatherDuration = 0
-
-                it.ambientSpawnLimit = 0
-                it.animalSpawnLimit = 0
-                it.monsterSpawnLimit = 0
-
-                it.setTicksPerAnimalSpawns(99999)
-                it.setTicksPerMonsterSpawns(99999)
-
-                it.setStorm(false)
-
-                it.setGameRuleValue("randomTickSpeed", "-1")
-                it.setGameRuleValue("mobGriefing", "false")
-                it.setGameRuleValue("doMobSpawning", "false")
-                it.setGameRuleValue("doMobLoot", "false")
-                it.setGameRuleValue("doFireTick", "false")
-                it.setGameRuleValue("doDaylightCycle", "false")
-
-                it.time = 1200
-            }
-
-            AsyncScheduler.scheduleAsyncRepeatingTask(
-                object : ApplicationStatusTask(
-                    ApplicationStatus(
-                        CoreProvider.application.name,
-                        CoreProvider.application.applicationType,
-                        CoreProvider.application.server,
-                        CoreProvider.application.address,
-                        this.onlineSince
-                    )
-                ) {
-                    override fun buildApplicationStatus(
-                        applicationStatus: ApplicationStatus
-                    ) {
-                        val runtime = Runtime.getRuntime()
-
-                        applicationStatus.heapSize = runtime.totalMemory()
-                        applicationStatus.heapMaxSize = runtime.maxMemory()
-                        applicationStatus.heapFreeSize = runtime.freeMemory()
-
-                        applicationStatus.onlinePlayers = Bukkit.getOnlinePlayers().size
-                    }
-                },
-                0,
-                1,
-                TimeUnit.SECONDS
-            )
-        }
     }
 
 }
