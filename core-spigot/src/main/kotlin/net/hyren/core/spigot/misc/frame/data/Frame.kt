@@ -196,15 +196,8 @@ data class Frame(val url: URL) {
         this.location = location
         this.blockFace = blockFace
 
-        mapsView.forEach { location, mapView ->
+        mapsView.forEach { (location, mapView) ->
             mapView.world = this.location!!.world
-
-            val clonedLocation = location.clone()
-            val block = clonedLocation.block
-
-            if (block.type != Material.AIR) {
-                clonedLocation.block.type = Material.AIR
-            }
 
             Bukkit.getScheduler().runTaskLater(
                 CoreSpigotPlugin.instance,
@@ -231,9 +224,11 @@ data class Frame(val url: URL) {
 
                     mapFrames.add(itemFrame)
 
-                    if (this.interactConsumer !== null) FrameManager.INTERACTABLE_FRAMES[
-                            itemFrame.uniqueId
-                    ] = this
+                    if (this.interactConsumer != null) {
+                        FrameManager.INTERACTABLE_FRAMES[
+                                itemFrame.uniqueId
+                        ] = this
+                    }
                 },
                 20L
             )
