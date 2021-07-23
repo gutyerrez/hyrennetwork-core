@@ -19,7 +19,6 @@ data class Application(
 ) {
 
     fun getFancyDisplayName() = when (applicationType) {
-        ApplicationType.LOGIN -> "L. ${name.split("-")[1]}"
         ApplicationType.LOBBY -> "S. ${name.split("-")[1]}"
         else -> displayName
     }
