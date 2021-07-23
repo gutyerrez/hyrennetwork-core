@@ -533,20 +533,24 @@ object KJson {
             }
         )
 
-        // BaseComponents serializer
+        // BaseComponent serializer
         contextual(
-            Array<BaseComponent>::class,
-            object : KSerializer<Array<BaseComponent>>() {
+            BaseComponent::class,
+            object : KSerializer<BaseComponent>() {
                 override fun serialize(
                     jsonEncoder: JsonEncoder,
-                    value: Array<BaseComponent>
-                ) = jsonEncoder.encodeString(
-                    ComponentSerializer.toString(*value)
-                )
+                    value: BaseComponent
+                ) = TODO("not yet implemented")
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ) = ComponentSerializer.parse(jsonDecoder.decodeString())
+                ): BaseComponent {
+                    val components = ComponentSerializer.parse(jsonDecoder.decodeString())
+
+                    println("Components size: ${components.size}")
+
+                    return components[0]
+                }
             }
         )
     }
