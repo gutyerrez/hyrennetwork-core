@@ -49,6 +49,6 @@ enum class Group {
     )
     fun getColoredPrefix() = prefix
 
-    fun getFancyDisplayName() = "${prefix[0].color}$displayName"
+    fun getFancyDisplayName() = "§${BaseComponent.toLegacyText(*prefix)[1] + displayName}"
 
 }
