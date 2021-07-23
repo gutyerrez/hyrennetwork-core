@@ -24,6 +24,8 @@ import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
@@ -545,11 +547,15 @@ object KJson {
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
                 ): BaseComponent {
-                    val components = ComponentSerializer.parse(jsonDecoder.decodeString())
+                    val components = ComponentBuilder()
 
-                    println("Components size: ${components.size}")
+                    jsonDecoder.decodeJsonElement().asJsonArray().forEach { components.append(
+                        ComponentSerializer.parse(it.asString())
+                    ) }
 
-                    return components[0]
+                    println("Current cursor: ${components.cursor}")
+
+                    return TextComponent(*components.create())
                 }
             }
         )
