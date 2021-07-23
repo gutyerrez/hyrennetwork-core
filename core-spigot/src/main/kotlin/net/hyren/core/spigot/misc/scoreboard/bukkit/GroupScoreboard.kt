@@ -3,6 +3,7 @@ package net.hyren.core.spigot.misc.scoreboard.bukkit
 import net.hyren.core.shared.groups.Group
 import net.hyren.core.shared.misc.utils.SequencePrefix
 import net.hyren.core.shared.users.data.User
+import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Team
 
@@ -43,7 +44,7 @@ open class GroupScoreboard : BaseScoreboard {
         return if (team === null) {
             team = this.scoreboard.registerNewTeam(teamName)
 
-            team.prefix = group.getColoredPrefix()
+            team.prefix = BaseComponent.toLegacyText(*group.prefix)
 
             team
         } else team
