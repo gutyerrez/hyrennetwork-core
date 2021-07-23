@@ -12,7 +12,6 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -48,7 +47,7 @@ data class Frame(val url: URL) {
         val extension = url.file.substring(url.file.length - 3)
         val frameImageFormat = FrameImageFormat.fromExtension(extension)
 
-        if (frameImageFormat === null) throw java.lang.IllegalArgumentException(
+        if (frameImageFormat === null) throw IllegalArgumentException(
             "Invalid file extension. Supported extensions: ${
                 Arrays.stream(FrameImageFormat.values()).map { it.extension }.collect(Collectors.joining(", "))
             }."
@@ -201,14 +200,11 @@ data class Frame(val url: URL) {
             mapView.world = this.location!!.world
 
             val clonedLocation = location.clone()
+            val block = clonedLocation.block
 
-            clonedLocation.world.entities.stream()
-                .filter { it.type == EntityType.ITEM_FRAME }
-                .forEach {
-                    if (it.location.blockX == clonedLocation.blockX && it.location.blockY == clonedLocation.blockY && it.location.blockZ == clonedLocation.blockZ) {
-                        it.remove()
-                    }
-                }
+            if (block.type != Material.AIR) {
+                clonedLocation.block.type = Material.AIR
+            }
 
             Bukkit.getScheduler().runTaskLater(
                 CoreSpigotPlugin.instance,
