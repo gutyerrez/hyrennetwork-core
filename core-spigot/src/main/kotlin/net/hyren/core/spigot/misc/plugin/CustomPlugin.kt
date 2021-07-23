@@ -1,7 +1,9 @@
 package net.hyren.core.spigot.misc.plugin
 
 import net.hyren.core.shared.CoreProvider
+import net.minecraft.server.v1_8_R3.DedicatedServer
 import org.bukkit.Bukkit
+import org.bukkit.World
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -21,6 +23,12 @@ abstract class CustomPlugin(
                 runnable.run()
             }
         }
+    }
+
+    fun getDefaultWorld(): World {
+        return Bukkit.getWorld(
+            DedicatedServer.getServer().propertyManager.getString("level-name", "world")
+        )
     }
 
 }
