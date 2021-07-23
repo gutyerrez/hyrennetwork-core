@@ -16,8 +16,6 @@ class PostgreSQLGroupsRepository : IGroupsRepository {
         CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
     ) {
         Group.values().forEach {
-            println("Load data from $it")
-
             GroupDAO.find {
                 GroupsTable.id eq it.name
             }.firstOrNull()?.readGroup()
