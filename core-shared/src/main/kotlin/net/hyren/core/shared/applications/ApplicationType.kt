@@ -7,8 +7,6 @@ enum class ApplicationType {
 
     PROXY,
 
-    LOGIN,
-
     LOBBY,
     
     PUNISHED_LOBBY,

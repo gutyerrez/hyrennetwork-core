@@ -18,7 +18,6 @@ import java.util.*
 class BungeeServerConnector : ServerConnector {
 
 	private val IGNORED_APPLICATIONS = arrayOf(
-		ApplicationType.LOGIN,
 		ApplicationType.LOBBY,
 		ApplicationType.PUNISHED_LOBBY
 	)
