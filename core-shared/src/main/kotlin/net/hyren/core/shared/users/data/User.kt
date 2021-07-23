@@ -5,6 +5,7 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.echo.packets.DisconnectUserPacket
 import net.hyren.core.shared.groups.Group
+import net.hyren.core.shared.misc.chat.plus
 import net.hyren.core.shared.misc.kotlin.copyFrom
 import net.hyren.core.shared.misc.preferences.FLY_IN_LOBBY
 import net.hyren.core.shared.misc.preferences.PreferenceRegistry
@@ -12,7 +13,6 @@ import net.hyren.core.shared.misc.preferences.PreferenceState
 import net.hyren.core.shared.misc.preferences.data.Preference
 import net.hyren.core.shared.misc.punish.PunishType
 import net.hyren.core.shared.misc.report.category.data.ReportCategory
-import net.hyren.core.shared.misc.utils.ChatColor
 import net.hyren.core.shared.misc.utils.DateFormatter
 import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.users.punishments.data.UserPunishment
@@ -140,7 +140,7 @@ open class User(
         return null
     }
 
-    fun getFancyName() = "${ChatColor.fromHEX(this.getHighestGroup().color!!)}$name"
+    fun getFancyName() = getHighestGroup().prefix[0].color + name
 
     fun getUniqueId() = this.id.value
 
