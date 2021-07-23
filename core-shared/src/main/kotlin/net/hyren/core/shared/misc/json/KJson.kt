@@ -25,8 +25,6 @@ import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
 import java.net.InetSocketAddress
@@ -537,25 +535,35 @@ object KJson {
 
         // BaseComponent serializer
         contextual(
-            BaseComponent::class,
-            object : KSerializer<BaseComponent>() {
+            Array<BaseComponent>::class,
+            object : KSerializer<Array<BaseComponent>>() {
                 override fun serialize(
                     jsonEncoder: JsonEncoder,
-                    value: BaseComponent
+                    value: Array<BaseComponent>
                 ) = TODO("not yet implemented")
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ): BaseComponent {
+                ): Array<BaseComponent> {
                     val components = ComponentBuilder()
 
-                    jsonDecoder.decodeJsonElement().asJsonArray().forEach { components.append(
-                        ComponentSerializer.parse(it.asString())
-                    ) }
+                    jsonDecoder.decodeJsonElement().asJsonArray().forEach {
+                        it as JsonObject
 
-                    println("Current cursor: ${components.cursor}")
+                        if (it.containsKey("text") && it["text"] != null) {
+                            components.append(it["text"]!!.asString())
+                        }
 
-                    return TextComponent(*components.create())
+                        if (it.containsKey("color") && it["color"] != null) {
+                            components.color(
+                                net.md_5.bungee.api.ChatColor.valueOf(
+                                    it["color"]!!.asString()
+                                )
+                            )
+                        }
+                    }
+
+                    return components.create()
                 }
             }
         )
