@@ -108,6 +108,35 @@ class CoreSpigotPlugin : CustomPlugin(true) {
         )
 
         if (CoreProvider.application.applicationType == ApplicationType.LOBBY) {
+
+            /**
+             * World settings
+             */
+            Bukkit.getServer().worlds.forEach {
+                it.isAutoSave = true
+
+                it.isThundering = false
+                it.weatherDuration = 0
+
+                it.ambientSpawnLimit = 0
+                it.animalSpawnLimit = 0
+                it.monsterSpawnLimit = 0
+
+                it.setTicksPerAnimalSpawns(99999)
+                it.setTicksPerMonsterSpawns(99999)
+
+                it.setStorm(false)
+
+                it.setGameRuleValue("randomTickSpeed", "-1")
+                it.setGameRuleValue("mobGriefing", "false")
+                it.setGameRuleValue("doMobSpawning", "false")
+                it.setGameRuleValue("doMobLoot", "false")
+                it.setGameRuleValue("doFireTick", "false")
+                it.setGameRuleValue("doDaylightCycle", "false")
+
+                it.time = 1200
+            }
+
             AsyncScheduler.scheduleAsyncRepeatingTask(
                 object : ApplicationStatusTask(
                     ApplicationStatus(
