@@ -5,6 +5,8 @@ package net.hyren.core.shared.applications
  **/
 enum class ApplicationType {
 
+    NYRAH_CONTROL,
+
     PROXY,
 
     LOBBY,
