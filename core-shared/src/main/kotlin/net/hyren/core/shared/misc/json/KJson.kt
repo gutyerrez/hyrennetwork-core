@@ -23,6 +23,8 @@ import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.chat.ComponentSerializer
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
 import java.net.InetSocketAddress
@@ -528,6 +530,23 @@ object KJson {
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
                 ) = DateTime.parse(jsonDecoder.decodeString())
+            }
+        )
+
+        // BaseComponents serializer
+        contextual(
+            Array<BaseComponent>::class,
+            object : KSerializer<Array<BaseComponent>>() {
+                override fun serialize(
+                    jsonEncoder: JsonEncoder,
+                    value: Array<BaseComponent>
+                ) = jsonEncoder.encodeString(
+                    ComponentSerializer.toString(*value)
+                )
+
+                override fun deserialize(
+                    jsonDecoder: JsonDecoder
+                ) = ComponentSerializer.parse(jsonDecoder.decodeString())
             }
         )
     }
