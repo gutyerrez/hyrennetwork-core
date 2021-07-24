@@ -1,22 +1,22 @@
 package net.hyren.core.shared.users.skins.storage.dao
 
 import net.hyren.core.shared.misc.skin.Skin
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntity
+import net.hyren.core.shared.providers.databases.postgresql.dao.StringEntityClass
 import net.hyren.core.shared.users.skins.data.UserSkin
 import net.hyren.core.shared.users.skins.storage.table.UsersSkinsTable
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 /**
  * @author SrGutyerrez
  **/
 class UserSkinDAO(
-	id: EntityID<Int>
-) : IntEntity(id) {
+	id: EntityID<String>
+) : StringEntity(id) {
 
-	companion object : IntEntityClass<UserSkinDAO>(UsersSkinsTable)
+	companion object : StringEntityClass<UserSkinDAO>(UsersSkinsTable)
 
-	var name by UsersSkinsTable.name
+	var name by UsersSkinsTable.id
 	var userId by UsersSkinsTable.userId
 	var value by UsersSkinsTable.value
 	var signature by UsersSkinsTable.signature
@@ -24,7 +24,7 @@ class UserSkinDAO(
 	var updatedAt by UsersSkinsTable.updatedAt
 
 	fun toUserSkin() = UserSkin(
-		this.name,
+		this.name.value,
 		this.userId,
 		Skin(
 			this.value,

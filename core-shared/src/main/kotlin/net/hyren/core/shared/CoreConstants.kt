@@ -18,8 +18,6 @@ object CoreConstants {
 	const val CLOUD_FOLDER = "${HOME_FOLDER}/cloud"
 	const val THEMES_FOLDER = "${CLOUD_FOLDER}/themes"
 
-	const val MAX_LOGIN_ATTEMPTS = 3
-
 	val CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
 	val OK_HTTP = OkHttpClient.Builder()
@@ -35,9 +33,7 @@ object CoreConstants {
 
 	val WHITELISTED_USERS = listOf(
 		"Gutyerrez",
-		"ImRamon",
-		"CONSOLE",
-		"VICTORBBBBR"
+		"joaopedro9990"
 	)
 
 	val UN_LOGGED_ALLOWED_COMMANDS = listOf(
