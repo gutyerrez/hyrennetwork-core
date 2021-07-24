@@ -555,6 +555,8 @@ object KJson {
                         
                         if (it.containsKey("text") && it["text"] != null) {
                             components[index] = TextComponent(it["text"]!!.asString())
+                        } else {
+                            components[index] = TextComponent()
                         }
 
                         if (it.containsKey("color") && it["color"] != null) {
