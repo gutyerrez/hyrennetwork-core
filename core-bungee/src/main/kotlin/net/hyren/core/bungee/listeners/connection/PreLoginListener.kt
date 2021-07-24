@@ -24,7 +24,7 @@ class PreLoginListener : Listener {
 
         if (user?.getUniqueId() == CoreConstants.CONSOLE_UUID) {
             event.setCancelReason(
-                *ComponentBuilder("§c§lREDE FANTASY")
+                *ComponentBuilder(CoreConstants.Info.ERROR_SERVER_NAME)
                     .append("\n\n")
                     .append("§cA conta ${user?.name} não pode jogar.")
                     .create()
@@ -35,9 +35,9 @@ class PreLoginListener : Listener {
 
         if (user !== null && user.isOnline()) {
             event.setCancelReason(
-                *ComponentBuilder("§c§lREDE FANTASY")
+                *ComponentBuilder(CoreConstants.Info.ERROR_SERVER_NAME)
                     .append("\n\n")
-                    .append("§cJá existe um usuário com o nick ${user.name} online.")
+                    .append("§cJá existe um usuário com o nome ${user.name} online.")
                     .create()
             )
             event.isCancelled = true
