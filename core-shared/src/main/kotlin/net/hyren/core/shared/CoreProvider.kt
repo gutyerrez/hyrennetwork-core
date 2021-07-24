@@ -34,7 +34,6 @@ import net.hyren.core.shared.servers.cache.local.ServersLocalCache
 import net.hyren.core.shared.servers.storage.repositories.IServersRepository
 import net.hyren.core.shared.servers.storage.repositories.implementations.PostgreSQLServersRepository
 import net.hyren.core.shared.users.cache.local.UsersLocalCache
-import net.hyren.core.shared.users.cache.redis.UsersLoggedRedisCache
 import net.hyren.core.shared.users.cache.redis.UsersStatusRedisCache
 import net.hyren.core.shared.users.friends.cache.local.UsersFriendsLocalCache
 import net.hyren.core.shared.users.friends.storage.repositories.IUsersFriendsRepository
@@ -343,10 +342,6 @@ object CoreProvider {
 
             val USERS_STATUS = RedisCacheProvider(
                 UsersStatusRedisCache()
-            )
-
-            val USERS_LOGGED = RedisCacheProvider(
-                UsersLoggedRedisCache()
             )
 
         }

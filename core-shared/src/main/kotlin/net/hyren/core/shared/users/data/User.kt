@@ -23,7 +23,6 @@ import okhttp3.internal.toImmutableList
 import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 
 /**
@@ -47,15 +46,10 @@ open class User(
     open var updatedAt: DateTime? = null
 ) {
 
-    val loginAttempts = AtomicInteger(0)
     var directMessage = CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchDirectMessage(
         this
     )
     var lastSentMessage: String? = null
-
-    fun setLogged(logged: Boolean) {
-        CoreProvider.Cache.Redis.USERS_LOGGED.provide().setLogged(this, logged)
-    }
 
     fun disconnect(message: Array<BaseComponent>) {
         val packet = DisconnectUserPacket()
@@ -319,13 +313,11 @@ open class User(
         return reports
     }
 
-    fun isLogged() = CoreProvider.Cache.Redis.USERS_LOGGED.provide().isLogged(this)
-
     fun isMuted() = getActivePunishments()
         .stream()
         .filter { it.punishType === PunishType.MUTE }
         .findFirst()
-        .orElse(null)
+        .orElse(null) != null
 
     fun isAFriendOf(user: User) = user.getFriends().contains(this) && this.getFriends().contains(user)
 
