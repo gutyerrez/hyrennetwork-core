@@ -46,8 +46,6 @@ open class GroupScoreboard : BaseScoreboard {
 
             team.prefix = BaseComponent.toLegacyText(*group.prefix)
 
-            println("Prefix: ${team.prefix} (${team.prefix.length})")
-
             team
         } else team
     }
