@@ -25,7 +25,13 @@ class GroupDAO(
         val group = Group.valueOf(id.value)
 
         group.displayName = displayName
-        group.prefix = prefix.copyOfRange(0, prefix.size - 1)
+        group.prefix = prefix.copyOfRange(
+            0, if (group != Group.DEFAULT) {
+                prefix.size - 1
+            } else {
+                prefix.size
+            }
+        )
         group.suffix = suffix
         group.priority = priority
         group.discordRoleId = discordRoleId

@@ -1,5 +1,7 @@
 package net.hyren.core.shared.groups
 
+import net.hyren.core.shared.misc.chat.plus
+import net.hyren.core.shared.misc.utils.ChatColor
 import net.md_5.bungee.api.chat.BaseComponent
 import kotlin.properties.Delegates
 
@@ -49,6 +51,10 @@ enum class Group {
     )
     fun getColoredPrefix() = prefix
 
-    fun getFancyDisplayName() = "§${BaseComponent.toLegacyText(*prefix) + displayName}"
+    fun getStripedPrefix() = ChatColor.stripColor(
+        BaseComponent.toLegacyText(*prefix)
+    )
+
+    fun getFancyDisplayName() = prefix + displayName
 
 }
