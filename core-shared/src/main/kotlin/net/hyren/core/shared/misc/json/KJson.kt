@@ -544,7 +544,7 @@ object KJson {
 
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
-                ) = ComponentSerializer.parse(jsonDecoder.decodeJsonElement().asString())
+                ) = ComponentSerializer.parse(jsonDecoder.decodeJsonElement().asJsonArray().toString())
             }
         )
     }
