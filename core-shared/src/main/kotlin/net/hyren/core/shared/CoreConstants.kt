@@ -52,12 +52,12 @@ object CoreConstants {
 		// name
 
 		const val SERVER_NAME = "Hyren"
-		const val COLORED_SERVER_NAME = "§3§lHYREN"
+		const val COLORED_SERVER_NAME = "§9§lHYREN"
 		const val ERROR_SERVER_NAME = "§c§lHYREN"
 
 		// url
 
-		const val DISCORD_URL = "www.hyren.net/discord"
+		const val DISCORD_URL = "hyrgo.me/discord"
 		const val SHOP_URL = "www.loja.hyren.net"
 
 	}
