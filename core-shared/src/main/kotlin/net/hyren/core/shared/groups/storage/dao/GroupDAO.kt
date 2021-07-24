@@ -24,7 +24,11 @@ class GroupDAO(
     fun readGroup(): Group {
         val group = Group.valueOf(id.value)
 
-        println(prefix)
+        println(prefix.size)
+
+        prefix.forEachIndexed { index, baseComponent ->
+            println("$index -> $baseComponent")
+        }
 
         group.displayName = displayName
         group.prefix = prefix
