@@ -35,15 +35,6 @@ class CoreBungeePlugin : CustomPlugin(true) {
             ConnectUserToApplicationEchoPacketListener()
         )
 
-        CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete(
-            CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByProxyApplication(
-                CoreProvider.application
-            )
-        )
-        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
-            CoreProvider.application
-        )
-
         AsyncScheduler.scheduleAsyncRepeatingTask(
             {
                 ProxyServer.getInstance().players.forEach {
@@ -66,22 +57,9 @@ class CoreBungeePlugin : CustomPlugin(true) {
                     )
                 }
             },
-            3,
-            3,
+            0,
+            1,
             TimeUnit.SECONDS
-        )
-    }
-
-    override fun onDisable() {
-        super.onDisable()
-
-        CoreProvider.Cache.Redis.USERS_LOGGED.provide().delete(
-            CoreProvider.Cache.Redis.USERS_STATUS.provide().fetchUsersByProxyApplication(
-                CoreProvider.application
-            )
-        )
-        CoreProvider.Cache.Redis.USERS_STATUS.provide().delete(
-            CoreProvider.application
         )
     }
 
