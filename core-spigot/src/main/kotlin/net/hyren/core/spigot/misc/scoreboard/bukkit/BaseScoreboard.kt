@@ -77,6 +77,9 @@ open class BaseScoreboard : Boardable {
         val prefix = prefixBuilder.toString()
         val suffix = suffixBuilder.toString()
 
+        println("Prefix: ${prefix.length}")
+        println("Suffix: ${suffix.length}")
+
         var team = this.TEAMS[score]
         val fresh = team === null
 
