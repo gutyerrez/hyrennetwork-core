@@ -23,8 +23,9 @@ import net.hyren.core.shared.servers.data.Server
 import net.hyren.core.shared.servers.storage.table.ServersTable
 import net.hyren.core.shared.users.reports.data.Report
 import net.hyren.core.shared.users.storage.table.UsersTable
+import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.BaseComponent
-import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.TextComponent
 import org.jetbrains.exposed.dao.id.*
 import org.joda.time.DateTime
 import java.net.InetSocketAddress
@@ -545,25 +546,23 @@ object KJson {
                 override fun deserialize(
                     jsonDecoder: JsonDecoder
                 ): Array<BaseComponent> {
-                    val components = ComponentBuilder()
+                    val serializedBaseComponent = jsonDecoder.decodeJsonElement().asJsonArray()
 
-                    jsonDecoder.decodeJsonElement().asJsonArray().forEach {
+                    val components = sizedArray<BaseComponent>(serializedBaseComponent.size)
+
+                    serializedBaseComponent.forEachIndexed { index, it ->
                         it as JsonObject
-
+                        
                         if (it.containsKey("text") && it["text"] != null) {
-                            components.append(it["text"]!!.asString())
+                            components[index] = TextComponent(it["text"]!!.asString())
                         }
 
                         if (it.containsKey("color") && it["color"] != null) {
-                            components.color(
-                                net.md_5.bungee.api.ChatColor.valueOf(
-                                    it["color"]!!.asString()
-                                )
-                            )
+                            components[index].color = ChatColor.of(it["color"]!!.asString())
                         }
                     }
 
-                    return components.create()
+                    return components
                 }
             }
         )
