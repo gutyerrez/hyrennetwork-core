@@ -22,13 +22,15 @@ class GroupDAO(
     val discordRoleId by GroupsTable.discordRoleId
 
     fun readGroup(): Group {
-        val group = Group.valueOf(this.id.value)
+        val group = Group.valueOf(id.value)
 
-        group.displayName = this.displayName
-        group.prefix = this.prefix
-        group.suffix = this.suffix
-        group.priority = this.priority
-        group.discordRoleId = this.discordRoleId
+        println(prefix)
+
+        group.displayName = displayName
+        group.prefix = prefix
+        group.suffix = suffix
+        group.priority = priority
+        group.discordRoleId = discordRoleId
 
         return group
     }
