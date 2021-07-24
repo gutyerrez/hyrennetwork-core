@@ -24,14 +24,8 @@ class GroupDAO(
     fun readGroup(): Group {
         val group = Group.valueOf(id.value)
 
-        println(prefix.size)
-
-        prefix.forEachIndexed { index, baseComponent ->
-            println("$index -> $baseComponent")
-        }
-
         group.displayName = displayName
-        group.prefix = prefix
+        group.prefix = prefix.copyOfRange(0, prefix.size - 1)
         group.suffix = suffix
         group.priority = priority
         group.discordRoleId = discordRoleId
