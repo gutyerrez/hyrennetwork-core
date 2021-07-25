@@ -24,14 +24,14 @@ class UserSkinDAO(
 	var updatedAt by UsersSkinsTable.updatedAt
 
 	fun toUserSkin() = UserSkin(
-		this.name.value,
-		this.userId,
+		name.value,
+		userId,
 		Skin(
-			this.value,
-			this.signature
+			value,
+			signature
 		),
-		this.enabled,
-		this.updatedAt
+		enabled,
+		updatedAt
 	)
 
 }
