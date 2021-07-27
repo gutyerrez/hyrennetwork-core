@@ -4,6 +4,7 @@ import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.hyren.core.shared.applications.status.ApplicationStatus
 import net.hyren.core.shared.misc.cooldowns.CooldownManager
+import net.hyren.core.shared.misc.utils.ChatColor
 import okhttp3.OkHttpClient
 import org.joda.time.DateTimeZone
 import java.util.*
@@ -45,6 +46,10 @@ object CoreConstants {
 
 	object Info {
 
+		// colors
+
+		val DEFAULT_COLOR = ChatColor.BLUE
+
 		// name
 
 		const val SERVER_NAME = "Hyren"
@@ -54,7 +59,7 @@ object CoreConstants {
 		// url
 
 		const val DISCORD_URL = "hyrgo.me/discord"
-		const val SHOP_URL = "https://www.loja.hyren.net"
+		const val SHOP_URL = "https://loja.hyren.net"
 
 	}
 
