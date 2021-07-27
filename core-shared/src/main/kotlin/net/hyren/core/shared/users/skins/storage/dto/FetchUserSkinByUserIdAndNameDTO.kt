@@ -8,5 +8,5 @@ import java.util.*
  */
 class FetchUserSkinByUserIdAndNameDTO(
 	val userId: EntityID<UUID>,
-	val name: String
+	val name: EntityID<String>
 )

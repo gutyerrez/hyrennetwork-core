@@ -24,7 +24,7 @@ class UserSkinDAO(
 	var updatedAt by UsersSkinsTable.updatedAt
 
 	fun toUserSkin() = UserSkin(
-		name.value,
+		name,
 		userId,
 		Skin(
 			value,

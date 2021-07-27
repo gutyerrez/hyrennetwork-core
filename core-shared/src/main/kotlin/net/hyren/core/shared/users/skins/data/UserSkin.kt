@@ -9,7 +9,7 @@ import java.util.*
  * @author SrGutyerrez
  **/
 data class UserSkin(
-    val name: String,
+    val name: EntityID<String>,
     val userId: EntityID<UUID>,
     val skin: Skin,
     var enabled: Boolean,

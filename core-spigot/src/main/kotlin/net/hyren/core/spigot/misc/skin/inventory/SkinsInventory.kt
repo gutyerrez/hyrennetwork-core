@@ -58,7 +58,7 @@ class SkinsInventory(
 
 					val response = SkinService.changeSkin(
 						user,
-						it.name
+						it.name.value
 					)
 
 					if (response != SkinService.CommonResponse.CHANGING_SKIN_TO)

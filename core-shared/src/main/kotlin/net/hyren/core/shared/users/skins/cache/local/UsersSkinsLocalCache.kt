@@ -5,6 +5,7 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.cache.local.LocalCache
 import net.hyren.core.shared.users.skins.data.UserSkin
 import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinsByUserIdDTO
+import net.hyren.core.shared.users.skins.storage.table.UsersSkinsTable
 import net.hyren.core.shared.users.storage.table.UsersTable
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*
@@ -25,20 +26,27 @@ class UsersSkinsLocalCache : LocalCache {
 			)
 		}
 
-	fun fetchByUserId(userId: EntityID<UUID>) = this.CACHE.get(userId)
+	fun fetchByUserId(userId: EntityID<UUID>) = CACHE.get(userId)
 
-	fun fetchByUserId(userId: UUID) = this.CACHE.get(
+	fun fetchByUserId(userId: UUID) = CACHE.get(
 		EntityID(
 			userId,
 			UsersTable
 		)
 	)
 
-	fun fetchByName(name: String): UserSkin? = this.CACHE.asMap().values.stream()
+	fun fetchByName(name: String): UserSkin? = CACHE.asMap().values.stream()
 		.map {
-			it.stream().filter { userSkin -> userSkin.name == name }.findFirst()
-		}.findFirst().orElse(null)?.orElse(null)
+			it.stream().filter { userSkin ->
+				userSkin.name == EntityID(
+					name,
+					UsersSkinsTable
+				)
+			}.findFirst()
+		}
+		.findFirst()
+		.orElse(null)?.orElse(null)
 
-	fun invalidate(userId: EntityID<UUID>) = this.CACHE.invalidate(userId)
+	fun invalidate(userId: EntityID<UUID>) = CACHE.invalidate(userId)
 
 }

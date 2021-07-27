@@ -1,9 +1,14 @@
 package net.hyren.core.shared.users.skins.storage.repositories.implementations
 
-import net.hyren.core.shared.*
+import net.hyren.core.shared.CoreConstants
+import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.misc.exposed.ilike
 import net.hyren.core.shared.users.skins.storage.dao.UserSkinDAO
-import net.hyren.core.shared.users.skins.storage.dto.*
+import net.hyren.core.shared.users.skins.storage.dto.CreateUserSkinDTO
+import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
+import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinByUserIdAndNameDTO
+import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinsByUserIdDTO
+import net.hyren.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
 import net.hyren.core.shared.users.skins.storage.repositories.IUsersSkinsRepository
 import net.hyren.core.shared.users.skins.storage.table.UsersSkinsTable
 import org.jetbrains.exposed.sql.and
@@ -31,7 +36,7 @@ class PostgreSQLUsersSkinsRepository : IUsersSkinsRepository {
 		CoreProvider.Databases.PostgreSQL.POSTGRESQL_MAIN.provide()
 	) {
 		UserSkinDAO.find {
-			UsersSkinsTable.name ilike fetchUserSkinByNameDTO.name
+			UsersSkinsTable.id ilike fetchUserSkinByNameDTO.name
 		}.firstOrNull()?.toUserSkin()
 	}
 
@@ -42,7 +47,7 @@ class PostgreSQLUsersSkinsRepository : IUsersSkinsRepository {
 	) {
 		UserSkinDAO.find {
 			UsersSkinsTable.userId eq fetchUserSkinByUserIdAndNameDTO.userId and (
-				UsersSkinsTable.name ilike fetchUserSkinByUserIdAndNameDTO.name
+				UsersSkinsTable.id ilike fetchUserSkinByUserIdAndNameDTO.name
 			)
 		}.firstOrNull()?.toUserSkin()
 	}

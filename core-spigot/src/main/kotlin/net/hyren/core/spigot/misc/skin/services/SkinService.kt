@@ -10,6 +10,8 @@ import net.hyren.core.shared.users.skins.storage.dto.CreateUserSkinDTO
 import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinByNameDTO
 import net.hyren.core.shared.users.skins.storage.dto.FetchUserSkinByUserIdAndNameDTO
 import net.hyren.core.shared.users.skins.storage.dto.UpdateUserSkinDTO
+import net.hyren.core.shared.users.skins.storage.table.UsersSkinsTable
+import org.jetbrains.exposed.dao.id.EntityID
 import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
 
@@ -24,30 +26,40 @@ object SkinService {
 		user: User,
 		name: String
 	): CommonResponse {
-		if (!user.canChangeSkin()) return CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN
+		if (!user.canChangeSkin()) {
+			return CommonResponse.WAIT_FOR_CHANGE_SKIN_AGAIN
+		}
 
-		if (!Patterns.NICK.matches(name)) return CommonResponse.INVALID_NICKNAME
+		if (!Patterns.NICK.matches(name)) {
+			return CommonResponse.INVALID_NICKNAME
+		}
 
 		val userSkin = CoreProvider.Cache.Local.USERS_SKINS.provide().fetchByName(name)
 			?: CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().fetchByName(
-				FetchUserSkinByNameDTO(name)
+				FetchUserSkinByNameDTO(
+					EntityID(
+						name,
+						UsersSkinsTable
+					)
+				)
 			)
 
-		val skin = userSkin?.skin ?: SkinController.fetchSkinByName(name)
+		val skin = userSkin?.skin ?: SkinController.fetchSkinByName(name) ?: return CommonResponse.SKIN_NOT_FOUND
 
-		if (skin === null) return CommonResponse.SKIN_NOT_FOUND
-
-		if (userSkin !== null && userSkin.userId == user.id) {
+		if (userSkin != null && userSkin.userId == user.id) {
 			CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().update(
 				UpdateUserSkinDTO(
 					userSkin
 				)
 			)
-		} else if (userSkin !== null && userSkin.userId != user.id) {
+		} else if (userSkin != null && userSkin.userId != user.id) {
 			CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
-						name,
+						EntityID(
+							name,
+							UsersSkinsTable
+						),
 						user.id,
 						skin,
 						true,
@@ -61,7 +73,10 @@ object SkinService {
 			CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().create(
 				CreateUserSkinDTO(
 					UserSkin(
-						name,
+						EntityID(
+							name,
+							UsersSkinsTable
+						),
 						user.id,
 						skin,
 						true,
@@ -89,7 +104,10 @@ object SkinService {
 			val userSkin = CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().fetchByUserIdAndName(
 				FetchUserSkinByUserIdAndNameDTO(
 					user.id,
-					user.name
+					EntityID(
+						user.name,
+						UsersSkinsTable
+					),
 				)
 			)
 
@@ -103,7 +121,10 @@ object SkinService {
 				CoreProvider.Repositories.PostgreSQL.USERS_SKINS_REPOSITORY.provide().create(
 					CreateUserSkinDTO(
 						UserSkin(
-							user.name,
+							EntityID(
+								user.name,
+								UsersSkinsTable
+							),
 							user.id,
 							skin,
 							true,
@@ -114,7 +135,9 @@ object SkinService {
 					)
 				)
 			}
-		} else return CommonResponse.SKIN_NOT_FOUND
+		} else {
+			return CommonResponse.SKIN_NOT_FOUND
+		}
 
 		return CommonResponse.DOWNLOADING_FROM_MOJANG
 	}
