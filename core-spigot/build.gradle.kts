@@ -15,12 +15,6 @@ dependencies {
     // caffeine
     compileOnly("com.github.ben-manes.caffeine:caffeine:2.8.5")
 
-    // minecraft-server
-    compileOnly("net.hyren:minecraft-server:1.8.8-SNAPSHOT")
-
-    // scutiblock-exploits
-    implementation("com.scuti:blockexploits-spigot:8.5.0-ALPHA")
-
     // core-shared
     implementation(project(":core-shared"))
 }
