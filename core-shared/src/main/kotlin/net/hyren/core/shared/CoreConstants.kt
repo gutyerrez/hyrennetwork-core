@@ -54,7 +54,7 @@ object CoreConstants {
 		// url
 
 		const val DISCORD_URL = "hyrgo.me/discord"
-		const val SHOP_URL = "www.loja.hyren.net"
+		const val SHOP_URL = "https://www.loja.hyren.net"
 
 	}
 
