@@ -1,16 +1,21 @@
 package net.hyren.core.spigot.misc.theme.data
 
+import com.sk89q.worldedit.EditSession
+import com.sk89q.worldedit.LocalSession
+import com.sk89q.worldedit.Vector
+import com.sk89q.worldedit.bukkit.BukkitWorld
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
+import com.sk89q.worldedit.function.operation.Operations
+import com.sk89q.worldedit.session.ClipboardHolder
+import com.sk89q.worldedit.util.io.Closer
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
-import net.minecraft.server.v1_8_R3.Chunk
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
-import kotlin.experimental.and
 
 /**
  * @author Gutyerrez
@@ -39,7 +44,7 @@ data class Theme(
         y: Int,
         z: Int
     ) {
-        val chunk = Chunk(
+        /*val chunk = Chunk(
             (Bukkit.getWorld(worldName) as CraftWorld).handle,
             x, z
         )
@@ -92,7 +97,52 @@ data class Theme(
                     }
                 }
             }
+        }*/
+
+        val _world = Bukkit.getWorld(worldName)
+        val world = BukkitWorld(_world)
+
+        val session = LocalSession()
+
+        val closer = Closer.create()
+
+        closer.use {
+            val fileInputStream = closer.register(FileInputStream(schematic))
+            val bufferedInputStream = closer.register(BufferedInputStream(
+                fileInputStream
+            ))
+
+            val format = ClipboardFormat.SCHEMATIC
+
+            val clipboardReader = format.getReader(bufferedInputStream)
+
+            val worldData = world.worldData
+
+            val clipboard = clipboardReader.read(worldData)
+
+            session.clipboard = ClipboardHolder(
+                clipboard, worldData
+            )
+
+            fileInputStream.close()
+            bufferedInputStream.close()
         }
+
+        val clipboardHolder = session.clipboard
+
+        val clipboard = clipboardHolder.clipboard
+        val region = clipboard.region
+
+        val to = Vector(0, 75, 0)
+
+        val editSession = EditSession(
+            world,
+            clipboard.region.area
+        )
+
+        val operation = clipboardHolder.createPaste(editSession, world.worldData).to(to).ignoreAirBlocks(true).build()
+
+        Operations.complete(operation)
     }
 
     private fun Application.getThemesFolder(): String = when (applicationType) {
