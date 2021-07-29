@@ -1,13 +1,18 @@
 package net.hyren.core.spigot.misc.theme.data
 
+import kotlin.experimental.and
 import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
+import net.hyren.core.shared.misc.kotlin.sizedArray
+import net.hyren.core.spigot.misc.asNMSWorld
 import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
 import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
+import net.minecraft.server.v1_8_R3.BlockPosition
+import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
 import java.util.zip.DataFormatException
@@ -66,9 +71,47 @@ data class Theme(
             val blocks = (schematic["Blocks"] as ByteArrayTag).value
             val data = (schematic["Data"] as ByteArrayTag).value
 
-            val placeBlocks = ByteArray(blocks.size)
+            var addId = ByteArray(0)
 
-            println("Bora por (($width/$height) * $length)")
+            val blocksIds = sizedArray<Short>(blocks.size)
+
+            if (schematic.containsKey("AddBlocks")) {
+                addId = (schematic["AddBlocks"] as ByteArrayTag).value
+            }
+
+            for (index in blocks.indices) {
+                if ((index shr 1) >= addId.size) {
+                    blocksIds[index] = (blocks[index] and 0xFF.toByte()).toShort()
+                } else {
+                    if ((index and 1) == 0) {
+                        blocksIds[index] = (((addId[index shr 1] and 0x0F.toByte()).toInt() shl 8) + (blocks[index] and 0xFF.toByte())).toShort()
+                    } else {
+                        blocksIds[index] = (((addId[index shr 1] and 0xF0.toByte()).toInt() shl 4) + (blocks[index] and 0xFF.toByte())).toShort()
+                    }
+                }
+            }
+
+            val worldServer = Bukkit.getWorld(worldName).asNMSWorld()
+
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    for (z in 0 until length) {
+                        if (!worldServer.chunkProviderServer.isChunkLoaded(x, z)) {
+                            worldServer.chunkProviderServer.loadChunk(x, z)
+                        }
+
+                        val chunk = worldServer.getChunkAt(x, z)
+
+                        val blockData = chunk.getBlockData(
+                            BlockPosition(
+                                x, y, z
+                            )
+                        )
+
+                        println("X: $x Y: $y Z: $z -> ${blockData.block.material}")
+                    }
+                }
+            }
         }
     }
 
