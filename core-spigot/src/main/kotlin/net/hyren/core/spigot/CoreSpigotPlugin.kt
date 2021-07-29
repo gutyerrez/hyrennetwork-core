@@ -107,7 +107,7 @@ class CoreSpigotPlugin : CustomPlugin(true) {
 
     override fun getDefaultWorldGenerator(
         worldName: String,
-        id: String
+        id: String?
     ): ChunkGenerator {
         println("Carregar o generator do mundo: $worldName - $id")
 
