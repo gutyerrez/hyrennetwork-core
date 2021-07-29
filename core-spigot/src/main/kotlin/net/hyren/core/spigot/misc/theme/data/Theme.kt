@@ -4,13 +4,13 @@ import net.hyren.core.shared.CoreConstants
 import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
-import net.minecraft.server.v1_8_R3.NBTReadLimiter
-import java.io.BufferedInputStream
-import java.io.DataInput
-import java.io.DataInputStream
+import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
+import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
+import net.hyren.core.spigot.misc.theme.nbt.ShortTag
+import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import java.io.File
 import java.io.FileInputStream
+import java.util.zip.DataFormatException
 import java.util.zip.GZIPInputStream
 
 /**
@@ -40,25 +40,35 @@ data class Theme(
         y: Int,
         z: Int
     ) {
-        DataInputStream(
-            BufferedInputStream(
-                GZIPInputStream(
-                    FileInputStream(schematic)
-                )
+        FileInputStream(schematic).use {
+            val nbtInputStream = NBTInputStream(
+                GZIPInputStream(it)
             )
-        ).use {
-            val nbtTagCompound = NBTCompressedStreamTools.a(it as DataInput, NBTReadLimiter.a)
 
-            val width = nbtTagCompound.getShort("Width")
-            val height = nbtTagCompound.getShort("Height")
-            val length = nbtTagCompound.getShort("Length")
+            val schematicTag = nbtInputStream.readTag<CompoundTag>()
 
-            val blocks = nbtTagCompound.getByteArray("Blocks")
-            val data = nbtTagCompound.getByteArray("Data")
+            nbtInputStream.close()
+
+            if (schematicTag.name != "Schematic") {
+                throw DataFormatException("Tag \"Schematic\" does not exists or is not first")
+            }
+
+            val schematic = schematicTag.value
+
+            if (!schematic.containsKey("Blocks")) {
+                throw DataFormatException("Schematic file is missing a \"Blocks\" tag")
+            }
+
+            val width = (schematic["Width"] as ShortTag).value
+            val height = (schematic["Height"] as ShortTag).value
+            val length = (schematic["Length"] as ShortTag).value
+
+            val blocks = (schematic["Blocks"] as ByteArrayTag).value
+            val data = (schematic["Data"] as ByteArrayTag).value
 
             val placeBlocks = ByteArray(blocks.size)
 
-            println("Bora por")
+            println("Bora por (($width/$height) * $length)")
         }
     }
 
