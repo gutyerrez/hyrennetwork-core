@@ -80,7 +80,7 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
             do {
                 val tag = readTag(depth + 1)
 
-                value[tag.name] = tag.value as Tag
+                value[tag.name] = tag
             } while (tag !is EndTag)
 
             CompoundTag(name, value)
