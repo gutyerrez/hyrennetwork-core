@@ -3,7 +3,7 @@ package net.hyren.core.spigot.misc.theme.nbt
 data class ShortTag(
     override val name: String,
     override val value: Short
-) : Tag<Short>(name, value) {
+) : Tag(name, value) {
 
     override fun hashCode(): Int {
         return name.hashCode() + 15

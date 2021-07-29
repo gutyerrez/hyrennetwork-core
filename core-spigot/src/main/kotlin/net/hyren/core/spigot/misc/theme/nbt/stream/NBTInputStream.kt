@@ -2,6 +2,7 @@ package net.hyren.core.spigot.misc.theme.nbt.stream
 
 import kotlin.experimental.and
 import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
+import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.EndTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.StringTag
@@ -18,9 +19,9 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
         dataInputStream = DataInputStream(inputStream)
     }
 
-    fun <T: Tag<*>> readTag() = readTag<T>(0)
+    fun readTag() = readTag(0)
 
-    fun <T: Tag<*>> readTag(depth: Int): T {
+    fun readTag(depth: Int): Tag {
         val type = (dataInputStream.readByte() and 0xFF.toByte()).toInt()
 
         lateinit var name: String
@@ -37,14 +38,14 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
             name = ""
         }
 
-        return readTagPayload(type, name, depth) as T
+        return readTagPayload(type, name, depth)
     }
 
     fun readTagPayload(
         type: Int,
         name: String,
         depth: Int
-    ): Tag<*> = when (type) {
+    ): Tag = when (type) {
         0 -> {
             if (depth == 0) {
                 throw IOException("TAG_End found without a TAG_Compound/TAG_List tag preceding it.")
@@ -72,6 +73,17 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
             StringTag(name, String(
                 byteArray
             ))
+        }
+        10 -> {
+            val value = mutableMapOf<String, Tag>()
+
+            do {
+                val tag = readTag(depth + 1)
+
+                value[tag.name] = tag.value as Tag
+            } while (tag !is EndTag)
+
+            CompoundTag(name, value)
         }
         else -> error("Cannot decode type $type")
     }

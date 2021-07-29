@@ -3,7 +3,7 @@ package net.hyren.core.spigot.misc.theme.nbt
 data class EndTag(
     override val name: String = "",
     override val value: String = "TAG_END"
-) : Tag<String>(name, value) {
+) : Tag(name, value) {
 
     override fun hashCode(): Int {
         return name.hashCode() + 15
