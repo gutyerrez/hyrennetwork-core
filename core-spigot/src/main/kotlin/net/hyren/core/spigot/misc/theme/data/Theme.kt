@@ -5,8 +5,6 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
-import net.minecraft.server.v1_8_R3.NBTReadLimiter
-import java.io.DataInput
 import java.io.DataInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -41,21 +39,14 @@ data class Theme(
         DataInputStream(
             FileInputStream(schematic)
         ).use {
-            val nbtTagCompound = NBTCompressedStreamTools::class.java.getDeclaredMethod(
-                "a",
-                DataInput::class.java,
-                NBTReadLimiter::class.java
-            ).invoke(null, it as DataInput, NBTReadLimiter.a)
+            val nbtTagCompound = NBTCompressedStreamTools.a(it)
 
-            val getShort = nbtTagCompound::class.java.getDeclaredMethod("getShort", String::class.java)
-            val getByteArray = nbtTagCompound::class.java.getDeclaredMethod("getByteArray", String::class.java)
+            val width = nbtTagCompound.getShort("Width")
+            val height = nbtTagCompound.getShort("Height")
+            val length = nbtTagCompound.getShort("Length")
 
-            val width = getShort.invoke(nbtTagCompound, "Width") as Short
-            val height = getShort.invoke(nbtTagCompound, "Height") as Short
-            val length = getShort.invoke(nbtTagCompound, "Length") as Short
-
-            val blocks = getByteArray.invoke(nbtTagCompound, "Blocks") as ByteArray
-            val data = getByteArray.invoke(nbtTagCompound, "Data") as ByteArray
+            val blocks = nbtTagCompound.getByteArray("Blocks")
+            val data = nbtTagCompound.getByteArray("Data")
 
             val placeBlocks = ByteArray(blocks.size)
 
