@@ -5,9 +5,9 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
+import java.io.DataInput
 import java.io.File
 import java.io.FileInputStream
-import java.io.InputStream
 
 /**
  * @author Gutyerrez
@@ -37,8 +37,8 @@ data class Theme(
         z: Int
     ) {
         FileInputStream(schematic).use {
-            val nbtTagCompound = NBTCompressedStreamTools::class.java.getMethod("a", InputStream::class.java).invoke(
-                null, it as InputStream
+            val nbtTagCompound = NBTCompressedStreamTools::class.java.getMethod("a", DataInput::class.java).invoke(
+                null, it
             )
 
             val getShort = nbtTagCompound::class.java.getMethod("getShort", String::class.java)
