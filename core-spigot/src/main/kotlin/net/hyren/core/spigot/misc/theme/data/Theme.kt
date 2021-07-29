@@ -42,7 +42,7 @@ data class Theme(
                 "a",
                 DataInput::class.java,
                 NBTReadLimiter::class.java
-            ).invoke(null, it, NBTReadLimiter.a)
+            ).invoke(null, it as DataInput, NBTReadLimiter.a)
 
             val getShort = nbtTagCompound::class.java.getDeclaredMethod("getShort", String::class.java)
             val getByteArray = nbtTagCompound::class.java.getDeclaredMethod("getByteArray", String::class.java)
