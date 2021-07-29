@@ -9,9 +9,11 @@ import net.hyren.core.spigot.misc.asNMSWorld
 import net.minecraft.server.v1_8_R3.Block
 import net.minecraft.server.v1_8_R3.BlockPosition
 import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
+import net.minecraft.server.v1_8_R3.NBTTagCompound
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStream
 
 /**
  * @author Gutyerrez
@@ -41,7 +43,10 @@ data class Theme(
         z: Int
     ) {
         FileInputStream(schematic).use {
-            val nbtTagCompound = NBTCompressedStreamTools.a(it) // erro aqui
+            val nbtTagCompound = NBTCompressedStreamTools::class.java.getMethod(
+                "a",
+                InputStream::class.java
+            ).invoke(null, it) as NBTTagCompound // erro aqui
 
             val width = nbtTagCompound.getShort("Width")
             val height = nbtTagCompound.getShort("Height")
