@@ -45,7 +45,7 @@ data class Theme(
                 GZIPInputStream(it)
             )
 
-            val schematicTag = nbtInputStream.readTag<CompoundTag>()
+            val schematicTag = nbtInputStream.readTag() as CompoundTag
 
             nbtInputStream.close()
 
