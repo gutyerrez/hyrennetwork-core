@@ -41,7 +41,7 @@ data class Theme(
         z: Int
     ) {
         FileInputStream(schematic).use {
-            val nbtTagCompound = NBTCompressedStreamTools.a(it)
+            val nbtTagCompound = NBTCompressedStreamTools.a(it) // erro aqui
 
             val width = nbtTagCompound.getShort("Width")
             val height = nbtTagCompound.getShort("Height")

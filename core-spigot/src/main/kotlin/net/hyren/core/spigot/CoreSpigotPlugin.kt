@@ -9,6 +9,7 @@ import net.hyren.core.spigot.misc.plugin.CustomPlugin
 import net.hyren.core.spigot.misc.utils.PacketEvent
 import net.hyren.core.spigot.misc.utils.PacketListener
 import net.hyren.core.spigot.sign.CustomSign
+import net.hyren.core.spigot.world.generator.VoidChunkGenerator
 import net.hyren.core.spigot.wrapper.SpigotWrapper
 import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign
 import org.bukkit.Bukkit
@@ -102,5 +103,10 @@ class CoreSpigotPlugin : CustomPlugin(true) {
             }
         )
     }
+
+    override fun getDefaultWorldGenerator(
+        worldName: String,
+        id: String
+    ) = VoidChunkGenerator()
 
 }

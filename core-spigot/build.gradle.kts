@@ -15,9 +15,6 @@ dependencies {
     // caffeine
     compileOnly("com.github.ben-manes.caffeine:caffeine:2.8.5")
 
-    // worldedit
-    implementation("com.sk89q:worldedit:6.1")
-
     // core-shared
     implementation(project(":core-shared"))
 }

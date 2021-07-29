@@ -2,3 +2,4 @@ name: Core
 main: net.hyren.core.spigot.CoreSpigotPlugin
 version: 0.1-ALPHA
 author: Gutyerrez
+load: STARTUP
