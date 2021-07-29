@@ -1,13 +1,17 @@
 package net.hyren.core.spigot.misc.theme.nbt.stream
 
 import kotlin.experimental.and
+import kotlin.reflect.KClass
+import net.hyren.core.shared.misc.kotlin.sizedArray
 import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
 import net.hyren.core.spigot.misc.theme.nbt.ByteTag
 import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.DoubleTag
 import net.hyren.core.spigot.misc.theme.nbt.EndTag
 import net.hyren.core.spigot.misc.theme.nbt.FloatTag
+import net.hyren.core.spigot.misc.theme.nbt.IntArrayTag
 import net.hyren.core.spigot.misc.theme.nbt.IntTag
+import net.hyren.core.spigot.misc.theme.nbt.ListTag
 import net.hyren.core.spigot.misc.theme.nbt.LongTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.StringTag
@@ -48,7 +52,7 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
 
     fun readTagPayload(
         type: Int,
-        name: String,
+        name: String = "",
         depth: Int
     ): Tag = when (type) {
         0 -> {
@@ -84,6 +88,25 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
                 byteArray
             ))
         }
+        9 -> {
+            val childType = dataInputStream.readByte().toInt()
+
+            val length = dataInputStream.readInt()
+
+            val list = mutableListOf<Tag>()
+
+            for (i in 0 until length) {
+                val tag = readTagPayload(childType, depth = depth + 1)
+
+                if (tag is EndTag) {
+                    throw IOException("TAG_End not permitted in a list.")
+                }
+
+                list.add(tag)
+            }
+
+            ListTag(name, childType.getTypeClass(), list)
+        }
         10 -> {
             val value = mutableMapOf<String, Tag>()
 
@@ -95,9 +118,36 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
 
             CompoundTag(name, value)
         }
+        11 -> {
+            val length = dataInputStream.readInt()
+
+            val value = sizedArray<Int>(length)
+
+            for (i in 0 until length) {
+                value[i] = dataInputStream.readInt()
+            }
+
+            IntArrayTag(name, value)
+        }
         else -> error("Cannot decode type $type")
     }
 
     fun close() = dataInputStream.close()
+
+    internal fun Int.getTypeClass(): KClass<out Tag> = when (this) {
+        0 -> EndTag::class
+        1 -> ByteTag::class
+        2 -> ShortTag::class
+        3 -> IntTag::class
+        4 -> LongTag::class
+        5 -> FloatTag::class
+        6 -> DoubleTag::class
+        7 -> ByteArrayTag::class
+        8 -> StringTag::class
+        9 -> ListTag::class
+        10 -> CompoundTag::class
+        11 -> IntArrayTag::class
+        else-> error("")
+    }
 
 }
