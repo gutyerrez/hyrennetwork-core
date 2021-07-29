@@ -5,7 +5,6 @@ import net.hyren.core.shared.CoreProvider
 import net.hyren.core.shared.applications.ApplicationType
 import net.hyren.core.shared.applications.data.Application
 import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools
-import java.io.DataInputStream
 import java.io.File
 import java.io.FileInputStream
 
@@ -36,9 +35,7 @@ data class Theme(
         y: Int,
         z: Int
     ) {
-        DataInputStream(
-            FileInputStream(schematic)
-        ).use {
+        FileInputStream(schematic).use {
             val nbtTagCompound = NBTCompressedStreamTools.a(it)
 
             val width = nbtTagCompound.getShort("Width")
