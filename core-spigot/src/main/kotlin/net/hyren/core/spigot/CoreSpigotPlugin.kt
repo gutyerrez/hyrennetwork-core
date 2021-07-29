@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.generator.ChunkGenerator
 
 /**
  * @author Gutyerrez
@@ -107,6 +108,10 @@ class CoreSpigotPlugin : CustomPlugin(true) {
     override fun getDefaultWorldGenerator(
         worldName: String,
         id: String
-    ) = VoidChunkGenerator()
+    ): ChunkGenerator {
+        println("Carregar o generator do mundo: $worldName - $id")
+
+        return VoidChunkGenerator()
+    }
 
 }
