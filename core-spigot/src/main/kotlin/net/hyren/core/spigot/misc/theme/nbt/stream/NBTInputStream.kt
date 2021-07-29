@@ -2,8 +2,13 @@ package net.hyren.core.spigot.misc.theme.nbt.stream
 
 import kotlin.experimental.and
 import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
+import net.hyren.core.spigot.misc.theme.nbt.ByteTag
 import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
+import net.hyren.core.spigot.misc.theme.nbt.DoubleTag
 import net.hyren.core.spigot.misc.theme.nbt.EndTag
+import net.hyren.core.spigot.misc.theme.nbt.FloatTag
+import net.hyren.core.spigot.misc.theme.nbt.IntTag
+import net.hyren.core.spigot.misc.theme.nbt.LongTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.StringTag
 import net.hyren.core.spigot.misc.theme.nbt.Tag
@@ -53,7 +58,12 @@ class NBTInputStream(inputStream: InputStream): Cloneable {
 
             EndTag()
         }
+        1 -> ByteTag(name, dataInputStream.readByte())
         2 -> ShortTag(name, dataInputStream.readShort())
+        3 -> IntTag(name, dataInputStream.readInt())
+        4 -> LongTag(name, dataInputStream.readLong())
+        5 -> FloatTag(name, dataInputStream.readFloat())
+        6 -> DoubleTag(name, dataInputStream.readDouble())
         7 -> {
             val size = dataInputStream.readInt()
 
