@@ -11,6 +11,7 @@ import net.hyren.core.spigot.misc.theme.nbt.ByteArrayTag
 import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
+import net.minecraft.server.v1_8_R3.Block
 import net.minecraft.server.v1_8_R3.BlockPosition
 import org.bukkit.Bukkit
 import java.io.File
@@ -96,19 +97,19 @@ data class Theme(
             for (x in 0 until width) {
                 for (y in 0 until height) {
                     for (z in 0 until length) {
+                        val index = y * width * length + z * width + x
+
                         if (!worldServer.chunkProviderServer.isChunkLoaded(x, z)) {
                             worldServer.chunkProviderServer.loadChunk(x, z)
                         }
 
-                        val chunk = worldServer.getChunkAt(x, z)
-
-                        val blockData = chunk.getBlockData(
+                        worldServer.setTypeAndData(
                             BlockPosition(
                                 x, y, z
-                            )
+                            ),
+                            Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12)),
+                            2
                         )
-
-                        println("X: $x Y: $y Z: $z -> ${blockData.block.material}")
                     }
                 }
             }
