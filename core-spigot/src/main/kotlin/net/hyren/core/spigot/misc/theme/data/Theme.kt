@@ -13,7 +13,6 @@ import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import net.minecraft.server.v1_8_R3.Block
 import net.minecraft.server.v1_8_R3.BlockPosition
-import net.minecraft.server.v1_8_R3.Material
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
@@ -47,6 +46,10 @@ data class Theme(
         y: Int,
         z: Int
     ) {
+        val x = x - 157
+        val y = y - 59
+        val z = z - 42
+
         FileInputStream(schematic).use {
             val nbtInputStream = NBTInputStream(
                 GZIPInputStream(it)
@@ -100,21 +103,15 @@ data class Theme(
                     for (blockZ in 0 until length) {
                         val index = blockY * width * length + blockZ * width + blockX
 
-                        if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
-                            worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
-                        }
-
-                        val blockData = Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12))
-                        val material = blockData.block.material
-
-                        if (material == Material.AIR) {
+                        if (blocksIds[index].toInt() == 0) {
                             continue
                         }
 
-                        if (blockX == 0 && blockY == 0 && blockZ == 0) {
-                            println("First location -> X: ${x + blockX}/${y + blockY}/${z + blockZ}")
-                        }
+                        val blockData = Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12))
 
+                        if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
+                            worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
+                        }
                         worldServer.setTypeAndData(
                             BlockPosition(x + blockX, y + blockY, z + blockZ),
                             blockData,
