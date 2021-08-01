@@ -12,7 +12,7 @@ import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import net.minecraft.server.v1_8_R3.Block
-import net.minecraft.server.v1_8_R3.BlockPosition
+import net.minecraft.server.v1_8_R3.ChunkSection
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
@@ -101,22 +101,39 @@ data class Theme(
             for (blockX in 0 until width) {
                 for (blockY in 0 until height) {
                     for (blockZ in 0 until length) {
+                        val chunk = worldServer.getChunkAt(x shr 4, z shr 4)
+                        var chunkSection = chunk.sections[y shr 4]
+
+                        if (chunkSection == null) {
+                            chunkSection = ChunkSection(
+                                y shr 4 shl 4,
+                                !chunk.world.worldProvider.o()
+                            )
+
+                            chunk.sections[y shr 4] = chunkSection
+                        }
+
                         val index = blockY * width * length + blockZ * width + blockX
 
                         if (blocksIds[index].toInt() == 0) {
                             continue
                         }
 
-                        val blockData = Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12))
+                        val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
 
                         if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
                             worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
                         }
-                        worldServer.setTypeAndData(
-                            BlockPosition(x + blockX, y + blockY, z + blockZ),
-                            blockData,
-                            2
+
+                        chunkSection.setType(
+                            (x + blockX),
+                            (y + blockY),
+                            (z + blockZ),
+                            blockData
                         )
+
+                        chunkSection.recalcBlockCounts()
+
                     }
                 }
             }
