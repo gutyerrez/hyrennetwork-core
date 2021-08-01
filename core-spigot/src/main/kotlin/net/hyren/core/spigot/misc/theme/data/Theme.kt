@@ -95,16 +95,20 @@ data class Theme(
 
             val worldServer = Bukkit.getWorld(worldName).asNMSWorld()
 
-            for (blockX in x until width + x) {
-                for (blockY in y until height + y) {
-                    for (blockZ in z until length + z) {
+            for (blockX in 0 until width) {
+                for (blockY in 0 until height) {
+                    for (blockZ in 0 until length) {
+                        val index = blockY * width * length + blockZ * width + blockX
+
+                        val x = x - 157
+                        val y = y - 59
+                        val z = z - 42
+
                         if (!worldServer.chunkProviderServer.isChunkLoaded(blockX shr 4, blockZ shr 4)) {
                             worldServer.chunkProviderServer.loadChunk(blockX shr 4, blockZ shr 4)
                         }
 
                         val chunk = worldServer.getChunkAt(blockX shr 4, blockZ shr 4)
-
-                        val index = blockY * width * length + blockZ * width + blockX
 
                         val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
 
