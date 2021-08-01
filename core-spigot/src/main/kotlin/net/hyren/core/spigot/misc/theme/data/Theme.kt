@@ -111,6 +111,10 @@ data class Theme(
                             continue
                         }
 
+                        if (blockX == 0 && blockY == 0 && blockZ == 0) {
+                            println("First location -> X: ${x + blockX}/${y + blockY}/${z + blockZ}")
+                        }
+
                         worldServer.setTypeAndData(
                             BlockPosition(x + blockX, y + blockY, z + blockZ),
                             blockData,
