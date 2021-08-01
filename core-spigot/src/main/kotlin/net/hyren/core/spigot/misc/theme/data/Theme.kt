@@ -12,7 +12,6 @@ import net.hyren.core.spigot.misc.theme.nbt.CompoundTag
 import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import net.minecraft.server.v1_8_R3.Block
-import net.minecraft.server.v1_8_R3.Blocks
 import net.minecraft.server.v1_8_R3.ChunkSection
 import org.bukkit.Bukkit
 import java.io.File
@@ -98,6 +97,10 @@ data class Theme(
             for (blockX in 0 until width) {
                 for (blockY in 0 until height) {
                     for (blockZ in 0 until length) {
+                        val x = x - 157
+                        val y = y - 59
+                        val z = z - 42
+
                         val chunk = worldServer.getChunkAt(x shr 4, z shr 4)
                         var chunkSection = chunk.sections[y shr 4]
 
@@ -118,17 +121,9 @@ data class Theme(
 
                         val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
 
-                        if (blockData.block == Blocks.AIR) {
-                            continue
-                        }
-
                         if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
                             worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
                         }
-
-                        val x = x - 157
-                        val y = y - 59
-                        val z = z - 42
 
                         chunkSection.setType(
                             (x + blockX) and 15,
