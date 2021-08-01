@@ -126,9 +126,9 @@ data class Theme(
                             worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
                         }
 
-                        /*val x = x - 157
+                        val x = x - 157
                         val y = y - 59
-                        val z = z - 42*/
+                        val z = z - 42
 
                         chunkSection.setType(
                             (x + blockX) and 15,
