@@ -13,6 +13,7 @@ import net.hyren.core.spigot.misc.theme.nbt.ShortTag
 import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import net.minecraft.server.v1_8_R3.Block
 import net.minecraft.server.v1_8_R3.BlockPosition
+import net.minecraft.server.v1_8_R3.Material
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
@@ -94,20 +95,25 @@ data class Theme(
 
             val worldServer = Bukkit.getWorld(worldName).asNMSWorld()
 
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    for (z in 0 until length) {
-                        val index = y * width * length + z * width + x
+            for (blockX in 0 until width) {
+                for (blockY in 0 until height) {
+                    for (blockZ in 0 until length) {
+                        val index = blockY * width * length + blockZ * width + blockX
 
-                        if (!worldServer.chunkProviderServer.isChunkLoaded(x, z)) {
-                            worldServer.chunkProviderServer.loadChunk(x, z)
+                        if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
+                            worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
+                        }
+
+                        val blockData = Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12))
+                        val material = blockData.block.material
+
+                        if (material == Material.AIR) {
+                            continue
                         }
 
                         worldServer.setTypeAndData(
-                            BlockPosition(
-                                x, y, z
-                            ),
-                            Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12)),
+                            BlockPosition(x + blockX, y + blockY, z + blockZ),
+                            blockData,
                             2
                         )
                     }
