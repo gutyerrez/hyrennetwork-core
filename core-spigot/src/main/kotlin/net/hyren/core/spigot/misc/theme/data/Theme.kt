@@ -110,7 +110,7 @@ data class Theme(
                         if (chunkSection == null) {
                             chunkSection = ChunkSection(
                                 (blockY shr 4) shl 4,
-                                !chunk.world.worldProvider.o()
+                                true
                             )
 
                             chunk.sections[blockY shr 4] = chunkSection
@@ -127,6 +127,10 @@ data class Theme(
                         if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
                             worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
                         }
+
+                        val x = x - 157
+                        val y = y - 59
+                        val z = z - 42
 
                         chunk.a(
                             BlockPosition(
