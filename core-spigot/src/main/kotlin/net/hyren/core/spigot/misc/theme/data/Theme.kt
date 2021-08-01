@@ -131,14 +131,13 @@ data class Theme(
                         val z = z - 42*/
 
                         chunkSection.setType(
-                            (x + blockX),
-                            (y + blockY),
-                            (z + blockZ),
+                            (x + blockX) and 15,
+                            (y + blockY) and 15,
+                            (z + blockZ) and 15,
                             blockData
                         )
 
                         chunkSection.recalcBlockCounts()
-
                     }
                 }
             }
