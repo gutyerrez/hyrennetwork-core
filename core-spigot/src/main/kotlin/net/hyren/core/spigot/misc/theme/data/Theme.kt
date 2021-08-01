@@ -118,9 +118,9 @@ data class Theme(
 
                         chunk.a(
                             BlockPosition(
-                                (x + blockX),
-                                (y + blockY),
-                                (z + blockZ),
+                                (x + blockX) and 15,
+                                (y + blockY) and 15,
+                                (z + blockZ) and 15,
                             ),
                             blockData
                         )
