@@ -14,7 +14,6 @@ import net.hyren.core.spigot.misc.theme.nbt.stream.NBTInputStream
 import net.minecraft.server.v1_8_R3.Block
 import net.minecraft.server.v1_8_R3.BlockPosition
 import net.minecraft.server.v1_8_R3.Blocks
-import net.minecraft.server.v1_8_R3.ChunkSection
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
@@ -104,17 +103,6 @@ data class Theme(
                         }
 
                         val chunk = worldServer.getChunkAt(blockX shr 4, blockZ shr 4)
-
-                        var chunkSection = chunk.sections[blockY shr 4]
-
-                        if (chunkSection == null) {
-                            chunkSection = ChunkSection(
-                                (blockY shr 4) shl 4,
-                                true
-                            )
-
-                            chunk.sections[blockY shr 4] = chunkSection
-                        }
 
                         val index = (blockY * length + blockZ) * width + blockX
 
