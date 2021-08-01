@@ -15,10 +15,6 @@ dependencies {
     // caffeine
     compileOnly("com.github.ben-manes.caffeine:caffeine:2.8.5")
 
-    // lombok
-    compileOnly("org.projectlombok:lombok:1.18.20")
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
-
     // core-shared
     implementation(project(":core-shared"))
 }
