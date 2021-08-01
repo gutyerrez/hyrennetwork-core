@@ -46,10 +46,6 @@ data class Theme(
         y: Int,
         z: Int
     ) {
-        val x = x - 157
-        val y = y - 59
-        val z = z - 42
-
         FileInputStream(schematic).use {
             val nbtInputStream = NBTInputStream(
                 GZIPInputStream(it)
@@ -124,6 +120,10 @@ data class Theme(
                         if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
                             worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
                         }
+
+                        val x = x - 157
+                        val y = y - 59
+                        val z = z - 42
 
                         chunkSection.setType(
                             (x + blockX),
