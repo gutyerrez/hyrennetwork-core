@@ -104,7 +104,7 @@ data class Theme(
 
                         val chunk = worldServer.getChunkAt(blockX shr 4, blockZ shr 4)
 
-                        val index = (blockY * length + blockZ) * width + blockX
+                        val index = blockY * width * length + blockZ * width + blockX
 
                         val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
 
