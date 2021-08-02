@@ -17,6 +17,7 @@ import net.minecraft.server.v1_8_R3.Material
 import org.bukkit.Bukkit
 import java.io.File
 import java.io.FileInputStream
+import java.util.concurrent.Executors
 import java.util.zip.DataFormatException
 import java.util.zip.GZIPInputStream
 
@@ -26,6 +27,8 @@ import java.util.zip.GZIPInputStream
 data class Theme(
     val schematicName: String = "default.schematic"
 ) {
+
+    private val EXECUTOR = Executors.newScheduledThreadPool(4)
 
     private lateinit var schematic: File
 
@@ -95,45 +98,43 @@ data class Theme(
 
             val worldServer = Bukkit.getWorld(worldName).asNMSWorld()
 
-            Thread {
-                run {
-                    for (blockX in 0 until width) {
-                        for (blockY in 0 until height) {
-                            for (blockZ in 0 until length) {
-                                val index = blockY * width * length + blockZ * width + blockX
+            EXECUTOR.execute {
+                for (blockX in 0 until width) {
+                    for (blockY in 0 until height) {
+                        for (blockZ in 0 until length) {
+                            val index = blockY * width * length + blockZ * width + blockX
 
-                                val x = x - 157
-                                val y = y - 59
-                                val z = z - 42
+                            val x = x - 157
+                            val y = y - 59
+                            val z = z - 42
 
-                                if (!worldServer.chunkProviderServer.isChunkLoaded(blockX shr 4, blockZ shr 4)) {
-                                    worldServer.chunkProviderServer.loadChunk(blockX shr 4, blockZ shr 4)
-                                }
-
-                                val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
-
-                                if (blockData.block.material == Material.AIR) {
-                                    continue
-                                }
-
-                                if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
-                                    worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
-                                }
-
-                                worldServer.setTypeAndData(
-                                    BlockPosition(
-                                        x + blockX,
-                                        y + blockY,
-                                        z + blockZ,
-                                    ),
-                                    blockData,
-                                    2
-                                )
+                            if (!worldServer.chunkProviderServer.isChunkLoaded(blockX shr 4, blockZ shr 4)) {
+                                worldServer.chunkProviderServer.loadChunk(blockX shr 4, blockZ shr 4)
                             }
+
+                            val blockData = Block.getByCombinedId(blocksIds[index].toInt() + (data[index].toInt() shl 12))
+
+                            if (blockData.block.material == Material.AIR) {
+                                continue
+                            }
+
+                            if (!worldServer.chunkProviderServer.isChunkLoaded(blockX, blockZ)) {
+                                worldServer.chunkProviderServer.loadChunk(blockX, blockZ)
+                            }
+
+                            worldServer.setTypeAndData(
+                                BlockPosition(
+                                    x + blockX,
+                                    y + blockY,
+                                    z + blockZ,
+                                ),
+                                blockData,
+                                2
+                            )
                         }
                     }
                 }
-            }.start()
+            }
         }
     }
 
