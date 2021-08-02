@@ -89,9 +89,9 @@ data class Theme(
                     blocksIds[index] = (blocks[index] and 0xFF.toByte()).toShort()
                 } else {
                     if ((index and 1) == 0) {
-                        blocksIds[index] = (((addId[index shr 1] and 0x0F.toByte()).toInt() shl 8) + (blocks[index] and 0xFF.toByte())).toShort()
+                        blocksIds[index] = (((addId[index shr 1].toInt() and 0x0F) shl 8) + (blocks[index].toInt() and 0xFF)).toShort()
                     } else {
-                        blocksIds[index] = (((addId[index shr 1] and 0xF0.toByte()).toInt() shl 4) + (blocks[index] and 0xFF.toByte())).toShort()
+                        blocksIds[index] = (((addId[index shr 1].toInt() and 0xF0) shl 4) + (blocks[index].toInt() and 0xFF)).toShort()
                     }
                 }
             }
@@ -144,4 +144,4 @@ data class Theme(
 
 private infix fun Byte.shl(
     other: Int
-): Byte = (this.toInt() * other).toByte()
+): Byte = (toInt() shl other).toByte()
