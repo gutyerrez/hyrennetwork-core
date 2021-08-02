@@ -108,7 +108,7 @@ data class Theme(
                                 worldServer.chunkProviderServer.loadChunk(blockX shr 4, blockZ shr 4)
                             }
 
-                            val blockData = Block.getByCombinedId(blocksIds[index] + (data[index] shl 12))
+                            val blockData = Block.getByCombinedId(blocksIds[index] + (data[index].toInt() shl 12))
 
                             if (blockData.block.material == Material.AIR) {
                                 continue
@@ -141,7 +141,3 @@ data class Theme(
     }
 
 }
-
-private infix fun Byte.shl(
-    other: Int
-): Byte = (toInt() shl other).toByte()
