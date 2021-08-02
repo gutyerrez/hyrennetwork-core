@@ -98,7 +98,7 @@ data class Theme(
 
             val worldServer = Bukkit.getWorld(worldName).asNMSWorld()
 
-            EXECUTOR.execute {
+//            EXECUTOR.execute {
                 for (blockX in 0 until width) {
                     for (blockY in 0 until height) {
                         for (blockZ in 0 until length) {
@@ -135,7 +135,7 @@ data class Theme(
                     }
                 }
             }
-        }
+//        }
     }
 
     private fun Application.getThemesFolder(): String = when (applicationType) {
